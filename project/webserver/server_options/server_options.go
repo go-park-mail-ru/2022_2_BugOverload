@@ -57,11 +57,11 @@ func (o *ServerOptions) checkServerOptions() error {
 		return errors.New("port not found")
 	}
 
-	if o.ReadTimeout <= 0 || o.ReadTimeout > 15 {
+	if o.ReadTimeout <= MinTimeout || o.ReadTimeout > MaxTimeout {
 		return errors.New("read timeout cannot be 0")
 	}
 
-	if o.WriteTimeout <= 0 || o.ReadTimeout > 15 {
+	if o.WriteTimeout <= MinTimeout || o.ReadTimeout > MaxTimeout {
 		return errors.New("write timeout cannot be 0")
 	}
 
