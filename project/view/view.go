@@ -1,8 +1,9 @@
 package view
 
 import (
-	"Kinopoisk/project/application/handling"
 	"net/http"
+
+	"Kinopoisk/project/application/handling"
 )
 
 func CreateMapHandling() *http.ServeMux {

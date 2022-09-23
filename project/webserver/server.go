@@ -1,16 +1,17 @@
-package web_server
+package webserver
 
 import (
-	"Kinopoisk/project/options"
-	view2 "Kinopoisk/project/view"
-	"Kinopoisk/project/web_server/server_options"
 	"fmt"
 	"github.com/wonderivan/logger"
 	"net/http"
 	"time"
+
+	"Kinopoisk/project/options"
+	view2 "Kinopoisk/project/view"
+	"Kinopoisk/project/webserver/server_options"
 )
 
-func LaunchServer(options options.Options) {
+func Launch(options options.Options) {
 	serverOption, err := server_options.GetServerOptions(options.PathServerConfig)
 	if err != nil {
 		logger.Error(err)
@@ -19,13 +20,13 @@ func LaunchServer(options options.Options) {
 	}
 
 	server := http.Server{
-		Addr:         ":" + serverOption.Addr,
+		Addr:         serverOption.Addr,
 		Handler:      view2.CreateMapHandling(),
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}
 
-	fmt.Println("starting server at :" + serverOption.Addr)
+	fmt.Println("starting server at " + serverOption.Addr)
 
 	err = server.ListenAndServe()
 	if err != nil {

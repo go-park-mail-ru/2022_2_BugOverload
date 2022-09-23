@@ -1,9 +1,10 @@
 package main
 
 import (
-	"Kinopoisk/project/options"
-	"Kinopoisk/project/web_server"
 	"github.com/wonderivan/logger"
+
+	"Kinopoisk/project/options"
+	"Kinopoisk/project/webserver"
 )
 
 func main() {
@@ -14,5 +15,5 @@ func main() {
 		return
 	}
 
-	web_server.LaunchServer(options)
+	webserver.Launch(options)
 }
