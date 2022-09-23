@@ -2,7 +2,7 @@ package web_server
 
 import (
 	"Kinopoisk/project/options"
-	"Kinopoisk/project/web_server/routing"
+	view2 "Kinopoisk/project/view"
 	"Kinopoisk/project/web_server/server_options"
 	"fmt"
 	"github.com/wonderivan/logger"
@@ -20,7 +20,7 @@ func LaunchServer(options options.Options) {
 
 	server := http.Server{
 		Addr:         ":" + serverOption.Addr,
-		Handler:      routing.CreateMapHandling(),
+		Handler:      view2.CreateMapHandling(),
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}

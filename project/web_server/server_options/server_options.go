@@ -2,7 +2,6 @@ package server_options
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -29,7 +28,6 @@ func GetServerOptions(pathConfig string) (ServerOptions, error) {
 	var keyValue [][]string
 
 	for _, val := range settings {
-		fmt.Println("val:", val)
 		split := strings.Split(val, ": ")
 		keyValue = append(keyValue, split)
 	}
