@@ -53,6 +53,13 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Email:    "dop123@mail.ru",
 		Avatar:   "*ссылка",
 	}
+
+	//suchUserExist := true
+	//
+	//if suchUserExist {
+	//	w.WriteHeader(http.StatusOK)
+	//}
+
 	//  handler -> plug
 	//  DataBase and Business logic magic
 
@@ -67,9 +74,9 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Отдаем ответ
 	w.Header().Set("Content-Type", "application/json")
 
-	w.Write(responseJSON)
-
 	w.WriteHeader(http.StatusCreated)
+
+	w.Write(responseJSON)
 }
 
 //  Подсказка для тестов
