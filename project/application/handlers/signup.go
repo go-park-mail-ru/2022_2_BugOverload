@@ -65,9 +65,11 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Логируем ответ
 
 	//  Отдаем ответ
-	w.WriteHeader(http.StatusCreated)
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
+
 	w.Write(responseJSON)
+
+	w.WriteHeader(http.StatusCreated)
 }
 
 //  Подсказка для тестов
