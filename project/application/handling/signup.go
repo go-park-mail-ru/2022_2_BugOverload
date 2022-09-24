@@ -63,7 +63,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  Формируем ответ
-	var responseBody = io.ReadCloser
+	var responseBody io.ReadCloser
 	responseBody.Read(responseJSON)
 
 	responseHeaders := http.Header{}
