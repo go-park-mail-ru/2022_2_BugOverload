@@ -25,15 +25,15 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Header.Get("Content-Type") == "application/json" {
-		http.Error(w, http.ErrBodyNotAllowed.Error(), http.StatusUnsupportedMediaType)
+	if r.Header.Get("Content-Type") != "application/json" {
+		http.Error(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
 		return
 	}
 
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		http.Error(w, "Bad Request"+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
@@ -41,7 +41,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(body, user)
 	if err != nil {
-		http.Error(w, "Bad Request"+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
@@ -55,11 +55,9 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	responseJSON, err := json.Marshal(plug)
 	if err != nil {
-		http.Error(w, "Bad Request"+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-
-	//  Логируем ответ после завершения всех обработчиков и парсеров
 
 	//  Формируем ответ
 	var responseBody io.ReadCloser
@@ -74,4 +72,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Body:       responseBody,
 	}
 
+	//  Логируем ответ после завершения всех обработчиков и парсеров
+
+	//  Отдаем ответ
 }
