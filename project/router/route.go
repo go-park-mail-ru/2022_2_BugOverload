@@ -10,8 +10,8 @@ import (
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	signupHandler := &handlers.HandlerSignup{}
-	router.Handle("/v1/auth/signup", signupHandler)
+	signupHandler := handlers.NewHandlerSignup()
+	router.Handle("/v1/auth/signup", signupHandler).Methods(http.MethodPost)
 
 	//  Дальше также сопоставляем обработчик и путь
 

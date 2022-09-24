@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
@@ -14,45 +13,27 @@ type HandlerSignup struct {
 	//  Менеджер моделей
 }
 
+func NewHandlerSignup() *HandlerSignup {
+	return &HandlerSignup{}
+}
+
 func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Получить уникальный номер HTTP запроса
 	//  requestID := GetNextRequestID()
 
 	//  Логируем входящий HTTP запрос
 
-	//  Достаем, валидируем параметры запроса
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", 405)
-		return
-	}
-
-	if r.Header.Get("Content-Type") != "application/json" {
-		http.Error(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
-		return
-	}
-
-	body, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
+	// Достаем, валидируем и конвертруем параметры в объект
+	var user structs.User
+	err := user.Bind(w, r)
 	if err != nil {
-		http.Error(w, "Bad Request:"+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	user := &structs.User{}
-
-	err = json.Unmarshal(body, user)
-	if err != nil {
-		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	//  DataBase and Business logic magic
 	//  user -> handler
-	plug := structs.User{
-		Nickname: "StepByyyy",
-		Email:    "dop123@mail.ru",
-		Avatar:   "*ссылка",
-	}
+	//  Эхо сервер
+	plug := user
 
 	//suchUserExist := true
 	//
@@ -64,20 +45,20 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  handler -> plug
 	//  DataBase and Business logic magic
 
-	responseJSON, err := json.Marshal(plug)
+	out, err := json.Marshal(plug)
 	if err != nil {
 		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	//  Логируем ответ
 
 	//  Отдаем ответ
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusCreated)
 
-	w.Write(responseJSON)
+	w.Write(out)
+
+	//  Логируем ответ
 }
 
 //  Подсказка для тестов
