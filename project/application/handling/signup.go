@@ -1,11 +1,12 @@
 package handling
 
 import (
-	"Kinopoisk/project/application/structs"
 	"encoding/json"
 	"io"
 	"io/ioutil"
 	"net/http"
+
+	"Kinopoisk/project/application/structs"
 )
 
 type HandlerSignup struct {
