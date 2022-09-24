@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"Kinopoisk/project/options"
-	view2 "Kinopoisk/project/view"
-	"Kinopoisk/project/webserver/server_options"
+	"go-park-mail-ru/2022_2_BugOverload/project/options"
+	"go-park-mail-ru/2022_2_BugOverload/project/router"
+	"go-park-mail-ru/2022_2_BugOverload/project/webserver/server_options"
 )
 
 func Launch(options options.Options) {
@@ -21,7 +21,7 @@ func Launch(options options.Options) {
 
 	server := http.Server{
 		Addr:         serverOption.Addr,
-		Handler:      view2.CreateMapHandling(),
+		Handler:      router.NewRouter(),
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}

@@ -1,16 +1,14 @@
-package handling
+package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"io/ioutil"
 	"net/http"
 
-	"Kinopoisk/project/application/structs"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
 type HandlerSignup struct {
-	user structs.User
 	//  Менеджер кеша
 	//  Логер
 	//  Менеджер моделей
@@ -36,7 +34,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		http.Error(w, "Bad Request:"+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -44,7 +42,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(body, user)
 	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -58,24 +56,17 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	responseJSON, err := json.Marshal(plug)
 	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
-	}
-
-	//  Формируем ответ
-	var responseBody io.ReadCloser
-	responseBody.Read(responseJSON)
-
-	responseHeaders := http.Header{}
-	responseHeaders.Add("Content-Type", "application/json")
-
-	var HTTPResponse = http.Response{
-		StatusCode: http.StatusCreated,
-		Header:     responseHeaders,
-		Body:       responseBody,
 	}
 
 	//  Логируем ответ
 
 	//  Отдаем ответ
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Add("Content-Type", "application/json")
+	w.Write(responseJSON)
 }
+
+//  Подсказка для тестов
+//  curl -vvv -X POST -H "Content-Type: application/json" -d '{"key": 123}' http://localhost:8086/v1/auth/signup
