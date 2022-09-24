@@ -9,8 +9,8 @@ import (
 func CreateMapHandling() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	rootHandler := &handling.HandlerRoot{}
-	mux.Handle("/", rootHandler)
+	signupHandler := &handling.HandlerSignup{}
+	mux.Handle("/v1/auth/signup", signupHandler)
 
 	//  Дальше также сопоставляем обработчик и путь
 
