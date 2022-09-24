@@ -58,6 +58,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//
 	//if suchUserExist {
 	//	w.WriteHeader(http.StatusOK)
+	//  return
 	//}
 
 	//  handler -> plug
