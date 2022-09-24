@@ -47,11 +47,13 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  DataBase and Business logic magic
+	//  user -> handler
 	plug := structs.User{
 		Nickname: "StepByyyy",
 		Email:    "dop123@mail.ru",
 		Avatar:   "*ссылка",
 	}
+	//  handler -> plug
 	//  DataBase and Business logic magic
 
 	responseJSON, err := json.Marshal(plug)
