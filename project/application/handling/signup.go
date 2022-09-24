@@ -19,7 +19,10 @@ type HandlerSignup struct {
 func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Получить уникальный номер HTTP запроса
 	//  requestID := GetNextRequestID()
+
 	//  Логируем входящий HTTP запрос
+
+	//  Достаем, валидируем параметры запроса
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", 405)
 		return
@@ -45,13 +48,13 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//  DataBase magic
+	//  DataBase and Business logic magic
 	plug := structs.User{
 		Nickname: "StepByyyy",
 		Email:    "dop123@mail.ru",
 		Avatar:   "*ссылка",
 	}
-	//  DataBase magic
+	//  DataBase and Business logic magic
 
 	responseJSON, err := json.Marshal(plug)
 	if err != nil {
@@ -60,7 +63,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  Формируем ответ
-	var responseBody io.ReadCloser
+	var responseBody = io.ReadCloser
 	responseBody.Read(responseJSON)
 
 	responseHeaders := http.Header{}
@@ -72,7 +75,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Body:       responseBody,
 	}
 
-	//  Логируем ответ после завершения всех обработчиков и парсеров
+	//  Логируем ответ
 
 	//  Отдаем ответ
 }
