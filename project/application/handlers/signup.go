@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/structs/tmp_storage"
 )
 
 type HandlerSignup struct {
@@ -17,10 +18,11 @@ func NewHandlerSignup() *HandlerSignup {
 	return &HandlerSignup{}
 }
 
-func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//  Получить уникальный номер HTTP запроса
-	//  requestID := GetNextRequestID()
+//  UserStorage is tmp simple impl similar DB
 
+var Storage tmp_storage.UserStorage = tmp_storage.NewUserStorage()
+
+func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 
 	// Достаем, валидируем и конвертруем параметры в объект
@@ -30,22 +32,14 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//  DataBase and Business logic magic
-	//  user -> handler
-	//  Эхо сервер
-	plug := user
+	//  There must be DataBase and Business logic magic
+	suchUserExist := Storage.Insert(user)
+	if suchUserExist != nil {
+		w.WriteHeader(http.StatusOK) //  A user with such a mail already exists
+		return
+	} //  There must be DataBase and Business logic magic
 
-	//suchUserExist := true
-	//
-	//if suchUserExist {
-	//	w.WriteHeader(http.StatusOK)
-	//  return
-	//}
-
-	//  handler -> plug
-	//  DataBase and Business logic magic
-
-	out, err := json.Marshal(plug)
+	out, err := json.Marshal(user)
 	if err != nil {
 		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
