@@ -9,18 +9,15 @@ import (
 )
 
 type HandlerSignup struct {
+	Storage tmp_storage.UserStorage //  UserStorage is tmp simple impl similar DB
 	//  Менеджер кеша
 	//  Логер
 	//  Менеджер моделей
 }
 
-func NewHandlerSignup() *HandlerSignup {
-	return &HandlerSignup{}
+func NewHandlerSignup(us tmp_storage.UserStorage) *HandlerSignup {
+	return &HandlerSignup{us}
 }
-
-//  UserStorage is tmp simple impl similar DB
-
-var Storage tmp_storage.UserStorage = tmp_storage.NewUserStorage()
 
 func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
@@ -33,11 +30,13 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  There must be DataBase and Business logic magic
-	suchUserExist := Storage.Insert(user)
+	suchUserExist := h.Storage.Contains(user)
 	if suchUserExist != nil {
-		w.WriteHeader(http.StatusOK) //  A user with such a mail already exists
+		http.Error(w, "A user with such a mail already exists", http.StatusBadRequest)
 		return
-	} //  There must be DataBase and Business logic magic
+	}
+	h.Storage.Insert(user)
+	//  There must be DataBase and Business logic magic
 
 	out, err := json.Marshal(user)
 	if err != nil {

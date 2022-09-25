@@ -13,19 +13,16 @@ func NewUserStorage() UserStorage {
 	return UserStorage{make(map[structs.User]string)}
 }
 
-func (us *UserStorage) Insert(u structs.User) error {
-	if len(us.Storage) == 0 {
-		us.Storage[u] = "exist"
-
-		return nil
-	}
-
+func (us *UserStorage) Contains(u structs.User) error {
 	_, ok := us.Storage[u]
 	if ok {
 		return errors.New("such user exist")
 	}
 
+	return nil
+}
+
+func (us *UserStorage) Insert(u structs.User) {
 	us.Storage[u] = "exist"
 
-	return nil
 }
