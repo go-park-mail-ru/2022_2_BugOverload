@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/myhttp"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
@@ -38,18 +38,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.Storage.Insert(user)
 	//  There must be DataBase and Business logic magic
 
-	out, err := json.Marshal(user)
-	if err != nil {
-		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	//  Отдаем ответ
-	w.Header().Set("Content-Type", "application/json")
-
-	w.WriteHeader(http.StatusCreated)
-
-	w.Write(out)
+	myhttp.Success(w, user)
 
 	//  Логируем ответ
 }
