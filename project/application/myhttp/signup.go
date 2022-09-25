@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Success(w http.ResponseWriter, u structs.User) {
+func SuccessSignup(w http.ResponseWriter, u structs.User) {
 	out, err := json.Marshal(u)
 	if err != nil {
 		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)

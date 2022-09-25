@@ -38,7 +38,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.Storage.Insert(user)
 	//  There must be DataBase and Business logic magic
 
-	myhttp.Success(w, user)
+	myhttp.SuccessSignup(w, user)
 
 	//  Логируем ответ
 }
