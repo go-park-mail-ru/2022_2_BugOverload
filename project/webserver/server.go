@@ -3,10 +3,10 @@ package webserver
 import (
 	"fmt"
 	"github.com/wonderivan/logger"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"net/http"
 	"time"
 
+	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/options"
 	"go-park-mail-ru/2022_2_BugOverload/project/router"
 	"go-park-mail-ru/2022_2_BugOverload/project/webserver/server_options"

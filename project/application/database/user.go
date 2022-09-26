@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
