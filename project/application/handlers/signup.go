@@ -17,7 +17,7 @@ type HandlerSignup struct {
 }
 
 // NewHandlerSignup is constructor for HandlerSignup
-func NewHandlerSignup(us *database.UserStorage) *HandlerSignup {
+func New_HandlerSignup(us *database.UserStorage) *HandlerSignup {
 	return &HandlerSignup{us}
 }
 
