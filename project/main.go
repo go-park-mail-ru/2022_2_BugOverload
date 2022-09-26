@@ -5,7 +5,7 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/options"
-	router2 "go-park-mail-ru/2022_2_BugOverload/project/router"
+	router_ "go-park-mail-ru/2022_2_BugOverload/project/router"
 	"go-park-mail-ru/2022_2_BugOverload/project/webserver"
 )
 
@@ -22,7 +22,7 @@ func main() {
 
 	//  По аналогии кеш, логер и остальные крупные отдельные сущности
 
-	router := router2.NewRouter(us)
+	router := router_.NewRouter(us)
 
 	webserver.Launch(options, router)
 }
