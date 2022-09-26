@@ -1,21 +1,18 @@
 .PHONY: all launch run_tests check_coverage
 
-all: launch
+all: check launch
 
 TARGET = ./project/main.go
+ARGS= ./configs/webserver.txt
 
 PKG = ./...
 
 create_env:
-	go get -u golang.org/x/lint/golint
-	go get -u honnef.co/go/tools/cmd/staticcheck
-	go get -u github.com/kisielk/errcheck
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
+	${GOPATH}/bin/golangci-lint
 
 check:
-	golint ${PKG}
-	go vet ${PKG}
-	staticcheck ${PKG}
-	errcheck ${PKG}
+	golangci-lint run
 
 launch:
 	go run ${TARGET} ${ARGS}
