@@ -8,10 +8,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers"
 )
 
-func NewRouter(database *database.Database) *mux.Router {
+// NewRouter is constructor for mux
+func NewRouter(us *database.UserStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	signupHandler := handlers.NewHandlerSignup(database.UserStorage)
+	signupHandler := handlers.NewHandlerSignup(us)
 	router.HandleFunc("/v1/auth/signup", signupHandler.Signup).Methods(http.MethodPost)
 
 	//  Дальше также сопоставляем обработчик и путь

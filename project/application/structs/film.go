@@ -1,5 +1,6 @@
 package structs
 
+// Film is a carrier structure for all movie attributes and specifying them for json conversion
 type Film struct {
 	ID          uint   `json:"film_id,omitempty"`
 	Name        string `json:"film_name,omitempty"`

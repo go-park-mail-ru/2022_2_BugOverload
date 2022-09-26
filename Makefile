@@ -4,6 +4,19 @@ all: launch
 
 TARGET = ./project/main.go
 
+PKG = ./...
+
+create_env:
+	go get -u golang.org/x/lint/golint
+	go get -u honnef.co/go/tools/cmd/staticcheck
+	go get -u github.com/kisielk/errcheck
+
+check:
+	golint ${PKG}
+	go vet ${PKG}
+	staticcheck ${PKG}
+	errcheck ${PKG}
+
 launch:
 	go run ${TARGET} ${ARGS}
 

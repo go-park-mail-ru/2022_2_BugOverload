@@ -1,22 +1,37 @@
-package server_options
+package serveroptions
 
 import (
 	"errors"
-	"io/ioutil"
+	"github.com/wonderivan/logger"
+	"io"
+	"os"
 	"strconv"
 	"strings"
 )
 
+// ServerOptions is struct for defining a server preset of work settings
 type ServerOptions struct {
 	Addr         string
 	ReadTimeout  int
 	WriteTimeout int
 }
 
+// GetServerOptions is function for getting startup parameters from global options
 func GetServerOptions(pathConfig string) (ServerOptions, error) {
 	var o ServerOptions
 
-	bytes, err := ioutil.ReadFile(pathConfig)
+	stream, err := os.Open(pathConfig)
+	if err != nil {
+		return ServerOptions{}, err
+	}
+	defer func() {
+		err := stream.Close()
+		if err != nil {
+			logger.Error(err)
+		}
+	}()
+
+	bytes, err := io.ReadAll(stream)
 	if err != nil {
 		return ServerOptions{}, err
 	}

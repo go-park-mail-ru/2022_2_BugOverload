@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// Created is function for generating a successful request
 func Created(w http.ResponseWriter, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
@@ -17,5 +18,9 @@ func Created(w http.ResponseWriter, someStruct interface{}) {
 
 	w.WriteHeader(http.StatusCreated)
 
-	w.Write(out)
+	_, err = w.Write(out)
+	if err != nil {
+		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
+		return
+	}
 }

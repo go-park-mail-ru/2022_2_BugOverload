@@ -8,6 +8,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
+// HandlerSignup is structure for API registration processing
 type HandlerSignup struct {
 	storage *database.UserStorage //  UserStorage is tmp simple impl similar DB
 	//  Менеджер кеша
@@ -15,10 +16,12 @@ type HandlerSignup struct {
 	//  Менеджер моделей
 }
 
+// NewHandlerSignup is constructor for HandlerSignup
 func NewHandlerSignup(us *database.UserStorage) *HandlerSignup {
 	return &HandlerSignup{us}
 }
 
+// Signup is handling request
 func (h *HandlerSignup) Signup(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 

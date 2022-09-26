@@ -5,6 +5,7 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/options"
+	router2 "go-park-mail-ru/2022_2_BugOverload/project/router"
 	"go-park-mail-ru/2022_2_BugOverload/project/webserver"
 )
 
@@ -16,8 +17,12 @@ func main() {
 		return
 	}
 
-	database := database.NewDatabase()
+	us := database.NewUserStorage()
+	//  cs := database.NewCookieStorage()
+
 	//  По аналогии кеш, логер и остальные крупные отдельные сущности
 
-	webserver.Launch(options, database)
+	router := router2.NewRouter(us)
+
+	webserver.Launch(options, router)
 }
