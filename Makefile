@@ -7,6 +7,9 @@ ARGS= ./configs/webserver.txt
 
 PKG = ./...
 
+clear:
+	sudo rm -rf main
+
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
