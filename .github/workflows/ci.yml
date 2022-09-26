@@ -1,0 +1,20 @@
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container: andeo1812/golang_web
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check
+  build:
+    runs-on: ubuntu-latest
+    container: andeo1812/golang_web
+    needs: [check]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: main

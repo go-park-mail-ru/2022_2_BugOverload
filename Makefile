@@ -13,6 +13,7 @@ create_env:
 
 check:
 	golangci-lint run
+	go fmt ${PKG}
 
 launch:
 	go run ${TARGET} ${ARGS}
