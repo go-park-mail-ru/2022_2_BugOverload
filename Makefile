@@ -3,6 +3,7 @@
 all: check launch
 
 TARGET = ./project/main.go
+ARGS= ./configs/webserver.txt
 
 PKG = ./...
 
