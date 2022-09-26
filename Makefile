@@ -24,6 +24,10 @@ launch:
 build:
 	go build ${TARGET}
 
+docker_launch:
+	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
+
+
 launch_race:
 	go run -race ${TARGET}
 
