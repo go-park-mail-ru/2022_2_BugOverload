@@ -1,6 +1,6 @@
 .PHONY: all launch run_tests check_coverage
 
-all: launch
+all: check launch
 
 TARGET = ./project/main.go
 
