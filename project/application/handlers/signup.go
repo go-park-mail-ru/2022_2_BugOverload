@@ -1,21 +1,21 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/project/application/myhttp"
 	"net/http"
 
+	"go-park-mail-ru/2022_2_BugOverload/project/application/myhttp"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/storages"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/structs/tmp_storage"
 )
 
 type HandlerSignup struct {
-	Storage tmp_storage.UserStorage //  UserStorage is tmp simple impl similar DB
+	storage *storages.UserStorage //  UserStorage is tmp simple impl similar DB
 	//  Менеджер кеша
 	//  Логер
 	//  Менеджер моделей
 }
 
-func NewHandlerSignup(us tmp_storage.UserStorage) *HandlerSignup {
+func NewHandlerSignup(us *storages.UserStorage) *HandlerSignup {
 	return &HandlerSignup{us}
 }
 
@@ -30,15 +30,15 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  There must be DataBase and Business logic magic
-	suchUserExist := h.Storage.Contains(user)
+	suchUserExist := h.storage.CheckExist(user)
 	if suchUserExist != nil {
 		http.Error(w, "A user with such a mail already exists", http.StatusBadRequest)
 		return
 	}
-	h.Storage.Insert(user)
+	h.storage.Create(user)
 	//  There must be DataBase and Business logic magic
 
-	myhttp.SuccessSignup(w, user)
+	myhttp.Created(w, user)
 
 	//  Логируем ответ
 }

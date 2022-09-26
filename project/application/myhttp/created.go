@@ -2,12 +2,11 @@ package myhttp
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 	"net/http"
 )
 
-func SuccessSignup(w http.ResponseWriter, u structs.User) {
-	out, err := json.Marshal(u)
+func Created(w http.ResponseWriter, someStruct interface{}) {
+	out, err := json.Marshal(someStruct)
 	if err != nil {
 		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return
