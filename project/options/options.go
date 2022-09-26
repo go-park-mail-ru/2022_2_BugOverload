@@ -5,10 +5,12 @@ import (
 	"flag"
 )
 
+// Options is struct for defining a global preset of work settings
 type Options struct {
 	PathServerConfig string
 }
 
+// GetOptions is function for getting startup parameters from console arguments
 func GetOptions() (Options, error) {
 	var o Options
 
@@ -24,6 +26,7 @@ func GetOptions() (Options, error) {
 	return o, nil
 }
 
+// checkOptions is method for validation parameters
 func (o *Options) checkOptions() error {
 	if o.PathServerConfig == "" {
 		return errors.New("the path to the work configuration is not specified")

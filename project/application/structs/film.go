@@ -1,14 +1,15 @@
 package structs
 
+// Film is a carrier structure for all movie attributes and specifying them for json conversion
 type Film struct {
-	ID          uint   `json:"film_id,integer,omitempty"`
-	Name        string `json:"film_name,string,omitempty"`
-	Type        string `json:"film_type,string,omitempty"`
-	YearProd    string `json:"year_prod,string,omitempty"`
-	ProdCompany string `json:"prod_company,string,omitempty"`
-	ProdCountry string `json:"prod_country,string,omitempty"`
-	AgeLimit    string `json:"age_limit,string,omitempty"`
-	Duration    string `json:"duration,string,omitempty"`
-	PosterHor   string `json:"poster_hor,string,omitempty"`
-	PosterVer   string `json:"poster_ver,string,omitempty"`
+	ID          uint   `json:"film_id,omitempty"`
+	Name        string `json:"film_name,omitempty"`
+	Type        string `json:"film_type,omitempty"`
+	YearProd    string `json:"year_prod,omitempty"`
+	ProdCompany string `json:"prod_company,omitempty"`
+	ProdCountry string `json:"prod_country,omitempty"`
+	AgeLimit    string `json:"age_limit,omitempty"`
+	Duration    string `json:"duration,omitempty"`
+	PosterHor   string `json:"poster_hor,omitempty"`
+	PosterVer   string `json:"poster_ver,omitempty"`
 }

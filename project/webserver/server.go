@@ -2,17 +2,17 @@ package webserver
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/wonderivan/logger"
+	"go-park-mail-ru/2022_2_BugOverload/project/options"
+	"go-park-mail-ru/2022_2_BugOverload/project/webserver/serveroptions"
 	"net/http"
 	"time"
-
-	"Kinopoisk/project/options"
-	view2 "Kinopoisk/project/view"
-	"Kinopoisk/project/webserver/server_options"
 )
 
-func Launch(options options.Options) {
-	serverOption, err := server_options.GetServerOptions(options.PathServerConfig)
+// Launch is used to start the server
+func Launch(options options.Options, router *mux.Router) {
+	serverOption, err := serveroptions.GetServerOptions(options.PathServerConfig)
 	if err != nil {
 		logger.Error(err)
 
@@ -21,7 +21,7 @@ func Launch(options options.Options) {
 
 	server := http.Server{
 		Addr:         serverOption.Addr,
-		Handler:      view2.CreateMapHandling(),
+		Handler:      router,
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}
