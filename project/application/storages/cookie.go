@@ -6,15 +6,15 @@ import (
 )
 
 type CookieStorage struct {
-	storage map[structs.User]string
+	storage map[string]structs.User
 }
 
 func NewCookieStorage() *CookieStorage {
-	return &CookieStorage{make(map[structs.User]string)}
+	return &CookieStorage{make(map[string]structs.User)}
 }
 
-func (us *CookieStorage) CheckExist(u structs.User) error {
-	_, ok := us.storage[u]
+func (us *CookieStorage) CheckExist(email string) error {
+	_, ok := us.storage[email]
 	if ok {
 		return errors.New("such user exist")
 	}
@@ -23,5 +23,5 @@ func (us *CookieStorage) CheckExist(u structs.User) error {
 }
 
 func (us *CookieStorage) Insert(u structs.User) {
-	us.storage[u] = "exist" + u.Email
+	us.storage[u.Email] = u
 }

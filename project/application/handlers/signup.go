@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/myhttp"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/storages"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -19,7 +19,7 @@ func NewHandlerSignup(us *storages.UserStorage) *HandlerSignup {
 	return &HandlerSignup{us}
 }
 
-func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *HandlerSignup) Some(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 
 	// Достаем, валидируем и конвертруем параметры в объект
@@ -38,7 +38,7 @@ func (h *HandlerSignup) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.storage.Create(user)
 	//  There must be DataBase and Business logic magic
 
-	myhttp.Created(w, user)
+	httpwrapper.Created(w, user)
 
 	//  Логируем ответ
 }

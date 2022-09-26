@@ -1,4 +1,4 @@
-package myhttp
+package httpwrapper
 
 import (
 	"encoding/json"
