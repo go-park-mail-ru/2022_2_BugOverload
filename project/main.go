@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/wonderivan/logger"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/options"
 	"go-park-mail-ru/2022_2_BugOverload/project/webserver"
@@ -15,5 +16,8 @@ func main() {
 		return
 	}
 
-	webserver.Launch(options)
+	database := database.NewDatabase()
+	//  По аналогии кеш, логер и остальные крупные отдельные сущности
+
+	webserver.Launch(options, database)
 }

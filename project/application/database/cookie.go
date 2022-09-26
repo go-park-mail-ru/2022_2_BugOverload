@@ -1,4 +1,4 @@
-package storages
+package database
 
 import (
 	"errors"

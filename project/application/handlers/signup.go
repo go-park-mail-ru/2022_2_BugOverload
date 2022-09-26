@@ -3,23 +3,23 @@ package handlers
 import (
 	"net/http"
 
+	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/storages"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
 type HandlerSignup struct {
-	storage *storages.UserStorage //  UserStorage is tmp simple impl similar DB
+	storage *database.UserStorage //  UserStorage is tmp simple impl similar DB
 	//  Менеджер кеша
 	//  Логер
 	//  Менеджер моделей
 }
 
-func NewHandlerSignup(us *storages.UserStorage) *HandlerSignup {
+func NewHandlerSignup(us *database.UserStorage) *HandlerSignup {
 	return &HandlerSignup{us}
 }
 
-func (h *HandlerSignup) Some(w http.ResponseWriter, r *http.Request) {
+func (h *HandlerSignup) Signup(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 
 	// Достаем, валидируем и конвертруем параметры в объект
