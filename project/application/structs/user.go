@@ -18,53 +18,6 @@ type User struct {
 	Avatar   string `json:"avatar,omitempty"`
 }
 
-const (
-	authRequestURI   = "/v1/auth"
-	signupRequestURI = authRequestURI + "/signup"
-	loginRequestURI  = authRequestURI + "/login"
-)
-
-func validate(r *http.Request, user *User) error {
-	requestURI := r.RequestURI
-
-	switch requestURI {
-	case authRequestURI:
-		return nil
-	case loginRequestURI:
-		if user.Email != "" && user.Password != "" {
-			return nil
-		}
-		return errors.New("request has empty fields (email | password)")
-	case signupRequestURI:
-		if user.Nickname != "" && user.Email != "" && user.Password != "" {
-			return nil
-		}
-		return errors.New("request has empty fields (nickname | email | password)")
-	default:
-		return errors.New("invalid uri")
-	}
-}
-
-func (u *User) ToPublic(r *http.Request) User {
-	requestURI := r.RequestURI
-
-	switch requestURI {
-	case authRequestURI, loginRequestURI:
-		return User{
-			Email:    u.Email,
-			Nickname: u.Nickname,
-			Avatar:   u.Avatar,
-		}
-	case signupRequestURI:
-		return User{
-			Nickname: u.Nickname,
-			Email:    u.Email,
-		}
-	default:
-		return User{}
-	}
-}
-
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") != "application/json" {
@@ -90,11 +43,58 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	err = validate(r, u)
+	return nil
+}
+
+// Empty struct with methods for login handler
+type UserLoginRequest struct {
+}
+
+// Validation and bind request fields to User struct for login request
+func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request, user *User) error {
+	err := user.Bind(w, r)
 	if err != nil {
-		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
 		return err
 	}
 
-	return nil
+	if user.Email != "" && user.Password != "" {
+		return nil
+	}
+	err = errors.New("request has empty fields (email | password)")
+	return err
+}
+
+// Return fields required by API
+func (loginRequest *UserLoginRequest) ToPublic(u *User) User {
+	return User{
+		Email:    u.Email,
+		Nickname: u.Nickname,
+		Avatar:   u.Avatar,
+	}
+}
+
+// Empty struct with methods for signup handler
+type UserSignupRequest struct {
+}
+
+// Validation and bind request fields to User struct for signup request
+func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request, user *User) error {
+	err := user.Bind(w, r)
+	if err != nil {
+		return err
+	}
+
+	if user.Nickname != "" && user.Email != "" && user.Password != "" {
+		return nil
+	}
+	err = errors.New("request has empty fields (nickname | email | password)")
+	return err
+}
+
+// Return fields required by API
+func (signupRequest *UserSignupRequest) ToPublic(u *User) User {
+	return User{
+		Email:    u.Email,
+		Nickname: u.Nickname,
+	}
 }

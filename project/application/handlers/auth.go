@@ -27,7 +27,8 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var user structs.User
-	err := user.Bind(w, r)
+	var loginRequest structs.UserLoginRequest
+	err := loginRequest.Bind(w, r, &user)
 	if err != nil {
 		return
 	}
@@ -45,7 +46,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return only required API fields
-	httpwrapper.ResponseOK(w, http.StatusOK, userFromDB.ToPublic(r))
+	httpwrapper.ResponseOK(w, http.StatusOK, loginRequest.ToPublic(&userFromDB))
 
 	//  Логируем ответ
 }
@@ -56,7 +57,8 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var user structs.User
-	err := user.Bind(w, r)
+	var signupRequest structs.UserSignupRequest
+	err := signupRequest.Bind(w, r, &user)
 	if err != nil {
 		return
 	}
@@ -70,7 +72,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 	ha.storage.Create(user)
 	//  There must be DataBase and Business logic magic
 
-	httpwrapper.ResponseOK(w, http.StatusCreated, user.ToPublic(r))
+	httpwrapper.ResponseOK(w, http.StatusCreated, signupRequest.ToPublic(&user))
 
 	//  Логируем ответ
 }
