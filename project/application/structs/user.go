@@ -1,7 +1,6 @@
 package structs
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -27,17 +26,16 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	body, err := io.ReadAll(r.Body)
-	r.Body.Close()
 	if err != nil {
 		http.Error(w, "Bad Request:"+err.Error(), http.StatusBadRequest)
 		return err
 	}
-
-	r.Body = io.NopCloser(bytes.NewBuffer(body))
-	err = r.Body.Close()
-	if err != nil {
-		logger.Error(err)
-	}
+	defer func() {
+		err := r.Body.Close()
+		if err != nil {
+			logger.Error(err)
+		}
+	}()
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
@@ -50,17 +48,17 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 
 // Empty struct with methods for login handler
 type UserLoginRequest struct {
+	user User
 }
 
 // Validation and bind request fields to User struct for login request
 func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error {
-	var user User
-	err := user.Bind(w, r)
+	err := loginRequest.user.Bind(w, r)
 	if err != nil {
 		return err
 	}
 
-	if user.Email != "" && user.Password != "" {
+	if loginRequest.user.Email != "" && loginRequest.user.Password != "" {
 		return nil
 	}
 	err = errors.New("request has empty fields (email | password)")
@@ -68,10 +66,8 @@ func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Reques
 }
 
 // Parse user fields and create struct User
-func (loginRequest *UserLoginRequest) ParseUser(w http.ResponseWriter, r *http.Request) *User {
-	var user User
-	_ = user.Bind(w, r)
-	return &user
+func (loginRequest *UserLoginRequest) GetUser() *User {
+	return &loginRequest.user
 }
 
 // Return fields required by API
@@ -85,17 +81,17 @@ func (loginRequest *UserLoginRequest) ToPublic(u *User) User {
 
 // Empty struct with methods for signup handler
 type UserSignupRequest struct {
+	user User
 }
 
 // Validation and bind request fields to User struct for signup request
 func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error {
-	var user User
-	err := user.Bind(w, r)
+	err := signupRequest.user.Bind(w, r)
 	if err != nil {
 		return err
 	}
 
-	if user.Nickname != "" && user.Email != "" && user.Password != "" {
+	if signupRequest.user.Nickname != "" && signupRequest.user.Email != "" && signupRequest.user.Password != "" {
 		return nil
 	}
 	err = errors.New("request has empty fields (nickname | email | password)")
@@ -103,10 +99,8 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 }
 
 // Parse user fields and create struct User
-func (signupRequest *UserSignupRequest) ParseUser(w http.ResponseWriter, r *http.Request) *User {
-	var user User
-	_ = user.Bind(w, r)
-	return &user
+func (signupRequest *UserSignupRequest) GetUser() *User {
+	return &signupRequest.user
 }
 
 // Return fields required by API

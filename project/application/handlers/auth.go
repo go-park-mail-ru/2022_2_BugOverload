@@ -33,7 +33,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := loginRequest.ParseUser(w, r)
+	user := loginRequest.GetUser()
 
 	//  There must be DataBase and Business logic magic
 	userFromDB, err := ha.storage.GetUser(user.Email)
@@ -65,7 +65,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := signupRequest.ParseUser(w, r)
+	user := signupRequest.GetUser()
 
 	//  There must be DataBase and Business logic magic
 	suchUserExist := ha.storage.CheckExist(user.Email)
