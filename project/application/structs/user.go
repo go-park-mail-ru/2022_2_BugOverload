@@ -19,29 +19,27 @@ type User struct {
 }
 
 const (
-	AUTH_REQUEST_URI   = "/v1/auth"
-	SIGNUP_REQUEST_URI = AUTH_REQUEST_URI + "/signup"
-	LOGIN_REQUEST_URI  = AUTH_REQUEST_URI + "/login"
+	authRequestURI   = "/v1/auth"
+	signupRequestURI = authRequestURI + "/signup"
+	loginRequestURI  = authRequestURI + "/login"
 )
 
 func validate(r *http.Request, user *User) error {
 	requestURI := r.RequestURI
 
 	switch requestURI {
-	case AUTH_REQUEST_URI:
+	case authRequestURI:
 		return nil
-	case LOGIN_REQUEST_URI:
+	case loginRequestURI:
 		if user.Email != "" && user.Password != "" {
 			return nil
-		} else {
-			return errors.New("request has empty fields (email | password)")
 		}
-	case SIGNUP_REQUEST_URI:
-		if user.Email != "" {
+		return errors.New("request has empty fields (email | password)")
+	case signupRequestURI:
+		if user.Nickname != "" && user.Email != "" && user.Password != "" {
 			return nil
-		} else {
-			return errors.New("request has empty fields (nickname | email | password)")
 		}
+		return errors.New("request has empty fields (nickname | email | password)")
 	default:
 		return errors.New("invalid uri")
 	}
@@ -51,19 +49,13 @@ func (u *User) ToPublic(r *http.Request) User {
 	requestURI := r.RequestURI
 
 	switch requestURI {
-	case AUTH_REQUEST_URI:
+	case authRequestURI, loginRequestURI:
 		return User{
 			Email:    u.Email,
 			Nickname: u.Nickname,
-			Password: u.Password,
-		}
-	case LOGIN_REQUEST_URI:
-		return User{
-			Nickname: u.Nickname,
-			Email:    u.Email,
 			Avatar:   u.Avatar,
 		}
-	case SIGNUP_REQUEST_URI:
+	case signupRequestURI:
 		return User{
 			Nickname: u.Nickname,
 			Email:    u.Email,

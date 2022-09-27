@@ -34,7 +34,12 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	//  There must be DataBase and Business logic magic
 	userFromDB, err := ha.storage.GetUser(user.Email)
-	if err != nil || user.Password != userFromDB.Password {
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if userFromDB.Password != user.Password {
 		http.Error(w, "No such combination of user and password", http.StatusBadRequest)
 		return
 	}
