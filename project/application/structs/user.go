@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -26,16 +27,17 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	body, err := io.ReadAll(r.Body)
+	r.Body.Close()
 	if err != nil {
 		http.Error(w, "Bad Request:"+err.Error(), http.StatusBadRequest)
 		return err
 	}
-	defer func() {
-		err := r.Body.Close()
-		if err != nil {
-			logger.Error(err)
-		}
-	}()
+
+	r.Body = io.NopCloser(bytes.NewBuffer(body))
+	err = r.Body.Close()
+	if err != nil {
+		logger.Error(err)
+	}
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
@@ -51,7 +53,8 @@ type UserLoginRequest struct {
 }
 
 // Validation and bind request fields to User struct for login request
-func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request, user *User) error {
+func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	var user User
 	err := user.Bind(w, r)
 	if err != nil {
 		return err
@@ -62,6 +65,13 @@ func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Reques
 	}
 	err = errors.New("request has empty fields (email | password)")
 	return err
+}
+
+// Parse user fields and create struct User
+func (loginRequest *UserLoginRequest) ParseUser(w http.ResponseWriter, r *http.Request) *User {
+	var user User
+	_ = user.Bind(w, r)
+	return &user
 }
 
 // Return fields required by API
@@ -78,7 +88,8 @@ type UserSignupRequest struct {
 }
 
 // Validation and bind request fields to User struct for signup request
-func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request, user *User) error {
+func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	var user User
 	err := user.Bind(w, r)
 	if err != nil {
 		return err
@@ -89,6 +100,13 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 	}
 	err = errors.New("request has empty fields (nickname | email | password)")
 	return err
+}
+
+// Parse user fields and create struct User
+func (signupRequest *UserSignupRequest) ParseUser(w http.ResponseWriter, r *http.Request) *User {
+	var user User
+	_ = user.Bind(w, r)
+	return &user
 }
 
 // Return fields required by API

@@ -26,12 +26,14 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 
 	// Достаем, валидируем и конвертруем параметры в объект
-	var user structs.User
 	var loginRequest structs.UserLoginRequest
-	err := loginRequest.Bind(w, r, &user)
+	err := loginRequest.Bind(w, r)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	user := loginRequest.ParseUser(w, r)
 
 	//  There must be DataBase and Business logic magic
 	userFromDB, err := ha.storage.GetUser(user.Email)
@@ -56,12 +58,14 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 	//  Логируем входящий HTTP запрос
 
 	// Достаем, валидируем и конвертруем параметры в объект
-	var user structs.User
 	var signupRequest structs.UserSignupRequest
-	err := signupRequest.Bind(w, r, &user)
+	err := signupRequest.Bind(w, r)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	user := signupRequest.ParseUser(w, r)
 
 	//  There must be DataBase and Business logic magic
 	suchUserExist := ha.storage.CheckExist(user.Email)
@@ -69,10 +73,10 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "A user with such a mail already exists", http.StatusBadRequest)
 		return
 	}
-	ha.storage.Create(user)
+	ha.storage.Create(*user)
 	//  There must be DataBase and Business logic magic
 
-	httpwrapper.ResponseOK(w, http.StatusCreated, signupRequest.ToPublic(&user))
+	httpwrapper.ResponseOK(w, http.StatusCreated, signupRequest.ToPublic(user))
 
 	//  Логируем ответ
 }
