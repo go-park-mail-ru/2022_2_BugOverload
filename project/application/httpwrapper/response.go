@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-// Created is function for generating a successful request
-func Created(w http.ResponseWriter, someStruct interface{}) {
+// Created is function for generating response
+func ResponseOK(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
 		http.Error(w, "Bad Request: "+err.Error(), http.StatusBadRequest)
@@ -16,7 +16,7 @@ func Created(w http.ResponseWriter, someStruct interface{}) {
 	//  Отдаем ответ
 	w.Header().Set("Content-Type", "application/json")
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(statusCode)
 
 	_, err = w.Write(out)
 	if err != nil {

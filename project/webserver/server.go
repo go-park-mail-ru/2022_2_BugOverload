@@ -1,9 +1,9 @@
 package webserver
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/wonderivan/logger"
+
 	"go-park-mail-ru/2022_2_BugOverload/project/options"
 	"go-park-mail-ru/2022_2_BugOverload/project/webserver/serveroptions"
 	"net/http"
@@ -26,7 +26,7 @@ func Launch(options options.Options, router *mux.Router) {
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}
 
-	fmt.Println("starting server at " + serverOption.Addr)
+	logger.Info("starting server at " + serverOption.Addr)
 
 	err = server.ListenAndServe()
 	if err != nil {

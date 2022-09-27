@@ -1,8 +1,9 @@
 package router
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers"
@@ -12,10 +13,11 @@ import (
 func NewRouter(us *database.UserStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	signupHandler := handlers.NewHandlerSignup(us)
-	router.HandleFunc("/v1/auth/signup", signupHandler.Signup).Methods(http.MethodPost)
+	authHandler := handlers.NewHandlerAuth(us)
+	router.HandleFunc("/v1/auth/signup", authHandler.Signup).Methods(http.MethodPost)
 
 	//  Дальше также сопоставляем обработчик и путь
+	router.HandleFunc("/v1/auth/login", authHandler.Login).Methods(http.MethodPost)
 
 	http.Handle("/", router)
 

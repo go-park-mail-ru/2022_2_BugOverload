@@ -3,9 +3,10 @@ package structs
 import (
 	"encoding/json"
 	"errors"
-	"github.com/wonderivan/logger"
 	"io"
 	"net/http"
+
+	"github.com/wonderivan/logger"
 )
 
 // User is a carrier structure for all movie attributes and specifying them for json conversion
@@ -30,7 +31,7 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	defer func() {
-		err := r.Body.Close()
+		err = r.Body.Close()
 		if err != nil {
 			logger.Error(err)
 		}
@@ -43,4 +44,69 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	return nil
+}
+
+// Empty struct with methods for login handler
+type UserLoginRequest struct {
+	user User
+}
+
+// Validation and bind request fields to User struct for login request
+func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	err := loginRequest.user.Bind(w, r)
+	if err != nil {
+		return err
+	}
+
+	if loginRequest.user.Email != "" && loginRequest.user.Password != "" {
+		return nil
+	}
+	err = errors.New("request has empty fields (email | password)")
+	return err
+}
+
+// Parse user fields and create struct User
+func (loginRequest *UserLoginRequest) GetUser() *User {
+	return &loginRequest.user
+}
+
+// Return fields required by API
+func (loginRequest *UserLoginRequest) ToPublic(u *User) User {
+	return User{
+		Email:    u.Email,
+		Nickname: u.Nickname,
+		Avatar:   u.Avatar,
+	}
+}
+
+// Empty struct with methods for signup handler
+type UserSignupRequest struct {
+	user User
+}
+
+// Validation and bind request fields to User struct for signup request
+func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	err := signupRequest.user.Bind(w, r)
+	if err != nil {
+		return err
+	}
+
+	if signupRequest.user.Nickname != "" && signupRequest.user.Email != "" && signupRequest.user.Password != "" {
+		return nil
+	}
+	err = errors.New("request has empty fields (nickname | email | password)")
+	return err
+}
+
+// Parse user fields and create struct User
+func (signupRequest *UserSignupRequest) GetUser() *User {
+	return &signupRequest.user
+}
+
+// Return fields required by API
+func (signupRequest *UserSignupRequest) ToPublic(u *User) User {
+	return User{
+		Email:    u.Email,
+		Nickname: u.Nickname,
+	}
 }
