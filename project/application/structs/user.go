@@ -31,7 +31,7 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	defer func() {
-		err := r.Body.Close()
+		err = r.Body.Close()
 		if err != nil {
 			logger.Error(err)
 		}

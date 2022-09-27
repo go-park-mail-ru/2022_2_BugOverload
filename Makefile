@@ -12,7 +12,7 @@ create_env:
 	${GOPATH}/bin/golangci-lint
 
 check:
-	golangci-lint run
+	golangci-lint run --config=linters_config/.golangci.yml
 
 launch:
 	go run ${TARGET} ${ARGS}

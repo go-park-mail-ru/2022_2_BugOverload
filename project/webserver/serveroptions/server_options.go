@@ -2,11 +2,12 @@ package serveroptions
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
 	"io"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/wonderivan/logger"
 )
 
 // ServerOptions is struct for defining a server preset of work settings
@@ -25,7 +26,7 @@ func GetServerOptions(pathConfig string) (ServerOptions, error) {
 		return ServerOptions{}, err
 	}
 	defer func() {
-		err := stream.Close()
+		err = stream.Close()
 		if err != nil {
 			logger.Error(err)
 		}
@@ -36,7 +37,7 @@ func GetServerOptions(pathConfig string) (ServerOptions, error) {
 		return ServerOptions{}, err
 	}
 
-	textConfig := string(bytes[:])
+	textConfig := string(bytes)
 
 	settings := strings.Split(textConfig, "\n")
 
