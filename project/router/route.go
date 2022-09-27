@@ -13,12 +13,11 @@ import (
 func NewRouter(us *database.UserStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	signupHandler := handlers.NewHandlerSignup(us)
-	router.HandleFunc("/v1/auth/signup", signupHandler.Signup).Methods(http.MethodPost)
+	authHandler := handlers.NewHandlerAuth(us)
+	router.HandleFunc("/v1/auth/signup", authHandler.Signup).Methods(http.MethodPost)
 
 	//  Дальше также сопоставляем обработчик и путь
-	loginHandler := handlers.NewHandlerLogin(us)
-	router.HandleFunc("/v1/auth/login", loginHandler.Login).Methods(http.MethodPost)
+	router.HandleFunc("/v1/auth/login", authHandler.Login).Methods(http.MethodPost)
 
 	http.Handle("/", router)
 
