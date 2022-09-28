@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Created is function for generating response
+// ResponseOK is function for generating response
 func ResponseOK(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {

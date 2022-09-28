@@ -15,8 +15,6 @@ func NewRouter(us *database.UserStorage) *mux.Router {
 
 	authHandler := handlers.NewHandlerAuth(us)
 	router.HandleFunc("/v1/auth/signup", authHandler.Signup).Methods(http.MethodPost)
-
-	//  Дальше также сопоставляем обработчик и путь
 	router.HandleFunc("/v1/auth/login", authHandler.Login).Methods(http.MethodPost)
 
 	http.Handle("/", router)
