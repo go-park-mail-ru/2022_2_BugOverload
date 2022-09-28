@@ -23,7 +23,7 @@ type TestCase struct {
 
 func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{
-		//  Success
+		// Success
 		TestCase{
 			Method:       http.MethodPost,
 			ContentType:  "application/json",
@@ -31,7 +31,7 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
 			StatusCode:   http.StatusOK,
 		},
-		//  BrokenJSON
+		// Broken JSON
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
@@ -48,7 +48,7 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody: "unexpected end of JSON input\n",
 			StatusCode:   http.StatusBadRequest,
 		},
-		// body not JSON
+		// Body not JSON
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/xml",
@@ -57,7 +57,7 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody: "unsupported media type\n",
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
-		//  Empty required field
+		// Empty required field - email
 		TestCase{
 			Method:       http.MethodPost,
 			ContentType:  "application/json",
@@ -65,7 +65,15 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody: "request has empty fields (nickname | email | password)\n",
 			StatusCode:   http.StatusBadRequest,
 		},
-		//  Content-Type not set
+		// Empty required field - password
+		TestCase{
+			Method:       http.MethodPost,
+			ContentType:  "application/json",
+			RequestBody:  `{"email":"YasaPupkinEzji@top.world"}`,
+			ResponseBody: "request has empty fields (nickname | email | password)\n",
+			StatusCode:   http.StatusBadRequest,
+		},
+		// Content-Type not set
 		TestCase{
 			Method:       http.MethodPost,
 			RequestBody:  `{"password":"Widget Adapter"}`,
