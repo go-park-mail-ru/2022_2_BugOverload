@@ -15,7 +15,7 @@ create_env:
 	${GOPATH}/bin/golangci-lint
 
 check:
-	golangci-lint run --config=linters_config/.golangci.yml
+	${GOPATH}/bin/golangci-lint run --config=linters_config/.golangci.yml
 	go fmt ${PKG}
 
 launch:

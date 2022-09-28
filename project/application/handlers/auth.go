@@ -27,9 +27,9 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var loginRequest structs.UserLoginRequest
-	err := loginRequest.Bind(w, r)
+	code, err := loginRequest.Bind(w, r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
@@ -59,9 +59,9 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var signupRequest structs.UserSignupRequest
-	err := signupRequest.Bind(w, r)
+	code, err := signupRequest.Bind(w, r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), code)
 		return
 	}
 
