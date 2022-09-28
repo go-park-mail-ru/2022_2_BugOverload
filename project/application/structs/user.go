@@ -92,7 +92,7 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 		return code, err
 	}
 
-	if (signupRequest.user.Nickname != "" && signupRequest.user.Email != "") || signupRequest.user.Password != "" {
+	if signupRequest.user.Nickname != "" || signupRequest.user.Email != "" || signupRequest.user.Password != "" {
 		return http.StatusBadRequest, errors.New("request has empty fields (nickname | email | password)")
 	}
 
