@@ -20,9 +20,12 @@ type User struct {
 
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) (int, error) {
+	if r.Header.Get("Content-Type") == "" {
+		return http.StatusBadRequest, errors.New("Content-Type undefined")
+	}
+
 	if r.Header.Get("Content-Type") != "application/json" {
-		http.Error(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
-		return http.StatusUnsupportedMediaType, errors.New("Unsupported Media Type")
+		return http.StatusUnsupportedMediaType, errors.New("unsupported media type")
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -56,8 +59,8 @@ func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Reques
 		return code, err
 	}
 
-	if loginRequest.user.Email == "" && loginRequest.user.Password == "" {
-		return http.StatusBadRequest, errors.New("request has empty fields (email | password)")
+	if (loginRequest.user.Nickname == "" && loginRequest.user.Email == "") || loginRequest.user.Password == "" {
+		return http.StatusBadRequest, errors.New("request has empty fields (nickname | email | password)")
 	}
 
 	return 0, nil
@@ -89,7 +92,7 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 		return code, err
 	}
 
-	if signupRequest.user.Nickname != "" && signupRequest.user.Email != "" && signupRequest.user.Password != "" {
+	if (signupRequest.user.Nickname != "" && signupRequest.user.Email != "") || signupRequest.user.Password != "" {
 		return http.StatusBadRequest, errors.New("request has empty fields (nickname | email | password)")
 	}
 

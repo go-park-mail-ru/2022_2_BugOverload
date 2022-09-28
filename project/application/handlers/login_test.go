@@ -40,30 +40,38 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody: "unexpected end of JSON input\n",
 			StatusCode:   http.StatusBadRequest,
 		},
-		////  Method not POST
-		//TestCase{
-		//	Method:      http.MethodGet,
-		//	ContentType: "application/json",
-		//	RequestBody: `{"email":"YasaPupkinEzji@top.world":"password":"Widget Adapter"}`,
-		//	StatusCode:  http.StatusMethodNotAllowed,
-		//},
-		////  Body is empty
-		//TestCase{
-		//	Method:      http.MethodPost,
-		//	ContentType: "application/json",
-		//
-		//	ResponseBody: "BadRequest\nContent-Type must be application/json\n",
-		//	StatusCode:   http.StatusBadRequest,
-		//},
-		//// body not JSON
-		//TestCase{
-		//	Method:      http.MethodPost,
-		//	ContentType: "application/xml",
-		//	RequestBody: `<Name>Ellen Adams</Name>`,
-		//
-		//	ResponseBody: "Unsupported Media Type\nContent-Type must be application/json\n",
-		//	StatusCode:   http.StatusUnsupportedMediaType,
-		//},
+		// Body is empty
+		TestCase{
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+
+			ResponseBody: "unexpected end of JSON input\n",
+			StatusCode:   http.StatusBadRequest,
+		},
+		// body not JSON
+		TestCase{
+			Method:      http.MethodPost,
+			ContentType: "application/xml",
+			RequestBody: `<Name>Ellen Adams</Name>`,
+
+			ResponseBody: "unsupported media type\n",
+			StatusCode:   http.StatusUnsupportedMediaType,
+		},
+		//  Empty required field
+		TestCase{
+			Method:       http.MethodPost,
+			ContentType:  "application/json",
+			RequestBody:  `{"password":"Widget Adapter"}`,
+			ResponseBody: "request has empty fields (nickname | email | password)\n",
+			StatusCode:   http.StatusBadRequest,
+		},
+		//  Content-Type not set
+		TestCase{
+			Method:       http.MethodPost,
+			RequestBody:  `{"password":"Widget Adapter"}`,
+			ResponseBody: "Content-Type undefined\n",
+			StatusCode:   http.StatusBadRequest,
+		},
 	}
 
 	url := "http://localhost:8088/v1/auth/login"

@@ -1,6 +1,6 @@
 .PHONY: all launch run_tests check_coverage
 
-all: check launch
+all: check
 
 TARGET = ./project/main.go
 ARGS= ./configs/webserver.txt
