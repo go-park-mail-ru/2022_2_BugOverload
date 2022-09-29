@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
@@ -27,9 +28,9 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var loginRequest structs.UserLoginRequest
-	code, err := loginRequest.Bind(w, r)
+	err := loginRequest.Bind(w, r)
 	if err != nil {
-		http.Error(w, err.Error(), code)
+		httpwrapper.DefHandlerError(w, err)
 		return
 	}
 
@@ -38,12 +39,12 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	//  There must be DataBase and Business logic magic
 	userFromDB, err := ha.storage.GetUser(user.Email)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		httpwrapper.DefHandlerError(w, err)
 		return
 	}
 
 	if userFromDB.Password != user.Password {
-		http.Error(w, "No such combination of user and password", http.StatusBadRequest)
+		httpwrapper.DefHandlerError(w, errorshandlers.LoginCombinationNotFound)
 		return
 	}
 
@@ -59,9 +60,9 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	// Достаем, валидируем и конвертруем параметры в объект
 	var signupRequest structs.UserSignupRequest
-	code, err := signupRequest.Bind(w, r)
+	err := signupRequest.Bind(w, r)
 	if err != nil {
-		http.Error(w, err.Error(), code)
+		httpwrapper.DefHandlerError(w, err)
 		return
 	}
 

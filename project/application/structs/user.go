@@ -2,7 +2,7 @@ package structs
 
 import (
 	"encoding/json"
-	"errors"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"io"
 	"net/http"
 
@@ -19,18 +19,18 @@ type User struct {
 }
 
 // Bind is method for validation and create a data structure from json for processing
-func (u *User) Bind(w http.ResponseWriter, r *http.Request) (int, error) {
+func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return http.StatusBadRequest, errors.New("Content-Type undefined")
+		return errorshandlers.ContentTypeUndefined
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return http.StatusUnsupportedMediaType, errors.New("unsupported media type")
+		return errorshandlers.UnsupportedMediaType
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return http.StatusBadRequest, err
+		return err
 	}
 	defer func() {
 		err = r.Body.Close()
@@ -41,10 +41,10 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return http.StatusBadRequest, err
+		return err
 	}
 
-	return 0, nil
+	return nil
 }
 
 // UserLoginRequest is empty struct with methods for login handler
@@ -53,17 +53,17 @@ type UserLoginRequest struct {
 }
 
 // Bind is func for validation and bind request fields to User struct for login request
-func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) (int, error) {
-	code, err := loginRequest.user.Bind(w, r)
+func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	err := loginRequest.user.Bind(w, r)
 	if err != nil {
-		return code, err
+		return err
 	}
 
 	if (loginRequest.user.Nickname == "" && loginRequest.user.Email == "") || loginRequest.user.Password == "" {
-		return http.StatusBadRequest, errors.New("request has empty fields (nickname | email | password)")
+		return errorshandlers.EmptyFieldAuth
 	}
 
-	return 0, nil
+	return nil
 }
 
 // GetUser is func for parse user fields and create struct User
@@ -86,17 +86,17 @@ type UserSignupRequest struct {
 }
 
 // Bind is func for validation and bind request fields to User struct for signup request
-func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) (int, error) {
-	code, err := signupRequest.user.Bind(w, r)
+func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error {
+	err := signupRequest.user.Bind(w, r)
 	if err != nil {
-		return code, err
+		return err
 	}
 
 	if signupRequest.user.Nickname != "" || signupRequest.user.Email != "" || signupRequest.user.Password != "" {
-		return http.StatusBadRequest, errors.New("request has empty fields (nickname | email | password)")
+		return errorshandlers.EmptyFieldAuth
 	}
 
-	return 0, nil
+	return nil
 }
 
 // GetUser is func for parse user fields and create struct User

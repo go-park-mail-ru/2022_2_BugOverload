@@ -38,7 +38,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: "No such combination of user and password\n",
+			ResponseBody: "no such combination of user and password\n",
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -90,7 +90,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: "Content-Type undefined\n",
+			ResponseBody: "content-type undefined\n",
 			StatusCode:   http.StatusBadRequest,
 		},
 	}
