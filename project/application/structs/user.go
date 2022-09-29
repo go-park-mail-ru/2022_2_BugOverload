@@ -21,11 +21,11 @@ type User struct {
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errorshandlers.ContentTypeUndefined
+		return errorshandlers.ErrContentTypeUndefined
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return errorshandlers.UnsupportedMediaType
+		return errorshandlers.ErrUnsupportedMediaType
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -60,7 +60,7 @@ func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Reques
 	}
 
 	if (loginRequest.user.Nickname == "" && loginRequest.user.Email == "") || loginRequest.user.Password == "" {
-		return errorshandlers.EmptyFieldAuth
+		return errorshandlers.ErrEmptyFieldAuth
 	}
 
 	return nil
@@ -93,7 +93,7 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 	}
 
 	if signupRequest.user.Nickname != "" || signupRequest.user.Email != "" || signupRequest.user.Password != "" {
-		return errorshandlers.EmptyFieldAuth
+		return errorshandlers.ErrEmptyFieldAuth
 	}
 
 	return nil

@@ -44,7 +44,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if userFromDB.Password != user.Password {
-		httpwrapper.DefHandlerError(w, errorshandlers.LoginCombinationNotFound)
+		httpwrapper.DefHandlerError(w, errorshandlers.ErrLoginCombinationNotFound)
 		return
 	}
 

@@ -7,7 +7,7 @@ import (
 )
 
 func DefHandlerError(w http.ResponseWriter, err error) {
-	if errors.Is(err, errorshandlers.UnsupportedMediaType) {
+	if errors.Is(err, errorshandlers.ErrUnsupportedMediaType) {
 		http.Error(w, err.Error(), http.StatusUnsupportedMediaType)
 		return
 	}
