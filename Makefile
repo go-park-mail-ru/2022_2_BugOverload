@@ -1,6 +1,6 @@
 .PHONY: all launch run_tests check_coverage
 
-all: check launch
+all: check build run_tests
 
 TARGET = ./project/main.go
 ARGS= ./configs/webserver.txt
@@ -15,7 +15,7 @@ create_env:
 	${GOPATH}/bin/golangci-lint
 
 check:
-	golangci-lint run --config=linters_config/.golangci.yml
+	${GOPATH}/bin/golangci-lint run --config=linters_config/.golangci.yml
 	go fmt ${PKG}
 
 launch:

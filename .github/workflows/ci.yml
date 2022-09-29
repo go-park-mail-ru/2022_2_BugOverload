@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container: andeo1812/golang_web
-    needs: [check]
+    needs: [ check ]
     steps:
       - uses: actions/checkout@v2
       - run: make build
@@ -18,3 +18,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: main
+  tests:
+    runs-on: ubuntu-latest
+    container: andeo1812/golang_web
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run_tests
