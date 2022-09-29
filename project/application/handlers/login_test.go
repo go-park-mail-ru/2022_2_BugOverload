@@ -25,11 +25,21 @@ func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
-			Method:       http.MethodPost,
-			ContentType:  "application/json",
-			RequestBody:  `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
+
 			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
 			StatusCode:   http.StatusOK,
+		},
+		// Wrong password
+		TestCase{
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
+
+			ResponseBody: "No such combination of user and password\n",
+			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
 		TestCase{
@@ -59,24 +69,27 @@ func TestLoginHandler(t *testing.T) {
 		},
 		// Empty required field - email
 		TestCase{
-			Method:       http.MethodPost,
-			ContentType:  "application/json",
-			RequestBody:  `{"password":"Widget Adapter"}`,
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"password":"Widget Adapter"}`,
+
 			ResponseBody: "request has empty fields (nickname | email | password)\n",
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
 		TestCase{
-			Method:       http.MethodPost,
-			ContentType:  "application/json",
-			RequestBody:  `{"email":"YasaPupkinEzji@top.world"}`,
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
+
 			ResponseBody: "request has empty fields (nickname | email | password)\n",
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
 		TestCase{
-			Method:       http.MethodPost,
-			RequestBody:  `{"password":"Widget Adapter"}`,
+			Method:      http.MethodPost,
+			RequestBody: `{"password":"Widget Adapter"}`,
+
 			ResponseBody: "Content-Type undefined\n",
 			StatusCode:   http.StatusBadRequest,
 		},
