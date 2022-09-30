@@ -1,7 +1,7 @@
 package database
 
 import (
-	"errors"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -20,13 +20,13 @@ func NewCookieStorage() *CookieStorage {
 func (us *CookieStorage) CheckExist(email string) error {
 	_, ok := us.storage[email]
 	if ok {
-		return errors.New("such user exist")
+		return errorshandlers.ErrUserExist
 	}
 
 	return nil
 }
 
-// Insert is method for creating a cookie
-func (us *CookieStorage) Insert(u structs.User) {
+// Create is method for creating a cookie
+func (us *CookieStorage) Create(u structs.User) {
 	us.storage[u.Email] = u
 }

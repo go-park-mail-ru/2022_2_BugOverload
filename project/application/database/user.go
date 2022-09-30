@@ -1,7 +1,7 @@
 package database
 
 import (
-	"errors"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
@@ -19,7 +19,7 @@ func NewUserStorage() *UserStorage {
 func (us *UserStorage) CheckExist(email string) error {
 	_, ok := us.storage[email]
 	if ok {
-		return errors.New("such user exist")
+		return errorshandlers.ErrUserExist
 	}
 
 	return nil
@@ -33,7 +33,8 @@ func (us *UserStorage) Create(u structs.User) {
 // Return user using email (primary key)
 func (us *UserStorage) GetUser(email string) (structs.User, error) {
 	if us.CheckExist(email) == nil {
-		return structs.User{}, errors.New("such user doesn't exist")
+		return structs.User{}, errorshandlers.ErrUserNotExist
 	}
+
 	return us.storage[email], nil
 }

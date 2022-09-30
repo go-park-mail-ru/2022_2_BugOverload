@@ -98,14 +98,18 @@ func TestLoginHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth/login"
 
 	us := database.NewUserStorage()
-	us.Create(structs.User{
+	user := structs.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 		Avatar:   "URL",
-	})
+	}
+	us.Create(user)
 
-	authHandler := handlers.NewHandlerAuth(us)
+	cs := database.NewCookieStorage()
+	cs.Create(user)
+
+	authHandler := handlers.NewHandlerAuth(us, cs)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)

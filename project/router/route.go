@@ -10,12 +10,14 @@ import (
 )
 
 // NewRouter is constructor for mux
-func NewRouter(us *database.UserStorage) *mux.Router {
+func NewRouter(us *database.UserStorage, cs *database.CookieStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	authHandler := handlers.NewHandlerAuth(us)
+	authHandler := handlers.NewHandlerAuth(us, cs)
 	router.HandleFunc("/v1/auth/signup", authHandler.Signup).Methods(http.MethodPost)
 	router.HandleFunc("/v1/auth/login", authHandler.Login).Methods(http.MethodPost)
+	router.HandleFunc("/v1/auth", authHandler.Login).Methods(http.MethodPost)
+	router.HandleFunc("/v1/auth/logout", authHandler.Login).Methods(http.MethodPost)
 
 	http.Handle("/", router)
 

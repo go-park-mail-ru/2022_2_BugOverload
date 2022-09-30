@@ -11,22 +11,20 @@ import (
 
 // HandlerAuth is structure for API auth, login and signup processing
 type HandlerAuth struct {
-	storage *database.UserStorage //  UserStorage is tmp simple impl similar DB
+	userStorage   *database.UserStorage
+	cookieStorage *database.CookieStorage
 	//  Менеджер кеша
 	//  Логер
 	//  Менеджер моделей
 }
 
 // NewHandlerAuth is constructor for HandlerAuth
-func NewHandlerAuth(us *database.UserStorage) *HandlerAuth {
-	return &HandlerAuth{us}
+func NewHandlerAuth(us *database.UserStorage, cs *database.CookieStorage) *HandlerAuth {
+	return &HandlerAuth{us, cs}
 }
 
 // Login is handling request
 func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
-	//  Логируем входящий HTTP запрос
-
-	// Достаем, валидируем и конвертруем параметры в объект
 	var loginRequest structs.UserLoginRequest
 	err := loginRequest.Bind(w, r)
 	if err != nil {
@@ -36,8 +34,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	user := loginRequest.GetUser()
 
-	//  There must be DataBase and Business logic magic
-	userFromDB, err := ha.storage.GetUser(user.Email)
+	userFromDB, err := ha.userStorage.GetUser(user.Email)
 	if err != nil {
 		httpwrapper.DefHandlerError(w, err)
 		return
@@ -48,17 +45,11 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Return only required API fields
 	httpwrapper.ResponseOK(w, http.StatusOK, loginRequest.ToPublic(&userFromDB))
-
-	//  Логируем ответ
 }
 
 // Signup is handling request
 func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
-	//  Логируем входящий HTTP запрос
-
-	// Достаем, валидируем и конвертруем параметры в объект
 	var signupRequest structs.UserSignupRequest
 	err := signupRequest.Bind(w, r)
 	if err != nil {
@@ -68,16 +59,12 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	user := signupRequest.GetUser()
 
-	//  There must be DataBase and Business logic magic
-	suchUserExist := ha.storage.CheckExist(user.Email)
+	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist != nil {
 		http.Error(w, "A user with such a mail already exists", http.StatusBadRequest)
 		return
 	}
-	ha.storage.Create(*user)
-	//  There must be DataBase and Business logic magic
+	ha.userStorage.Create(*user)
 
 	httpwrapper.ResponseOK(w, http.StatusCreated, signupRequest.ToPublic(user))
-
-	//  Логируем ответ
 }

@@ -13,7 +13,6 @@ func ResponseOK(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 		return
 	}
 
-	//  Отдаем ответ
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(statusCode)
