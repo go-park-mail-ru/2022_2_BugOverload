@@ -20,17 +20,13 @@ func NewCookieStorage() *CookieStorage {
 }
 
 // CheckExist is method to check the existence of such a cookie in the database
-func (cs *CookieStorage) CheckExist(email string) error {
-	_, ok := cs.storage[email]
-	if ok {
-		return errorshandlers.ErrUserExist
-	}
-
-	return nil
+func (cs *CookieStorage) CheckExist(cookie string) bool {
+	_, ok := cs.storage[cookie]
+	return ok
 }
 
 // Create is method for creating a cookie
-func (cs *CookieStorage) Create(email string) {
+func (cs *CookieStorage) Create(email string) string {
 	expiration := time.Now().Add(TimeoutLiveCookie * time.Hour)
 
 	sessionID := strconv.Itoa(len(cs.storage) + 1)
@@ -42,14 +38,27 @@ func (cs *CookieStorage) Create(email string) {
 		HttpOnly: true,
 	}
 
-	cs.storage[email] = cookie
+	cookieStr := cookie.String()
+
+	cs.storage[cookieStr] = cookie
+
+	return cookieStr
 }
 
-// GetCookie return exist cookie
-func (cs *CookieStorage) GetCookie(email string) (http.Cookie, error) {
-	if cs.CheckExist(email) == nil {
-		return http.Cookie{}, errorshandlers.ErrUserNotExist
+// GetCookie return user using email (primary key)
+func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
+	if !cs.CheckExist(cookie) {
+		return http.Cookie{}, errorshandlers.ErrCookieNotExist
 	}
 
-	return cs.storage[email], nil
+	return cs.storage[cookie], nil
+}
+
+// DeleteCookie delete cookie from storage
+func (cs *CookieStorage) DeleteCookie(cookie string) error {
+	if !cs.CheckExist(cookie) {
+		return errorshandlers.ErrCookieNotExist
+	}
+
+	return nil
 }

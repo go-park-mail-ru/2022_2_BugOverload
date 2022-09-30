@@ -132,7 +132,7 @@ func TestLoginHandler(t *testing.T) {
 		resp := w.Result()
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+			respCookie := resp.Header.Get("Cookie")
 
 			if strings.HasPrefix(respCookie, item.ResponseCookie) {
 				t.Errorf("[%d] wrong cookie: got [%s], cookie must have [%s]", caseNum, respCookie, item.ResponseCookie)
@@ -150,7 +150,7 @@ func TestLoginHandler(t *testing.T) {
 
 		bodyStr := string(body)
 		if bodyStr != item.ResponseBody {
-			t.Errorf("[%d] wrong Response: got [%+v], expected [%+v]", caseNum, bodyStr, item.ResponseBody)
+			t.Errorf("[%d] wrong Response: got [%s], expected [%s]", caseNum, bodyStr, item.ResponseBody)
 		}
 	}
 }

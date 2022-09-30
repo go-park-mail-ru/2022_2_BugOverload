@@ -53,22 +53,16 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 	user := signupRequest.GetUser()
 
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
-	if suchUserExist != nil {
+	if suchUserExist {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrSignupUserExist)
 		return
 	}
 
 	ha.userStorage.Create(*user)
 
-	ha.cookieStorage.Create(user.Email)
+	newCookie := ha.cookieStorage.Create(user.Email)
 
-	newCookie, err := ha.cookieStorage.GetCookie(user.Email)
-	if err != nil {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrCookieNotExist)
-		return
-	}
+	w.Header().Set("Cookie", newCookie)
 
-	http.SetCookie(w, &newCookie)
-
-	httpwrapper.ResponseOK(w, http.StatusCreated, signupRequest.ToPublic(user))
+	httpwrapper.Success(w, http.StatusCreated, signupRequest.ToPublic(user))
 }

@@ -16,13 +16,9 @@ func NewUserStorage() *UserStorage {
 }
 
 // CheckExist is method to check the existence of such a cookie in the database
-func (us *UserStorage) CheckExist(email string) error {
+func (us *UserStorage) CheckExist(email string) bool {
 	_, ok := us.storage[email]
-	if ok {
-		return errorshandlers.ErrUserExist
-	}
-
-	return nil
+	return ok
 }
 
 // Create is method for creating a user in database
@@ -32,7 +28,7 @@ func (us *UserStorage) Create(u structs.User) {
 
 // GetUser return user using email (primary key)
 func (us *UserStorage) GetUser(email string) (structs.User, error) {
-	if us.CheckExist(email) == nil {
+	if !us.CheckExist(email) {
 		return structs.User{}, errorshandlers.ErrUserNotExist
 	}
 

@@ -10,5 +10,6 @@ var (
 	ErrUserExist                = errors.New("such user exist")
 	ErrUserNotExist             = errors.New("such user doesn't exist")
 	ErrSignupUserExist          = errors.New("a user with such a mail already exists")
-	ErrCookieNotExist           = errors.New("for this user cookie not exists")
+	ErrNoCookie                 = errors.New("request not have cookie")
+	ErrCookieNotExist           = errors.New("no such cookie")
 )

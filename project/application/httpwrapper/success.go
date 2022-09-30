@@ -5,11 +5,11 @@ import (
 	"net/http"
 )
 
-// ResponseOK is function for generating response
-func ResponseOK(w http.ResponseWriter, statusCode int, someStruct interface{}) {
+// Success is function for generating response success
+func Success(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		DefHandlerError(w, err)
 		return
 	}
 
@@ -19,7 +19,7 @@ func ResponseOK(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 
 	_, err = w.Write(out)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		DefHandlerError(w, err)
 		return
 	}
 }
