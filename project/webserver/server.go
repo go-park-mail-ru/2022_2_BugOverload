@@ -19,14 +19,16 @@ func Launch(options options.Options, router *mux.Router) {
 		return
 	}
 
+	fullAddr := serverOption.IP + serverOption.Port
+
 	server := http.Server{
-		Addr:         serverOption.Addr,
+		Addr:         fullAddr,
 		Handler:      router,
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,
 	}
 
-	logger.Info("starting server at " + serverOption.Addr)
+	logger.Info("starting server at " + fullAddr)
 
 	err = server.ListenAndServe()
 	if err != nil {
