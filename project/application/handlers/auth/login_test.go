@@ -30,7 +30,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
-			ResponseCookie: "1" + "YasaPupkinEzji@top.world",
+			ResponseCookie: "YasaPupkinEzji@top.world",
 			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
 			StatusCode:     http.StatusOK,
 		},
@@ -109,7 +109,6 @@ func TestLoginHandler(t *testing.T) {
 	us.Create(user)
 
 	cs := database.NewCookieStorage()
-	cs.Create(user.Email)
 
 	authHandler := auth.NewHandlerAuth(us, cs)
 
@@ -134,8 +133,8 @@ func TestLoginHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Cookie")
 
-			if strings.HasPrefix(respCookie, item.ResponseCookie) {
-				t.Errorf("[%d] wrong cookie: got [%s], cookie must have [%s]", caseNum, respCookie, item.ResponseCookie)
+			if respCookie == "" {
+				t.Errorf("[%d] wrong cookie: got [%s], cookie must be", caseNum, respCookie)
 			}
 		}
 

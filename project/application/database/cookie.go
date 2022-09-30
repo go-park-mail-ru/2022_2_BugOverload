@@ -1,10 +1,11 @@
 package database
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"net/http"
 	"strconv"
 	"time"
+
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 )
 
 const TimeoutLiveCookie = 10
