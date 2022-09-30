@@ -92,7 +92,7 @@ func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Requ
 		return err
 	}
 
-	if signupRequest.user.Nickname != "" || signupRequest.user.Email != "" || signupRequest.user.Password != "" {
+	if signupRequest.user.Nickname == "" || signupRequest.user.Email == "" || signupRequest.user.Password == "" {
 		return errorshandlers.ErrEmptyFieldAuth
 	}
 
