@@ -62,7 +62,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	newCookie := ha.cookieStorage.Create(user.Email)
 
-	w.Header().Set("Cookie", newCookie)
+	w.Header().Set("Set-Cookie", newCookie)
 
-	httpwrapper.Success(w, http.StatusCreated, signupRequest.ToPublic(user))
+	httpwrapper.Response(w, http.StatusCreated, signupRequest.ToPublic(user))
 }

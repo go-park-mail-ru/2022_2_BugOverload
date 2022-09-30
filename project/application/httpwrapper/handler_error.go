@@ -7,16 +7,21 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 )
 
+//  type ErrResponse struct {
+//  }
+
 func DefHandlerError(w http.ResponseWriter, err error) {
+	body := `{"error":"` + err.Error() + `"}`
+
 	if errors.Is(err, errorshandlers.ErrUnsupportedMediaType) {
-		http.Error(w, err.Error(), http.StatusUnsupportedMediaType)
+		Response(w, http.StatusUnsupportedMediaType, body)
 		return
 	}
 
 	if errors.Is(err, errorshandlers.ErrCookieNotExist) {
-		http.Error(w, err.Error(), http.StatusForbidden)
+		Response(w, http.StatusForbidden, body)
 		return
 	}
 
-	http.Error(w, err.Error(), http.StatusBadRequest)
+	Response(w, http.StatusBadRequest, body)
 }

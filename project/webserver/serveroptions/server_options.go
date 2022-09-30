@@ -12,7 +12,6 @@ import (
 
 // ServerOptions is struct for defining a server preset of work settings
 type ServerOptions struct {
-	IP           string
 	Port         string
 	ReadTimeout  int
 	WriteTimeout int
@@ -49,16 +48,14 @@ func GetServerOptions(pathConfig string) (ServerOptions, error) {
 		keyValue = append(keyValue, split)
 	}
 
-	o.IP = keyValue[0][1]
+	o.Port = keyValue[0][1]
 
-	o.Port = keyValue[1][1]
-
-	o.ReadTimeout, err = strconv.Atoi(keyValue[2][1])
+	o.ReadTimeout, err = strconv.Atoi(keyValue[1][1])
 	if err != nil {
 		return ServerOptions{}, errors.New("conversion error for the parameter - " + keyValue[1][0])
 	}
 
-	o.WriteTimeout, err = strconv.Atoi(keyValue[3][1])
+	o.WriteTimeout, err = strconv.Atoi(keyValue[2][1])
 	if err != nil {
 		return ServerOptions{}, errors.New("conversion error for the parameter - " + keyValue[2][0])
 	}
@@ -72,10 +69,6 @@ func GetServerOptions(pathConfig string) (ServerOptions, error) {
 }
 
 func (o *ServerOptions) checkServerOptions() error {
-	if o.IP == "" {
-		return errors.New("IP not found")
-	}
-
 	if o.Port == "" {
 		return errors.New("port not found")
 	}

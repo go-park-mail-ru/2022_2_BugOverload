@@ -40,7 +40,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: "no such combination of user and password\n",
+			ResponseBody: `{"error":"no such combination of user and password"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -49,7 +49,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
-			ResponseBody: "unexpected end of JSON input\n",
+			ResponseBody: `{"error":"unexpected end of JSON input"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
@@ -57,7 +57,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
-			ResponseBody: "unexpected end of JSON input\n",
+			ResponseBody: `{"error":"unexpected end of JSON input"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -66,7 +66,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: "unsupported media type\n",
+			ResponseBody: `{"error":"unsupported media type"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -75,7 +75,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: "request has empty fields (nickname | email | password)\n",
+			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
@@ -84,7 +84,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
 
-			ResponseBody: "request has empty fields (nickname | email | password)\n",
+			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
@@ -92,7 +92,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: "content-type undefined\n",
+			ResponseBody: `{"error":"content-type undefined"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}
@@ -131,7 +131,7 @@ func TestLoginHandler(t *testing.T) {
 		resp := w.Result()
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Cookie")
+			respCookie := resp.Header.Get("Set-Cookie")
 
 			if respCookie == "" {
 				t.Errorf("[%d] wrong cookie: got [%s], cookie must be", caseNum, respCookie)

@@ -66,7 +66,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	newCookie := ha.cookieStorage.Create(user.Email)
 
-	w.Header().Set("Cookie", newCookie)
+	w.Header().Set("Set-Cookie", newCookie)
 
-	httpwrapper.Success(w, http.StatusOK, loginRequest.ToPublic(&userFromDB))
+	httpwrapper.Response(w, http.StatusOK, loginRequest.ToPublic(&userFromDB))
 }

@@ -24,5 +24,7 @@ func main() {
 
 	router := router_.NewRouter(us, cs)
 
-	webserver.Launch(options, router)
+	corsOptions := router_.NewCorsOptions()
+
+	webserver.Launch(options, router, corsOptions)
 }

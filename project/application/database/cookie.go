@@ -39,11 +39,11 @@ func (cs *CookieStorage) Create(email string) string {
 		HttpOnly: true,
 	}
 
-	cookieStr := cookie.String()
+	cookieStrFullName := sessionID + "=" + email
 
-	cs.storage[cookieStr] = cookie
+	cs.storage[cookieStrFullName] = cookie
 
-	return cookieStr
+	return cookie.String()
 }
 
 // GetCookie return user using email (primary key)

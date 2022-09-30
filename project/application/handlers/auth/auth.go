@@ -1,11 +1,12 @@
 package auth
 
 import (
+	"net/http"
+
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
-	"net/http"
 )
 
 // HandlerAuth is structure for API auth, login and signup processing
@@ -74,5 +75,5 @@ func (ha *HandlerAuth) Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpwrapper.Success(w, http.StatusOK, authRequest.ToPublic(&userFromDB))
+	httpwrapper.Response(w, http.StatusOK, authRequest.ToPublic(&userFromDB))
 }

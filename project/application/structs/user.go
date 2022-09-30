@@ -24,6 +24,8 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 		return errorshandlers.ErrContentTypeUndefined
 	}
 
+	logger.Info(r.Header.Get("Content-Type"))
+
 	if r.Header.Get("Content-Type") != "application/json" {
 		return errorshandlers.ErrUnsupportedMediaType
 	}
