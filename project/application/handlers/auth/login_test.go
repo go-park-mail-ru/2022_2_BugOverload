@@ -1,4 +1,4 @@
-package handlers_test
+package auth_test
 
 import (
 	"io"
@@ -8,17 +8,18 @@ import (
 	"testing"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers/auth"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
 // TestCase is structure for API testing
 type TestCase struct {
-	Method       string
-	RequestBody  string
-	ResponseBody string
-	ContentType  string
-	StatusCode   int
+	Method         string
+	ContentType    string
+	RequestBody    string
+	ResponseCookie string
+	ResponseBody   string
+	StatusCode     int
 }
 
 func TestLoginHandler(t *testing.T) {
@@ -29,8 +30,9 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
-			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
-			StatusCode:   http.StatusOK,
+			ResponseCookie: "1" + "YasaPupkinEzji@top.world",
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
+			StatusCode:     http.StatusOK,
 		},
 		// Wrong password
 		TestCase{
@@ -107,9 +109,9 @@ func TestLoginHandler(t *testing.T) {
 	us.Create(user)
 
 	cs := database.NewCookieStorage()
-	cs.Create(user)
+	cs.Create(user.Email)
 
-	authHandler := handlers.NewHandlerAuth(us, cs)
+	authHandler := auth.NewHandlerAuth(us, cs)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -118,6 +120,7 @@ func TestLoginHandler(t *testing.T) {
 		if item.ContentType != "" {
 			req.Header.Set("Content-Type", item.ContentType)
 		}
+
 		w := httptest.NewRecorder()
 
 		authHandler.Login(w, req)
@@ -127,6 +130,14 @@ func TestLoginHandler(t *testing.T) {
 		}
 
 		resp := w.Result()
+
+		if item.ResponseCookie != "" {
+			respCookie := resp.Header.Get("Set-Cookie")
+
+			if strings.HasPrefix(respCookie, item.ResponseCookie) {
+				t.Errorf("[%d] wrong cookie: got [%s], cookie must have [%s]", caseNum, respCookie, item.ResponseCookie)
+			}
+		}
 
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {

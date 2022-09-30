@@ -30,7 +30,7 @@ func (us *UserStorage) Create(u structs.User) {
 	us.storage[u.Email] = u
 }
 
-// Return user using email (primary key)
+// GetUser return user using email (primary key)
 func (us *UserStorage) GetUser(email string) (structs.User, error) {
 	if us.CheckExist(email) == nil {
 		return structs.User{}, errorshandlers.ErrUserNotExist

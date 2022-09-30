@@ -9,4 +9,6 @@ var (
 	ErrLoginCombinationNotFound = errors.New("no such combination of user and password")
 	ErrUserExist                = errors.New("such user exist")
 	ErrUserNotExist             = errors.New("such user doesn't exist")
+	ErrSignupUserExist          = errors.New("a user with such a mail already exists")
+	ErrCookieNotExist           = errors.New("for this user cookie not exists")
 )
