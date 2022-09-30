@@ -80,7 +80,8 @@ func (hf *HandlerFilms) GetFilmToPoster(w http.ResponseWriter, r *http.Request) 
 	// Логируем входящий HTTP запрос
 
 	// Create response (film collection)
-	response, err := hf.storage.GetFilm(12)
+
+	response, err := hf.storage.GetFilm(uint(hf.storage.GetStorageLen() - 1))
 	if err != nil {
 		logger.Error(err.Error() + " 404 get film to poster")
 		http.Error(w, errorshandlers.ErrFilmNotFound.Error(), http.StatusNotFound)

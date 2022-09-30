@@ -21,7 +21,8 @@ func main() {
 	//  cs := database.NewCookieStorage()
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStorage()
+	fs.FillFilmStoragePartOne()
+	fs.FillFilmStoragePartTwo()
 	//  По аналогии кеш, логер и остальные крупные отдельные сущности
 
 	router := router_.NewRouter(us, fs)

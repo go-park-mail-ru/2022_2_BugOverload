@@ -47,108 +47,124 @@ func (fs *FilmStorage) GetStorageLen() int {
 }
 
 // Temporary function, filling local storage
-func (fs *FilmStorage) FillFilmStorage() {
+func (fs *FilmStorage) FillFilmStoragePartOne() {
 	// First collection
+	var currentID uint
 	fs.AddFilm(structs.Film{
-		ID:        0,
+		ID:        currentID,
 		Name:      "Дюна",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/dune_poster.jpg",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        1,
+		ID:        currentID,
 		Name:      "Убить Билла",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/8.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        2,
+		ID:        currentID,
 		Name:      "Головокружение",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/9.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        3,
+		ID:        currentID,
 		Name:      "Доказательство смерти",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/5.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        4,
+		ID:        currentID,
 		Name:      "Чунгингский экспресс",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/7.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        5,
+		ID:        currentID,
 		Name:      "Девушка с татуировкой дракона",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/6.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+}
+
+func (fs *FilmStorage) FillFilmStoragePartTwo() {
+	var currentID uint = 6
 	// Second collection
 	fs.AddFilm(structs.Film{
-		ID:        6,
+		ID:        currentID,
 		Name:      "Дюна",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/dune_poster.jpg",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        7,
+		ID:        currentID,
 		Name:      "Человек",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/1.png",
 		Genres:    []string{"Документальный", "Смотрю и плачу"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        8,
+		ID:        currentID,
 		Name:      "Люси",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/2.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        9,
+		ID:        currentID,
 		Name:      "Властелин колец. Братство кольца",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/3.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        10,
+		ID:        currentID,
 		Name:      "Дом, который построил Джек",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/4.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:        11,
+		ID:        currentID,
 		Name:      "Доказательство смерти",
 		YearProd:  "2021",
 		Rating:    "7.1",
 		PosterVer: "asserts/img/posters/5.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	// Third collection (poster)
 	fs.AddFilm(structs.Film{
-		ID:          12,
+		ID:          currentID,
 		Name:        "Звёздные войны. Эпизод IV: Новая надежда",
 		Description: "Может хватит бухтеть и дестабилизировать ситуацию в стране? Световой меч делает вжух-вжух",
 		YearProd:    "2021",
@@ -156,8 +172,9 @@ func (fs *FilmStorage) FillFilmStorage() {
 		PosterVer:   "asserts/img/StarWars.jpeg",
 		Genres:      []string{"Фэнтези", "Приключения"},
 	})
+	currentID++
 	fs.AddFilm(structs.Film{
-		ID:          13,
+		ID:          currentID,
 		Name:        "Дюна",
 		Description: "Ну типо по пустыням ходят, а ещё черви там всякие делают уууу",
 		YearProd:    "2021",
