@@ -14,23 +14,25 @@ import (
 
 // TestCase is structure for API testing
 type TestCase struct {
-	Method         string
-	ContentType    string
-	RequestBody    string
-	ResponseCookie string
-	ResponseBody   string
-	StatusCode     int
+	Method          string
+	ContentType     string
+	RequestBody     string
+	CookieUserEmail string
+	ResponseCookie  string
+	ResponseBody    string
+	StatusCode      int
 }
 
 func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
-			Method:      http.MethodPost,
-			ContentType: "application/json",
-			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
+			Method:          http.MethodPost,
+			ContentType:     "application/json",
+			RequestBody:     `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
+			CookieUserEmail: "YasaPupkinEzji@top.world",
 
-			ResponseCookie: "YasaPupkinEzji@top.world",
+			ResponseCookie: "1=YasaPupkinEzji@top.world",
 			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
 			StatusCode:     http.StatusOK,
 		},
@@ -133,8 +135,10 @@ func TestLoginHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			if respCookie == "" {
-				t.Errorf("[%d] wrong cookie: got [%s], cookie must be", caseNum, respCookie)
+			fullCookieStr := cs.Create(item.CookieUserEmail)
+
+			if strings.HasPrefix(fullCookieStr, item.ResponseCookie) {
+				t.Errorf("[%d] wrong cookie: got [%s], cookie must be [%s]", caseNum, respCookie, item.ResponseCookie)
 			}
 		}
 

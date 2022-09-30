@@ -8,7 +8,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 )
 
-const TimeoutLiveCookie = 10
+const TimeoutLiveCookie = 10 * time.Hour
 
 // CookieStorage is TMP impl database for cookie
 type CookieStorage struct {
@@ -28,7 +28,7 @@ func (cs *CookieStorage) CheckExist(cookie string) bool {
 
 // Create is method for creating a cookie
 func (cs *CookieStorage) Create(email string) string {
-	expiration := time.Now().Add(TimeoutLiveCookie * time.Hour)
+	expiration := time.Now().Add(TimeoutLiveCookie)
 
 	sessionID := strconv.Itoa(len(cs.storage) + 1)
 
@@ -56,10 +56,16 @@ func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
 }
 
 // DeleteCookie delete cookie from storage
-func (cs *CookieStorage) DeleteCookie(cookie string) error {
+func (cs *CookieStorage) DeleteCookie(cookie string) (string, error) {
 	if !cs.CheckExist(cookie) {
-		return errorshandlers.ErrCookieNotExist
+		return "", errorshandlers.ErrCookieNotExist
 	}
 
-	return nil
+	delete(cs.storage, cookie)
+
+	oldCookie := cs.storage[cookie]
+
+	oldCookie.Expires = time.Now().Add(-TimeoutLiveCookie)
+
+	return oldCookie.String(), nil
 }

@@ -20,8 +20,6 @@ func NewRouter(us *database.UserStorage, cs *database.CookieStorage) *mux.Router
 	router.HandleFunc("/v1/auth", authHandler.Auth).Methods(http.MethodGet)
 	router.HandleFunc("/v1/auth/logout", authHandler.Logout).Methods(http.MethodGet)
 
-	router.Use(mux.CORSMethodMiddleware(router))
-
 	http.Handle("/", router)
 
 	return router

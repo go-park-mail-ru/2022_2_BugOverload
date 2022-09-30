@@ -38,11 +38,13 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	err = ha.cookieStorage.DeleteCookie(cookieStr)
+	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
 		httpwrapper.DefHandlerError(w, err)
 		return
 	}
+
+	w.Header().Set("Set-Cookie", badCookie)
 
 	w.WriteHeader(http.StatusOK)
 }
