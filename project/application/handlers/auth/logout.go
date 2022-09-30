@@ -1,10 +1,11 @@
 package auth
 
 import (
+	"net/http"
+
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
-	"net/http"
 )
 
 // UserLogoutRequest is empty struct with methods for login handler

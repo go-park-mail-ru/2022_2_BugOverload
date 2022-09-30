@@ -2,11 +2,12 @@ package structs
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"io"
 	"net/http"
 
 	"github.com/wonderivan/logger"
+
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 )
 
 // User is a carrier structure for all movie attributes and specifying them for json conversion
