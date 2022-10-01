@@ -1,4 +1,4 @@
-package router
+package cors
 
 import (
 	"net/http"

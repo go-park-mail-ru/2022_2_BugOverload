@@ -21,7 +21,7 @@ func DefHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
-	if errors.Is(err, errorshandlers.ErrCookieNotExist) {
+	if errors.Is(err, errorshandlers.ErrCookieNotExist) || errors.Is(err, errorshandlers.ErrLoginCombinationNotFound) {
 		Response(w, http.StatusForbidden, errResp)
 		return
 	}
