@@ -2,14 +2,11 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
-
-	"github.com/wonderivan/logger"
 )
 
 type HandlerFilms struct {
@@ -33,7 +30,6 @@ func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if len(films) == 0 {
-		logger.Error(strconv.FormatInt(int64(len(films)), 10) + " 404 get popular films")
 		http.Error(w, errorshandlers.ErrFilmsNotFound.Error(), http.StatusNotFound)
 		return
 	}
@@ -55,7 +51,6 @@ func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request)
 	}
 
 	if len(films) == 0 {
-		logger.Error(strconv.FormatInt(int64(hf.storage.GetStorageLen()), 10) + " 404 get films in cinema")
 		http.Error(w, errorshandlers.ErrFilmsNotFound.Error(), http.StatusNotFound)
 		return
 	}
@@ -69,7 +64,6 @@ func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request)
 func (hf *HandlerFilms) GetFilmToPoster(w http.ResponseWriter, r *http.Request) {
 	response, err := hf.storage.GetFilm(uint(hf.storage.GetStorageLen() - 1))
 	if err != nil {
-		logger.Error(err.Error() + " 404 get film to poster")
 		http.Error(w, errorshandlers.ErrFilmNotFound.Error(), http.StatusNotFound)
 		return
 	}
