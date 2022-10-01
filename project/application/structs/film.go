@@ -4,7 +4,7 @@ package structs
 type Film struct {
 	ID          uint     `json:"film_id,omitempty"`
 	Name        string   `json:"film_name,omitempty"`
-	Description string   `json:"Description,omitempty"`
+	Description string   `json:"description,omitempty"`
 	Type        string   `json:"film_type,omitempty"`
 	YearProd    string   `json:"year_prod,omitempty"`
 	ProdCompany string   `json:"prod_company,omitempty"`
@@ -13,5 +13,6 @@ type Film struct {
 	Duration    string   `json:"duration,omitempty"`
 	PosterHor   string   `json:"poster_hor,omitempty"`
 	PosterVer   string   `json:"poster_ver,omitempty"`
+	Rating      string   `json:"film_rating,omitempty"`
 	Genres      []string `json:"genres,omitempty"`
 }

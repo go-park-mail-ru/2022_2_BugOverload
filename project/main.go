@@ -20,8 +20,13 @@ func main() {
 
 	us := database.NewUserStorage()
 	cs := database.NewCookieStorage()
+	fs := database.NewFilmStorage()
+  
+	fs.FillFilmStoragePartOne()
+	fs.FillFilmStoragePartTwo()
 
-	router := router_.NewRouter(us, cs)
+	router := router_.NewRouter(us, cs, fs)
+
 	corsOptions := cors.NewCorsOptions()
 
 	webserver.Launch(options, router, corsOptions)
