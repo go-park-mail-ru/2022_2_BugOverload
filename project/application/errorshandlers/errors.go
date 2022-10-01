@@ -12,4 +12,6 @@ var (
 	ErrSignupUserExist          = errors.New("a user with such a mail already exists")
 	ErrNoCookie                 = errors.New("request not have cookie")
 	ErrCookieNotExist           = errors.New("no such cookie")
+  ErrFilmNotFound             = errors.New(`such film doesn't exist`)
+	ErrFilmsNotFound            = errors.New(`no such films`)
 )
