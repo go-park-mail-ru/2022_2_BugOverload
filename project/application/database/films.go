@@ -169,7 +169,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		Description: "Может хватит бухтеть и дестабилизировать ситуацию в стране? Световой меч делает вжух-вжух",
 		YearProd:    "2021",
 		Rating:      "7.1",
-		PosterVer:   "asserts/img/StarWars.jpeg",
+		PosterHor:   "asserts/img/StarWars.jpeg",
 		Genres:      []string{"Фэнтези", "Приключения"},
 	})
 	currentID++
@@ -179,7 +179,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		Description: "Ну типо по пустыням ходят, а ещё черви там всякие делают уууу",
 		YearProd:    "2021",
 		Rating:      "7.1",
-		PosterVer:   "asserts/img/dune.jpg",
+		PosterHor:   "asserts/img/dune.jpg",
 		Genres:      []string{"Фэнтези", "Приключения"},
 	})
 }
