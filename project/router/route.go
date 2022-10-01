@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-  "go-park-mail-ru/2022_2_BugOverload/project/application/handlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers/auth"
 )
 

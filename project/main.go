@@ -21,7 +21,7 @@ func main() {
 	us := database.NewUserStorage()
 	cs := database.NewCookieStorage()
 	fs := database.NewFilmStorage()
-  
+
 	fs.FillFilmStoragePartOne()
 	fs.FillFilmStoragePartTwo()
 
