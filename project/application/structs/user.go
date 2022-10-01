@@ -2,11 +2,12 @@ package structs
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"io"
 	"net/http"
 
 	"github.com/wonderivan/logger"
+
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 )
 
 // User is a carrier structure for all movie attributes and specifying them for json conversion
@@ -23,6 +24,8 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
 		return errorshandlers.ErrContentTypeUndefined
 	}
+
+	logger.Info(r.Header.Get("Content-Type"))
 
 	if r.Header.Get("Content-Type") != "application/json" {
 		return errorshandlers.ErrUnsupportedMediaType
@@ -45,69 +48,4 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	return nil
-}
-
-// UserLoginRequest is empty struct with methods for login handler
-type UserLoginRequest struct {
-	user User
-}
-
-// Bind is func for validation and bind request fields to User struct for login request
-func (loginRequest *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error {
-	err := loginRequest.user.Bind(w, r)
-	if err != nil {
-		return err
-	}
-
-	if (loginRequest.user.Nickname == "" && loginRequest.user.Email == "") || loginRequest.user.Password == "" {
-		return errorshandlers.ErrEmptyFieldAuth
-	}
-
-	return nil
-}
-
-// GetUser is func for parse user fields and create struct User
-func (loginRequest *UserLoginRequest) GetUser() *User {
-	return &loginRequest.user
-}
-
-// ToPublic return fields required by API
-func (loginRequest *UserLoginRequest) ToPublic(u *User) User {
-	return User{
-		Email:    u.Email,
-		Nickname: u.Nickname,
-		Avatar:   u.Avatar,
-	}
-}
-
-// UserSignupRequest is empty struct with methods for signup handler
-type UserSignupRequest struct {
-	user User
-}
-
-// Bind is func for validation and bind request fields to User struct for signup request
-func (signupRequest *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error {
-	err := signupRequest.user.Bind(w, r)
-	if err != nil {
-		return err
-	}
-
-	if signupRequest.user.Nickname != "" || signupRequest.user.Email != "" || signupRequest.user.Password != "" {
-		return errorshandlers.ErrEmptyFieldAuth
-	}
-
-	return nil
-}
-
-// GetUser is func for parse user fields and create struct User
-func (signupRequest *UserSignupRequest) GetUser() *User {
-	return &signupRequest.user
-}
-
-// ToPublic return fields required by API
-func (signupRequest *UserSignupRequest) ToPublic(u *User) User {
-	return User{
-		Email:    u.Email,
-		Nickname: u.Nickname,
-	}
 }

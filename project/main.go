@@ -18,14 +18,16 @@ func main() {
 	}
 
 	us := database.NewUserStorage()
-	//  cs := database.NewCookieStorage()
+	cs := database.NewCookieStorage()
 
 	fs := database.NewFilmStorage()
 	fs.FillFilmStoragePartOne()
 	fs.FillFilmStoragePartTwo()
 	//  По аналогии кеш, логер и остальные крупные отдельные сущности
 
-	router := router_.NewRouter(us, fs)
+	router := router_.NewRouter(us, cs, fs)
 
-	webserver.Launch(options, router)
+	corsOptions := router_.NewCorsOptions()
+
+	webserver.Launch(options, router, corsOptions)
 }
