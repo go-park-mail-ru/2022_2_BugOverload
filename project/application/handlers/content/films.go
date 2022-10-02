@@ -1,6 +1,7 @@
 package content
 
 import (
+	"math/rand"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
@@ -32,19 +33,20 @@ func (pfr *PopularFilmsRequest) AddFilm(film structs.Film) {
 		YearProd:  film.YearProd,
 		PosterVer: film.PosterVer,
 		Genres:    film.Genres,
+		Rating:    film.Rating,
 	})
 }
 
 // CreateResponse return FilmCollection struct for sending response in PopularFilmsRequest
 func (pfr *PopularFilmsRequest) CreateResponse() structs.FilmCollection {
-	return structs.CreateFilmCollection("Popular films", pfr.filmCollection)
+	return structs.CreateFilmCollection("Популярное", pfr.filmCollection)
 }
 
 // GetPopularFilms is handle getPopularFilms request
 func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) {
 	var popularFilmRequest PopularFilmsRequest
 
-	for i := 0; i < 6; i++ {
+	for i := hf.storage.GetStorageLen() - 5; i >= 0; i-- {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
@@ -75,18 +77,19 @@ func (fcr *FilmsInCinemaRequest) AddFilm(film structs.Film) {
 		YearProd:  film.YearProd,
 		PosterVer: film.PosterVer,
 		Genres:    film.Genres,
+		Rating:    film.Rating,
 	})
 }
 
 // CreateResponse return FilmCollection struct for sending response in FilmsInCinemaRequest
 func (fcr *FilmsInCinemaRequest) CreateResponse() structs.FilmCollection {
-	return structs.CreateFilmCollection("In cinema", fcr.filmCollection)
+	return structs.CreateFilmCollection("Сейчас в кино", fcr.filmCollection)
 }
 
 // GetFilmsInCinema is handle InCinema request
 func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request) {
 	var inCinemaRequest FilmsInCinemaRequest
-	for i := 6; i < 12; i++ {
+	for i := 0; i < hf.storage.GetStorageLen()-4; i++ {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
@@ -118,6 +121,7 @@ func (rfr *RecommendFilmRequest) SetFilm(film structs.Film) {
 		YearProd:         film.YearProd,
 		PosterHor:        film.PosterHor,
 		Genres:           film.Genres,
+		Rating:           film.Rating,
 	}
 }
 
@@ -130,7 +134,10 @@ func (rfr *RecommendFilmRequest) CreateResponse() structs.Film {
 func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Request) {
 	var recommendFilmRequest RecommendFilmRequest
 
-	film, err := hf.storage.GetFilm(uint(hf.storage.GetStorageLen() - 1))
+	max := hf.storage.GetStorageLen()
+	min := max - 3
+
+	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
 		http.Error(w, errorshandlers.ErrFilmNotFound.Error(), http.StatusNotFound)
 		return

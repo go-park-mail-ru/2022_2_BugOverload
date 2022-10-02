@@ -55,7 +55,7 @@ func (fs *FilmStorage) FillFilmStoragePartOne() {
 		ID:        currentID,
 		Name:      "Дюна",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "9.9",
 		PosterVer: "asserts/img/posters/dune_poster.jpg",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -64,7 +64,7 @@ func (fs *FilmStorage) FillFilmStoragePartOne() {
 		ID:        currentID,
 		Name:      "Убить Билла",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "2.0",
 		PosterVer: "asserts/img/posters/8.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -82,7 +82,7 @@ func (fs *FilmStorage) FillFilmStoragePartOne() {
 		ID:        currentID,
 		Name:      "Доказательство смерти",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "3.3",
 		PosterVer: "asserts/img/posters/5.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -100,7 +100,7 @@ func (fs *FilmStorage) FillFilmStoragePartOne() {
 		ID:        currentID,
 		Name:      "Девушка с татуировкой дракона",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "5.7",
 		PosterVer: "asserts/img/posters/6.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -114,7 +114,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		ID:        currentID,
 		Name:      "Дюна",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "9.9",
 		PosterVer: "asserts/img/posters/dune_poster.jpg",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -132,7 +132,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		ID:        currentID,
 		Name:      "Люси",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "8.9",
 		PosterVer: "asserts/img/posters/2.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -141,7 +141,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		ID:        currentID,
 		Name:      "Властелин колец. Братство кольца",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "8.4",
 		PosterVer: "asserts/img/posters/3.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -150,7 +150,7 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		ID:        currentID,
 		Name:      "Дом, который построил Джек",
 		YearProd:  "2021",
-		Rating:    "7.1",
+		Rating:    "7.2",
 		PosterVer: "asserts/img/posters/4.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -159,7 +159,62 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		ID:        currentID,
 		Name:      "Доказательство смерти",
 		YearProd:  "2021",
+		Rating:    "4.1",
+		PosterVer: "asserts/img/posters/5.png",
+		Genres:    []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	// Duple
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Дюна",
+		YearProd:  "2021",
+		Rating:    "9.9",
+		PosterVer: "asserts/img/posters/dune_poster.jpg",
+		Genres:    []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Человек",
+		YearProd:  "2021",
 		Rating:    "7.1",
+		PosterVer: "asserts/img/posters/1.png",
+		Genres:    []string{"Документальный", "Смотрю и плачу"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Люси",
+		YearProd:  "2021",
+		Rating:    "8.9",
+		PosterVer: "asserts/img/posters/2.png",
+		Genres:    []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Властелин колец. Братство кольца",
+		YearProd:  "2021",
+		Rating:    "8.4",
+		PosterVer: "asserts/img/posters/3.png",
+		Genres:    []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Дом, который построил Джек",
+		YearProd:  "2021",
+		Rating:    "7.2",
+		PosterVer: "asserts/img/posters/4.png",
+		Genres:    []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Доказательство смерти",
+		YearProd:  "2021",
+		Rating:    "4.1",
 		PosterVer: "asserts/img/posters/5.png",
 		Genres:    []string{"Фэнтези", "Приключения"},
 	})
@@ -170,7 +225,6 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		Name:             "Звёздные войны. Эпизод IV: Новая надежда",
 		ShortDescription: "Может хватит бухтеть и дестабилизировать ситуацию в стране? Световой меч делает вжух-вжух",
 		YearProd:         "2021",
-		Rating:           "7.1",
 		PosterHor:        "asserts/img/StarWars.jpeg",
 		Genres:           []string{"Фэнтези", "Приключения"},
 	})
@@ -180,8 +234,25 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 		Name:             "Дюна",
 		ShortDescription: "Ну типо по пустыням ходят, а ещё черви там всякие делают уууу",
 		YearProd:         "2021",
-		Rating:           "7.1",
 		PosterHor:        "asserts/img/dune.jpg",
+		Genres:           []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:               currentID,
+		Name:             "Джокер",
+		ShortDescription: "Псих вышел погулять",
+		YearProd:         "2021",
+		PosterHor:        "asserts/img/joker_hor.jpg",
+		Genres:           []string{"Фэнтези", "Приключения"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:               currentID,
+		Name:             "2001: Космическая одисея",
+		ShortDescription: "Псих вышел погулять",
+		YearProd:         "2021",
+		PosterHor:        "asserts/img/space_odyssey_hor.jpg",
 		Genres:           []string{"Фэнтези", "Приключения"},
 	})
 }
