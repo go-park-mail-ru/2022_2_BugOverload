@@ -18,6 +18,7 @@ type TestCase struct {
 	ContentType     string
 	RequestBody     string
 	CookieUserEmail string
+	Cookie          string
 	ResponseCookie  string
 	ResponseBody    string
 	StatusCode      int

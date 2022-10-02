@@ -1,13 +1,14 @@
 package auth_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers/auth"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/handlers/auth"
 )
 
 func TestSignupHandler(t *testing.T) {
