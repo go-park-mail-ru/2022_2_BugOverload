@@ -25,7 +25,7 @@ func (fs *FilmStorage) CheckExist(filmID uint) error {
 	return nil
 }
 
-// Create is method for creating a film in database
+// AddFilm is method for creating a film in database
 func (fs *FilmStorage) AddFilm(f structs.Film) {
 	err := fs.CheckExist(f.ID)
 
@@ -34,7 +34,7 @@ func (fs *FilmStorage) AddFilm(f structs.Film) {
 	}
 }
 
-// Return film using film_id (primary key)
+// GetFilm return film using film_id (primary key)
 func (fs *FilmStorage) GetFilm(filmID uint) (structs.Film, error) {
 	if err := fs.CheckExist(filmID); err != nil {
 		return structs.Film{}, err
@@ -42,11 +42,12 @@ func (fs *FilmStorage) GetFilm(filmID uint) (structs.Film, error) {
 	return fs.storage[filmID], nil
 }
 
+// GetStorageLen return films count in storage
 func (fs *FilmStorage) GetStorageLen() int {
 	return len(fs.storage)
 }
 
-// Temporary function, filling local storage
+// FillFilmStoragePartOne is temporary function, filling local storage
 func (fs *FilmStorage) FillFilmStoragePartOne() {
 	// First collection
 	var currentID uint
@@ -105,6 +106,7 @@ func (fs *FilmStorage) FillFilmStoragePartOne() {
 	})
 }
 
+// FillFilmStoragePartTwo is temporary function, filling local storage
 func (fs *FilmStorage) FillFilmStoragePartTwo() {
 	var currentID uint = 6
 	// Second collection
@@ -164,22 +166,22 @@ func (fs *FilmStorage) FillFilmStoragePartTwo() {
 	currentID++
 	// Third collection (poster)
 	fs.AddFilm(structs.Film{
-		ID:          currentID,
-		Name:        "Звёздные войны. Эпизод IV: Новая надежда",
-		Description: "Может хватит бухтеть и дестабилизировать ситуацию в стране? Световой меч делает вжух-вжух",
-		YearProd:    "2021",
-		Rating:      "7.1",
-		PosterHor:   "asserts/img/StarWars.jpeg",
-		Genres:      []string{"Фэнтези", "Приключения"},
+		ID:               currentID,
+		Name:             "Звёздные войны. Эпизод IV: Новая надежда",
+		ShortDescription: "Может хватит бухтеть и дестабилизировать ситуацию в стране? Световой меч делает вжух-вжух",
+		YearProd:         "2021",
+		Rating:           "7.1",
+		PosterHor:        "asserts/img/StarWars.jpeg",
+		Genres:           []string{"Фэнтези", "Приключения"},
 	})
 	currentID++
 	fs.AddFilm(structs.Film{
-		ID:          currentID,
-		Name:        "Дюна",
-		Description: "Ну типо по пустыням ходят, а ещё черви там всякие делают уууу",
-		YearProd:    "2021",
-		Rating:      "7.1",
-		PosterHor:   "asserts/img/dune.jpg",
-		Genres:      []string{"Фэнтези", "Приключения"},
+		ID:               currentID,
+		Name:             "Дюна",
+		ShortDescription: "Ну типо по пустыням ходят, а ещё черви там всякие делают уууу",
+		YearProd:         "2021",
+		Rating:           "7.1",
+		PosterHor:        "asserts/img/dune.jpg",
+		Genres:           []string{"Фэнтези", "Приключения"},
 	})
 }

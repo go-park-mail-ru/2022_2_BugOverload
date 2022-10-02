@@ -61,7 +61,7 @@ func (cs *CookieStorage) DeleteCookie(cookie string) (string, error) {
 		return "", errorshandlers.ErrCookieNotExist
 	}
 
-	delete(cs.storage, cookie)
+	defer delete(cs.storage, cookie)
 
 	oldCookie := cs.storage[cookie]
 
