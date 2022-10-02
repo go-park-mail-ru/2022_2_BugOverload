@@ -14,6 +14,6 @@ type Film struct {
 	Duration         string   `json:"duration,omitempty"`
 	PosterHor        string   `json:"poster_hor,omitempty"`
 	PosterVer        string   `json:"poster_ver,omitempty"`
-	Rating           string   `json:"film_rating,omitempty"`
+	Rating           string   `json:"ratio,omitempty"`
 	Genres           []string `json:"genres,omitempty"`
 }
