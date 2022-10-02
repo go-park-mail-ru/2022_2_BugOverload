@@ -6,7 +6,7 @@ import (
 	"github.com/rs/cors"
 )
 
-const frontend = "http://localhost:3000"
+const frontend = "http://localhost:3001"
 
 func NewCorsOptions() *cors.Cors {
 	c := cors.New(cors.Options{
