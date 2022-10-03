@@ -1,3 +1,2 @@
-Port: :8088
 ReadTimeOut: 10
 WriteTimeOut: 10
