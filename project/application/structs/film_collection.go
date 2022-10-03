@@ -6,7 +6,7 @@ type FilmCollection struct {
 	Films []Film `json:"films,omitempty"`
 }
 
-// CreateNewFilmCollection returns collection
+// CreateFilmCollection returns collection
 func CreateFilmCollection(title string, films []Film) FilmCollection {
 	return FilmCollection{
 		Title: title,

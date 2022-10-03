@@ -64,8 +64,8 @@ func TestFilmsHandlerPopular(t *testing.T) {
 		t.Error("Popular films test: wrong response body, unmarshal error")
 	}
 
-	if responseCollection.Title != "Popular films" {
-		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Popular films")
+	if responseCollection.Title != "Популярное" {
+		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Популярное")
 	}
 
 	for _, film := range responseCollection.Films {
@@ -116,8 +116,8 @@ func TestFilmsHandlerInCinema(t *testing.T) {
 		t.Error("In cinema test: wrong response body, unmarshal error")
 	}
 
-	if responseCollection.Title != "In cinema" {
-		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "In cinema")
+	if responseCollection.Title != "Сейчас в кино" {
+		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Сейчас в кино")
 	}
 
 	for _, film := range responseCollection.Films {
@@ -183,21 +183,21 @@ func TestFilmsHandlerEmptyStorage(t *testing.T) {
 			URL:          "http://localhost:8088/v1/popular_films",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: "no such films\n",
+			ResponseBody: `{"error":"such film doesn't exist"}`,
 		},
 		// unsuccess request in cinema
 		TestCase{
 			URL:          "http://localhost:8088/v1/in_cinema",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: "no such films\n",
+			ResponseBody: `{"error":"such film doesn't exist"}`,
 		},
 		// unsuccess request recommendation film
 		TestCase{
 			URL:          "http://localhost:8088/v1/recommendation_film",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: "such film doesn't exist\n",
+			ResponseBody: `{"error":"such film doesn't exist"}`,
 		},
 	}
 

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"sync"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
@@ -13,14 +14,22 @@ import (
 type HandlerAuth struct {
 	userStorage   *database.UserStorage
 	cookieStorage *database.CookieStorage
-	//  Менеджер кеша
-	//  Логер
-	//  Менеджер моделей
+	muSignup      *sync.Mutex
+	muLogin       *sync.Mutex
+	muAuth        *sync.Mutex
+	muLogout      *sync.Mutex
 }
 
 // NewHandlerAuth is constructor for HandlerAuth
 func NewHandlerAuth(us *database.UserStorage, cs *database.CookieStorage) *HandlerAuth {
-	return &HandlerAuth{us, cs}
+	return &HandlerAuth{
+		us,
+		cs,
+		&sync.Mutex{},
+		&sync.Mutex{},
+		&sync.Mutex{},
+		&sync.Mutex{},
+	}
 }
 
 // UserAuthRequest is empty struct with methods for login handler
@@ -63,17 +72,25 @@ func (ha *HandlerAuth) Auth(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
+	ha.muAuth.Lock()
 	cookie, err := ha.cookieStorage.GetCookie(cookieStr)
 	if err != nil {
+		ha.muAuth.Unlock()
+
 		httpwrapper.DefHandlerError(w, err)
+
 		return
 	}
 
 	userFromDB, err := ha.userStorage.GetUser(cookie.Value)
 	if err != nil {
+		ha.muAuth.Unlock()
+
 		httpwrapper.DefHandlerError(w, err)
+
 		return
 	}
+	ha.muAuth.Unlock()
 
 	httpwrapper.Response(w, http.StatusOK, authRequest.ToPublic(&userFromDB))
 }

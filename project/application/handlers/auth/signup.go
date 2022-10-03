@@ -52,15 +52,20 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	user := signupRequest.GetUser()
 
+	ha.muSignup.Lock()
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist {
+		ha.muSignup.Unlock()
+
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrSignupUserExist)
+
 		return
 	}
 
 	ha.userStorage.Create(*user)
 
 	newCookie := ha.cookieStorage.Create(user.Email)
+	ha.muSignup.Unlock()
 
 	w.Header().Set("Set-Cookie", newCookie)
 

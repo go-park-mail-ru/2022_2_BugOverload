@@ -39,11 +39,15 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
+	ha.muLogout.Lock()
 	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
+		ha.muLogout.Unlock()
+
 		httpwrapper.DefHandlerError(w, err)
 		return
 	}
+	ha.muLogout.Unlock()
 
 	w.Header().Set("Set-Cookie", badCookie)
 

@@ -26,5 +26,10 @@ func DefHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
+	if errors.Is(err, errorshandlers.ErrFilmNotFound) {
+		Response(w, http.StatusNotFound, errResp)
+		return
+	}
+
 	Response(w, http.StatusBadRequest, errResp)
 }
