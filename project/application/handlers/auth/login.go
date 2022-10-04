@@ -53,26 +53,20 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	user := loginRequest.GetUser()
 
-	ha.muLogin.Lock()
 	userFromDB, err := ha.userStorage.GetUser(user.Email)
 	if err != nil {
-		ha.muLogin.Unlock()
-
 		httpwrapper.DefHandlerError(w, err)
 
 		return
 	}
 
 	if userFromDB.Password != user.Password {
-		ha.muLogin.Unlock()
-
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrLoginCombinationNotFound)
 
 		return
 	}
 
 	newCookie := ha.cookieStorage.Create(user.Email)
-	ha.muLogin.Unlock()
 
 	w.Header().Set("Set-Cookie", newCookie)
 

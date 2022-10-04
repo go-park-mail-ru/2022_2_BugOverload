@@ -3,7 +3,6 @@ package content
 import (
 	"math/rand"
 	"net/http"
-	"sync"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
@@ -13,19 +12,13 @@ import (
 
 // HandlerFilms is structure for API films requests processing
 type HandlerFilms struct {
-	storage               *database.FilmStorage
-	muPopularFilms        *sync.Mutex
-	muInCinema            *sync.Mutex
-	muRecommendationFilms *sync.Mutex
+	storage *database.FilmStorage
 }
 
 // NewHandlerFilms is constructor for HandlerFilms
 func NewHandlerFilms(fs *database.FilmStorage) *HandlerFilms {
 	return &HandlerFilms{
 		fs,
-		&sync.Mutex{},
-		&sync.Mutex{},
-		&sync.Mutex{},
 	}
 }
 
@@ -55,7 +48,6 @@ func (pfr *PopularFilmsRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) {
 	var popularFilmRequest PopularFilmsRequest
 
-	hf.muPopularFilms.Lock()
 	for i := hf.storage.GetStorageLen() - 5; i >= 0; i-- {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
@@ -63,7 +55,6 @@ func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) 
 		}
 		popularFilmRequest.AddFilm(film)
 	}
-	hf.muPopularFilms.Unlock()
 
 	if len(popularFilmRequest.filmCollection) == 0 {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
@@ -102,7 +93,6 @@ func (fcr *FilmsInCinemaRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request) {
 	var inCinemaRequest FilmsInCinemaRequest
 
-	hf.muInCinema.Lock()
 	for i := 0; i < hf.storage.GetStorageLen()-4; i++ {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
@@ -111,7 +101,6 @@ func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request)
 
 		inCinemaRequest.AddFilm(film)
 	}
-	hf.muInCinema.Unlock()
 
 	if len(inCinemaRequest.filmCollection) == 0 {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
@@ -154,16 +143,12 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 	max := hf.storage.GetStorageLen()
 	min := max - 3
 
-	hf.muRecommendationFilms.Lock()
 	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
-		hf.muRecommendationFilms.Unlock()
-
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
 
 		return
 	}
-	hf.muRecommendationFilms.Unlock()
 
 	recommendFilmRequest.SetFilm(film)
 
