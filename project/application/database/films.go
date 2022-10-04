@@ -121,7 +121,7 @@ func (fs *FilmStorage) FillFilmStorage() {
 	fs.AddFilm(structs.Film{
 		ID:        currentID,
 		Name:      "Черное зеркало",
-		YearProd:  "2011",
+		YearProd:  "2011-2019",
 		Rating:    "8.5",
 		PosterVer: "asserts/img/posters/33.png",
 		Genres:    []string{"Фантастика", "драма"},
