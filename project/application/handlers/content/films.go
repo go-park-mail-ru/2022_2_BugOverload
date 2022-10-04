@@ -17,7 +17,9 @@ type HandlerFilms struct {
 
 // NewHandlerFilms is constructor for HandlerFilms
 func NewHandlerFilms(fs *database.FilmStorage) *HandlerFilms {
-	return &HandlerFilms{fs}
+	return &HandlerFilms{
+		fs,
+	}
 }
 
 // PopularFilmsRequest is structure for films handler
@@ -55,7 +57,8 @@ func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if len(popularFilmRequest.filmCollection) == 0 {
-		http.Error(w, errorshandlers.ErrFilmsNotFound.Error(), http.StatusNotFound)
+		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+
 		return
 	}
 
@@ -89,16 +92,19 @@ func (fcr *FilmsInCinemaRequest) CreateResponse() structs.FilmCollection {
 // GetFilmsInCinema is handle InCinema request
 func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request) {
 	var inCinemaRequest FilmsInCinemaRequest
+
 	for i := 0; i < hf.storage.GetStorageLen()-4; i++ {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
 		}
+
 		inCinemaRequest.AddFilm(film)
 	}
 
 	if len(inCinemaRequest.filmCollection) == 0 {
-		http.Error(w, errorshandlers.ErrFilmsNotFound.Error(), http.StatusNotFound)
+		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+
 		return
 	}
 
@@ -139,7 +145,8 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 
 	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
-		http.Error(w, errorshandlers.ErrFilmNotFound.Error(), http.StatusNotFound)
+		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+
 		return
 	}
 

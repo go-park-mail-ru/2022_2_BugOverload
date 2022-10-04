@@ -1,6 +1,8 @@
 package database
 
 import (
+	"sync"
+
 	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -8,42 +10,53 @@ import (
 // FilmStorage is TMP impl database for films, where key = film_id
 type FilmStorage struct {
 	storage map[uint]structs.Film
+	mu      *sync.Mutex
 }
 
 // NewFilmStorage is constructor for FilmStorage
 func NewFilmStorage() *FilmStorage {
-	return &FilmStorage{make(map[uint]structs.Film)}
+	return &FilmStorage{
+		make(map[uint]structs.Film),
+		&sync.Mutex{},
+	}
 }
 
 // CheckExist is method to check the existence of such a film in the database
-func (fs *FilmStorage) CheckExist(filmID uint) error {
-	_, ok := fs.storage[filmID]
-	if !ok {
-		return errorshandlers.ErrFilmNotFound
-	}
+func (fs *FilmStorage) CheckExist(filmID uint) bool {
+	fs.mu.Lock()
+	defer fs.mu.Unlock()
 
-	return nil
+	_, ok := fs.storage[filmID]
+	return ok
 }
 
 // AddFilm is method for creating a film in database
 func (fs *FilmStorage) AddFilm(f structs.Film) {
-	err := fs.CheckExist(f.ID)
+	if !fs.CheckExist(f.ID) {
+		fs.mu.Lock()
+		defer fs.mu.Unlock()
 
-	if err != nil {
 		fs.storage[f.ID] = f
 	}
 }
 
 // GetFilm return film using film_id (primary key)
 func (fs *FilmStorage) GetFilm(filmID uint) (structs.Film, error) {
-	if err := fs.CheckExist(filmID); err != nil {
-		return structs.Film{}, err
+	if !fs.CheckExist(filmID) {
+		return structs.Film{}, errorshandlers.ErrFilmNotFound
 	}
+
+	fs.mu.Lock()
+	defer fs.mu.Unlock()
+
 	return fs.storage[filmID], nil
 }
 
 // GetStorageLen return films count in storage
 func (fs *FilmStorage) GetStorageLen() int {
+	fs.mu.Lock()
+	defer fs.mu.Unlock()
+
 	return len(fs.storage)
 }
 

@@ -21,12 +21,12 @@ func Launch(options options.Options, router *mux.Router, corsOptions *cors.Cors)
 		return
 	}
 
-	logger.Info("starting server at " + serverOption.Port)
+	logger.Info("starting server at " + options.Port)
 
 	routerCORS := corsOptions.Handler(router)
 
 	server := http.Server{
-		Addr:         serverOption.Port,
+		Addr:         options.Port,
 		Handler:      routerCORS,
 		ReadTimeout:  time.Duration(serverOption.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(serverOption.WriteTimeout) * time.Second,

@@ -7,6 +7,7 @@ import (
 
 // Options is struct for defining a global preset of work settings
 type Options struct {
+	Port             string
 	PathServerConfig string
 }
 
@@ -16,7 +17,8 @@ func GetOptions() (Options, error) {
 
 	flag.Parse()
 
-	o.PathServerConfig = flag.Arg(0)
+	o.Port = flag.Arg(0)
+	o.PathServerConfig = flag.Arg(1)
 
 	resCheck := o.checkOptions()
 	if resCheck != nil {
@@ -30,6 +32,10 @@ func GetOptions() (Options, error) {
 func (o *Options) checkOptions() error {
 	if o.PathServerConfig == "" {
 		return errors.New("the path to the work configuration is not specified")
+	}
+
+	if o.Port == "" {
+		return errors.New("port is not specified")
 	}
 
 	return nil

@@ -56,11 +56,13 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	userFromDB, err := ha.userStorage.GetUser(user.Email)
 	if err != nil {
 		httpwrapper.DefHandlerError(w, err)
+
 		return
 	}
 
 	if userFromDB.Password != user.Password {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrLoginCombinationNotFound)
+
 		return
 	}
 

@@ -55,6 +55,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrSignupUserExist)
+
 		return
 	}
 

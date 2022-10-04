@@ -3,12 +3,12 @@
 all: check build run_tests
 
 TARGET = ./project/main.go
-ARGS= ./configs/webserver.txt
+ARGS= :8088 ./configs/webserver.txt
 
 PKG = ./...
 
 clear:
-	sudo rm -rf main
+	sudo rm -rf main coverage.out coverage.html
 
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
