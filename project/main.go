@@ -22,8 +22,8 @@ func main() {
 	cs := database.NewCookieStorage()
 	fs := database.NewFilmStorage()
 
-	fs.FillFilmStoragePartOne()
-	fs.FillFilmStoragePartTwo()
+	fs.FillFilmStorage()
+	fs.FillFilmStorageSpecial()
 
 	router := router_.NewRouter(us, cs, fs)
 
