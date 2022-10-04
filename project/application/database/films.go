@@ -77,7 +77,7 @@ func (fs *FilmStorage) FillFilmStorage() {
 		ID:        currentID,
 		Name:      "Убить Билла",
 		YearProd:  "2021",
-		Rating:    "2.0",
+		Rating:    "9.0",
 		PosterVer: "asserts/img/posters/8.png",
 		Genres:    []string{"Боевик", "приключения"},
 	})
