@@ -93,6 +93,51 @@ func (fs *FilmStorage) FillFilmStorage() {
 	currentID++
 	fs.AddFilm(structs.Film{
 		ID:        currentID,
+		Name:      "Петровы в гриппе",
+		YearProd:  "2020",
+		Rating:    "6.8",
+		PosterVer: "asserts/img/posters/30.png",
+		Genres:    []string{"Драма", "фантастика"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Она",
+		YearProd:  "2013",
+		Rating:    "7.6",
+		PosterVer: "asserts/img/posters/31.png",
+		Genres:    []string{"Мелодрама", "фантастика"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Плата за страх",
+		YearProd:  "1952",
+		Rating:    "8.0",
+		PosterVer: "asserts/img/posters/32.png",
+		Genres:    []string{"Мелодрама", "фантастика"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Черное зеркало",
+		YearProd:  "2011",
+		Rating:    "8.5",
+		PosterVer: "asserts/img/posters/33.png",
+		Genres:    []string{"Фантастика", "драма"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
+		Name:      "Олдбой",
+		YearProd:  "2003",
+		Rating:    "8.1",
+		PosterVer: "asserts/img/posters/34.png",
+		Genres:    []string{"Триллер", "детектив"},
+	})
+	currentID++
+	fs.AddFilm(structs.Film{
+		ID:        currentID,
 		Name:      "Доказательство смерти",
 		YearProd:  "2021",
 		Rating:    "3.3",
@@ -230,7 +275,7 @@ func (fs *FilmStorage) FillFilmStorage() {
 		ID:        currentID,
 		Name:      "Три тысячи лет желаний",
 		YearProd:  "2022",
-		Rating:    "7",
+		Rating:    "7.0",
 		PosterVer: "asserts/img/posters/17.png",
 		Genres:    []string{"Фэнтези", "драма"},
 	})
