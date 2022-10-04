@@ -286,7 +286,7 @@ func (fs *FilmStorage) FillFilmStorage() {
 		YearProd:  "2022",
 		Rating:    "5.5",
 		PosterVer: "asserts/img/posters/19.png",
-		Genres:    []string{"фантастика"},
+		Genres:    []string{"Фантастика"},
 	})
 	currentID++
 	fs.AddFilm(structs.Film{
