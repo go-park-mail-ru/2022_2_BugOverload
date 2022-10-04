@@ -264,15 +264,6 @@ func (fs *FilmStorage) FillFilmStorage() {
 	currentID++
 	fs.AddFilm(structs.Film{
 		ID:        currentID,
-		Name:      "Волк с Уолл-стрит",
-		YearProd:  "2013",
-		Rating:    "7.9",
-		PosterVer: "asserts/img/posters/16.png",
-		Genres:    []string{"Криминал", "комедия"},
-	})
-	currentID++
-	fs.AddFilm(structs.Film{
-		ID:        currentID,
 		Name:      "Три тысячи лет желаний",
 		YearProd:  "2022",
 		Rating:    "7.0",
