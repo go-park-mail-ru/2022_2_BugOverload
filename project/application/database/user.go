@@ -35,6 +35,8 @@ func (us *UserStorage) Create(u structs.User) {
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
+	u.Avatar = "asserts/img/elements/invisibleMan.jpeg"
+
 	us.storage[u.Email] = u
 }
 
