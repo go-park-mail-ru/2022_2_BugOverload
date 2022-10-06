@@ -32,8 +32,6 @@ func TestFilmsHandlerPopular(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStoragePartOne()
-	fs.FillFilmStoragePartTwo()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -84,8 +82,6 @@ func TestFilmsHandlerInCinema(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStoragePartOne()
-	fs.FillFilmStoragePartTwo()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -136,8 +132,6 @@ func TestFilmsHandlerRecomended(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStoragePartOne()
-	fs.FillFilmStoragePartTwo()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -201,7 +195,7 @@ func TestFilmsHandlerEmptyStorage(t *testing.T) {
 		},
 	}
 
-	fs := database.NewFilmStorage()
+	fs := &database.FilmStorage{}
 
 	filmsHandler := content.NewHandlerFilms(fs)
 

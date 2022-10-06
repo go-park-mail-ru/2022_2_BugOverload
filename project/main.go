@@ -22,9 +22,6 @@ func main() {
 	cs := database.NewCookieStorage()
 	fs := database.NewFilmStorage()
 
-	fs.FillFilmStoragePartOne()
-	fs.FillFilmStoragePartTwo()
-
 	router := router_.NewRouter(us, cs, fs)
 
 	corsOptions := cors.NewCorsOptions()
