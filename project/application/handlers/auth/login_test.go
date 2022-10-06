@@ -34,7 +34,7 @@ func TestLoginHandler(t *testing.T) {
 			CookieUserEmail: "YasaPupkinEzji@top.world",
 
 			ResponseCookie: "1=YasaPupkinEzji@top.world",
-			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:     http.StatusOK,
 		},
 		// Wrong password
