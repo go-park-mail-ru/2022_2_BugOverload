@@ -9,6 +9,9 @@ PKG = ./...
 
 clear:
 	sudo rm -rf main
+	sudo rm -rf coverage.html
+	sudo rm -rf coverage.out
+	sudo rm -rf c.out
 
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
@@ -26,7 +29,6 @@ build:
 
 docker_launch:
 	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
-
 
 launch_race:
 	go run -race ${TARGET}
