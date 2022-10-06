@@ -303,10 +303,10 @@ func (fs *FilmStorage) GetStorageLen() int {
 
 // ClearStorage will delete all films from storage
 func (fs *FilmStorage) ClearStorage() {
-	//fs.mu.Lock()
-	//defer fs.mu.Unlock()
+	fs.mu.Lock()
+	defer fs.mu.Unlock()
 
-	if fs.GetStorageLen() != 0 {
+	if len(fs.storage) != 0 {
 		fs.storage = make(map[uint]structs.Film)
 	}
 }

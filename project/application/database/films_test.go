@@ -60,7 +60,9 @@ func TestFilmStorageAdd(t *testing.T) {
 func TestFilmStorageGet(t *testing.T) {
 	fs := database.NewFilmStorage()
 
-	_, err := fs.GetFilm(125)
+	fs.ClearStorage()
+
+	_, err := fs.GetFilm(1)
 
 	if err != errorshandlers.ErrFilmNotFound {
 		t.Errorf("Err: [%s], expected: nil", err.Error())

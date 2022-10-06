@@ -8,10 +8,7 @@ ARGS= :8088 ./configs/webserver.txt
 PKG = ./...
 
 clear:
-	sudo rm -rf main
-	sudo rm -rf coverage.html
-	sudo rm -rf coverage.out
-	sudo rm -rf c.out
+	sudo rm -rf main coverage.html coverage.out c.out
 
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
