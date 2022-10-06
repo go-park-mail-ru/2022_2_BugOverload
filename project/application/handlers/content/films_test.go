@@ -32,8 +32,6 @@ func TestFilmsHandlerPopular(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStorage()
-	fs.FillFilmStorageSpecial()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -84,8 +82,6 @@ func TestFilmsHandlerInCinema(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStorage()
-	fs.FillFilmStorageSpecial()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -136,8 +132,6 @@ func TestFilmsHandlerRecomended(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
-	fs.FillFilmStorage()
-	fs.FillFilmStorageSpecial()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 
@@ -171,7 +165,7 @@ func TestFilmsHandlerRecomended(t *testing.T) {
 
 	filmFromStorage, _ := fs.GetFilm(responseFilm.ID)
 
-	if !cmp.Equal(responseFilm, filmFromStorage, cmpopts.IgnoreFields(structs.Film{}, "Rating")) {
+	if !cmp.Equal(responseFilm, filmFromStorage, cmpopts.IgnoreFields(structs.Film{}, "Rating", "PosterVer")) {
 		t.Errorf("[%d] wrong Film: got [%v], expected [%v]", 2, responseFilm, filmFromStorage)
 	}
 }
@@ -202,6 +196,7 @@ func TestFilmsHandlerEmptyStorage(t *testing.T) {
 	}
 
 	fs := database.NewFilmStorage()
+	fs.ClearStorage()
 
 	filmsHandler := content.NewHandlerFilms(fs)
 

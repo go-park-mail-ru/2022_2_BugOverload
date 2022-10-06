@@ -41,7 +41,6 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
-
 		httpwrapper.DefHandlerError(w, err)
 		return
 	}
