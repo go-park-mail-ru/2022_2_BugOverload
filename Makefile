@@ -37,3 +37,6 @@ run_tests:
 check_coverage:
 	go test ./... -coverprofile coverage.out
 	go tool cover -html coverage.out -o coverage.html
+
+check_full_coverage:
+	go test -race -coverpkg=./... -coverprofile=c.out ./... && go tool cover -func=c.out
