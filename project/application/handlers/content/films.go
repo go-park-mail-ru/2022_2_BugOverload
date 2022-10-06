@@ -48,7 +48,7 @@ func (pfr *PopularFilmsRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) {
 	var popularFilmRequest PopularFilmsRequest
 
-	for i := hf.storage.GetStorageLen() - 5; i >= 0; i-- {
+	for i := 0; i < (hf.storage.GetStorageLen()-5)/2; i++ {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
@@ -93,7 +93,7 @@ func (fcr *FilmsInCinemaRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request) {
 	var inCinemaRequest FilmsInCinemaRequest
 
-	for i := 0; i < hf.storage.GetStorageLen()-4; i++ {
+	for i := hf.storage.GetStorageLen() - 5; i >= (hf.storage.GetStorageLen()-5)/2; i-- {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue

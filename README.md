@@ -6,7 +6,7 @@
 - [**Иван Бирюков**](https://github.com/Ivan-Bir) - *Frontend*
 - [**Михаил Волков**](https://github.com/Mike5535) - *Frontend*
 
-### Movie aggregator [ТопНазвание-СсылкаНаДеплой](https://github.com/go-park-mail-ru/2022_2_BugOverload)
+### Movie aggregator [MovieGate](http://movie-gate.online/)
 Лучшее описание!
 
 ### Mentors

@@ -37,6 +37,7 @@ func (usr *UserSignupRequest) ToPublic(u *structs.User) structs.User {
 	return structs.User{
 		Email:    u.Email,
 		Nickname: u.Nickname,
+		Avatar:   u.Avatar,
 	}
 }
 
