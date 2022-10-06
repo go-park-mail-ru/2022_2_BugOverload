@@ -48,7 +48,12 @@ func (pfr *PopularFilmsRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) {
 	var popularFilmRequest PopularFilmsRequest
 
-	for i := 0; i < (hf.storage.GetStorageLen()-5)/2; i++ {
+	upperBound := 0
+	if (hf.storage.GetStorageLen()-5)/2 > 0 {
+		upperBound = (hf.storage.GetStorageLen() - 5) / 2
+	}
+
+	for i := 0; i < upperBound; i++ {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
@@ -93,7 +98,16 @@ func (fcr *FilmsInCinemaRequest) CreateResponse() structs.FilmCollection {
 func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request) {
 	var inCinemaRequest FilmsInCinemaRequest
 
-	for i := hf.storage.GetStorageLen() - 5; i >= (hf.storage.GetStorageLen()-5)/2; i-- {
+	var upperBound, lowerBound int
+
+	if hf.storage.GetStorageLen()-5 > 0 {
+		upperBound = hf.storage.GetStorageLen() - 5
+	}
+	if (hf.storage.GetStorageLen()-5)/2 >= 0 {
+		lowerBound = (hf.storage.GetStorageLen() - 5) / 2
+	}
+
+	for i := upperBound; i >= lowerBound; i-- {
 		film, err := hf.storage.GetFilm(uint(i))
 		if err != nil {
 			continue
@@ -141,12 +155,16 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 	var recommendFilmRequest RecommendFilmRequest
 
 	max := hf.storage.GetStorageLen()
-	min := max - 3
+	min := 0
+
+	if max == 0 {
+		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+		return
+	}
 
 	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
-
 		return
 	}
 

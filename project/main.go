@@ -14,16 +14,12 @@ func main() {
 	options, err := options.GetOptions()
 	if err != nil {
 		logger.Error(err)
-
 		return
 	}
 
 	us := database.NewUserStorage()
 	cs := database.NewCookieStorage()
 	fs := database.NewFilmStorage()
-
-	fs.FillFilmStorage()
-	fs.FillFilmStorageSpecial()
 
 	router := router_.NewRouter(us, cs, fs)
 
