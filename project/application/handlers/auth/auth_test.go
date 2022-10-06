@@ -18,7 +18,7 @@ func TestAuthHandler(t *testing.T) {
 		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"URL"}`,
+			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:   http.StatusOK,
 		},
 		// Wrong cookie
