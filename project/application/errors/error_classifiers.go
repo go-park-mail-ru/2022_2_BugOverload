@@ -63,7 +63,7 @@ func NewErrClassifierAuth() ErrClassifierAuth {
 	res["such user doesn't exist"] = http.StatusBadRequest
 	res["such a login exists"] = http.StatusBadRequest
 
-	res["request has no cookies"] = http.StatusBadRequest
+	res["request has no cookies"] = http.StatusUnauthorized
 	res["no such cookie"] = http.StatusUnauthorized
 
 	return ErrClassifierAuth{

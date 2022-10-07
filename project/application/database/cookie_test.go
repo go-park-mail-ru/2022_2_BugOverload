@@ -45,7 +45,7 @@ func TestCookieStorageGet(t *testing.T) {
 
 	_, err = cs.GetCookie("")
 
-	if err != errors.ErrCookieNotExist {
+	if err != errors.NewErrAuth(errors.ErrCookieNotExist) {
 		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errors.ErrCookieNotExist)
 	}
 }

@@ -60,7 +60,7 @@ func (cs *CookieStorage) Create(email string) string {
 // GetCookie return user using email (primary key)
 func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
 	if !cs.CheckExist(cookie) {
-		return http.Cookie{}, errors.ErrCookieNotExist
+		return http.Cookie{}, errors.NewErrAuth(errors.ErrCookieNotExist)
 	}
 
 	cs.mu.Lock()

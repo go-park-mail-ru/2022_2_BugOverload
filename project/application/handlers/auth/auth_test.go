@@ -25,13 +25,13 @@ func TestAuthHandler(t *testing.T) {
 		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"no such cookie"}`,
+			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Cookie is missing
 		TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"request has no cookies"}`,
+			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}

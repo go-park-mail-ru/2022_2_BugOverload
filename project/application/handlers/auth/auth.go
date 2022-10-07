@@ -30,7 +30,7 @@ type UserAuthRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (uar *UserAuthRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errors.ErrNoCookie
+		return errors.NewErrAuth(errors.ErrNoCookie)
 	}
 
 	return nil

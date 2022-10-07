@@ -22,13 +22,14 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
-	if stdErrors.Is(err, errors.ErrNoCookie) {
-		Response(w, http.StatusUnauthorized, errResp)
+	var errAuth errors.ErrAuth
+	if ok := stdErrors.As(err, &errAuth); ok {
+		Response(w, errAuth.Code, errResp)
 		return
 	}
 
-	if stdErrors.Is(err, errors.ErrUnsupportedMediaType) {
-		Response(w, http.StatusUnsupportedMediaType, errResp)
+	if stdErrors.Is(err, errors.ErrNoCookie) {
+		Response(w, http.StatusUnauthorized, errResp)
 		return
 	}
 

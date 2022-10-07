@@ -69,7 +69,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"HTTP: error with code [415] happened: [unsupported media type]"}`,
+			ResponseBody: `{"error":"HTTP: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -95,7 +95,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"HTTP: error with code [400] happened: [content-type undefined]"}`,
+			ResponseBody: `{"error":"HTTP: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

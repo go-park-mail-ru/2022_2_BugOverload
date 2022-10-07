@@ -39,7 +39,7 @@ func TestLogoutHandler(t *testing.T) {
 		// Cookie is missing
 		TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"request has no cookies"}`,
+			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}

@@ -10,7 +10,7 @@ type ErrHTTP struct {
 }
 
 func (e ErrHTTP) Error() string {
-	return fmt.Sprintf("HTTP: error with code [%d] happened: [%s]", e.Code, e.Reason)
+	return fmt.Sprintf("HTTP: [%s]", e.Reason)
 }
 
 func NewErrHTTP(error error) ErrHTTP {
@@ -26,7 +26,7 @@ type ErrAuth struct {
 }
 
 func (e ErrAuth) Error() string {
-	return fmt.Sprintf("Auth: error with code [%d] happened: [%s]", e.Code, e.Reason)
+	return fmt.Sprintf("Auth: [%s]", e.Reason)
 }
 
 func NewErrAuth(error error) ErrAuth {
