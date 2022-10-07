@@ -155,7 +155,7 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 	var recommendFilmRequest RecommendFilmRequest
 
 	max := hf.storage.GetStorageLen()
-	min := 0
+	min := max - 3
 
 	if max == 0 {
 		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
