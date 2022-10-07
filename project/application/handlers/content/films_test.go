@@ -177,21 +177,21 @@ func TestFilmsHandlerEmptyStorage(t *testing.T) {
 			URL:          "http://localhost:8088/v1/popular_films",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: `{"error":"such film doesn't exist"}`,
+			ResponseBody: `{"error":"no such film"}`,
 		},
 		// unsuccess request in cinema
 		TestCase{
 			URL:          "http://localhost:8088/v1/in_cinema",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: `{"error":"such film doesn't exist"}`,
+			ResponseBody: `{"error":"no such film"}`,
 		},
 		// unsuccess request recommendation film
 		TestCase{
 			URL:          "http://localhost:8088/v1/recommendation_film",
 			Method:       http.MethodGet,
 			StatusCode:   http.StatusNotFound,
-			ResponseBody: `{"error":"such film doesn't exist"}`,
+			ResponseBody: `{"error":"no such film"}`,
 		},
 	}
 

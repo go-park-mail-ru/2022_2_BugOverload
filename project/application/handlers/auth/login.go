@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -21,7 +21,7 @@ func (ulr *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	if (ulr.user.Nickname == "" && ulr.user.Email == "") || ulr.user.Password == "" {
-		return errorshandlers.ErrEmptyFieldAuth
+		return errors.ErrEmptyFieldAuth
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	err := loginRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -55,13 +55,13 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	userFromDB, err := ha.userStorage.GetUser(user.Email)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 
 		return
 	}
 
 	if userFromDB.Password != user.Password {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrLoginCombinationNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.ErrLoginCombinationNotFound)
 
 		return
 	}

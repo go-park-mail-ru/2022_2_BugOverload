@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 )
 
 const TimeoutLiveCookie = 10 * time.Hour
@@ -60,7 +60,7 @@ func (cs *CookieStorage) Create(email string) string {
 // GetCookie return user using email (primary key)
 func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
 	if !cs.CheckExist(cookie) {
-		return http.Cookie{}, errorshandlers.ErrCookieNotExist
+		return http.Cookie{}, errors.ErrCookieNotExist
 	}
 
 	cs.mu.Lock()
@@ -72,7 +72,7 @@ func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
 // DeleteCookie delete cookie from storage
 func (cs *CookieStorage) DeleteCookie(cookie string) (string, error) {
 	if !cs.CheckExist(cookie) {
-		return "", errorshandlers.ErrCookieNotExist
+		return "", errors.ErrCookieNotExist
 	}
 
 	cs.mu.Lock()

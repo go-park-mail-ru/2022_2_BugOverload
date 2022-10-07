@@ -7,7 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
@@ -41,7 +41,7 @@ func TestUserStorageGet(t *testing.T) {
 	us := database.NewUserStorage()
 
 	_, err := us.GetUser("test")
-	if err != errorshandlers.ErrUserNotExist {
-		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errorshandlers.ErrUserNotExist)
+	if err != errors.ErrUserNotExist {
+		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errors.ErrUserNotExist)
 	}
 }

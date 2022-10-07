@@ -30,7 +30,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"a user with such a mail already exists"}`,
+			ResponseBody: `{"error":"such a login exists"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -56,7 +56,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"unsupported media type"}`,
+			ResponseBody: `{"error":"HTTP: error with code [415] happened: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -91,7 +91,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"content-type undefined"}`,
+			ResponseBody: `{"error":"HTTP: error with code [400] happened: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

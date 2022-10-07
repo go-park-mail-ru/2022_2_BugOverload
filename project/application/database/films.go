@@ -3,7 +3,7 @@ package database
 import (
 	"sync"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
@@ -284,7 +284,7 @@ func (fs *FilmStorage) AddFilm(f structs.Film) {
 // GetFilm return film using film_id (primary key)
 func (fs *FilmStorage) GetFilm(filmID uint) (structs.Film, error) {
 	if !fs.CheckExist(filmID) {
-		return structs.Film{}, errorshandlers.ErrFilmNotFound
+		return structs.Film{}, errors.ErrFilmNotFound
 	}
 
 	fs.mu.Lock()

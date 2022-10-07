@@ -43,7 +43,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: `{"error":"no such combination of user and password"}`,
+			ResponseBody: `{"error":"no such combination of login and password"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
@@ -69,7 +69,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"unsupported media type"}`,
+			ResponseBody: `{"error":"HTTP: error with code [415] happened: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -95,7 +95,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"content-type undefined"}`,
+			ResponseBody: `{"error":"HTTP: error with code [400] happened: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

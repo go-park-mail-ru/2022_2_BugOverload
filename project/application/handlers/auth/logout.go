@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -16,7 +16,7 @@ type UserLogoutRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (ulr *UserLogoutRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errorshandlers.ErrNoCookie
+		return errors.ErrNoCookie
 	}
 
 	return nil
@@ -33,7 +33,7 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -41,7 +41,7 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -62,7 +62,7 @@ func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if len(popularFilmRequest.filmCollection) == 0 {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
 
 		return
 	}
@@ -117,7 +117,7 @@ func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request)
 	}
 
 	if len(inCinemaRequest.filmCollection) == 0 {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
 
 		return
 	}
@@ -158,13 +158,13 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 	min := max - 4
 
 	if max == 0 {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
 		return
 	}
 
 	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
 		return
 	}
 

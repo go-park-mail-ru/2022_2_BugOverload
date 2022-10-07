@@ -3,7 +3,7 @@ package database
 import (
 	"sync"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
@@ -43,7 +43,7 @@ func (us *UserStorage) Create(u structs.User) {
 // GetUser return user using email (primary key)
 func (us *UserStorage) GetUser(email string) (structs.User, error) {
 	if !us.CheckExist(email) {
-		return structs.User{}, errorshandlers.ErrUserNotExist
+		return structs.User{}, errors.ErrUserNotExist
 	}
 
 	us.mu.Lock()

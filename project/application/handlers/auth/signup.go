@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
@@ -21,7 +21,7 @@ func (usr *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if usr.user.Nickname == "" || usr.user.Email == "" || usr.user.Password == "" {
-		return errorshandlers.ErrEmptyFieldAuth
+		return errors.ErrEmptyFieldAuth
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist {
-		httpwrapper.DefHandlerError(w, errorshandlers.ErrSignupUserExist)
+		httpwrapper.DefaultHandlerError(w, errors.ErrSignupUserExist)
 
 		return
 	}

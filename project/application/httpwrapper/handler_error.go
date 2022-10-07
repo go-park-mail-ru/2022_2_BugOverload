@@ -1,37 +1,43 @@
 package httpwrapper
 
 import (
-	"errors"
+	stdErrors "github.com/pkg/errors"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 )
 
 type ErrResponse struct {
 	ErrMassage string `json:"error,omitempty"`
 }
 
-func DefHandlerError(w http.ResponseWriter, err error) {
+func DefaultHandlerError(w http.ResponseWriter, err error) {
 	errResp := ErrResponse{
 		err.Error(),
 	}
 
-	if errors.Is(err, errorshandlers.ErrNoCookie) {
+	var errHTTP errors.ErrHTTP
+	if ok := stdErrors.As(err, &errHTTP); ok {
+		Response(w, errHTTP.Code, errResp)
+		return
+	}
+
+	if stdErrors.Is(err, errors.ErrNoCookie) {
 		Response(w, http.StatusUnauthorized, errResp)
 		return
 	}
 
-	if errors.Is(err, errorshandlers.ErrUnsupportedMediaType) {
+	if stdErrors.Is(err, errors.ErrUnsupportedMediaType) {
 		Response(w, http.StatusUnsupportedMediaType, errResp)
 		return
 	}
 
-	if errors.Is(err, errorshandlers.ErrCookieNotExist) || errors.Is(err, errorshandlers.ErrLoginCombinationNotFound) {
+	if stdErrors.Is(err, errors.ErrCookieNotExist) || stdErrors.Is(err, errors.ErrLoginCombinationNotFound) {
 		Response(w, http.StatusUnauthorized, errResp)
 		return
 	}
 
-	if errors.Is(err, errorshandlers.ErrFilmNotFound) {
+	if stdErrors.Is(err, errors.ErrFilmNotFound) {
 		Response(w, http.StatusNotFound, errResp)
 		return
 	}

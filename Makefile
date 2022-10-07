@@ -1,4 +1,4 @@
-.PHONY: all launch run_tests check_coverage
+.PHONY: all clear create_env check launch build launch_docker run_tests check_coverage check_full_coverage
 
 all: check build run_tests
 
@@ -24,11 +24,8 @@ launch:
 build:
 	go build ${TARGET}
 
-docker_launch:
+launch_docker:
 	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
-
-launch_race:
-	go run -race ${TARGET}
 
 run_tests:
 	go test -race ./... -cover -coverpkg ./...
@@ -38,4 +35,5 @@ check_coverage:
 	go tool cover -html coverage.out -o coverage.html
 
 check_full_coverage:
-	go test -race -coverpkg=./... -coverprofile=c.out ./... && go tool cover -func=c.out
+	go test -race -coverpkg=./... -coverprofile=c.out ./...
+	go tool cover -func=c.out

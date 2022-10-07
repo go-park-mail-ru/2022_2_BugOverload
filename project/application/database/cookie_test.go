@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 )
 
 func TestCookieStorage(t *testing.T) {
@@ -27,8 +27,8 @@ func TestCookieStorageDelete(t *testing.T) {
 	cs := database.NewCookieStorage()
 
 	_, err := cs.DeleteCookie("")
-	if err != errorshandlers.ErrCookieNotExist {
-		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errorshandlers.ErrCookieNotExist)
+	if err != errors.ErrCookieNotExist {
+		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errors.ErrCookieNotExist)
 	}
 }
 
@@ -45,7 +45,7 @@ func TestCookieStorageGet(t *testing.T) {
 
 	_, err = cs.GetCookie("")
 
-	if err != errorshandlers.ErrCookieNotExist {
-		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errorshandlers.ErrCookieNotExist)
+	if err != errors.ErrCookieNotExist {
+		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errors.ErrCookieNotExist)
 	}
 }

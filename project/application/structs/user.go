@@ -7,7 +7,7 @@ import (
 
 	"github.com/wonderivan/logger"
 
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 )
 
 // User is a carrier structure for all movie attributes and specifying them for json conversion
@@ -22,11 +22,11 @@ type User struct {
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errorshandlers.ErrContentTypeUndefined
+		return errors.NewErrHTTP(errors.ErrContentTypeUndefined)
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return errorshandlers.ErrUnsupportedMediaType
+		return errors.NewErrHTTP(errors.ErrUnsupportedMediaType)
 	}
 
 	body, err := io.ReadAll(r.Body)

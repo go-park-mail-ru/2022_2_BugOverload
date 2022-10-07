@@ -9,7 +9,7 @@ import (
 func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
-		DefHandlerError(w, err)
+		DefaultHandlerError(w, err)
 		return
 	}
 
@@ -18,7 +18,7 @@ func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 
 	_, err = w.Write(out)
 	if err != nil {
-		DefHandlerError(w, err)
+		DefaultHandlerError(w, err)
 		return
 	}
 }

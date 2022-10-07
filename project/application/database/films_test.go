@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 )
 
@@ -64,7 +64,7 @@ func TestFilmStorageGet(t *testing.T) {
 
 	_, err := fs.GetFilm(1)
 
-	if err != errorshandlers.ErrFilmNotFound {
+	if err != errors.ErrFilmNotFound {
 		t.Errorf("Err: [%s], expected: nil", err.Error())
 	}
 }

@@ -2,7 +2,7 @@ package auth
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/project/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/project/application/errorshandlers"
+	"go-park-mail-ru/2022_2_BugOverload/project/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/project/application/structs"
 	"net/http"
@@ -30,7 +30,7 @@ type UserAuthRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (uar *UserAuthRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errorshandlers.ErrNoCookie
+		return errors.ErrNoCookie
 	}
 
 	return nil
@@ -56,7 +56,7 @@ func (ha *HandlerAuth) Auth(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -64,13 +64,13 @@ func (ha *HandlerAuth) Auth(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := ha.cookieStorage.GetCookie(cookieStr)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
 	userFromDB, err := ha.userStorage.GetUser(cookie.Value)
 	if err != nil {
-		httpwrapper.DefHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
