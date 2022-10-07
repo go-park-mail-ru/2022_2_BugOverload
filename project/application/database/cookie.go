@@ -1,6 +1,7 @@
 package database
 
 import (
+	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
@@ -35,7 +36,7 @@ func (cs *CookieStorage) CheckExist(cookie string) bool {
 }
 
 // Create is method for creating a cookie
-func (cs *CookieStorage) Create(email string) string {
+func (cs *CookieStorage) Create() string {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
@@ -43,14 +44,16 @@ func (cs *CookieStorage) Create(email string) string {
 
 	sessionID := strconv.Itoa(len(cs.storage) + 1)
 
+	randStr := RandStringRunes(30)
+
 	cookie := http.Cookie{
 		Name:     sessionID,
-		Value:    email,
+		Value:    RandStringRunes(30),
 		Expires:  expiration,
 		HttpOnly: true,
 	}
 
-	cookieStrFullName := sessionID + "=" + email
+	cookieStrFullName := sessionID + "=" + randStr
 
 	cs.storage[cookieStrFullName] = cookie
 
@@ -85,4 +88,18 @@ func (cs *CookieStorage) DeleteCookie(cookie string) (string, error) {
 	oldCookie.Expires = time.Now().Add(-TimeoutLiveCookie)
 
 	return oldCookie.String(), nil
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
