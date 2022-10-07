@@ -18,4 +18,4 @@
 
 ### Ссылка на [backend](https://github.com/go-park-mail-ru/2022_2_BugOverload)
 
-### Ссылка на API документацию [swagger](https://app.swaggerhub.com/apis/Andeo1812/BugOverload/1.0.0#/)
+### Ссылка на API документацию [swagger](https://app.swaggerhub.com/apis/BugOverload/API-Kinopoisk/1.0.0)
