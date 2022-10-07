@@ -16,13 +16,18 @@ func DefHandlerError(w http.ResponseWriter, err error) {
 		err.Error(),
 	}
 
+	if errors.Is(err, errorshandlers.ErrNoCookie) {
+		Response(w, http.StatusUnauthorized, errResp)
+		return
+	}
+
 	if errors.Is(err, errorshandlers.ErrUnsupportedMediaType) {
 		Response(w, http.StatusUnsupportedMediaType, errResp)
 		return
 	}
 
 	if errors.Is(err, errorshandlers.ErrCookieNotExist) || errors.Is(err, errorshandlers.ErrLoginCombinationNotFound) {
-		Response(w, http.StatusForbidden, errResp)
+		Response(w, http.StatusUnauthorized, errResp)
 		return
 	}
 

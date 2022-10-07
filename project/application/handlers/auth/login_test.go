@@ -44,7 +44,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
 			ResponseBody: `{"error":"no such combination of user and password"}`,
-			StatusCode:   http.StatusForbidden,
+			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
 		TestCase{
