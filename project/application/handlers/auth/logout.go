@@ -47,5 +47,5 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Set-Cookie", badCookie)
 
-	httpwrapper.Response(w, http.StatusOK, "")
+	httpwrapper.NoContent(w, http.StatusOK)
 }

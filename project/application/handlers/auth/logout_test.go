@@ -18,7 +18,6 @@ func TestLogoutHandler(t *testing.T) {
 		TestCase{
 			Method:         http.MethodGet,
 			Cookie:         "1=YasaPupkinEzji@top.world",
-			ResponseBody:   `""`,
 			ResponseCookie: "1=YasaPupkinEzji@top.world",
 			StatusCode:     http.StatusOK,
 		},

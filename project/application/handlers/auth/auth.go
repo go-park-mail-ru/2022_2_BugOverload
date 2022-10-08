@@ -64,13 +64,13 @@ func (ha *HandlerAuth) Auth(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := ha.cookieStorage.GetCookie(cookieStr)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 
 	userFromDB, err := ha.userStorage.GetUser(cookie.Value)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 
