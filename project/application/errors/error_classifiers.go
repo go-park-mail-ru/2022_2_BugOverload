@@ -11,7 +11,7 @@ type ErrClassifier interface {
 }
 
 type ErrClassifierHTTP struct {
-	table map[string]int
+	table map[error]int
 }
 
 var (
@@ -20,10 +20,10 @@ var (
 )
 
 func NewErrClassifierHTTP() ErrClassifierHTTP {
-	res := make(map[string]int)
+	res := make(map[error]int)
 
-	res["content-type undefined"] = http.StatusBadRequest
-	res["unsupported media type"] = http.StatusUnsupportedMediaType
+	res[ErrContentTypeUndefined] = http.StatusBadRequest
+	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
 
 	return ErrClassifierHTTP{
 		table: res,
@@ -31,7 +31,7 @@ func NewErrClassifierHTTP() ErrClassifierHTTP {
 }
 
 func (ec *ErrClassifierHTTP) GetCode(error error) int {
-	code, exist := ec.table[error.Error()]
+	code, exist := ec.table[error]
 	if !exist {
 		return http.StatusInternalServerError
 	}
@@ -50,21 +50,20 @@ var (
 )
 
 type ErrClassifierAuth struct {
-	table map[string]int
+	table map[error]int
 }
 
 func NewErrClassifierAuth() ErrClassifierAuth {
-	res := make(map[string]int)
+	res := make(map[error]int)
 
-	res["request has empty fields (nickname | email | password)"] = http.StatusBadRequest
-	res["no such combination of login and password"] = http.StatusUnauthorized
+	res[ErrEmptyFieldAuth] = http.StatusBadRequest
+	res[ErrUserExist] = http.StatusBadRequest
+	res[ErrUserNotExist] = http.StatusBadRequest
+	res[ErrSignupUserExist] = http.StatusBadRequest
 
-	res["such user exist"] = http.StatusBadRequest
-	res["such user doesn't exist"] = http.StatusBadRequest
-	res["such a login exists"] = http.StatusBadRequest
-
-	res["request has no cookies"] = http.StatusUnauthorized
-	res["no such cookie"] = http.StatusUnauthorized
+	res[ErrLoginCombinationNotFound] = http.StatusUnauthorized
+	res[ErrNoCookie] = http.StatusUnauthorized
+	res[ErrCookieNotExist] = http.StatusUnauthorized
 
 	return ErrClassifierAuth{
 		table: res,
@@ -72,7 +71,7 @@ func NewErrClassifierAuth() ErrClassifierAuth {
 }
 
 func (ec *ErrClassifierAuth) GetCode(error error) int {
-	code, exist := ec.table[error.Error()]
+	code, exist := ec.table[error]
 	if !exist {
 		return http.StatusInternalServerError
 	}
@@ -86,14 +85,14 @@ var (
 )
 
 type ErrClassifierFilms struct {
-	table map[string]int
+	table map[error]int
 }
 
 func NewErrClassifierFilms() ErrClassifierFilms {
-	res := make(map[string]int)
+	res := make(map[error]int)
 
-	res["no such film"] = http.StatusNotFound
-	res["no such films"] = http.StatusNotFound
+	res[ErrFilmNotFound] = http.StatusNotFound
+	res[ErrFilmsNotFound] = http.StatusNotFound
 
 	return ErrClassifierFilms{
 		table: res,
@@ -101,7 +100,7 @@ func NewErrClassifierFilms() ErrClassifierFilms {
 }
 
 func (ec *ErrClassifierFilms) GetCode(error error) int {
-	code, exist := ec.table[error.Error()]
+	code, exist := ec.table[error]
 	if !exist {
 		return http.StatusInternalServerError
 	}

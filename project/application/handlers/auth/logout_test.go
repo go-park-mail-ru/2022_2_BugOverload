@@ -26,14 +26,14 @@ func TestLogoutHandler(t *testing.T) {
 		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"no such cookie"}`,
+			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Wrong cookie
 		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"no such cookie"}`,
+			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Cookie is missing

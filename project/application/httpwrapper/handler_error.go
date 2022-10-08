@@ -28,18 +28,9 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
-	if stdErrors.Is(err, errors.ErrNoCookie) {
-		Response(w, http.StatusUnauthorized, errResp)
-		return
-	}
-
-	if stdErrors.Is(err, errors.ErrCookieNotExist) || stdErrors.Is(err, errors.ErrLoginCombinationNotFound) {
-		Response(w, http.StatusUnauthorized, errResp)
-		return
-	}
-
-	if stdErrors.Is(err, errors.ErrFilmNotFound) {
-		Response(w, http.StatusNotFound, errResp)
+	var errFilms errors.ErrFilms
+	if ok := stdErrors.As(err, &errFilms); ok {
+		Response(w, errFilms.Code, errResp)
 		return
 	}
 

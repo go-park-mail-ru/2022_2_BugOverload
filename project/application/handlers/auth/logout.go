@@ -16,7 +16,7 @@ type UserLogoutRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (ulr *UserLogoutRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errors.ErrNoCookie
+		return errors.NewErrAuth(errors.ErrNoCookie)
 	}
 
 	return nil
@@ -41,7 +41,7 @@ func (ha *HandlerAuth) Logout(w http.ResponseWriter, r *http.Request) {
 
 	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 

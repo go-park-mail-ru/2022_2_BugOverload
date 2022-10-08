@@ -35,3 +35,19 @@ func NewErrAuth(error error) ErrAuth {
 		Code:   ErrCsfAuth.GetCode(error),
 	}
 }
+
+type ErrFilms struct {
+	Reason string
+	Code   int
+}
+
+func (e ErrFilms) Error() string {
+	return fmt.Sprintf("Films: [%s]", e.Reason)
+}
+
+func NewErrFilms(error error) ErrFilms {
+	return ErrFilms{
+		Reason: error.Error(),
+		Code:   ErrCsfFilms.GetCode(error),
+	}
+}

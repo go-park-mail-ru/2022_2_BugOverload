@@ -43,7 +43,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: `{"error":"no such combination of login and password"}`,
+			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
@@ -78,7 +78,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
@@ -87,7 +87,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
 
-			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set

@@ -21,7 +21,7 @@ func (ulr *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	if (ulr.user.Nickname == "" && ulr.user.Email == "") || ulr.user.Password == "" {
-		return errors.ErrEmptyFieldAuth
+		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
 	}
 
 	return nil
@@ -55,13 +55,13 @@ func (ha *HandlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	userFromDB, err := ha.userStorage.GetUser(user.Email)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 
 		return
 	}
 
 	if userFromDB.Password != user.Password {
-		httpwrapper.DefaultHandlerError(w, errors.ErrLoginCombinationNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrLoginCombinationNotFound))
 
 		return
 	}

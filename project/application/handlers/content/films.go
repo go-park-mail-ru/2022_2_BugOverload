@@ -62,7 +62,7 @@ func (hf *HandlerFilms) GetPopularFilms(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if len(popularFilmRequest.filmCollection) == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 
 		return
 	}
@@ -117,7 +117,7 @@ func (hf *HandlerFilms) GetFilmsInCinema(w http.ResponseWriter, r *http.Request)
 	}
 
 	if len(inCinemaRequest.filmCollection) == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 
 		return
 	}
@@ -158,13 +158,13 @@ func (hf *HandlerFilms) GetRecommendedFilm(w http.ResponseWriter, r *http.Reques
 	min := max - 4
 
 	if max == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 		return
 	}
 
 	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.ErrFilmNotFound)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 		return
 	}
 
