@@ -1,6 +1,6 @@
 # 2022_2_BugOverload
-### Проект: Кинопоиск
 
+### Проект: Кинопоиск
 
 ## MovieGate
 **MovieGate** - это агрегатор фильмов, сериалов, актёров, режиссеров и пр. В нашем сервисе пользователь получает:
@@ -30,3 +30,8 @@
 * [**Сарафанников Александр**](https://github.com/Sarafa2n) - *Frontend*
 * [**Трущелёв Михаил**](https://github.com/ThePsina) - *Backend*
 * [**Шишова Анастасия**]() - *Interfaces*
+
+### Аннотация
+Проект выполнен на:
+* [чистой архитектуре](https://github.com/bxcodec/go-clean-arch/tree/9e174b8b0bbdfbab69bc293bb2905b2bb622155c)
+* [производственном макете](https://github.com/golang-standards/project-layout/tree/721df07f8281bbf8f441ea9f74f108747e60b679)
