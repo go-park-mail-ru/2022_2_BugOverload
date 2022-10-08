@@ -1,16 +1,17 @@
-package popular_films_handler_test
+package popularfilmshandler_test
 
 import (
 	"encoding/json"
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popular_films_handler"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popularfilmshandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
@@ -32,7 +33,7 @@ func TestFilmsHandlerPopular(t *testing.T) {
 
 	fs := memory.NewFilmStorage()
 
-	filmsHandler := popular_films_handler.NewCollectionPopularHandler(fs)
+	filmsHandler := popularfilmshandler.NewCollectionPopularHandler(fs)
 
 	req := httptest.NewRequest(currentTestCase.Method, currentTestCase.URL, nil)
 	w := httptest.NewRecorder()

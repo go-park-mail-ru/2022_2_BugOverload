@@ -2,8 +2,8 @@
 
 all: check build run_tests
 
-TARGET = ./project/main.go
-ARGS= :8088 ./configs/webserver.txt
+TARGET = ./cmd/server/main.go
+ARGS= --config-path ./configs/config.toml
 LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...

@@ -72,8 +72,8 @@ func NewErrClassifierAuth() ErrClassifierAuth {
 	}
 }
 
-func (ec *ErrClassifierAuth) GetCode(error error) int {
-	code, exist := ec.table[error]
+func (ec *ErrClassifierAuth) GetCode(err error) int {
+	code, exist := ec.table[err]
 	if !exist {
 		return http.StatusInternalServerError
 	}

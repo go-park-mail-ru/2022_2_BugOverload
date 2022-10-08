@@ -1,16 +1,17 @@
-package incinema_films_handler_test
+package incinemafilmshandler_test
 
 import (
 	"encoding/json"
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/incinema_films_handler"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/incinemafilmshandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
@@ -32,7 +33,7 @@ func TestFilmsHandlerInCinema(t *testing.T) {
 
 	fs := memory.NewFilmStorage()
 
-	filmsHandler := incinema_films_handler.NewCollectionInCinemaHandler(fs)
+	filmsHandler := incinemafilmshandler.NewCollectionInCinemaHandler(fs)
 
 	req := httptest.NewRequest(currentTestCase.Method, currentTestCase.URL, nil)
 	w := httptest.NewRecorder()

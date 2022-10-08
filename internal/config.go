@@ -1,7 +1,7 @@
 package internal
 
 type Server struct {
-	BindHttpAddr string `toml:"bind_addr_http"`
+	BindHTTPAddr string `toml:"bind_addr_http"`
 	ReadTimeout  int    `toml:"read_timeout"`
 	WriteTimeout int    `toml:"write_timeout"`
 }

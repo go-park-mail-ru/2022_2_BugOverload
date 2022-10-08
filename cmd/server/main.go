@@ -1,23 +1,20 @@
-package server
+package main
 
 import (
 	"flag"
+
 	"github.com/BurntSushi/toml"
 	"github.com/sirupsen/logrus"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal"
-
-	main_server "go-park-mail-ru/2022_2_BugOverload/internal/app/server"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/server"
 )
-
-var (
-	configPath string
-)
-
-func init() {
-	flag.StringVar(&configPath, "config-path", "configs/config.toml", "path to config file")
-}
 
 func main() {
+	var configPath string
+
+	flag.StringVar(&configPath, "config-path", "configs/config.toml", "path to config file")
+
 	config := internal.NewConfig()
 
 	_, err := toml.DecodeFile(configPath, config)
@@ -25,7 +22,7 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	server := main_server.New(config)
+	server := server.New(config)
 
 	err = server.Launch()
 	if err != nil {

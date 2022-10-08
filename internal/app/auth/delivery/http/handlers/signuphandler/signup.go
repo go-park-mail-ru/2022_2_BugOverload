@@ -1,4 +1,4 @@
-package signup_handler
+package signuphandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"

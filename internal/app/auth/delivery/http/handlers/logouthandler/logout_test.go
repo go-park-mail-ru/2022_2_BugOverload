@@ -1,15 +1,14 @@
-package auth_handler_test
+package logouthandler_test
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/logouthandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/auth_handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
 // TestCase is structure for API testing
@@ -24,14 +23,21 @@ type TestCase struct {
 	StatusCode      int
 }
 
-func TestAuthHandler(t *testing.T) {
+func TestLogoutHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
+			Method:         http.MethodGet,
+			Cookie:         "1=YasaPupkinEzji@top.world",
+			ResponseCookie: "1=YasaPupkinEzji@top.world",
+			StatusCode:     http.StatusNoContent,
+		},
+		// Cookie has been deleted
+		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
-			StatusCode:   http.StatusOK,
+			ResponseBody: `{"error":"Action: [no such cookie]"}`,
+			StatusCode:   http.StatusUnauthorized,
 		},
 		// Wrong cookie
 		TestCase{
@@ -48,7 +54,7 @@ func TestAuthHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/auth"
+	url := "http://localhost:8088/v1/auth/logout"
 
 	us := memory.NewUserStorage()
 	user := models.User{
@@ -62,7 +68,7 @@ func TestAuthHandler(t *testing.T) {
 	cs := memory.NewCookieStorage()
 	cs.Create("YasaPupkinEzji@top.world")
 
-	authHandler := auth_handler.NewHandler(us, cs)
+	logoutHandler := logouthandler.NewHandler(us, cs)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -78,7 +84,7 @@ func TestAuthHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 
-		authHandler.Action(w, req)
+		logoutHandler.Action(w, req)
 
 		if w.Code != item.StatusCode {
 			t.Errorf("[%d] wrong StatusCode: got [%d], expected [%d]", caseNum, w.Code, item.StatusCode)

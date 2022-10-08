@@ -1,4 +1,4 @@
-package login_handler
+package loginhandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"

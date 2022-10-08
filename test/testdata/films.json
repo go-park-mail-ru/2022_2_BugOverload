@@ -1,0 +1,327 @@
+[
+  {
+    "film_name": "Дюна",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/dune_poster.jpg",
+    "ratio": "9.9",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 1,
+    "film_name": "Убить Билла",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/8.png",
+    "ratio": "9.0",
+    "genres": [
+      "Боевик",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 2,
+    "film_name": "Головокружение",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/9.png",
+    "ratio": "7.1",
+    "genres": [
+      "Триллер",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 3,
+    "film_name": "Петровы в гриппе",
+    "year_prod": "2020",
+    "poster_ver": "asserts/img/posters/30.png",
+    "ratio": "6.8",
+    "genres": [
+      "Драма",
+      "фантастика"
+    ]
+  },
+  {
+    "film_id": 4,
+    "film_name": "Она",
+    "year_prod": "2013",
+    "poster_ver": "asserts/img/posters/31.png",
+    "ratio": "7.6",
+    "genres": [
+      "Мелодрама",
+      "фантастика"
+    ]
+  },
+  {
+    "film_id": 5,
+    "film_name": "Плата за страх",
+    "year_prod": "1952",
+    "poster_ver": "asserts/img/posters/32.png",
+    "ratio": "8.0",
+    "genres": [
+      "Мелодрама",
+      "фантастика"
+    ]
+  },
+  {
+    "film_id": 6,
+    "film_name": "Черное зеркало",
+    "year_prod": "2011-2019",
+    "poster_ver": "asserts/img/posters/33.png",
+    "ratio": "8.5",
+    "genres": [
+      "Фантастика",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 7,
+    "film_name": "Олдбой",
+    "year_prod": "2003",
+    "poster_ver": "asserts/img/posters/34.png",
+    "ratio": "8.1",
+    "genres": [
+      "Триллер",
+      "детектив"
+    ]
+  },
+  {
+    "film_id": 8,
+    "film_name": "Доказательство смерти",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/5.png",
+    "ratio": "3.3",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 9,
+    "film_name": "Чунгингский экспресс",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/7.png",
+    "ratio": "7.1",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 10,
+    "film_name": "Девушка с татуировкой дракона",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/6.png",
+    "ratio": "5.7",
+    "genres": [
+      "Триллер",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 11,
+    "film_name": "Человек",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/1.png",
+    "ratio": "7.1",
+    "genres": [
+      "Документальный",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 12,
+    "film_name": "Люси",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/2.png",
+    "ratio": "8.9",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 13,
+    "film_name": "Властелин колец. Братство кольца",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/3.png",
+    "ratio": "8.4",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 14,
+    "film_name": "Дом, который построил Джек",
+    "year_prod": "2021",
+    "poster_ver": "asserts/img/posters/4.png",
+    "ratio": "7.2",
+    "genres": [
+      "Фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 15,
+    "film_name": "Интерстеллар",
+    "year_prod": "2014",
+    "poster_ver": "asserts/img/posters/10.png",
+    "ratio": "8.6",
+    "genres": [
+      "Фантастика",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 16,
+    "film_name": "1+1",
+    "year_prod": "2011",
+    "poster_ver": "asserts/img/posters/11.png",
+    "ratio": "8.8",
+    "genres": [
+      "Комедия",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 17,
+    "film_name": "Темный рыцарь",
+    "year_prod": "2008",
+    "poster_ver": "asserts/img/posters/12.png",
+    "ratio": "8.5",
+    "genres": [
+      "Фантастика",
+      "боевик"
+    ]
+  },
+  {
+    "film_id": 18,
+    "film_name": "Бойцовский клуб",
+    "year_prod": "1999",
+    "poster_ver": "asserts/img/posters/13.png",
+    "ratio": "8.6",
+    "genres": [
+      "Триллер",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 19,
+    "film_name": "Титаник",
+    "year_prod": "1997",
+    "poster_ver": "asserts/img/posters/14.png",
+    "ratio": "8.6",
+    "genres": [
+      "Мелодрама",
+      "история"
+    ]
+  },
+  {
+    "film_id": 20,
+    "film_name": "Ходячий замок",
+    "year_prod": "2004",
+    "poster_ver": "asserts/img/posters/15.png",
+    "ratio": "8.3",
+    "genres": [
+      "Мультфильм",
+      "аниме"
+    ]
+  },
+  {
+    "film_id": 21,
+    "film_name": "Волк с Уолл-стрит",
+    "year_prod": "2013",
+    "poster_ver": "asserts/img/posters/16.png",
+    "ratio": "7.9",
+    "genres": [
+      "Криминал",
+      "комедия"
+    ]
+  },
+  {
+    "film_id": 22,
+    "film_name": "Три тысячи лет желаний",
+    "year_prod": "2022",
+    "poster_ver": "asserts/img/posters/17.png",
+    "ratio": "7.0",
+    "genres": [
+      "Фэнтези",
+      "драма"
+    ]
+  },
+  {
+    "film_id": 23,
+    "film_name": "Джиперс Криперс: Возрожденный",
+    "year_prod": "2022",
+    "poster_ver": "asserts/img/posters/18.png",
+    "ratio": "3.5",
+    "genres": [
+      "Ужасы"
+    ]
+  },
+  {
+    "film_id": 24,
+    "film_name": "Эра выживания ",
+    "year_prod": "2022",
+    "poster_ver": "asserts/img/posters/19.png",
+    "ratio": "5.5",
+    "genres": [
+      "Фантастика"
+    ]
+  },
+  {
+    "film_id": 25,
+    "film_name": "Проклятие Плачущей. Возвращение",
+    "year_prod": "2022",
+    "poster_ver": "asserts/img/posters/20.png",
+    "ratio": "4.2",
+    "genres": [
+      "Ужасы"
+    ]
+  },
+  {
+    "film_id": 26,
+    "film_name": "Звёздные войны. Эпизод IV: Новая надежда",
+    "short_description": "Галактическая империя порабощает целые системы, повстанцы будут мешать этому",
+    "year_prod": "2021",
+    "poster_hor": "asserts/img/StarWars.jpeg",
+    "genres": [
+      "фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 27,
+    "film_name": "Дюна",
+    "short_description": "Наследник дома Атрейдесов отправляется на одну из самых опасных планет во Вселенной — Арракис",
+    "year_prod": "2021",
+    "poster_hor": "asserts/img/dune.jpg",
+    "genres": [
+      "фэнтези",
+      "приключения"
+    ]
+  },
+  {
+    "film_id": 28,
+    "film_name": "Джокер",
+    "short_description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
+    "year_prod": "2021",
+    "poster_hor": "asserts/img/joker_hor.jpg",
+    "genres": [
+      "драма"
+    ]
+  },
+  {
+    "film_id": 29,
+    "film_name": "2001: Космическая одисея",
+    "short_description": "Экипаж космического корабля «Дискавери» должен исследовать район галактики",
+    "year_prod": "1968",
+    "poster_hor": "asserts/img/space_odyssey_hor.jpg",
+    "genres": [
+      "фэнтези",
+      "приключения"
+    ]
+  }
+]

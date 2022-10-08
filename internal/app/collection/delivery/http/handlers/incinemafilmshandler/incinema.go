@@ -1,4 +1,4 @@
-package incinema_films_handler
+package incinemafilmshandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
@@ -20,6 +20,8 @@ func NewCollectionInCinemaHandler(fs *memory.FilmStorage) *CollectionInCinemaHan
 		fs,
 	}
 }
+
+const countParts = 2
 
 // Action is handle InCinema request
 func (hf *CollectionInCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {

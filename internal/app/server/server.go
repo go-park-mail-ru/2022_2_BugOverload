@@ -1,13 +1,15 @@
 package server
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/sirupsen/logrus"
 	"github.com/wonderivan/logger"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/middleware"
-	"net/http"
-	"time"
 )
 
 type Server struct {
@@ -22,7 +24,7 @@ func New(config *internal.Config) *Server {
 
 // Launch is used to start the server
 func (s *Server) Launch() error {
-	logger.Info("starting server at " + s.config.Server.BindHttpAddr)
+	logger.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	us := memory.NewUserStorage()
 	cs := memory.NewCookieStorage()
@@ -34,7 +36,7 @@ func (s *Server) Launch() error {
 	routerCors := cors.SetCors(router)
 
 	server := http.Server{
-		Addr:         s.config.Server.BindHttpAddr,
+		Addr:         s.config.Server.BindHTTPAddr,
 		Handler:      routerCors,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Millisecond,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Millisecond,

@@ -1,4 +1,4 @@
-package auth_handler
+package logouthandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
@@ -25,9 +25,9 @@ func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *Handler {
 
 // Action is handling request for check current client cookie and return user data
 func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
-	var authRequest models.UserAuthRequest
+	var logoutRequest models.UserLogoutRequest
 
-	err := authRequest.Bind(w, r)
+	err := logoutRequest.Bind(w, r)
 	if err != nil {
 		httpwrapper2.DefaultHandlerError(w, err)
 		return
@@ -35,17 +35,13 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	cookie, err := ha.cookieStorage.GetCookie(cookieStr)
+	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
 		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 
-	userFromDB, err := ha.userStorage.GetUser(cookie.Value)
-	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
-		return
-	}
+	w.Header().Set("Set-Cookie", badCookie)
 
-	httpwrapper2.Response(w, http.StatusOK, authRequest.ToPublic(&userFromDB))
+	httpwrapper2.NoContent(w)
 }

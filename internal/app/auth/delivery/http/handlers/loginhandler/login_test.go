@@ -1,13 +1,15 @@
-package signup_handler_test
+package loginhandler_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/signup_handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/loginhandler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
 // TestCase is structure for API testing
@@ -22,33 +24,33 @@ type TestCase struct {
 	StatusCode      int
 }
 
-func TestSignupHandler(t *testing.T) {
+func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
 			Method:          http.MethodPost,
 			ContentType:     "application/json",
-			RequestBody:     `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
+			RequestBody:     `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 			CookieUserEmail: "YasaPupkinEzji@top.world",
 
 			ResponseCookie: "1=YasaPupkinEzji@top.world",
-			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru"}`,
-			StatusCode:     http.StatusCreated,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			StatusCode:     http.StatusOK,
 		},
-		// Such user exists
+		// Wrong password
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
-			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
+			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: `{"error":"Action: [such a login exists]"}`,
-			StatusCode:   http.StatusBadRequest,
+			ResponseBody: `{"error":"Action: [no such combination of login and password]"}`,
+			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
-			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
+			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
 			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
 			StatusCode:   http.StatusBadRequest,
@@ -74,7 +76,7 @@ func TestSignupHandler(t *testing.T) {
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
-			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
+			RequestBody: `{"password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
@@ -83,16 +85,7 @@ func TestSignupHandler(t *testing.T) {
 		TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
-			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
-
-			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
-			StatusCode:   http.StatusBadRequest,
-		},
-		// Empty required field - nickname
-		TestCase{
-			Method:      http.MethodPost,
-			ContentType: "application/json",
-			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
+			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
 
 			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
@@ -100,18 +93,27 @@ func TestSignupHandler(t *testing.T) {
 		// Content-Type not set
 		TestCase{
 			Method:      http.MethodPost,
-			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
+			RequestBody: `{"password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}
 
-	url := "http://localhost:8088/v1/auth/signup"
+	url := "http://localhost:8088/v1/auth/login"
 
 	us := memory.NewUserStorage()
+	user := models.User{
+		Nickname: "Andeo",
+		Email:    "YasaPupkinEzji@top.world",
+		Password: "Widget Adapter",
+		Avatar:   "URL",
+	}
+	us.Create(user)
+
 	cs := memory.NewCookieStorage()
-	authHandler := signup_handler.NewHandler(us, cs)
+
+	authHandler := loginhandler.NewHandler(us, cs)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -120,6 +122,7 @@ func TestSignupHandler(t *testing.T) {
 		if item.ContentType != "" {
 			req.Header.Set("Content-Type", item.ContentType)
 		}
+
 		w := httptest.NewRecorder()
 
 		authHandler.Action(w, req)
@@ -151,7 +154,7 @@ func TestSignupHandler(t *testing.T) {
 
 		bodyStr := string(body)
 		if bodyStr != item.ResponseBody {
-			t.Errorf("[%d] wrong Response: got [%+v], expected [%+v]", caseNum, bodyStr, item.ResponseBody)
+			t.Errorf("[%d] wrong Response: got [%s], expected [%s]", caseNum, bodyStr, item.ResponseBody)
 		}
 	}
 }
