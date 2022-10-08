@@ -16,7 +16,7 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		err.Error(),
 	}
 
-	var errHTTP errors.ErrHTTP
+	var errHTTP errors.ErrDefaultValidation
 	if ok := stdErrors.As(err, &errHTTP); ok {
 		Response(w, errHTTP.Code, errResp)
 		return
@@ -34,5 +34,5 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
-	Response(w, http.StatusBadRequest, errResp)
+	//  Response(w, http.StatusBadRequest, errResp)
 }

@@ -4,19 +4,19 @@ import (
 	"fmt"
 )
 
-type ErrHTTP struct {
+type ErrDefaultValidation struct {
 	Reason string
 	Code   int
 }
 
-func (e ErrHTTP) Error() string {
-	return fmt.Sprintf("HTTP: [%s]", e.Reason)
+func (e ErrDefaultValidation) Error() string {
+	return fmt.Sprintf("Def validation: [%s]", e.Reason)
 }
 
-func NewErrHTTP(error error) ErrHTTP {
-	return ErrHTTP{
+func NewErrValidation(error error) ErrDefaultValidation {
+	return ErrDefaultValidation{
 		Reason: error.Error(),
-		Code:   ErrCsfHTTP.GetCode(error),
+		Code:   ErrCsfValid.GetCode(error),
 	}
 }
 

@@ -30,7 +30,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"such a login exists"}`,
+			ResponseBody: `{"error":"Auth: [such a login exists]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -39,7 +39,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
 
-			ResponseBody: `{"error":"unexpected end of JSON input"}`,
+			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
@@ -47,7 +47,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
-			ResponseBody: `{"error":"unexpected end of JSON input"}`,
+			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -56,7 +56,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"HTTP: [unsupported media type]"}`,
+			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -65,7 +65,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
@@ -74,7 +74,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
 
-			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - nickname
@@ -83,7 +83,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"request has empty fields (nickname | email | password)"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
@@ -91,7 +91,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"HTTP: [content-type undefined]"}`,
+			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

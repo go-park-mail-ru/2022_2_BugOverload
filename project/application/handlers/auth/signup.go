@@ -21,7 +21,7 @@ func (usr *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if usr.user.Nickname == "" || usr.user.Email == "" || usr.user.Password == "" {
-		return errors.ErrEmptyFieldAuth
+		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
 	}
 
 	return nil
@@ -55,8 +55,7 @@ func (ha *HandlerAuth) Signup(w http.ResponseWriter, r *http.Request) {
 
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist {
-		httpwrapper.DefaultHandlerError(w, errors.ErrSignupUserExist)
-
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSignupUserExist))
 		return
 	}
 

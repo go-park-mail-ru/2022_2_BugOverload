@@ -10,27 +10,29 @@ type ErrClassifier interface {
 	GetCode(error) int
 }
 
-type ErrClassifierHTTP struct {
+type ErrClassifierDefaultValidation struct {
 	table map[error]int
 }
 
 var (
+	ErrCJSONUnexpectedEnd   = stdErrors.New("unexpected end of JSON input")
 	ErrContentTypeUndefined = stdErrors.New("content-type undefined")
 	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
 )
 
-func NewErrClassifierHTTP() ErrClassifierHTTP {
+func NewErrClassifierValidation() ErrClassifierDefaultValidation {
 	res := make(map[error]int)
 
+	res[ErrCJSONUnexpectedEnd] = http.StatusBadRequest
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
 	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
 
-	return ErrClassifierHTTP{
+	return ErrClassifierDefaultValidation{
 		table: res,
 	}
 }
 
-func (ec *ErrClassifierHTTP) GetCode(error error) int {
+func (ec *ErrClassifierDefaultValidation) GetCode(error error) int {
 	code, exist := ec.table[error]
 	if !exist {
 		return http.StatusInternalServerError
@@ -108,6 +110,6 @@ func (ec *ErrClassifierFilms) GetCode(error error) int {
 	return code
 }
 
-var ErrCsfHTTP = NewErrClassifierHTTP()
+var ErrCsfValid = NewErrClassifierValidation()
 var ErrCsfAuth = NewErrClassifierAuth()
 var ErrCsfFilms = NewErrClassifierFilms()

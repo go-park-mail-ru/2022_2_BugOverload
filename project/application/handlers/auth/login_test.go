@@ -52,7 +52,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
-			ResponseBody: `{"error":"unexpected end of JSON input"}`,
+			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
@@ -60,7 +60,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
-			ResponseBody: `{"error":"unexpected end of JSON input"}`,
+			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -69,7 +69,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"HTTP: [unsupported media type]"}`,
+			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -95,7 +95,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"HTTP: [content-type undefined]"}`,
+			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

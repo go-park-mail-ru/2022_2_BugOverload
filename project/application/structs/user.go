@@ -22,11 +22,11 @@ type User struct {
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errors.NewErrHTTP(errors.ErrContentTypeUndefined)
+		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return errors.NewErrHTTP(errors.ErrUnsupportedMediaType)
+		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -42,7 +42,7 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return err
+		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
 	}
 
 	return nil
