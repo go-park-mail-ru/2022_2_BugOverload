@@ -4,6 +4,7 @@ all: check build run_tests
 
 TARGET = ./project/main.go
 ARGS= :8088 ./configs/webserver.txt
+LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...
 
@@ -15,7 +16,7 @@ create_env:
 	${GOPATH}/bin/golangci-lint
 
 check:
-	${GOPATH}/bin/golangci-lint run --config=linters_config/.golangci.yml
+	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
 launch:
@@ -28,12 +29,12 @@ launch_docker:
 	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
 
 run_tests:
-	go test -race ./... -cover -coverpkg ./...
+	go test -race ${PKG} -cover -coverpkg ${PKG}
 
 check_coverage:
-	go test ./... -coverprofile coverage.out
+	go test ${PKG} -coverprofile coverage.out
 	go tool cover -html coverage.out -o coverage.html
 
 check_full_coverage:
-	go test -race -coverpkg=./... -coverprofile=c.out ./...
+	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
 	go tool cover -func=c.out
