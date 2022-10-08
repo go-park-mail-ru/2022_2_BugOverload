@@ -31,10 +31,10 @@ launch_docker:
 run_tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
 
-check_coverage:
+get_coverage:
 	go test ${PKG} -coverprofile coverage.out
 	go tool cover -html coverage.out -o coverage.html
 
-check_full_coverage:
+get_coverage_stat:
 	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
 	go tool cover -func=c.out

@@ -1,2 +1,0 @@
-ReadTimeOut: 10
-WriteTimeOut: 10
