@@ -21,15 +21,17 @@ func NewCollectionPopularHandler(fs *memory.FilmStorage) *CollectionPopularHandl
 	}
 }
 
-//const countParts = 2
+// tmp const
+const countParts = 2
+const countFilmPreview = 5
 
 // Action is handle getPopularFilms request
 func (hf *CollectionPopularHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var popularFilmRequest models.PopularFilmsRequest
 
 	upperBound := 0
-	if (hf.storage.GetStorageLen()-5)/2 > 0 {
-		upperBound = (hf.storage.GetStorageLen() - 5) / 2
+	if (hf.storage.GetStorageLen()-countFilmPreview)/countParts > 0 {
+		upperBound = (hf.storage.GetStorageLen() - countFilmPreview) / countParts
 	}
 
 	for i := 0; i < upperBound; i++ {

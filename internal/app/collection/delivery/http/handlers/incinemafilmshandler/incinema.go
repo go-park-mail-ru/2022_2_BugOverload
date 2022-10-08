@@ -21,7 +21,9 @@ func NewCollectionInCinemaHandler(fs *memory.FilmStorage) *CollectionInCinemaHan
 	}
 }
 
+// tmp const
 const countParts = 2
+const countFilmPreview = 5
 
 // Action is handle InCinema request
 func (hf *CollectionInCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
@@ -29,11 +31,11 @@ func (hf *CollectionInCinemaHandler) Action(w http.ResponseWriter, r *http.Reque
 
 	var upperBound, lowerBound int
 
-	if hf.storage.GetStorageLen()-5 > 0 {
-		upperBound = hf.storage.GetStorageLen() - 5
+	if hf.storage.GetStorageLen()-countFilmPreview > 0 {
+		upperBound = hf.storage.GetStorageLen() - countFilmPreview
 	}
-	if (hf.storage.GetStorageLen()-5)/2 >= 0 {
-		lowerBound = (hf.storage.GetStorageLen() - 5) / 2
+	if (hf.storage.GetStorageLen()-countFilmPreview)/countParts >= 0 {
+		lowerBound = (hf.storage.GetStorageLen() - countFilmPreview) / countParts
 	}
 
 	for i := upperBound; i >= lowerBound; i-- {

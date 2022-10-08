@@ -1,13 +1,13 @@
 package recommendation
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
-	"math/rand"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"net/http"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
 // FilmRecommendationHandler is structure for API films requests processing
@@ -22,21 +22,24 @@ func NewHandlerRecommendationFilm(fs *memory.FilmStorage) *FilmRecommendationHan
 	}
 }
 
+// tmp const
+const countFilmPreview = 4
+
 // GetRecommendedFilm is handle film to poster request
 func (hf *FilmRecommendationHandler) GetRecommendedFilm(w http.ResponseWriter, r *http.Request) {
 	var recommendFilmRequest models.RecommendFilmRequest
 
 	max := hf.storage.GetStorageLen()
-	min := max - 4
+	min := max - countFilmPreview
 
 	if max == 0 {
-		httpwrapper2.DefaultHandlerError(w, errors2.NewErrFilms(errors2.ErrFilmNotFound))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 		return
 	}
 
-	film, err := hf.storage.GetFilm(uint(rand.Intn(max-min) + min))
+	film, err := hf.storage.GetFilm(uint(utils.Rand(max-min) + min))
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors2.NewErrFilms(errors2.ErrFilmNotFound))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
 		return
 	}
 
@@ -44,5 +47,5 @@ func (hf *FilmRecommendationHandler) GetRecommendedFilm(w http.ResponseWriter, r
 
 	response := recommendFilmRequest.CreateResponse()
 
-	httpwrapper2.Response(w, http.StatusOK, response)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

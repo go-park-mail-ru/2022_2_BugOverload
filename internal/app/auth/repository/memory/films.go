@@ -2,7 +2,7 @@ package memory
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"sync"
 
 	"github.com/sirupsen/logrus"
@@ -19,7 +19,7 @@ type FilmStorage struct {
 
 // NewFilmStorage is constructor for FilmStorage
 func NewFilmStorage() *FilmStorage {
-	file, err := ioutil.ReadFile("/home/andeo/GitHub/2022_2_BugOverload/test/testdata/films.json")
+	file, err := os.ReadFile("/home/andeo/GitHub/2022_2_BugOverload/test/testdata/films.json")
 	if err != nil {
 		logrus.Error("can't get data from file")
 		return &FilmStorage{}
@@ -43,11 +43,7 @@ func NewFilmStorage() *FilmStorage {
 
 // CheckExist is method to check the existence of such a film in the database
 func (fs *FilmStorage) CheckExist(filmID uint) bool {
-	if filmID <= uint(fs.GetStorageLen()) {
-		return true
-	}
-
-	return false
+	return filmID <= uint(fs.GetStorageLen())
 }
 
 // AddFilm is method for creating a film in database
