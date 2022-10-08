@@ -1,12 +1,11 @@
-package database
+package memory
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 const TimeoutLiveCookie = 10 * time.Hour

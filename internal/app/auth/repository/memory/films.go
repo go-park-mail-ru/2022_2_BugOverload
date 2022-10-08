@@ -1,10 +1,9 @@
-package database
+package memory
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"sync"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 // FilmStorage is TMP impl database for films, where key = film_id

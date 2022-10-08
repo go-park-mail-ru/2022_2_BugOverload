@@ -1,21 +1,21 @@
 package popular_films_handler
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
 )
 
 // CollectionPopularHandler is structure for API films requests processing
 type CollectionPopularHandler struct {
-	storage *database.FilmStorage
+	storage *memory.FilmStorage
 }
 
 // NewCollectionPopularHandler is constructor for NewCollectionPopularHandler
-func NewCollectionPopularHandler(fs *database.FilmStorage) *CollectionPopularHandler {
+func NewCollectionPopularHandler(fs *memory.FilmStorage) *CollectionPopularHandler {
 	return &CollectionPopularHandler{
 		fs,
 	}
@@ -39,12 +39,12 @@ func (hf *CollectionPopularHandler) Action(w http.ResponseWriter, r *http.Reques
 	}
 
 	if len(popularFilmRequest.FilmCollection) == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
+		httpwrapper2.DefaultHandlerError(w, errors2.NewErrFilms(errors2.ErrFilmNotFound))
 
 		return
 	}
 
 	response := popularFilmRequest.CreateResponse()
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper2.Response(w, http.StatusOK, response)
 }

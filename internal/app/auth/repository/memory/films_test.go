@@ -1,19 +1,18 @@
-package database_test
+package memory_test
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"testing"
 
 	stdErrors "github.com/pkg/errors"
 
 	"github.com/google/go-cmp/cmp"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 func TestFilmStorage(t *testing.T) {
-	fs := database.NewFilmStorage()
+	fs := memory.NewFilmStorage()
 
 	if fs.GetStorageLen() != 30 {
 		t.Errorf("Invalid film storage len, [%d], expected: 14", fs.GetStorageLen())
@@ -35,7 +34,7 @@ func TestFilmStorage(t *testing.T) {
 }
 
 func TestFilmStorageAdd(t *testing.T) {
-	fs := database.NewFilmStorage()
+	fs := memory.NewFilmStorage()
 
 	newFilm := models.Film{
 		ID:   30,
@@ -60,7 +59,7 @@ func TestFilmStorageAdd(t *testing.T) {
 }
 
 func TestFilmStorageGet(t *testing.T) {
-	fs := database.NewFilmStorage()
+	fs := memory.NewFilmStorage()
 
 	fs.ClearStorage()
 

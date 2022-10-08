@@ -2,14 +2,13 @@ package logout_handler_test
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/logout_handler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 )
 
 // TestCase is structure for API testing
@@ -57,7 +56,7 @@ func TestLogoutHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/logout"
 
-	us := database.NewUserStorage()
+	us := memory.NewUserStorage()
 	user := models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
@@ -66,7 +65,7 @@ func TestLogoutHandler(t *testing.T) {
 	}
 	us.Create(user)
 
-	cs := database.NewCookieStorage()
+	cs := memory.NewCookieStorage()
 	cs.Create("YasaPupkinEzji@top.world")
 
 	logoutHandler := logout_handler.NewHandler(us, cs)

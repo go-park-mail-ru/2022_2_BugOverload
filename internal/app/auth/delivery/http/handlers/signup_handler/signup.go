@@ -1,22 +1,21 @@
 package signup_handler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/httpwrapper"
 )
 
 // Handler is structure for API auth, login and signup processing
 type Handler struct {
-	userStorage   *database.UserStorage
-	cookieStorage *database.CookieStorage
+	userStorage   *memory.UserStorage
+	cookieStorage *memory.CookieStorage
 }
 
 // NewHandler is constructor for Handler
-func NewHandler(us *database.UserStorage, cs *database.CookieStorage) *Handler {
+func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *Handler {
 	return &Handler{
 		us,
 		cs,
@@ -29,7 +28,7 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper2.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -37,7 +36,7 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	suchUserExist := ha.userStorage.CheckExist(user.Email)
 	if suchUserExist {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSignupUserExist))
+		httpwrapper2.DefaultHandlerError(w, errors2.NewErrAuth(errors2.ErrSignupUserExist))
 		return
 	}
 
@@ -47,5 +46,5 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Set-Cookie", newCookie)
 
-	httpwrapper.Response(w, http.StatusCreated, signupRequest.ToPublic(user))
+	httpwrapper2.Response(w, http.StatusCreated, signupRequest.ToPublic(user))
 }

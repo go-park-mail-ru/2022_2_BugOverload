@@ -1,9 +1,9 @@
 package models
 
 import (
+	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
@@ -20,7 +20,7 @@ func (ulr *UserLoginRequest) Bind(w http.ResponseWriter, r *http.Request) error 
 	}
 
 	if (ulr.user.Nickname == "" && ulr.user.Email == "") || ulr.user.Password == "" {
-		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
+		return errors2.NewErrAuth(errors2.ErrEmptyFieldAuth)
 	}
 
 	return nil
@@ -48,7 +48,7 @@ type UserAuthRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (uar *UserAuthRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
+		return errors2.NewErrAuth(errors2.ErrNoCookie)
 	}
 
 	return nil
@@ -76,7 +76,7 @@ type UserLogoutRequest struct {
 // Bind is func for validation and bind request fields to User struct for login request
 func (ulr *UserLogoutRequest) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
+		return errors2.NewErrAuth(errors2.ErrNoCookie)
 	}
 
 	return nil
@@ -100,7 +100,7 @@ func (usr *UserSignupRequest) Bind(w http.ResponseWriter, r *http.Request) error
 	}
 
 	if usr.user.Nickname == "" || usr.user.Email == "" || usr.user.Password == "" {
-		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
+		return errors2.NewErrAuth(errors2.ErrEmptyFieldAuth)
 	}
 
 	return nil

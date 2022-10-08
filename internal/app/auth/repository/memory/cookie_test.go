@@ -1,17 +1,16 @@
-package database_test
+package memory_test
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"strings"
 	"testing"
 
 	stdErrors "github.com/pkg/errors"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 func TestCookieStorage(t *testing.T) {
-	cs := database.NewCookieStorage()
+	cs := memory.NewCookieStorage()
 
 	cookie := cs.Create("test@corp.mail.ru")
 
@@ -26,7 +25,7 @@ func TestCookieStorage(t *testing.T) {
 }
 
 func TestCookieStorageDelete(t *testing.T) {
-	cs := database.NewCookieStorage()
+	cs := memory.NewCookieStorage()
 
 	_, err := cs.DeleteCookie("")
 	if !stdErrors.Is(err, errors.ErrCookieNotExist) {
@@ -35,7 +34,7 @@ func TestCookieStorageDelete(t *testing.T) {
 }
 
 func TestCookieStorageGet(t *testing.T) {
-	cs := database.NewCookieStorage()
+	cs := memory.NewCookieStorage()
 
 	_ = cs.Create("test@mail.ru")
 

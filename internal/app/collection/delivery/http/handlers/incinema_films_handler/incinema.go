@@ -1,21 +1,21 @@
 package incinema_films_handler
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
 )
 
 // CollectionInCinemaHandler is structure for API films requests processing
 type CollectionInCinemaHandler struct {
-	storage *database.FilmStorage
+	storage *memory.FilmStorage
 }
 
 // NewCollectionInCinemaHandler is constructor for NewCollectionInCinemaHandler
-func NewCollectionInCinemaHandler(fs *database.FilmStorage) *CollectionInCinemaHandler {
+func NewCollectionInCinemaHandler(fs *memory.FilmStorage) *CollectionInCinemaHandler {
 	return &CollectionInCinemaHandler{
 		fs,
 	}
@@ -44,12 +44,12 @@ func (hf *CollectionInCinemaHandler) Action(w http.ResponseWriter, r *http.Reque
 	}
 
 	if len(inCinemaRequest.FilmCollection) == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
+		httpwrapper2.DefaultHandlerError(w, errors2.NewErrFilms(errors2.ErrFilmNotFound))
 
 		return
 	}
 
 	response := inCinemaRequest.CreateResponse()
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper2.Response(w, http.StatusOK, response)
 }

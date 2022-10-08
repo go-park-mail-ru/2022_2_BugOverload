@@ -1,11 +1,11 @@
 package server
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/auth_handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/login_handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/logout_handler"
@@ -16,7 +16,7 @@ import (
 )
 
 // NewRouter is constructor for mux
-func NewRouter(us *database.UserStorage, cs *database.CookieStorage, fs *database.FilmStorage) *mux.Router {
+func NewRouter(us *memory.UserStorage, cs *memory.CookieStorage, fs *memory.FilmStorage) *mux.Router {
 	router := mux.NewRouter()
 
 	authHandler := auth_handler.NewHandler(us, cs)

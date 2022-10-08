@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popular_films_handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
@@ -30,7 +30,7 @@ func TestFilmsHandlerPopular(t *testing.T) {
 		StatusCode: http.StatusOK,
 	}
 
-	fs := database.NewFilmStorage()
+	fs := memory.NewFilmStorage()
 
 	filmsHandler := popular_films_handler.NewCollectionPopularHandler(fs)
 

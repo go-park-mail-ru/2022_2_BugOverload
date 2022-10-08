@@ -1,20 +1,19 @@
-package database_test
+package memory_test
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"testing"
 
 	stdErrors "github.com/pkg/errors"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 func TestUserStorage(t *testing.T) {
-	us := database.NewUserStorage()
+	us := memory.NewUserStorage()
 
 	newUser := models.User{
 		ID:       0,
@@ -40,7 +39,7 @@ func TestUserStorage(t *testing.T) {
 }
 
 func TestUserStorageGet(t *testing.T) {
-	us := database.NewUserStorage()
+	us := memory.NewUserStorage()
 
 	_, err := us.GetUser("test")
 	if !stdErrors.Is(err, errors.ErrUserNotExist) {

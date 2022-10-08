@@ -1,13 +1,13 @@
 package auth_handler_test
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/auth_handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
@@ -50,7 +50,7 @@ func TestAuthHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth"
 
-	us := database.NewUserStorage()
+	us := memory.NewUserStorage()
 	user := models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
@@ -59,7 +59,7 @@ func TestAuthHandler(t *testing.T) {
 	}
 	us.Create(user)
 
-	cs := database.NewCookieStorage()
+	cs := memory.NewCookieStorage()
 	cs.Create("YasaPupkinEzji@top.world")
 
 	authHandler := auth_handler.NewHandler(us, cs)

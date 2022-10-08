@@ -1,11 +1,10 @@
 package httpwrapper
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 type ErrResponse struct {

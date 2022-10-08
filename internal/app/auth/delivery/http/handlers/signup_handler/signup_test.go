@@ -2,13 +2,12 @@ package signup_handler_test
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/signup_handler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 )
 
 // TestCase is structure for API testing
@@ -110,8 +109,8 @@ func TestSignupHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/signup"
 
-	us := database.NewUserStorage()
-	cs := database.NewCookieStorage()
+	us := memory.NewUserStorage()
+	cs := memory.NewCookieStorage()
 	authHandler := signup_handler.NewHandler(us, cs)
 
 	for caseNum, item := range cases {

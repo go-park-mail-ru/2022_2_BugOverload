@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/wonderivan/logger"
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/database"
 	"go-park-mail-ru/2022_2_BugOverload/internal"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/middleware"
 	"net/http"
 	"time"
@@ -24,9 +24,9 @@ func New(config *internal.Config) *Server {
 func (s *Server) Launch() error {
 	logger.Info("starting server at " + s.config.Server.BindHttpAddr)
 
-	us := database.NewUserStorage()
-	cs := database.NewCookieStorage()
-	fs := database.NewFilmStorage()
+	us := memory.NewUserStorage()
+	cs := memory.NewCookieStorage()
+	fs := memory.NewFilmStorage()
 
 	router := NewRouter(us, cs, fs)
 

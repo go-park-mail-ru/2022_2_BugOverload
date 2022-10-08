@@ -2,12 +2,11 @@ package models
 
 import (
 	"encoding/json"
+	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"io"
 	"net/http"
 
 	"github.com/wonderivan/logger"
-
-	"go-park-mail-ru/2022_2_BugOverload/OLD/application/errors"
 )
 
 // User is a carrier structure for all movie attributes and specifying them for json conversion
@@ -22,11 +21,11 @@ type User struct {
 // Bind is method for validation and create a data structure from json for processing
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
+		return errors2.NewErrValidation(errors2.ErrContentTypeUndefined)
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors2.NewErrValidation(errors2.ErrUnsupportedMediaType)
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -42,7 +41,7 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
+		return errors2.NewErrValidation(errors2.ErrCJSONUnexpectedEnd)
 	}
 
 	return nil
