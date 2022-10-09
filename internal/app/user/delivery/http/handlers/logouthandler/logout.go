@@ -9,22 +9,22 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"
 )
 
-// Handler is structure for API auth, login and signup processing
-type Handler struct {
+// handler is structure for API auth, login and signup processing
+type handler struct {
 	userStorage   *memory.UserStorage
 	cookieStorage *memory.CookieStorage
 }
 
-// NewHandler is constructor for Handler
-func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *Handler {
-	return &Handler{
+// NewHandler is constructor for handler
+func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *handler {
+	return &handler{
 		us,
 		cs,
 	}
 }
 
 // Action is handling request for check current client cookie and return user data
-func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var logoutRequest models.UserLogoutRequest
 
 	err := logoutRequest.Bind(w, r)
@@ -35,7 +35,7 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	badCookie, err := ha.cookieStorage.DeleteCookie(cookieStr)
+	badCookie, err := h.cookieStorage.DeleteCookie(cookieStr)
 	if err != nil {
 		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return

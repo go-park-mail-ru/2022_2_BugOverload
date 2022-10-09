@@ -8,22 +8,22 @@ import (
 	"net/http"
 )
 
-// Handler is structure for API auth, login and signup processing
-type Handler struct {
+// handler is structure for API auth, login and signup processing
+type handler struct {
 	userStorage   *memory.UserStorage
 	cookieStorage *memory.CookieStorage
 }
 
-// NewHandler is constructor for Handler
-func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *Handler {
-	return &Handler{
+// NewHandler is constructor for handler
+func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *handler {
+	return &handler{
 		us,
 		cs,
 	}
 }
 
 // Action is handling request
-func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var signupRequest models.UserSignupRequest
 
 	err := signupRequest.Bind(w, r)
@@ -34,15 +34,15 @@ func (ha *Handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user := signupRequest.GetUser()
 
-	suchUserExist := ha.userStorage.CheckExist(user.Email)
+	suchUserExist := h.userStorage.CheckExist(user.Email)
 	if suchUserExist {
 		httpwrapper2.DefaultHandlerError(w, errors2.NewErrAuth(errors2.ErrSignupUserExist))
 		return
 	}
 
-	ha.userStorage.Create(*user)
+	h.userStorage.Create(*user)
 
-	newCookie := ha.cookieStorage.Create(user.Email)
+	newCookie := h.cookieStorage.Create(user.Email)
 
 	w.Header().Set("Set-Cookie", newCookie)
 

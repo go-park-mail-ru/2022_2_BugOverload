@@ -1,7 +1,7 @@
 package memory_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"strings"
 	"testing"
