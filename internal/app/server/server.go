@@ -29,6 +29,7 @@ func (s *Server) Launch() error {
 	us := memory.NewUserStorage()
 	cs := memory.NewCookieStorage()
 	fs := memory.NewFilmStorage()
+	fs.FillStorage("test/testdata/films.json")
 
 	router := NewRouter(us, cs, fs)
 

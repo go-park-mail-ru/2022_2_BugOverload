@@ -19,10 +19,18 @@ type FilmStorage struct {
 
 // NewFilmStorage is constructor for FilmStorage
 func NewFilmStorage() *FilmStorage {
-	file, err := os.ReadFile("/home/andeo/GitHub/2022_2_BugOverload/test/testdata/films.json")
+	res := &FilmStorage{
+		mu: &sync.Mutex{},
+	}
+
+	return res
+}
+
+// FillStorage for getting data from file
+func (fs *FilmStorage) FillStorage(path string) {
+	file, err := os.ReadFile(path)
 	if err != nil {
 		logrus.Error("can't get data from file")
-		return &FilmStorage{}
 	}
 
 	var films []models.Film
@@ -30,15 +38,11 @@ func NewFilmStorage() *FilmStorage {
 	err = json.Unmarshal(file, &films)
 	if err != nil {
 		logrus.Error("can't Unmarshal data from file")
-		return &FilmStorage{}
 	}
 
-	res := &FilmStorage{
-		storage: films,
-		mu:      &sync.Mutex{},
-	}
+	logrus.Info(len(films))
 
-	return res
+	fs.storage = films
 }
 
 // CheckExist is method to check the existence of such a film in the database

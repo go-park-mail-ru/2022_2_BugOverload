@@ -1,15 +1,5 @@
 [
   {
-    "film_name": "Дюна",
-    "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/dune_poster.jpg",
-    "ratio": "9.9",
-    "genres": [
-      "Фэнтези",
-      "приключения"
-    ]
-  },
-  {
     "film_id": 1,
     "film_name": "Убить Билла",
     "year_prod": "2021",
