@@ -30,7 +30,8 @@ func NewHandler(us userInterface.UserService, as authInterface.AuthService) *han
 func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var signupRequest models.UserSignupRequest
 
-	if err := signupRequest.Bind(w, r); err != nil {
+	err := signupRequest.Bind(w, r)
+	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
