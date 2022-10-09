@@ -1,9 +1,11 @@
 package server
 
 import (
-	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
 	memory3 "go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
+	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,16 +20,23 @@ import (
 )
 
 // NewRouter is constructor for mux
-func NewRouter(us *memory.userRepo, cs *memory2.memoryCookieRepo, fs *memory3.FilmStorage) *mux.Router {
+func NewRouter(fs *memory3.FilmStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	authHandler := authhandler.NewHandler(us, cs)
+	us := memoryUser.NewUserRepo()
+	cs := memoryCookie.NewCookieRepo()
+
+	userService := serviceUser.NewUserService(us, 2)
+	authService := serviceAuth.NewAuthService(us, cs, 2)
+
+	authHandler := authhandler.NewHandler(userService, authService)
+	logoutHandler := logouthandler.NewHandler(userService, authService)
+	loginHandler := loginhandler.NewHandler(userService, authService)
+	singUpHandler := signuphandler.NewHandler(userService, authService)
+
 	router.HandleFunc("/v1/auth", authHandler.Action).Methods(http.MethodGet)
-	loginHandler := loginhandler.NewHandler(us, cs)
 	router.HandleFunc("/v1/auth/login", loginHandler.Action).Methods(http.MethodPost)
-	singUpHandler := signuphandler.NewHandler(us, cs)
 	router.HandleFunc("/v1/auth/signup", singUpHandler.Action).Methods(http.MethodPost)
-	logoutHandler := logouthandler.NewHandler(us, cs)
 	router.HandleFunc("/v1/auth/logout", logoutHandler.Action).Methods(http.MethodGet)
 
 	inCinemaHandler := incinemafilmshandler.NewHandler(fs)

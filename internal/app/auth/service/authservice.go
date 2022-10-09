@@ -15,9 +15,10 @@ type authService struct {
 	contextTimeout time.Duration
 }
 
-func NewAuthService(ur userInterface.UserRepository, timeout time.Duration) authInterface.AuthService {
+func NewAuthService(ur userInterface.UserRepository, ar authInterface.AuthRepository, timeout time.Duration) authInterface.AuthService {
 	return &authService{
 		userRepo:       ur,
+		authRepo:       ar,
 		contextTimeout: timeout,
 	}
 }
@@ -36,7 +37,7 @@ func (a authService) GetSession(ctx context.Context) (models.User, error) {
 	panic("implement me")
 }
 
-func (a authService) DeleteSession(ctx context.Context) error {
+func (a authService) DeleteSession(ctx context.Context) (string, error) {
 	//TODO implement me
 	panic("implement me")
 }

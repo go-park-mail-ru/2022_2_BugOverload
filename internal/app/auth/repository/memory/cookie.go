@@ -37,7 +37,7 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 }
 
 // CreateSession is method for creating a cookie
-func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) string {
+func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (string, error) {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
@@ -56,7 +56,7 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) stri
 
 	cs.storage[cookieStrFullName] = cookie
 
-	return cookie.String()
+	return cookie.String(), nil
 }
 
 type key string

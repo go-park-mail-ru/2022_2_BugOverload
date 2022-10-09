@@ -1,26 +1,26 @@
 package authhandler
 
 import (
-	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
+	"context"
 	"net/http"
 
+	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
+	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.userRepo
-	cookieStorage *memory2.memoryCookieRepo
+	userService userInterface.UserService
+	authService authInterface.AuthService
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.userRepo, cs *memory2.memoryCookieRepo) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
 	return &handler{
 		us,
-		cs,
+		as,
 	}
 }
 
@@ -30,23 +30,19 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
 	cookieStr := r.Header.Get("Cookie")
 
-	cookie, err := h.cookieStorage.GetCookie(cookieStr)
+	ctx := context.WithValue(r.Context(), "cookie", cookieStr)
+
+	user, err := h.authService.GetSession(ctx)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	userFromDB, err := h.userStorage.Login(cookie.Value)
-	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
-		return
-	}
-
-	httpwrapper2.Response(w, http.StatusOK, authRequest.ToPublic(&userFromDB))
+	httpwrapper.Response(w, http.StatusOK, authRequest.ToPublic(&user))
 }

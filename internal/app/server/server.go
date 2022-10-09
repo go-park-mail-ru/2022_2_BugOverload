@@ -1,7 +1,6 @@
 package server
 
 import (
-	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	memory3 "go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	"net/http"
 	"time"
@@ -11,7 +10,6 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/middleware"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 )
 
 type Server struct {
@@ -28,12 +26,10 @@ func New(config *internal.Config) *Server {
 func (s *Server) Launch() error {
 	logger.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
-	us := memory.NewUserRepo()
-	cs := memory2.NewCookieRepo()
 	fs := memory3.NewFilmStorage()
 	fs.FillStorage("test/testdata/films.json")
 
-	router := NewRouter(us, cs, fs)
+	router := NewRouter(fs)
 
 	cors := middleware.NewCorsMiddleware(&s.config.Cors)
 	routerCors := cors.SetCors(router)

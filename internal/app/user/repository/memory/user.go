@@ -2,6 +2,7 @@ package memory
 
 import (
 	"context"
+	"fmt"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
@@ -28,12 +29,15 @@ func (us *userRepo) CheckExist(email string) bool {
 	defer us.mu.Unlock()
 
 	_, ok := us.storage[email]
+
 	return ok
 }
 
 // Signup is method for creating a user in database
 func (us *userRepo) Signup(ctx context.Context, user *models.User) (models.User, error) {
 	if us.CheckExist(user.Email) {
+		fmt.Printf("REPO go %+v\n", user.Email)
+
 		return models.User{}, errors.ErrSignupUserExist
 	}
 
@@ -43,6 +47,8 @@ func (us *userRepo) Signup(ctx context.Context, user *models.User) (models.User,
 	user.Avatar = "asserts/img/invisibleMan.jpeg"
 
 	us.storage[user.Email] = *user
+
+	fmt.Printf("CUR STORAGE %+v\n", us.storage)
 
 	return *user, nil
 }

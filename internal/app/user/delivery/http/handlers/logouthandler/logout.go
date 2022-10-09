@@ -1,26 +1,27 @@
 package logouthandler
 
 import (
-	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
+	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
+	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
+	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.userRepo
-	cookieStorage *memory2.memoryCookieRepo
+	userService userInterface.UserService
+	authService authInterface.AuthService
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.userRepo, cs *memory2.memoryCookieRepo) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
 	return &handler{
 		us,
-		cs,
+		as,
 	}
 }
 
@@ -30,19 +31,21 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := logoutRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
 	cookieStr := r.Header.Get("Cookie")
 
-	badCookie, err := h.cookieStorage.DeleteCookie(cookieStr)
+	ctx := context.WithValue(r.Context(), "cookie", cookieStr)
+
+	badCookie, err := h.authService.DeleteSession(ctx)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 
 	w.Header().Set("Set-Cookie", badCookie)
 
-	httpwrapper2.NoContent(w)
+	httpwrapper.NoContent(w)
 }

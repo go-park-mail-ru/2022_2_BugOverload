@@ -10,12 +10,12 @@ import (
 type AuthService interface {
 	CreateSession(ctx context.Context, user *models.User) (string, error)
 	GetSession(ctx context.Context) (models.User, error)
-	DeleteSession(ctx context.Context) error
+	DeleteSession(ctx context.Context) (string, error)
 }
 
 // AuthRepository represent the article's repository
 type AuthRepository interface {
 	CreateSession(ctx context.Context, user *models.User) (string, error)
 	GetSession(ctx context.Context) (string, error)
-	DeleteSession(ctx context.Context) error
+	DeleteSession(ctx context.Context) (string, error)
 }

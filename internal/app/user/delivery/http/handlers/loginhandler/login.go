@@ -1,26 +1,26 @@
 package loginhandler
 
 import (
-	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
+	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
+	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.userRepo
-	cookieStorage *memory2.cookieRepo
+	userService userInterface.UserService
+	authService authInterface.AuthService
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.userRepo, cs *memory2.cookieRepo) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
 	return &handler{
 		us,
-		cs,
+		as,
 	}
 }
 
@@ -36,20 +36,19 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user := loginRequest.GetUser()
 
-	userFromDB, err := h.userStorage.Login(user.Email)
+	userLogged, err := h.userService.Login(r.Context(), user)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
 	}
 
-	if userFromDB.Password != user.Password {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrLoginCombinationNotFound))
+	newSession, err := h.authService.CreateSession(r.Context(), &userLogged)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	newCookie := h.cookieStorage.CreateSession(user.Email)
+	w.Header().Set("Set-Cookie", newSession)
 
-	w.Header().Set("Set-Cookie", newCookie)
-
-	httpwrapper.Response(w, http.StatusOK, loginRequest.ToPublic(&userFromDB))
+	httpwrapper.Response(w, http.StatusOK, loginRequest.ToPublic(&userLogged))
 }
