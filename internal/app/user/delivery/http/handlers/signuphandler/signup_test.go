@@ -1,35 +1,42 @@
 package signuphandler_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/signuphandler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/signuphandler"
+	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 )
 
 // TestCase is structure for API testing
 type TestCase struct {
-	Method          string
-	ContentType     string
-	RequestBody     string
-	CookieUserEmail string
-	Cookie          string
-	ResponseCookie  string
-	ResponseBody    string
-	StatusCode      int
+	Method         string
+	ContentType    string
+	RequestBody    string
+	User           models.User
+	Cookie         string
+	ResponseCookie string
+	ResponseBody   string
+	StatusCode     int
 }
 
 func TestSignupHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
-			Method:          http.MethodPost,
-			ContentType:     "application/json",
-			RequestBody:     `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
-			CookieUserEmail: "YasaPupkinEzji@top.world",
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
+			User: models.User{
+				Email: "YasaPupkinEzji@top.world",
+			},
 
 			ResponseCookie: "1=YasaPupkinEzji@top.world",
 			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru"}`,
@@ -109,8 +116,11 @@ func TestSignupHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/signup"
 
-	us := memory.NewUserStorage()
-	cs := memory.NewCookieStorage()
+	us := memoryUser.NewUserRepo()
+	cs := memoryCookie.NewCookieRepo()
+
+	serviceUser.NewUserService(us, 2)
+	serviceAuth.NewAuthService(cs, 2)
 	authHandler := signuphandler.NewHandler(us, cs)
 
 	for caseNum, item := range cases {
@@ -133,7 +143,7 @@ func TestSignupHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			fullCookieStr := cs.Create(item.CookieUserEmail)
+			fullCookieStr := cs.CreateSession(item.CookieUserEmail)
 
 			if strings.HasPrefix(fullCookieStr, item.ResponseCookie) {
 				t.Errorf("[%d] wrong cookie: got [%s], cookie must be [%s]", caseNum, respCookie, item.ResponseCookie)

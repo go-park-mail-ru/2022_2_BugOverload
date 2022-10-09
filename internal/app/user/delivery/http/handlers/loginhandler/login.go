@@ -1,22 +1,23 @@
 package loginhandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.UserStorage
-	cookieStorage *memory.CookieStorage
+	userStorage   *memory.userRepo
+	cookieStorage *memory2.cookieRepo
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *handler {
+func NewHandler(us *memory.userRepo, cs *memory2.cookieRepo) *handler {
 	return &handler{
 		us,
 		cs,
@@ -35,7 +36,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user := loginRequest.GetUser()
 
-	userFromDB, err := h.userStorage.GetUser(user.Email)
+	userFromDB, err := h.userStorage.Login(user.Email)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return
@@ -46,7 +47,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newCookie := h.cookieStorage.Create(user.Email)
+	newCookie := h.cookieStorage.CreateSession(user.Email)
 
 	w.Header().Set("Set-Cookie", newCookie)
 

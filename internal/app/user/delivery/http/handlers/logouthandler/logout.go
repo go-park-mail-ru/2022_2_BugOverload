@@ -1,22 +1,23 @@
 package logouthandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.UserStorage
-	cookieStorage *memory.CookieStorage
+	userStorage   *memory.userRepo
+	cookieStorage *memory2.memoryCookieRepo
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *handler {
+func NewHandler(us *memory.userRepo, cs *memory2.memoryCookieRepo) *handler {
 	return &handler{
 		us,
 		cs,

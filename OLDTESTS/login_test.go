@@ -1,15 +1,16 @@
-package loginhandler_test
+package OLDTESTS_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/loginhandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/loginhandler"
 )
 
 // TestCase is structure for API testing
@@ -102,16 +103,16 @@ func TestLoginHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/login"
 
-	us := memory.NewUserStorage()
+	us := memory.NewUserRepo()
 	user := models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 		Avatar:   "URL",
 	}
-	us.Create(user)
+	us.Signup(user)
 
-	cs := memory.NewCookieStorage()
+	cs := memory2.NewCookieRepo()
 
 	authHandler := loginhandler.NewHandler(us, cs)
 
@@ -136,7 +137,7 @@ func TestLoginHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			fullCookieStr := cs.Create(item.CookieUserEmail)
+			fullCookieStr := cs.CreateSession(item.CookieUserEmail)
 
 			if strings.HasPrefix(fullCookieStr, item.ResponseCookie) {
 				t.Errorf("[%d] wrong cookie: got [%s], cookie must be [%s]", caseNum, respCookie, item.ResponseCookie)

@@ -1,7 +1,8 @@
-package recommendation_test
+package OLDTESTS_test
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,8 +11,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/recommendation"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popularfilmshandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
@@ -24,21 +24,21 @@ type TestCase struct {
 	StatusCode   int
 }
 
-func TestFilmsHandlerRecommended(t *testing.T) {
+func TestFilmsHandlerPopular(t *testing.T) {
 	currentTestCase := TestCase{
-		URL:        "http://localhost:8088/v1/recommendation_film",
+		URL:        "http://localhost:8088/v1/popular_films",
 		Method:     http.MethodGet,
 		StatusCode: http.StatusOK,
 	}
 
 	fs := memory.NewFilmStorage()
 
-	filmsHandler := recommendation.NewHandlerRecommendationFilm(fs)
+	filmsHandler := popularfilmshandler.NewHandler(fs)
 
 	req := httptest.NewRequest(currentTestCase.Method, currentTestCase.URL, nil)
 	w := httptest.NewRecorder()
 
-	filmsHandler.GetRecommendedFilm(w, req)
+	filmsHandler.Action(w, req)
 
 	if w.Code != currentTestCase.StatusCode {
 		t.Errorf("Wrong StatusCode: got [%d], expected [%d]", w.Code, currentTestCase.StatusCode)
@@ -55,17 +55,21 @@ func TestFilmsHandlerRecommended(t *testing.T) {
 		t.Errorf("Err: [%s], expected: nil", err)
 	}
 
-	var responseFilm models.Film
-
-	err = json.Unmarshal(body, &responseFilm)
+	var responseCollection models.FilmCollection
+	err = json.Unmarshal(body, &responseCollection)
 
 	if err != nil {
-		t.Errorf("[%d] wrong response body, unmarshal error", 2)
+		t.Error("Popular films test: wrong response body, unmarshal error")
 	}
 
-	filmFromStorage, _ := fs.GetFilm(responseFilm.ID)
+	if responseCollection.Title != "Популярное" {
+		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Популярное")
+	}
 
-	if !cmp.Equal(responseFilm, filmFromStorage, cmpopts.IgnoreFields(models.Film{}, "Rating", "PosterVer")) {
-		t.Errorf("[%d] wrong Film: got [%v], expected [%v]", 2, responseFilm, filmFromStorage)
+	for _, film := range responseCollection.Films {
+		filmFromStorage, _ := fs.GetFilm(film.ID)
+		if !cmp.Equal(film, filmFromStorage, cmpopts.IgnoreFields(models.Film{}, "Rating")) {
+			t.Errorf("Wrong Film: got [%v], expected [%v]", film, filmFromStorage)
+		}
 	}
 }

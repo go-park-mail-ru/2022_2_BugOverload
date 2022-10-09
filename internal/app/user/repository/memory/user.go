@@ -1,27 +1,29 @@
 package memory
 
 import (
+	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"sync"
 )
 
-// UserStorage is TMP impl database for users, where key = User.Email
-type UserStorage struct {
+// userRepo is TMP impl database for users, where key = User.Email
+type userRepo struct {
 	storage map[string]models.User
 	mu      *sync.Mutex
 }
 
-// NewUserStorage is constructor for UserStorage
-func NewUserStorage() *UserStorage {
-	return &UserStorage{
+// NewUserRepo is constructor for userRepo
+func NewUserRepo() interfaces.UserRepository {
+	return &userRepo{
 		make(map[string]models.User),
 		&sync.Mutex{},
 	}
 }
 
 // CheckExist is method to check the existence of such a cookie in the database
-func (us *UserStorage) CheckExist(email string) bool {
+func (us *userRepo) CheckExist(email string) bool {
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
@@ -29,24 +31,30 @@ func (us *UserStorage) CheckExist(email string) bool {
 	return ok
 }
 
-// Create is method for creating a user in database
-func (us *UserStorage) Create(u models.User) {
+// Signup is method for creating a user in database
+func (us *userRepo) Signup(ctx context.Context, user *models.User) (models.User, error) {
+	if us.CheckExist(user.Email) {
+		return models.User{}, errors.ErrSignupUserExist
+	}
+
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
-	u.Avatar = "asserts/img/invisibleMan.jpeg"
+	user.Avatar = "asserts/img/invisibleMan.jpeg"
 
-	us.storage[u.Email] = u
+	us.storage[user.Email] = *user
+
+	return *user, nil
 }
 
-// GetUser return user using email (primary key)
-func (us *UserStorage) GetUser(email string) (models.User, error) {
-	if !us.CheckExist(email) {
+// Login return user using email (primary key)
+func (us *userRepo) Login(ctx context.Context, user *models.User) (models.User, error) {
+	if !us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrUserNotExist
 	}
 
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
-	return us.storage[email], nil
+	return us.storage[user.Email], nil
 }

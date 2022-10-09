@@ -1,7 +1,8 @@
-package popularfilmshandler_test
+package OLDTESTS_test
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,8 +11,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popularfilmshandler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/incinemafilmshandler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
@@ -24,16 +24,16 @@ type TestCase struct {
 	StatusCode   int
 }
 
-func TestFilmsHandlerPopular(t *testing.T) {
+func TestFilmsHandlerInCinema(t *testing.T) {
 	currentTestCase := TestCase{
-		URL:        "http://localhost:8088/v1/popular_films",
+		URL:        "http://localhost:8088/v1/in_cinema",
 		Method:     http.MethodGet,
 		StatusCode: http.StatusOK,
 	}
 
 	fs := memory.NewFilmStorage()
 
-	filmsHandler := popularfilmshandler.NewCollectionPopularHandler(fs)
+	filmsHandler := incinemafilmshandler.NewHandler(fs)
 
 	req := httptest.NewRequest(currentTestCase.Method, currentTestCase.URL, nil)
 	w := httptest.NewRecorder()
@@ -59,11 +59,11 @@ func TestFilmsHandlerPopular(t *testing.T) {
 	err = json.Unmarshal(body, &responseCollection)
 
 	if err != nil {
-		t.Error("Popular films test: wrong response body, unmarshal error")
+		t.Error("In cinema test: wrong response body, unmarshal error")
 	}
 
-	if responseCollection.Title != "Популярное" {
-		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Популярное")
+	if responseCollection.Title != "Сейчас в кино" {
+		t.Errorf("Wrong Title: got [%s], expected [%s]", responseCollection.Title, "Сейчас в кино")
 	}
 
 	for _, film := range responseCollection.Films {

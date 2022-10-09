@@ -1,15 +1,15 @@
-package authhandler_test
+package OLDTESTS_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	memory2 "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/logouthandler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/handlers/authhandler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
 // TestCase is structure for API testing
@@ -24,14 +24,21 @@ type TestCase struct {
 	StatusCode      int
 }
 
-func TestAuthHandler(t *testing.T) {
+func TestLogoutHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
+			Method:         http.MethodGet,
+			Cookie:         "1=YasaPupkinEzji@top.world",
+			ResponseCookie: "1=YasaPupkinEzji@top.world",
+			StatusCode:     http.StatusNoContent,
+		},
+		// Cookie has been deleted
+		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
-			StatusCode:   http.StatusOK,
+			ResponseBody: `{"error":"Action: [no such cookie]"}`,
+			StatusCode:   http.StatusUnauthorized,
 		},
 		// Wrong cookie
 		TestCase{
@@ -48,21 +55,21 @@ func TestAuthHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/auth"
+	url := "http://localhost:8088/v1/auth/logout"
 
-	us := memory.NewUserStorage()
+	us := memory.NewUserRepo()
 	user := models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 		Avatar:   "URL",
 	}
-	us.Create(user)
+	us.Signup(user)
 
-	cs := memory.NewCookieStorage()
-	cs.Create("YasaPupkinEzji@top.world")
+	cs := memory2.NewCookieRepo()
+	cs.CreateSession("YasaPupkinEzji@top.world")
 
-	authHandler := authhandler.NewHandler(us, cs)
+	logoutHandler := logouthandler.NewHandler(us, cs)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -78,7 +85,7 @@ func TestAuthHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 
-		authHandler.Action(w, req)
+		logoutHandler.Action(w, req)
 
 		if w.Code != item.StatusCode {
 			t.Errorf("[%d] wrong StatusCode: got [%d], expected [%d]", caseNum, w.Code, item.StatusCode)

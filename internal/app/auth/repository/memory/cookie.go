@@ -1,31 +1,34 @@
 package memory
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	"context"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 const TimeoutLiveCookie = 10 * time.Hour
 
-// CookieStorage is TMP impl database for cookie
-type CookieStorage struct {
+// cookieRepo is TMP impl database for cookie
+type cookieRepo struct {
 	storage map[string]http.Cookie
 	mu      *sync.Mutex
 }
 
-// NewCookieStorage is constructor for CookieStorage
-func NewCookieStorage() *CookieStorage {
-	return &CookieStorage{
+// NewCookieRepo is constructor for cookieRepo
+func NewCookieRepo() *cookieRepo {
+	return &cookieRepo{
 		make(map[string]http.Cookie),
 		&sync.Mutex{},
 	}
 }
 
 // CheckExist is method to check the existence of such a cookie in the database
-func (cs *CookieStorage) CheckExist(cookie string) bool {
+func (cs *cookieRepo) CheckExist(cookie string) bool {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
@@ -33,8 +36,8 @@ func (cs *CookieStorage) CheckExist(cookie string) bool {
 	return ok
 }
 
-// Create is method for creating a cookie
-func (cs *CookieStorage) Create(email string) string {
+// CreateSession is method for creating a cookie
+func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) string {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
@@ -44,32 +47,42 @@ func (cs *CookieStorage) Create(email string) string {
 
 	cookie := http.Cookie{
 		Name:     sessionID,
-		Value:    email,
+		Value:    user.Email,
 		Expires:  expiration,
 		HttpOnly: true,
 	}
 
-	cookieStrFullName := sessionID + "=" + email
+	cookieStrFullName := sessionID + "=" + user.Email
 
 	cs.storage[cookieStrFullName] = cookie
 
 	return cookie.String()
 }
 
-// GetCookie return user using email (primary key)
-func (cs *CookieStorage) GetCookie(cookie string) (http.Cookie, error) {
+type key string
+
+const cookieKey key = "cookie"
+
+// GetSession return user using email (primary key)
+func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
+	cookie, _ := ctx.Value(cookieKey).(string)
+
 	if !cs.CheckExist(cookie) {
-		return http.Cookie{}, errors.ErrCookieNotExist
+		return "", errors.ErrCookieNotExist
 	}
 
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	return cs.storage[cookie], nil
+	resCookie := cs.storage[cookie]
+
+	return resCookie.String(), nil
 }
 
-// DeleteCookie delete cookie from storage
-func (cs *CookieStorage) DeleteCookie(cookie string) (string, error) {
+// DeleteSession delete cookie from storage
+func (cs *cookieRepo) DeleteSession(ctx context.Context) (string, error) {
+	cookie, _ := ctx.Value(cookieKey).(string)
+
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist
 	}

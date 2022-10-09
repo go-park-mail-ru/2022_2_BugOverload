@@ -1,10 +1,10 @@
 package recommendation
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"

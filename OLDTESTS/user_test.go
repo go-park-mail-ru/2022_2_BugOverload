@@ -1,8 +1,8 @@
-package memory_test
+package OLDTESTS_test
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestUserStorage(t *testing.T) {
-	us := memory.NewUserStorage()
+	us := memory.NewUserRepo()
 
 	newUser := models.User{
 		ID:       0,
@@ -21,14 +21,14 @@ func TestUserStorage(t *testing.T) {
 		Email:    "Test@corp.mail.ru",
 	}
 
-	us.Create(newUser)
+	us.Signup(newUser)
 
 	ok := us.CheckExist(newUser.Email)
 	if !ok {
 		t.Errorf("Invalid result: [%t], expected: true", ok)
 	}
 
-	usr, err := us.GetUser(newUser.Email)
+	usr, err := us.Login(newUser.Email)
 	if err != nil {
 		t.Errorf("Err: [%s], expected: nil", err.Error())
 	}
@@ -39,9 +39,9 @@ func TestUserStorage(t *testing.T) {
 }
 
 func TestUserStorageGet(t *testing.T) {
-	us := memory.NewUserStorage()
+	us := memory.NewUserRepo()
 
-	_, err := us.GetUser("test")
+	_, err := us.Login("test")
 	if !stdErrors.Is(err, errors.ErrUserNotExist) {
 		t.Errorf("Err: [%s], expected: [%s]", err.Error(), errors.ErrUserNotExist)
 	}

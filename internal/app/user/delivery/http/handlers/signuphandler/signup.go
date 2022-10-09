@@ -1,24 +1,26 @@
 package signuphandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/delivery/http/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
-	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
+	"context"
 	"net/http"
+
+	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
+	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
 // handler is structure for API auth, login and signup processing
 type handler struct {
-	userStorage   *memory.UserStorage
-	cookieStorage *memory.CookieStorage
+	userService userInterface.UserService
+	authService authInterface.AuthService
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us *memory.UserStorage, cs *memory.CookieStorage) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
 	return &handler{
 		us,
-		cs,
+		as,
 	}
 }
 
@@ -28,23 +30,25 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(w, r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	user := signupRequest.GetUser()
+	var ctx context.Context
 
-	suchUserExist := h.userStorage.CheckExist(user.Email)
-	if suchUserExist {
-		httpwrapper2.DefaultHandlerError(w, errors2.NewErrAuth(errors2.ErrSignupUserExist))
+	user, err := h.userService.Signup(ctx, signupRequest.GetUser())
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	h.userStorage.Create(*user)
-
-	newCookie := h.cookieStorage.Create(user.Email)
+	newCookie, err := h.authService.CreateSession(ctx, &user)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
+		return
+	}
 
 	w.Header().Set("Set-Cookie", newCookie)
 
-	httpwrapper2.Response(w, http.StatusCreated, signupRequest.ToPublic(user))
+	httpwrapper.Response(w, http.StatusCreated, signupRequest.ToPublic(&user))
 }
