@@ -1,4 +1,4 @@
-package loginhandler_test
+package integrationhandlerstests
 
 import (
 	"context"
@@ -18,18 +18,6 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 )
-
-// TestCase is structure for API testing
-type TestCase struct {
-	Method          string
-	ContentType     string
-	RequestBody     string
-	CookieUserEmail string
-	Cookie          string
-	ResponseCookie  string
-	ResponseBody    string
-	StatusCode      int
-}
 
 func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{

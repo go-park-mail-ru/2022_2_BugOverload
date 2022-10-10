@@ -1,8 +1,8 @@
-package logouthandler_test
+package integrationhandlerstests
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/logouthandler"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,37 +12,20 @@ import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/authhandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 )
 
-// TestCase is structure for API testing
-type TestCase struct {
-	Method         string
-	ContentType    string
-	RequestBody    string
-	Cookie         string
-	ResponseCookie string
-	ResponseBody   string
-	StatusCode     int
-}
-
 func TestAuthHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
-			Method:         http.MethodGet,
-			Cookie:         "1=YasaPupkinEzji@top.world",
-			ResponseCookie: "1=YasaPupkinEzji@top.world",
-			StatusCode:     http.StatusNoContent,
-		},
-		// Cookie has been deleted
-		TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Action: [no such cookie]"}`,
-			StatusCode:   http.StatusUnauthorized,
+			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			StatusCode:   http.StatusOK,
 		},
 		// Wrong cookie
 		TestCase{
@@ -59,7 +42,7 @@ func TestAuthHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/auth/logput"
+	url := "http://localhost:8088/v1/auth"
 
 	us := memoryUser.NewUserRepo()
 	cs := memoryCookie.NewCookieRepo()
@@ -76,7 +59,7 @@ func TestAuthHandler(t *testing.T) {
 
 	userService := serviceUser.NewUserService(us, 2)
 	authService := serviceAuth.NewAuthService(cs, 2)
-	logoutHandler := logouthandler.NewHandler(userService, authService)
+	authHandler := authhandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)
@@ -86,8 +69,18 @@ func TestAuthHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 
-		logoutHandler.Action(w, req)
+		authHandler.Action(w, req)
+
+		resp := w.Result()
 
 		require.Equal(t, item.StatusCode, w.Code, utils.TestErrorMessage(caseNum, "Wrong StatusCode"))
+
+		body, err := io.ReadAll(resp.Body)
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+
+		err = resp.Body.Close()
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+		require.Equal(t, item.ResponseBody, string(body), utils.TestErrorMessage(caseNum, "Wrong body"))
 	}
 }
