@@ -24,12 +24,11 @@ func TestLoginHandler(t *testing.T) {
 	cases := []TestCase{
 		// Success
 		TestCase{
-			Method:          http.MethodPost,
-			ContentType:     "application/json",
-			RequestBody:     `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
-			CookieUserEmail: "YasaPupkinEzji@top.world",
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
-			ResponseCookie: "1=YasaPupkinEzji@top.world",
+			ResponseCookie: "GeneratedData",
 			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:     http.StatusOK,
 		},
@@ -136,12 +135,13 @@ func TestLoginHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			ctx := context.WithValue(context.TODO(), "cookie", item.ResponseCookie)
+			cookieName := strings.Split(respCookie, ";")[0]
 
+			ctx := context.WithValue(context.TODO(), "cookie", cookieName)
 			nameSession, err := authService.GetSession(ctx)
 			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
 
-			require.Contains(t, respCookie, nameSession, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Equal(t, respCookie, nameSession, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		body, err := io.ReadAll(resp.Body)

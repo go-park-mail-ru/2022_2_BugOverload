@@ -1,6 +1,7 @@
 package integrationhandlerstests
 
 import (
+	"context"
 	"github.com/stretchr/testify/require"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"io"
@@ -132,7 +133,13 @@ func TestSignupHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			require.Contains(t, respCookie, item.Cookie, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			cookieName := strings.Split(respCookie, ";")[0]
+
+			ctx := context.WithValue(context.TODO(), "cookie", cookieName)
+			nameSession, err := authService.GetSession(ctx)
+			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
+
+			require.Equal(t, respCookie, nameSession, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		body, err := io.ReadAll(resp.Body)

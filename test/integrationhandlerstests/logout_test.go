@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"sync"
 	"testing"
 
@@ -65,7 +66,9 @@ func TestLogoutHandler(t *testing.T) {
 	}
 
 	us.CreateUser(context.TODO(), testUser)
-	cs.CreateSession(context.TODO(), testUser)
+	cookie, _ := cs.CreateSession(context.TODO(), testUser)
+
+	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
 	userService := serviceUser.NewUserService(us, 2)
 	authService := serviceAuth.NewAuthService(cs, 2)

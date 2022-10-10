@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"sync"
 	"testing"
 
@@ -24,7 +25,6 @@ func TestAuthHandler(t *testing.T) {
 		// Success
 		TestCase{
 			Method:       http.MethodGet,
-			Cookie:       "1=YasaPupkinEzji@top.world",
 			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:   http.StatusOK,
 		},
@@ -59,7 +59,9 @@ func TestAuthHandler(t *testing.T) {
 	}
 
 	us.CreateUser(context.TODO(), testUser)
-	cs.CreateSession(context.TODO(), testUser)
+	cookie, _ := cs.CreateSession(context.TODO(), testUser)
+
+	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
 	userService := serviceUser.NewUserService(us, 2)
 	authService := serviceAuth.NewAuthService(cs, 2)

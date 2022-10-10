@@ -2,6 +2,8 @@ package memory
 
 import (
 	"context"
+	"fmt"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"net/http"
 	"strconv"
 	"sync"
@@ -43,6 +45,8 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error) {
 	cookie, _ := ctx.Value("cookie").(string)
 
+	fmt.Println("Get user", cookie)
+
 	if !cs.CheckExist(cookie) {
 		return models.User{}, errors.ErrCookieNotExist
 	}
@@ -65,17 +69,21 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 
 	sessionID := strconv.Itoa(len(cs.storageCookie) + 1)
 
+	newCookieValue, _ := utils.CryptoString(20)
+
 	cookie := http.Cookie{
 		Name:     sessionID,
-		Value:    user.Email,
+		Value:    newCookieValue,
 		Expires:  expiration,
 		HttpOnly: true,
 	}
 
-	cookieStrFullName := sessionID + "=" + user.Email
+	cookieKey := sessionID + "=" + newCookieValue
 
-	cs.storageCookie[cookieStrFullName] = cookie
-	cs.storageUserCookie[cookieStrFullName] = user
+	cs.storageCookie[cookieKey] = cookie
+	cs.storageUserCookie[cookieKey] = user
+
+	fmt.Println("create ses", cookie.String())
 
 	return cookie.String(), nil
 }
