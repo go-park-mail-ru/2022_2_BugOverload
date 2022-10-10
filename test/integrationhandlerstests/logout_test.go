@@ -24,7 +24,7 @@ func TestLogoutHandler(t *testing.T) {
 		// Success
 		TestCase{
 			Method:         http.MethodGet,
-			Cookie:         "1=YasaPupkinEzji@top.world",
+			Cookie:         "GeneratedData",
 			ResponseCookie: "1=YasaPupkinEzji@top.world",
 			StatusCode:     http.StatusNoContent,
 		},
@@ -54,8 +54,8 @@ func TestLogoutHandler(t *testing.T) {
 
 	userMutex := &sync.Mutex{}
 	authMutex := &sync.Mutex{}
-	us := memoryUser.NewUserRepo(userMutex)
 
+	us := memoryUser.NewUserRepo(userMutex)
 	cs := memoryCookie.NewCookieRepo(authMutex)
 
 	testUser := &models.User{
@@ -91,7 +91,9 @@ func TestLogoutHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
-			require.Contains(t, respCookie, item.Cookie, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			nameCookieDel := strings.Split(respCookie, ";")[0]
+
+			require.Equal(t, item.Cookie, nameCookieDel, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 	}
 }

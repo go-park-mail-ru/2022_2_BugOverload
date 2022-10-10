@@ -25,6 +25,7 @@ func TestAuthHandler(t *testing.T) {
 		// Success
 		TestCase{
 			Method:       http.MethodGet,
+			Cookie:       "GeneratedData",
 			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:   http.StatusOK,
 		},
