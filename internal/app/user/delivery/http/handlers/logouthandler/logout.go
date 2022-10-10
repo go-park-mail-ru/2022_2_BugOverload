@@ -2,6 +2,7 @@ package logouthandler
 
 import (
 	"context"
+	stdErrors "github.com/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
@@ -41,7 +42,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	badCookie, err := h.authService.DeleteSession(ctx)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 

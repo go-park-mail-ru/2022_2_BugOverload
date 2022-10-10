@@ -43,26 +43,3 @@ func (u userService) Signup(ctx context.Context, user *models.User) (models.User
 
 	return newUser, nil
 }
-
-//  login
-//userFromDB, err := h.userStorage.Login(user.Email)
-//if err != nil {
-//httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
-//return
-//}
-//
-//if userFromDB.Password != user.Password {
-//httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrLoginCombinationNotFound))
-//return
-//return
-//}
-//
-//newCookie := h.cookieStorage.CreateSession(user.Email)
-
-//  logout
-//badCookie, err := h.cookieStorage.DeleteCookie(cookieStr)
-//if err != nil {
-//httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(err))
-//return
-//}
-//}

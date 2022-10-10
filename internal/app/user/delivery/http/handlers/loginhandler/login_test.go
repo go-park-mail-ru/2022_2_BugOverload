@@ -13,7 +13,7 @@ import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
-	loginHandler "go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/loginhandler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/loginhandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
@@ -122,8 +122,8 @@ func TestLoginHandler(t *testing.T) {
 	us.CreateUser(context.TODO(), testUser)
 
 	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(us, cs, 2)
-	loginHandler := loginHandler.NewHandler(userService, authService)
+	authService := serviceAuth.NewAuthService(cs, 2)
+	loginHandler := loginhandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)

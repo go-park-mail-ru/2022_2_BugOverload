@@ -118,7 +118,7 @@ func TestSignupHandler(t *testing.T) {
 	cs := memoryCookie.NewCookieRepo()
 
 	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(us, cs, 2)
+	authService := serviceAuth.NewAuthService(cs, 2)
 	signupHandler := signuphandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {

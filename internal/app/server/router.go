@@ -27,7 +27,7 @@ func NewRouter(fs *memory3.FilmStorage) *mux.Router {
 	cs := memoryCookie.NewCookieRepo()
 
 	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(us, cs, 2)
+	authService := serviceAuth.NewAuthService(cs, 2)
 
 	authHandler := authhandler.NewHandler(userService, authService)
 	logoutHandler := logouthandler.NewHandler(userService, authService)
