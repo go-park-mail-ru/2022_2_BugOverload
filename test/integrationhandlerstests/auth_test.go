@@ -1,7 +1,9 @@
-package integrationhandlerstests
+package integrationhandlerstests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,23 +23,23 @@ import (
 )
 
 func TestAuthHandler(t *testing.T) {
-	cases := []TestCase{
+	cases := []integrationhandlerstests.TestCase{
 		// Success
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "GeneratedData",
 			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:   http.StatusOK,
 		},
 		// Wrong cookie
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
 			ResponseBody: `{"error":"Action: [no such cookie]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Cookie is missing
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:       http.MethodGet,
 			ResponseBody: `{"error":"Action: [request has no cookies]"}`,
 			StatusCode:   http.StatusUnauthorized,
@@ -59,13 +61,17 @@ func TestAuthHandler(t *testing.T) {
 		Avatar:   "URL",
 	}
 
-	us.CreateUser(context.TODO(), testUser)
-	cookie, _ := cs.CreateSession(context.TODO(), testUser)
+	_, err := us.CreateUser(context.TODO(), testUser)
+	require.Nil(t, err, utils.TestErrorMessage(-1, "Err create user for test"))
+
+	var cookie string
+	cookie, err = cs.CreateSession(context.TODO(), testUser)
+	require.Nil(t, err, utils.TestErrorMessage(-1, "Err create session-cookie for test"))
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(cs, 2)
+	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
 	authHandler := authhandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -82,7 +88,8 @@ func TestAuthHandler(t *testing.T) {
 
 		require.Equal(t, item.StatusCode, w.Code, utils.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		body, err := io.ReadAll(resp.Body)
+		var body []byte
+		body, err = io.ReadAll(resp.Body)
 		require.Nil(t, err, utils.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
 		err = resp.Body.Close()

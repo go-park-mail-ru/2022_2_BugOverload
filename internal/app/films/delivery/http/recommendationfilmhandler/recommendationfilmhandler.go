@@ -1,7 +1,8 @@
-package recommendation
+package recommendationfilmhandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"net/http"
 
@@ -16,7 +17,7 @@ type FilmRecommendationHandler struct {
 }
 
 // NewHandlerRecommendationFilm is constructor for NewHandlerRecommendationFilm
-func NewHandlerRecommendationFilm(fs *memory.FilmStorage) *FilmRecommendationHandler {
+func NewHandlerRecommendationFilm(fs *memory.FilmStorage) interfaces.Handler {
 	return &FilmRecommendationHandler{
 		fs,
 	}
@@ -25,8 +26,8 @@ func NewHandlerRecommendationFilm(fs *memory.FilmStorage) *FilmRecommendationHan
 // tmp const
 const countFilmPreview = 4
 
-// GetRecommendedFilm is handle film to poster request
-func (hf *FilmRecommendationHandler) GetRecommendedFilm(w http.ResponseWriter, r *http.Request) {
+// Action is handle film to poster request
+func (hf *FilmRecommendationHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var recommendFilmRequest models.RecommendFilmRequest
 
 	max := hf.storage.GetStorageLen()

@@ -2,6 +2,7 @@ package popularfilmshandler
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
@@ -15,7 +16,7 @@ type handler struct {
 }
 
 // NewHandler is constructor for handler
-func NewHandler(fs *memory.FilmStorage) *handler {
+func NewHandler(fs *memory.FilmStorage) interfaces.Handler {
 	return &handler{
 		fs,
 	}

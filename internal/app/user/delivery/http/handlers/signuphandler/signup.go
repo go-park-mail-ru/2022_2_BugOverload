@@ -1,6 +1,7 @@
 package signuphandler
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -19,7 +20,7 @@ type handler struct {
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) interfaces.Handler {
 	return &handler{
 		us,
 		as,

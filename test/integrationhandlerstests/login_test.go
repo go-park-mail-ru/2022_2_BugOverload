@@ -1,7 +1,9 @@
-package integrationhandlerstests
+package integrationhandlerstests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,9 +23,9 @@ import (
 )
 
 func TestLoginHandler(t *testing.T) {
-	cases := []TestCase{
+	cases := []integrationhandlerstests.TestCase{
 		// Success
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
@@ -33,7 +35,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:     http.StatusOK,
 		},
 		// Wrong password
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
@@ -42,7 +44,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
@@ -51,7 +53,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
@@ -59,7 +61,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
@@ -68,7 +70,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"password":"Widget Adapter"}`,
@@ -77,7 +79,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
@@ -86,7 +88,7 @@ func TestLoginHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
@@ -110,10 +112,11 @@ func TestLoginHandler(t *testing.T) {
 		Avatar:   "URL",
 	}
 
-	us.CreateUser(context.TODO(), testUser)
+	_, err := us.CreateUser(context.TODO(), testUser)
+	require.Nil(t, err, utils.TestErrorMessage(-1, "Err create user for test"))
 
-	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(cs, 2)
+	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
 	loginHandler := loginhandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -137,14 +140,17 @@ func TestLoginHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), "cookie", cookieName)
-			nameSession, err := authService.GetSession(ctx)
+			ctx := context.WithValue(context.TODO(), contextparams.CookieKey, cookieName)
+
+			var nameSession string
+			nameSession, err = authService.GetSession(ctx)
 			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
 
 			require.Equal(t, respCookie, nameSession, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
-		body, err := io.ReadAll(resp.Body)
+		var body []byte
+		body, err = io.ReadAll(resp.Body)
 		require.Nil(t, err, utils.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
 		err = resp.Body.Close()

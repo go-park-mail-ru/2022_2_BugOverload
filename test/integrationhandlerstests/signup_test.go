@@ -1,9 +1,8 @@
-package integrationhandlerstests
+package integrationhandlerstests_test
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,17 +10,21 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/signuphandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
+	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
 func TestSignupHandler(t *testing.T) {
-	cases := []TestCase{
+	cases := []integrationhandlerstests.TestCase{
 		// Success
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
@@ -31,7 +34,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:     http.StatusCreated,
 		},
 		// Such user exists
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
@@ -40,7 +43,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
@@ -49,7 +52,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
@@ -57,7 +60,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
@@ -66,7 +69,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
@@ -75,7 +78,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
@@ -84,7 +87,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - nickname
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
@@ -93,7 +96,7 @@ func TestSignupHandler(t *testing.T) {
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
-		TestCase{
+		integrationhandlerstests.TestCase{
 			Method:      http.MethodPost,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
@@ -110,8 +113,8 @@ func TestSignupHandler(t *testing.T) {
 	us := memoryUser.NewUserRepo(userMutex)
 	cs := memoryCookie.NewCookieRepo(authMutex)
 
-	userService := serviceUser.NewUserService(us, 2)
-	authService := serviceAuth.NewAuthService(cs, 2)
+	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
 	signupHandler := signuphandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -135,7 +138,7 @@ func TestSignupHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), "cookie", cookieName)
+			ctx := context.WithValue(context.TODO(), contextparams.CookieKey, cookieName)
 			nameSession, err := authService.GetSession(ctx)
 			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
 

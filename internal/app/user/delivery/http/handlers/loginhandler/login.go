@@ -1,13 +1,15 @@
 package loginhandler
 
 import (
-	stdErrors "github.com/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
+	stdErrors "github.com/pkg/errors"
+
 	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
@@ -18,7 +20,7 @@ type handler struct {
 }
 
 // NewHandler is constructor for handler
-func NewHandler(us userInterface.UserService, as authInterface.AuthService) *handler {
+func NewHandler(us userInterface.UserService, as authInterface.AuthService) interfaces.Handler {
 	return &handler{
 		us,
 		as,
