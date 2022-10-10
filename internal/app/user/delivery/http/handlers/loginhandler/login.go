@@ -1,6 +1,7 @@
 package loginhandler
 
 import (
+	stdErrors "github.com/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
@@ -38,13 +39,13 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	userLogged, err := h.userService.Login(r.Context(), user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	newSession, err := h.authService.CreateSession(r.Context(), &userLogged)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 

@@ -12,6 +12,6 @@ type UserService interface {
 }
 
 type UserRepository interface {
-	Login(ctx context.Context, user *models.User) (models.User, error)
-	Signup(ctx context.Context, user *models.User) (models.User, error)
+	GetUser(ctx context.Context, user *models.User) (models.User, error)
+	CreateUser(ctx context.Context, user *models.User) (models.User, error)
 }

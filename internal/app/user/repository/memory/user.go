@@ -33,7 +33,7 @@ func (us *userRepo) CheckExist(email string) bool {
 }
 
 // Signup is method for creating a user in database
-func (us *userRepo) Signup(ctx context.Context, user *models.User) (models.User, error) {
+func (us *userRepo) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
 	if us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrSignupUserExist
 	}
@@ -49,7 +49,7 @@ func (us *userRepo) Signup(ctx context.Context, user *models.User) (models.User,
 }
 
 // Login return user using email (primary key)
-func (us *userRepo) Login(ctx context.Context, user *models.User) (models.User, error) {
+func (us *userRepo) GetUser(ctx context.Context, user *models.User) (models.User, error) {
 	if !us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrUserNotExist
 	}

@@ -2,6 +2,8 @@ package authhandler
 
 import (
 	"context"
+	stdErrors "github.com/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
 	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
@@ -40,7 +42,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 

@@ -2,12 +2,12 @@ package memory
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
@@ -16,14 +16,16 @@ const TimeoutLiveCookie = 10 * time.Hour
 
 // cookieRepo is TMP impl database for cookie
 type cookieRepo struct {
-	storage map[string]http.Cookie
-	mu      *sync.Mutex
+	storageCookie     map[string]http.Cookie
+	storageUserCookie map[string]*models.User
+	mu                *sync.Mutex
 }
 
 // NewCookieRepo is constructor for cookieRepo
 func NewCookieRepo() interfaces.AuthRepository {
 	return &cookieRepo{
 		make(map[string]http.Cookie),
+		make(map[string]*models.User),
 		&sync.Mutex{},
 	}
 }
@@ -33,13 +35,25 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	_, ok := cs.storage[cookie]
+	_, ok := cs.storageCookie[cookie]
 	return ok
 }
 
 // GetUserBySession is method for creating a cookie
 func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error) {
-	return models.User{}, nil
+	cookie, _ := ctx.Value("cookie").(string)
+
+	if !cs.CheckExist(cookie) {
+		return models.User{}, errors.ErrCookieNotExist
+	}
+
+	cs.mu.Lock()
+	defer cs.mu.Unlock()
+
+	user := cs.storageUserCookie[cookie]
+
+	return *user, nil
+
 }
 
 // CreateSession is method for creating a cookie
@@ -49,7 +63,7 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 
 	expiration := time.Now().Add(TimeoutLiveCookie)
 
-	sessionID := strconv.Itoa(len(cs.storage) + 1)
+	sessionID := strconv.Itoa(len(cs.storageCookie) + 1)
 
 	cookie := http.Cookie{
 		Name:     sessionID,
@@ -60,7 +74,8 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 
 	cookieStrFullName := sessionID + "=" + user.Email
 
-	cs.storage[cookieStrFullName] = cookie
+	cs.storageCookie[cookieStrFullName] = cookie
+	cs.storageUserCookie[cookieStrFullName] = user
 
 	return cookie.String(), nil
 }
@@ -76,7 +91,7 @@ func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	resCookie := cs.storage[cookie]
+	resCookie := cs.storageCookie[cookie]
 
 	return resCookie.String(), nil
 }
@@ -92,9 +107,10 @@ func (cs *cookieRepo) DeleteSession(ctx context.Context) (string, error) {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	defer delete(cs.storage, cookie)
+	defer delete(cs.storageCookie, cookie)
+	defer delete(cs.storageUserCookie, cookie)
 
-	oldCookie := cs.storage[cookie]
+	oldCookie := cs.storageCookie[cookie]
 
 	oldCookie.Expires = time.Now().Add(-TimeoutLiveCookie)
 

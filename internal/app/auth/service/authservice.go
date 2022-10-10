@@ -26,8 +26,12 @@ func NewAuthService(ur userInterface.UserRepository, ar authInterface.AuthReposi
 }
 
 func (a authService) GetUserBySession(ctx context.Context) (models.User, error) {
-	//TODO implement me
-	panic("implement me")
+	user, err := a.authRepo.GetUserBySession(ctx)
+	if err != nil {
+		return models.User{}, errors.Wrap(err, "GetUserBySession")
+	}
+
+	return user, nil
 }
 
 func (a authService) CreateSession(ctx context.Context, user *models.User) (string, error) {
