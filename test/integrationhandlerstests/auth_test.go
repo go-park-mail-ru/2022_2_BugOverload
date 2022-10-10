@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -44,8 +45,11 @@ func TestAuthHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth"
 
-	us := memoryUser.NewUserRepo()
-	cs := memoryCookie.NewCookieRepo()
+	userMutex := &sync.Mutex{}
+	authMutex := &sync.Mutex{}
+
+	us := memoryUser.NewUserRepo(userMutex)
+	cs := memoryCookie.NewCookieRepo(authMutex)
 
 	testUser := &models.User{
 		Nickname: "Andeo",

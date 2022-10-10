@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"testing"
 
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
@@ -102,8 +103,11 @@ func TestSignupHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/signup"
 
-	us := memoryUser.NewUserRepo()
-	cs := memoryCookie.NewCookieRepo()
+	userMutex := &sync.Mutex{}
+	authMutex := &sync.Mutex{}
+
+	us := memoryUser.NewUserRepo(userMutex)
+	cs := memoryCookie.NewCookieRepo(authMutex)
 
 	userService := serviceUser.NewUserService(us, 2)
 	authService := serviceAuth.NewAuthService(cs, 2)

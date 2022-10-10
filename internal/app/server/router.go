@@ -7,6 +7,7 @@ import (
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/mux"
 
@@ -23,8 +24,11 @@ import (
 func NewRouter(fs *memory3.FilmStorage) *mux.Router {
 	router := mux.NewRouter()
 
-	us := memoryUser.NewUserRepo()
-	cs := memoryCookie.NewCookieRepo()
+	userMutex := &sync.Mutex{}
+	authMutex := &sync.Mutex{}
+
+	us := memoryUser.NewUserRepo(userMutex)
+	cs := memoryCookie.NewCookieRepo(authMutex)
 
 	userService := serviceUser.NewUserService(us, 2)
 	authService := serviceAuth.NewAuthService(cs, 2)

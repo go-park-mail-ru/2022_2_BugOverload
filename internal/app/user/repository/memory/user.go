@@ -15,10 +15,10 @@ type userRepo struct {
 }
 
 // NewUserRepo is constructor for userRepo
-func NewUserRepo() interfaces.UserRepository {
+func NewUserRepo(mu *sync.Mutex) interfaces.UserRepository {
 	return &userRepo{
 		make(map[string]models.User),
-		&sync.Mutex{},
+		mu,
 	}
 }
 

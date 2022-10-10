@@ -22,11 +22,11 @@ type cookieRepo struct {
 }
 
 // NewCookieRepo is constructor for cookieRepo
-func NewCookieRepo() interfaces.AuthRepository {
+func NewCookieRepo(mu *sync.Mutex) interfaces.AuthRepository {
 	return &cookieRepo{
 		make(map[string]http.Cookie),
 		make(map[string]*models.User),
-		&sync.Mutex{},
+		mu,
 	}
 }
 

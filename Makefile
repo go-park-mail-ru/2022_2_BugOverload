@@ -2,7 +2,7 @@
 
 all: check build run_tests
 
-TARGET = ./cmd/server/main.go
+TARGET = ./cmd/defaultlaunch/main.go
 ARGS= --config-path ./configs/config.toml
 LINTERS_CONFIG = ./configs/.golangci.yml
 
