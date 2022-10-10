@@ -2,7 +2,6 @@ package memory
 
 import (
 	"context"
-	"fmt"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"net/http"
 	"strconv"
@@ -61,8 +60,6 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 
 	cookieStrFullName := sessionID + "=" + user.Email
 
-	fmt.Println("new created name cookie", cookieStrFullName)
-
 	cs.storage[cookieStrFullName] = cookie
 
 	return cookie.String(), nil
@@ -71,8 +68,6 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 // GetSession return user using email (primary key)
 func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	cookie, _ := ctx.Value("cookie").(string)
-
-	fmt.Println("cookie for find", cookie)
 
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist
