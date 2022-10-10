@@ -2,6 +2,8 @@ package memory
 
 import (
 	"context"
+	"fmt"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"net/http"
 	"strconv"
 	"sync"
@@ -20,7 +22,7 @@ type cookieRepo struct {
 }
 
 // NewCookieRepo is constructor for cookieRepo
-func NewCookieRepo() *cookieRepo {
+func NewCookieRepo() interfaces.AuthRepository {
 	return &cookieRepo{
 		make(map[string]http.Cookie),
 		&sync.Mutex{},
@@ -34,6 +36,11 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 
 	_, ok := cs.storage[cookie]
 	return ok
+}
+
+// GetUserBySession is method for creating a cookie
+func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error) {
+	return models.User{}, nil
 }
 
 // CreateSession is method for creating a cookie
@@ -54,18 +61,18 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 
 	cookieStrFullName := sessionID + "=" + user.Email
 
+	fmt.Println("new created name cookie", cookieStrFullName)
+
 	cs.storage[cookieStrFullName] = cookie
 
 	return cookie.String(), nil
 }
 
-type key string
-
-const cookieKey key = "cookie"
-
 // GetSession return user using email (primary key)
 func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
-	cookie, _ := ctx.Value(cookieKey).(string)
+	cookie, _ := ctx.Value("cookie").(string)
+
+	fmt.Println("cookie for find", cookie)
 
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist
@@ -81,7 +88,7 @@ func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 
 // DeleteSession delete cookie from storage
 func (cs *cookieRepo) DeleteSession(ctx context.Context) (string, error) {
-	cookie, _ := ctx.Value(cookieKey).(string)
+	cookie, _ := ctx.Value("cookie").(string)
 
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist

@@ -1,6 +1,9 @@
 package signuphandler_test
 
 import (
+	"context"
+	"github.com/stretchr/testify/require"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +12,6 @@ import (
 
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/signuphandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
@@ -20,7 +22,6 @@ type TestCase struct {
 	Method         string
 	ContentType    string
 	RequestBody    string
-	User           models.User
 	Cookie         string
 	ResponseCookie string
 	ResponseBody   string
@@ -34,11 +35,8 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
-			User: models.User{
-				Email: "YasaPupkinEzji@top.world",
-			},
 
-			ResponseCookie: "1=YasaPupkinEzji@top.world",
+			ResponseCookie: "1=testmail@yandex.ru",
 			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:     http.StatusCreated,
 		},
@@ -130,38 +128,32 @@ func TestSignupHandler(t *testing.T) {
 		if item.ContentType != "" {
 			req.Header.Set("Content-Type", item.ContentType)
 		}
+
 		w := httptest.NewRecorder()
 
 		signupHandler.Action(w, req)
 
-		if w.Code != item.StatusCode {
-			t.Errorf("[%d] wrong StatusCode: got [%d], expected [%d]", caseNum, w.Code, item.StatusCode)
-		}
-
 		resp := w.Result()
 
-		//if item.ResponseCookie != "" {
-		//	respCookie := resp.Header.Get("Set-Cookie")
-		//
-		//	fullCookieStr := authService.GetSession()
-		//
-		//	if strings.HasPrefix(fullCookieStr, item.ResponseCookie) {
-		//		t.Errorf("[%d] wrong cookie: got [%s], cookie must be [%s]", caseNum, respCookie, item.ResponseCookie)
-		//	}
-		//}
+		require.Equal(t, item.StatusCode, w.Code, utils.TestErrorMessage(caseNum, "Wrong StatusCode"))
+
+		if item.ResponseCookie != "" {
+			respCookie := resp.Header.Get("Set-Cookie")
+
+			ctx := context.WithValue(context.TODO(), "cookie", item.ResponseCookie)
+
+			nameSession, err := authService.GetSession(ctx)
+			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
+
+			require.Contains(t, respCookie, nameSession, utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+		}
 
 		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			t.Errorf("[%d] err: [%s], expected: nil", caseNum, err)
-		}
-		err = resp.Body.Close()
-		if err != nil {
-			t.Errorf("[%d] err: [%s], expected: nil", caseNum, err)
-		}
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-		bodyStr := string(body)
-		if bodyStr != item.ResponseBody {
-			t.Errorf("[%d] wrong Response: got [%+v], expected [%+v]", caseNum, bodyStr, item.ResponseBody)
-		}
+		err = resp.Body.Close()
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+		require.Equal(t, item.ResponseBody, string(body), utils.TestErrorMessage(caseNum, "Wrong body"))
 	}
 }

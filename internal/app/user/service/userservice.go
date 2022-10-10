@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
 	"time"
 
@@ -30,8 +29,7 @@ func (u userService) Login(ctx context.Context, user *models.User) (models.User,
 func (u userService) Signup(ctx context.Context, user *models.User) (models.User, error) {
 	newUser, err := u.userRepo.Signup(ctx, user)
 	if err != nil {
-		fmt.Printf("SERVICE go %+v\n", user.Email)
-		return models.User{}, errors.Wrap(err, "service signup")
+		return models.User{}, errors.Wrap(err, "Signup")
 	}
 
 	return newUser, nil

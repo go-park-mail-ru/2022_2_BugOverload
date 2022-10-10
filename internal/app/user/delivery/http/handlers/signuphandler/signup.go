@@ -44,7 +44,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	newSession, err := h.authService.CreateSession(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 

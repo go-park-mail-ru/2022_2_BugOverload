@@ -8,13 +8,15 @@ import (
 
 // AuthService represent the auth service
 type AuthService interface {
+	GetUserBySession(ctx context.Context) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (string, error)
-	GetSession(ctx context.Context) (models.User, error)
+	GetSession(ctx context.Context) (string, error)
 	DeleteSession(ctx context.Context) (string, error)
 }
 
 // AuthRepository represent the article's repository
 type AuthRepository interface {
+	GetUserBySession(ctx context.Context) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (string, error)
 	GetSession(ctx context.Context) (string, error)
 	DeleteSession(ctx context.Context) (string, error)

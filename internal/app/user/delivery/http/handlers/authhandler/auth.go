@@ -38,7 +38,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.WithValue(r.Context(), "cookie", cookieStr)
 
-	user, err := h.authService.GetSession(ctx)
+	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
