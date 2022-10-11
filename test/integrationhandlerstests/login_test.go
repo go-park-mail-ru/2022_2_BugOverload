@@ -2,8 +2,6 @@ package integrationhandlerstests_test
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
-	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -20,6 +18,8 @@ import (
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
 func TestLoginHandler(t *testing.T) {

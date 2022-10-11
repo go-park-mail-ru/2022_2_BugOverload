@@ -3,10 +3,6 @@ package integrationhandlerstests_test
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popularfilmshandler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
-	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -15,9 +11,13 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/handlers/popularfilmshandler"
 	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/repository/memory"
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
 func TestPopularHandler(t *testing.T) {

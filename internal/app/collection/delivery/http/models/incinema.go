@@ -12,6 +12,6 @@ func NewFilmsInCinemaRequest(collection []models.Film) *FilmsInCinemaRequest {
 	}
 }
 
-func (fcr *FilmsInCinemaRequest) CreateResponse() *models.FilmCollection {
+func (fcr *FilmsInCinemaRequest) ToPublic() *models.FilmCollection {
 	return models.NewFilmCollection("Сейчас в кино", fcr.FilmCollection)
 }

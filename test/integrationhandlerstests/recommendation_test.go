@@ -2,6 +2,10 @@ package integrationhandlerstests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/recommendationfilmhandler"
+	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/app/films/service"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -13,29 +17,19 @@ import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/logouthandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
-func TestLogoutHandler(t *testing.T) {
+func TestRecommendationHandler(t *testing.T) {
 	cases := []integrationhandlerstests.TestCase{
 		// Success
 		integrationhandlerstests.TestCase{
-			Method:         http.MethodGet,
-			Cookie:         "GeneratedData",
-			ResponseCookie: "1=YasaPupkinEzji@top.world",
-			StatusCode:     http.StatusNoContent,
-		},
-		// Cookie has been deleted
-		integrationhandlerstests.TestCase{
-			Method:       http.MethodGet,
-			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Action: [no such cookie]"}`,
-			StatusCode:   http.StatusUnauthorized,
+			Method:     http.MethodGet,
+			Cookie:     "GeneratedData",
+			StatusCode: http.StatusOK,
 		},
 		// Wrong cookie
 		integrationhandlerstests.TestCase{
@@ -52,8 +46,9 @@ func TestLogoutHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/auth/logput"
+	url := "http://localhost:8088/v1/auth"
 
+	// Base
 	userMutex := &sync.Mutex{}
 	authMutex := &sync.Mutex{}
 
@@ -76,9 +71,18 @@ func TestLogoutHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
 	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
-	logoutHandler := logouthandler.NewHandler(userService, authService)
+
+	// Films
+	pathPreview := "../testdata/preview.json"
+
+	filmsMutex := &sync.Mutex{}
+
+	fs := memoryFilms.NewFilmRepo(filmsMutex, pathPreview)
+
+	filmsService := serviceFilms.NewFilmService(fs, contextparams.ContextTimeout)
+
+	recommendationHandler := recommendationfilmhandler.NewHandler(filmsService, authService)
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)
@@ -88,19 +92,19 @@ func TestLogoutHandler(t *testing.T) {
 
 		w := httptest.NewRecorder()
 
-		logoutHandler.Action(w, req)
+		recommendationHandler.Action(w, req)
 
 		resp := w.Result()
 
 		require.Equal(t, item.StatusCode, w.Code, utils.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+		var body []byte
+		body, err = io.ReadAll(resp.Body)
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-			nameCookieDel := strings.Split(respCookie, ";")[0]
+		err = resp.Body.Close()
+		require.Nil(t, err, utils.TestErrorMessage(caseNum, "Body.Close must be success"))
 
-			require.Equal(t, item.Cookie, nameCookieDel,
-				utils.TestErrorMessage(caseNum, "Created and received cookie not equal"))
-		}
+		require.True(t, string(body) != "", utils.TestErrorMessage(caseNum, "Wrong body"))
 	}
 }

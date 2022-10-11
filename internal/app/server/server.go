@@ -1,12 +1,10 @@
 package server
 
 import (
-	memory3 "go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	"net/http"
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/wonderivan/logger"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/middleware"
@@ -23,15 +21,12 @@ func New(config *internal.Config) *Server {
 }
 
 func (s *Server) Launch() error {
-	logger.Info("starting server at " + s.config.Server.BindHTTPAddr)
-
-	fs := memory3.NewFilmStorage()
-	fs.FillStorage("test/testdata/popular.json")
-
-	router := NewRouter(fs)
+	router := NewRouter()
 
 	cors := middleware.NewCorsMiddleware(&s.config.Cors)
 	routerCors := cors.SetCors(router)
+
+	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,

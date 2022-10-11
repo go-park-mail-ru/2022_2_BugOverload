@@ -12,6 +12,6 @@ func NewFilmsPopularRequest(collection []models.Film) *FilmsPopularRequest {
 	}
 }
 
-func (fcr *FilmsPopularRequest) CreateResponse() *models.FilmCollection {
+func (fcr *FilmsPopularRequest) ToPublic() *models.FilmCollection {
 	return models.NewFilmCollection("Популярное", fcr.FilmCollection)
 }

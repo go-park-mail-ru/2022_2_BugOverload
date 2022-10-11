@@ -31,7 +31,5 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	collectionPopular := models.NewFilmsPopularRequest(collection)
 
-	response := collectionPopular.CreateResponse()
-
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(w, http.StatusOK, collectionPopular.ToPublic())
 }

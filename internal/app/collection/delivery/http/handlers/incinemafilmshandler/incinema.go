@@ -31,7 +31,5 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	collectionInCinema := models.NewFilmsInCinemaRequest(collection)
 
-	response := collectionInCinema.CreateResponse()
-
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
 }

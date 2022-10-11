@@ -68,13 +68,13 @@ func (c *collectionRepo) FillRepo(path string, storage string) {
 	}
 
 	if storage == "popular" {
-		c.storagePopular = append(c.storagePopular, films...)
+		c.storagePopular = films
 
 		return
 	}
 
 	if storage == "in_cinema" {
-		c.storageInCinema = append(c.storageInCinema, films...)
+		c.storageInCinema = films
 
 		return
 	}

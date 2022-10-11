@@ -6,18 +6,20 @@ type RecommendFilmRequest struct {
 	recommendedFilm models.Film
 }
 
-func (rfr *RecommendFilmRequest) SetFilm(film models.Film) {
-	rfr.recommendedFilm = models.Film{
-		ID:               film.ID,
-		Name:             film.Name,
-		ShortDescription: film.ShortDescription,
-		YearProd:         film.YearProd,
-		PosterHor:        film.PosterHor,
-		Genres:           film.Genres,
-		Rating:           film.Rating,
+func NewRecommendFilmRequest(film models.Film) *RecommendFilmRequest {
+	return &RecommendFilmRequest{
+		models.Film{
+			ID:               film.ID,
+			Name:             film.Name,
+			ShortDescription: film.ShortDescription,
+			YearProd:         film.YearProd,
+			PosterHor:        film.PosterHor,
+			Genres:           film.Genres,
+			Rating:           film.Rating,
+		},
 	}
 }
 
-func (rfr *RecommendFilmRequest) CreateResponse() models.Film {
+func (rfr *RecommendFilmRequest) ToPublic() models.Film {
 	return rfr.recommendedFilm
 }

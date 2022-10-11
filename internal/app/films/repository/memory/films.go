@@ -1,50 +1,54 @@
 package memory
 
 import (
+	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"os"
 	"sync"
 
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
-type FilmStorage struct {
+type filmsRepo struct {
 	storage []models.Film
 	mu      *sync.Mutex
 }
 
-func NewFilmStorage() *FilmStorage {
-	res := &FilmStorage{
-		mu: &sync.Mutex{},
+func NewFilmRepo(mu *sync.Mutex, path string) interfaces.FilmsRepository {
+	res := &filmsRepo{
+		mu: mu,
 	}
+
+	res.FillRepo(path)
 
 	return res
 }
 
-func (fs *FilmStorage) FillStorage(path string) {
+func (fs *filmsRepo) FillRepo(path string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
-		logrus.Error("can't get data from file")
+		logrus.Error("FillRepoFilms: can't get data from file")
 	}
 
 	var films []models.Film
 
 	err = json.Unmarshal(file, &films)
 	if err != nil {
-		logrus.Error("can't Unmarshal data from file")
+		logrus.Error("FillRepoFilms: can't Unmarshal data from file")
 	}
 
 	fs.storage = films
 }
 
-func (fs *FilmStorage) CheckExist(filmID uint) bool {
-	return filmID <= uint(fs.GetStorageLen())
+func (fs *filmsRepo) CheckExist(filmID uint) bool {
+	return filmID <= uint(fs.GetStorageCapacity())
 }
 
-func (fs *FilmStorage) AddFilm(f models.Film) {
+func (fs *filmsRepo) AddFilm(f models.Film) {
 	if !fs.CheckExist(f.ID) {
 		fs.mu.Lock()
 		defer fs.mu.Unlock()
@@ -53,20 +57,17 @@ func (fs *FilmStorage) AddFilm(f models.Film) {
 	}
 }
 
-func (fs *FilmStorage) GetFilm(filmID uint) (models.Film, error) {
-	if !fs.CheckExist(filmID) {
-		return models.Film{}, errors.ErrFilmNotFound
-	}
-
-	fs.mu.Lock()
-	defer fs.mu.Unlock()
-
-	return fs.storage[filmID], nil
-}
-
-func (fs *FilmStorage) GetStorageLen() int {
+func (fs *filmsRepo) GetStorageCapacity() int {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 
 	return len(fs.storage)
+}
+
+func (fs *filmsRepo) GerRecommendation(ctx context.Context, user *models.User) (models.Film, error) {
+	randIndex := utils.Rand(fs.GetStorageCapacity())
+
+	filmRecommendation := fs.storage[randIndex]
+
+	return filmRecommendation, nil
 }
