@@ -2,10 +2,11 @@ package memory
 
 import (
 	"context"
+	"sync"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	"sync"
 )
 
 type userRepo struct {

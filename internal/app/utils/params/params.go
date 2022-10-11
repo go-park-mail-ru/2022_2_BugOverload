@@ -1,4 +1,4 @@
-package contextparams
+package params
 
 import "time"
 
@@ -9,3 +9,8 @@ var CookieKey ContextType = "cookie"
 const countSeconds = 2
 
 var ContextTimeout = time.Duration(countSeconds) * time.Second
+
+const (
+	CookieValueLength = 40
+	TimeoutLiveCookie = 10 * time.Hour
+)

@@ -11,9 +11,9 @@ import (
 	filmModels "go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/models"
 	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/films/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )
 
 type handler struct {
@@ -35,7 +35,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	if cookieStr != "" {
-		ctx := context.WithValue(r.Context(), contextparams.CookieKey, cookieStr)
+		ctx := context.WithValue(r.Context(), params.CookieKey, cookieStr)
 
 		user, err = h.authService.GetUserBySession(ctx)
 		if err != nil {

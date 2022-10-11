@@ -2,17 +2,17 @@ package authhandler
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )
 
 type handler struct {
@@ -38,7 +38,7 @@ func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	ctx := context.WithValue(r.Context(), contextparams.CookieKey, cookieStr)
+	ctx := context.WithValue(r.Context(), params.CookieKey, cookieStr)
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {

@@ -17,7 +17,7 @@ import (
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
@@ -76,8 +76,8 @@ func TestLogoutHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
+	userService := serviceUser.NewUserService(us, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
 	logoutHandler := logouthandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {

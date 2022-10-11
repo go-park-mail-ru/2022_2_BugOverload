@@ -16,7 +16,7 @@ import (
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
@@ -36,7 +36,7 @@ func TestInCinemaHandler(t *testing.T) {
 	collectionMutex := &sync.Mutex{}
 	cs := memoryCollection.NewCollectionRepo(collectionMutex, pathPopular, pathInCinema)
 
-	collectionService := serviceCollection.NewCollectionService(cs, contextparams.ContextTimeout)
+	collectionService := serviceCollection.NewCollectionService(cs, params.ContextTimeout)
 	inCinemaHandler := incinemafilmshandler.NewHandler(collectionService)
 
 	url := "http://localhost:8088/v1/in_cinema"

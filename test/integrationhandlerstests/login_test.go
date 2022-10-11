@@ -18,7 +18,7 @@ import (
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
@@ -115,8 +115,8 @@ func TestLoginHandler(t *testing.T) {
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, utils.TestErrorMessage(-1, "Err create user for test"))
 
-	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
+	userService := serviceUser.NewUserService(us, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
 	loginHandler := loginhandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -140,7 +140,7 @@ func TestLoginHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), contextparams.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), params.CookieKey, cookieName)
 
 			var nameSession string
 			nameSession, err = authService.GetSession(ctx)

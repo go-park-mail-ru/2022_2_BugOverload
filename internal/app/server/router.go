@@ -21,7 +21,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/signuphandler"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )
 
 func NewRouter() *mux.Router {
@@ -34,8 +34,8 @@ func NewRouter() *mux.Router {
 	us := memoryUser.NewUserRepo(userMutex)
 	cs := memoryCookie.NewCookieRepo(authMutex)
 
-	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
+	userService := serviceUser.NewUserService(us, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
 
 	authHandler := authhandler.NewHandler(userService, authService)
 	logoutHandler := logouthandler.NewHandler(userService, authService)
@@ -54,7 +54,7 @@ func NewRouter() *mux.Router {
 	collectionMutex := &sync.Mutex{}
 	colS := memoryCollection.NewCollectionRepo(collectionMutex, pathPopular, pathInCinema)
 
-	collectionService := serviceCollection.NewCollectionService(colS, contextparams.ContextTimeout)
+	collectionService := serviceCollection.NewCollectionService(colS, params.ContextTimeout)
 
 	inCinemaHandler := incinemafilmshandler.NewHandler(collectionService)
 	popularHandler := popularfilmshandler.NewHandler(collectionService)
@@ -69,7 +69,7 @@ func NewRouter() *mux.Router {
 
 	fs := memoryFilms.NewFilmRepo(filmsMutex, pathPreview)
 
-	filmsService := serviceFilms.NewFilmService(fs, contextparams.ContextTimeout)
+	filmsService := serviceFilms.NewFilmService(fs, params.ContextTimeout)
 
 	recommendationHandler := recommendationfilmhandler.NewHandler(filmsService, authService)
 

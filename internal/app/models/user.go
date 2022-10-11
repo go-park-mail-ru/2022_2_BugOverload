@@ -2,11 +2,12 @@ package models
 
 import (
 	"encoding/json"
-	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"io"
 	"net/http"
 
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 type User struct {
@@ -19,11 +20,11 @@ type User struct {
 
 func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errors2.NewErrValidation(errors2.ErrContentTypeUndefined)
+		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
 
 	if r.Header.Get("Content-Type") != "application/json" {
-		return errors2.NewErrValidation(errors2.ErrUnsupportedMediaType)
+		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -33,13 +34,13 @@ func (u *User) Bind(w http.ResponseWriter, r *http.Request) error {
 	defer func() {
 		err = r.Body.Close()
 		if err != nil {
-			logger.Error(err)
+			logrus.Error(err)
 		}
 	}()
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors2.NewErrValidation(errors2.ErrCJSONUnexpectedEnd)
+		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
 	}
 
 	return nil

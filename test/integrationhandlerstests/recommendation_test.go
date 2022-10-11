@@ -19,7 +19,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
@@ -58,7 +58,7 @@ func TestRecommendationHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
 
 	// Films
 	pathPreview := "../testdata/preview.json"
@@ -67,7 +67,7 @@ func TestRecommendationHandler(t *testing.T) {
 
 	fs := memoryFilms.NewFilmRepo(filmsMutex, pathPreview)
 
-	filmsService := serviceFilms.NewFilmService(fs, contextparams.ContextTimeout)
+	filmsService := serviceFilms.NewFilmService(fs, params.ContextTimeout)
 
 	recommendationHandler := recommendationfilmhandler.NewHandler(filmsService, authService)
 

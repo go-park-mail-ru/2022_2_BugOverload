@@ -17,7 +17,7 @@ import (
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/contextparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 	"go-park-mail-ru/2022_2_BugOverload/test/integrationhandlerstests"
 )
 
@@ -113,8 +113,8 @@ func TestSignupHandler(t *testing.T) {
 	us := memoryUser.NewUserRepo(userMutex)
 	cs := memoryCookie.NewCookieRepo(authMutex)
 
-	userService := serviceUser.NewUserService(us, contextparams.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, contextparams.ContextTimeout)
+	userService := serviceUser.NewUserService(us, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
 	signupHandler := signuphandler.NewHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -138,7 +138,7 @@ func TestSignupHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), contextparams.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), params.CookieKey, cookieName)
 			nameSession, err := authService.GetSession(ctx)
 			require.Nil(t, err, utils.TestErrorMessage(caseNum, "Result GetSession not error"))
 

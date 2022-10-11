@@ -3,14 +3,14 @@ package memory
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 	"os"
 	"sync"
 
 	"github.com/sirupsen/logrus"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
 )
 
 type filmsRepo struct {

@@ -2,8 +2,9 @@ package httpwrapper
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {

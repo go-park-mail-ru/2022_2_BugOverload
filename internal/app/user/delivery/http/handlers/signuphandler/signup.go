@@ -1,12 +1,12 @@
 package signuphandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	authInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
