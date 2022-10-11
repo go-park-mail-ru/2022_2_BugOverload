@@ -11,13 +11,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
-// FilmStorage is TMP impl database for films, where key = film_id
 type FilmStorage struct {
 	storage []models.Film
 	mu      *sync.Mutex
 }
 
-// NewFilmStorage is constructor for FilmStorage
 func NewFilmStorage() *FilmStorage {
 	res := &FilmStorage{
 		mu: &sync.Mutex{},
@@ -26,7 +24,6 @@ func NewFilmStorage() *FilmStorage {
 	return res
 }
 
-// FillStorage for getting data from file
 func (fs *FilmStorage) FillStorage(path string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
@@ -40,17 +37,13 @@ func (fs *FilmStorage) FillStorage(path string) {
 		logrus.Error("can't Unmarshal data from file")
 	}
 
-	logrus.Info(len(films))
-
 	fs.storage = films
 }
 
-// CheckExist is method to check the existence of such a film in the database
 func (fs *FilmStorage) CheckExist(filmID uint) bool {
 	return filmID <= uint(fs.GetStorageLen())
 }
 
-// AddFilm is method for creating a film in database
 func (fs *FilmStorage) AddFilm(f models.Film) {
 	if !fs.CheckExist(f.ID) {
 		fs.mu.Lock()
@@ -60,7 +53,6 @@ func (fs *FilmStorage) AddFilm(f models.Film) {
 	}
 }
 
-// GetFilm return film using film_id (primary key)
 func (fs *FilmStorage) GetFilm(filmID uint) (models.Film, error) {
 	if !fs.CheckExist(filmID) {
 		return models.Film{}, errors.ErrFilmNotFound
@@ -72,7 +64,6 @@ func (fs *FilmStorage) GetFilm(filmID uint) (models.Film, error) {
 	return fs.storage[filmID], nil
 }
 
-// GetStorageLen return films count in storage
 func (fs *FilmStorage) GetStorageLen() int {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()

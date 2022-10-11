@@ -22,12 +22,11 @@ func New(config *internal.Config) *Server {
 	}
 }
 
-// Launch is used to start the server
 func (s *Server) Launch() error {
 	logger.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	fs := memory3.NewFilmStorage()
-	fs.FillStorage("test/testdata/films.json")
+	fs.FillStorage("test/testdata/popular.json")
 
 	router := NewRouter(fs)
 

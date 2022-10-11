@@ -8,13 +8,11 @@ import (
 	"sync"
 )
 
-// userRepo is TMP impl database for users, where key = User.Email
 type userRepo struct {
 	storage map[string]models.User
 	mu      *sync.Mutex
 }
 
-// NewUserRepo is constructor for userRepo
 func NewUserRepo(mu *sync.Mutex) interfaces.UserRepository {
 	return &userRepo{
 		make(map[string]models.User),
@@ -22,7 +20,6 @@ func NewUserRepo(mu *sync.Mutex) interfaces.UserRepository {
 	}
 }
 
-// CheckExist is method to check the existence of such a cookie in the database
 func (us *userRepo) CheckExist(email string) bool {
 	us.mu.Lock()
 	defer us.mu.Unlock()
@@ -32,7 +29,6 @@ func (us *userRepo) CheckExist(email string) bool {
 	return ok
 }
 
-// Signup is method for creating a user in database
 func (us *userRepo) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
 	if us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrSignupUserExist
@@ -48,7 +44,6 @@ func (us *userRepo) CreateUser(ctx context.Context, user *models.User) (models.U
 	return *user, nil
 }
 
-// Login return user using email (primary key)
 func (us *userRepo) GetUser(ctx context.Context, user *models.User) (models.User, error) {
 	if !us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrUserNotExist

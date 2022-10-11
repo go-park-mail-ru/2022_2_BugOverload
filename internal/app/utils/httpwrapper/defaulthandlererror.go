@@ -33,6 +33,4 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		Response(w, errFilms.Code, errResp)
 		return
 	}
-
-	//  Response(w, http.StatusBadRequest, errResp)
 }

@@ -19,14 +19,12 @@ const (
 	timeoutLiveCookie = 10 * time.Hour
 )
 
-// cookieRepo is TMP impl database for cookie
 type cookieRepo struct {
 	storageCookie     map[string]http.Cookie
 	storageUserCookie map[string]*models.User
 	mu                *sync.Mutex
 }
 
-// NewCookieRepo is constructor for cookieRepo
 func NewCookieRepo(mu *sync.Mutex) interfaces.AuthRepository {
 	return &cookieRepo{
 		make(map[string]http.Cookie),
@@ -35,7 +33,6 @@ func NewCookieRepo(mu *sync.Mutex) interfaces.AuthRepository {
 	}
 }
 
-// CheckExist is method to check the existence of such a cookie in the database
 func (cs *cookieRepo) CheckExist(cookie string) bool {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
@@ -44,7 +41,6 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 	return ok
 }
 
-// GetUserBySession is method for creating a cookie
 func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error) {
 	cookie, _ := ctx.Value(contextparams.CookieKey).(string)
 
@@ -60,7 +56,6 @@ func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error)
 	return *user, nil
 }
 
-// CreateSession is method for creating a cookie
 func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (string, error) {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
@@ -86,7 +81,6 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 	return cookie.String(), nil
 }
 
-// GetSession return user using email (primary key)
 func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	cookie, _ := ctx.Value(contextparams.CookieKey).(string)
 
@@ -102,7 +96,6 @@ func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	return resCookie.String(), nil
 }
 
-// DeleteSession delete cookie from storage
 func (cs *cookieRepo) DeleteSession(ctx context.Context) (string, error) {
 	cookie, _ := ctx.Value(contextparams.CookieKey).(string)
 

@@ -82,8 +82,8 @@ func (ec *ErrClassifierAuth) GetCode(err error) int {
 }
 
 var (
-	ErrFilmNotFound  = stdErrors.New(`no such film`)
-	ErrFilmsNotFound = stdErrors.New(`no such films`)
+	ErrFilmNotFound  = stdErrors.New("no such film")
+	ErrFilmsNotFound = stdErrors.New("no such films")
 )
 
 type ErrClassifierFilms struct {

@@ -1,60 +1,37 @@
 package incinemafilmshandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
-	errors2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"net/http"
 
+	stdErrors "github.com/pkg/errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
+	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
-// handler is structure for API films requests processing
 type handler struct {
-	storage *memory.FilmStorage
+	collectionService collectionInterface.CollectionService
 }
 
-// NewHandler is constructor for handler
-func NewHandler(fs *memory.FilmStorage) interfaces.Handler {
+func NewHandler(uc collectionInterface.CollectionService) interfaces.Handler {
 	return &handler{
-		fs,
+		uc,
 	}
 }
 
-// tmp const
-const countParts = 2
-const countFilmPreview = 5
-
-// Action is handle InCinema request
 func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
-	var inCinemaRequest models.FilmsInCinemaRequest
-
-	var upperBound, lowerBound int
-
-	if h.storage.GetStorageLen()-countFilmPreview > 0 {
-		upperBound = h.storage.GetStorageLen() - countFilmPreview
-	}
-	if (h.storage.GetStorageLen()-countFilmPreview)/countParts >= 0 {
-		lowerBound = (h.storage.GetStorageLen() - countFilmPreview) / countParts
-	}
-
-	for i := upperBound; i >= lowerBound; i-- {
-		film, err := h.storage.GetFilm(uint(i))
-		if err != nil {
-			continue
-		}
-
-		inCinemaRequest.AddFilm(film)
-	}
-
-	if len(inCinemaRequest.FilmCollection) == 0 {
-		httpwrapper2.DefaultHandlerError(w, errors2.NewErrFilms(errors2.ErrFilmNotFound))
-
+	collection, err := h.collectionService.GetInCinema(r.Context())
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return
 	}
 
-	response := inCinemaRequest.CreateResponse()
+	collectionInCinema := models.NewFilmsInCinemaRequest(collection)
 
-	httpwrapper2.Response(w, http.StatusOK, response)
+	response := collectionInCinema.CreateResponse()
+
+	httpwrapper.Response(w, http.StatusOK, response)
 }

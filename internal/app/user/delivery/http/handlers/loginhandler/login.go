@@ -13,13 +13,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
-// handler is structure for API auth, login and signup processing
 type handler struct {
 	userService userInterface.UserService
 	authService authInterface.AuthService
 }
 
-// NewHandler is constructor for handler
 func NewHandler(us userInterface.UserService, as authInterface.AuthService) interfaces.Handler {
 	return &handler{
 		us,
@@ -27,7 +25,6 @@ func NewHandler(us userInterface.UserService, as authInterface.AuthService) inte
 	}
 }
 
-// Action is handling request
 func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var loginRequest models.UserLoginRequest
 

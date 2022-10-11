@@ -3,6 +3,8 @@ package server
 import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/repository/memory"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/app/auth/service"
+	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/repository/memory"
+	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/recommendationfilmhandler"
 	memory3 "go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/app/user/repository/memory"
@@ -21,7 +23,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/handlers/signuphandler"
 )
 
-// NewRouter is constructor for mux
 func NewRouter(fs *memory3.FilmStorage) *mux.Router {
 	router := mux.NewRouter()
 
@@ -44,11 +45,21 @@ func NewRouter(fs *memory3.FilmStorage) *mux.Router {
 	router.HandleFunc("/v1/auth/signup", singUpHandler.Action).Methods(http.MethodPost)
 	router.HandleFunc("/v1/auth/logout", logoutHandler.Action).Methods(http.MethodGet)
 
-	inCinemaHandler := incinemafilmshandler.NewHandler(fs)
-	router.HandleFunc("/v1/in_cinema", inCinemaHandler.Action).Methods(http.MethodGet)
-	popularHandler := popularfilmshandler.NewHandler(fs)
-	router.HandleFunc("/v1/popular_films", popularHandler.Action).Methods(http.MethodGet)
+	pathInCinema := "test/testdata/in_cinema.json"
+	pathPopular := "test/testdata/popular.json"
+
+	collectionMutex := &sync.Mutex{}
+	colS := memoryCollection.NewCollectionRepo(collectionMutex, pathPopular, pathInCinema)
+
+	collectionService := serviceCollection.NewCollectionService(colS, contextparams.ContextTimeout)
+
+	inCinemaHandler := incinemafilmshandler.NewHandler(collectionService)
+	popularHandler := popularfilmshandler.NewHandler(collectionService)
+
 	recommendationHandler := recommendationfilmhandler.NewHandlerRecommendationFilm(fs)
+
+	router.HandleFunc("/v1/in_cinema", inCinemaHandler.Action).Methods(http.MethodGet)
+	router.HandleFunc("/v1/popular_films", popularHandler.Action).Methods(http.MethodGet)
 	router.HandleFunc("/v1/recommendation_film", recommendationHandler.Action).Methods(http.MethodGet)
 
 	http.Handle("/", router)

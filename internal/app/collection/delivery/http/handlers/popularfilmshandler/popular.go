@@ -1,55 +1,37 @@
 package popularfilmshandler
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/films/repository/memory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"net/http"
 
+	stdErrors "github.com/pkg/errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
+	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
-// handler is structure for API films requests processing
 type handler struct {
-	storage *memory.FilmStorage
+	collectionService collectionInterface.CollectionService
 }
 
-// NewHandler is constructor for handler
-func NewHandler(fs *memory.FilmStorage) interfaces.Handler {
+func NewHandler(uc collectionInterface.CollectionService) interfaces.Handler {
 	return &handler{
-		fs,
+		uc,
 	}
 }
 
-// tmp const
-const countParts = 2
-const countFilmPreview = 5
-
-// Action is handle getPopularFilms request
 func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
-	var popularFilmRequest models.PopularFilmsRequest
-
-	upperBound := 0
-	if (h.storage.GetStorageLen()-countFilmPreview)/countParts > 0 {
-		upperBound = (h.storage.GetStorageLen() - countFilmPreview) / countParts
-	}
-
-	for i := 0; i < upperBound; i++ {
-		film, err := h.storage.GetFilm(uint(i))
-		if err != nil {
-			continue
-		}
-		popularFilmRequest.AddFilm(film)
-	}
-
-	if len(popularFilmRequest.FilmCollection) == 0 {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(errors.ErrFilmNotFound))
-
+	collection, err := h.collectionService.GetPopular(r.Context())
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return
 	}
 
-	response := popularFilmRequest.CreateResponse()
+	collectionPopular := models.NewFilmsPopularRequest(collection)
+
+	response := collectionPopular.CreateResponse()
 
 	httpwrapper.Response(w, http.StatusOK, response)
 }
