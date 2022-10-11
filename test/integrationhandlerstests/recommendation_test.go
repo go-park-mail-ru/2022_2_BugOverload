@@ -31,19 +31,6 @@ func TestRecommendationHandler(t *testing.T) {
 			Cookie:     "GeneratedData",
 			StatusCode: http.StatusOK,
 		},
-		// Wrong cookie
-		integrationhandlerstests.TestCase{
-			Method:       http.MethodGet,
-			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Action: [no such cookie]"}`,
-			StatusCode:   http.StatusUnauthorized,
-		},
-		// Cookie is missing
-		integrationhandlerstests.TestCase{
-			Method:       http.MethodGet,
-			ResponseBody: `{"error":"Action: [request has no cookies]"}`,
-			StatusCode:   http.StatusUnauthorized,
-		},
 	}
 
 	url := "http://localhost:8088/v1/auth"
