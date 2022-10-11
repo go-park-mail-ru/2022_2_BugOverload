@@ -5,16 +5,17 @@ import (
 	"time"
 
 	stdErrors "github.com/pkg/errors"
-	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 )
 
 type collectionService struct {
-	collectionRepo collectionInterface.CollectionRepository
+	collectionRepo interfaces.CollectionRepository
 	contextTimeout time.Duration
 }
 
-func NewCollectionService(cr collectionInterface.CollectionRepository, timeout time.Duration) collectionInterface.CollectionService {
+func NewCollectionService(cr interfaces.CollectionRepository, timeout time.Duration) interfaces.CollectionService {
 	return &collectionService{
 		collectionRepo: cr,
 		contextTimeout: timeout,

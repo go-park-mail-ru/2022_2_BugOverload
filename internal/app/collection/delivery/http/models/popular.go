@@ -2,16 +2,16 @@ package models
 
 import "go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 
-type filmsPopularRequest struct {
+type FilmsPopularRequest struct {
 	FilmCollection []models.Film
 }
 
-func NewFilmsPopularRequest(collection []models.Film) *filmsPopularRequest {
-	return &filmsPopularRequest{
+func NewFilmsPopularRequest(collection []models.Film) *FilmsPopularRequest {
+	return &FilmsPopularRequest{
 		collection,
 	}
 }
 
-func (fcr *filmsPopularRequest) CreateResponse() *models.FilmCollection {
+func (fcr *FilmsPopularRequest) CreateResponse() *models.FilmCollection {
 	return models.NewFilmCollection("Популярное", fcr.FilmCollection)
 }

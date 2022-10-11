@@ -2,16 +2,16 @@ package models
 
 import "go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 
-type filmsInCinemaRequest struct {
+type FilmsInCinemaRequest struct {
 	FilmCollection []models.Film
 }
 
-func NewFilmsInCinemaRequest(collection []models.Film) *filmsInCinemaRequest {
-	return &filmsInCinemaRequest{
+func NewFilmsInCinemaRequest(collection []models.Film) *FilmsInCinemaRequest {
+	return &FilmsInCinemaRequest{
 		collection,
 	}
 }
 
-func (fcr *filmsInCinemaRequest) CreateResponse() *models.FilmCollection {
+func (fcr *FilmsInCinemaRequest) CreateResponse() *models.FilmCollection {
 	return models.NewFilmCollection("Сейчас в кино", fcr.FilmCollection)
 }
