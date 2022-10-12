@@ -31,8 +31,8 @@ func (s *Server) Launch() error {
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,
 		Handler:      routerCors,
-		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Millisecond,
-		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Millisecond,
+		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
 	}
 
 	err := server.ListenAndServe()
