@@ -4,7 +4,7 @@ read_timeout = 10
 write_timeout = 10
 
 [context]
-timeout = 2
+timeout = 10
 
 [cors]
 methods = ["POST", "GET"]

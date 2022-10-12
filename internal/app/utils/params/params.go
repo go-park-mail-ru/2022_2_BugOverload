@@ -6,7 +6,7 @@ type ContextType string
 
 var CookieKey ContextType = "cookie"
 
-const countSeconds = 2
+const countSeconds = 10
 
 var ContextTimeout = time.Duration(countSeconds) * time.Second
 
