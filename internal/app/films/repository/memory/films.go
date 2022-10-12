@@ -65,7 +65,7 @@ func (fs *filmsRepo) GetStorageCapacity() int {
 }
 
 func (fs *filmsRepo) GerRecommendation(ctx context.Context, user *models.User) (models.Film, error) {
-	randIndex := utils.Rand(fs.GetStorageCapacity())
+	randIndex := utils.Rand(fs.GetStorageCapacity() - 1)
 
 	filmRecommendation := fs.storage[randIndex]
 
