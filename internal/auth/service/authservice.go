@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/pkg/errors"
 
@@ -20,15 +19,13 @@ type AuthService interface {
 
 // authService is implementation for auth service corresponding to the AuthService interface.
 type authService struct {
-	authRepo       repository.AuthRepository
-	contextTimeout time.Duration
+	authRepo repository.AuthRepository
 }
 
-// NewAuthService is constructor for authService. Accepts AuthRepository interfaces and context timeout.
-func NewAuthService(ar repository.AuthRepository, timeout time.Duration) AuthService {
+// NewAuthService is constructor for authService. Accepts AuthRepository interfaces.
+func NewAuthService(ar repository.AuthRepository) AuthService {
 	return &authService{
-		authRepo:       ar,
-		contextTimeout: timeout,
+		authRepo: ar,
 	}
 }
 

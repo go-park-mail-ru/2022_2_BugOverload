@@ -3,8 +3,6 @@ package tests_test
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
+	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
 	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	models2 "go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -34,7 +33,7 @@ func TestPopularHandler(t *testing.T) {
 	//  init
 	cs := memoryCollection.NewCollectionCash(pathPopular, pathInCinema)
 
-	collectionService := serviceCollection.NewCollectionService(cs, params.ContextTimeout)
+	collectionService := serviceCollection.NewCollectionService(cs)
 	popularHandler := handlers.NewPopularFilmsHandler(collectionService)
 
 	url := "http://localhost:8088/v1/popular_films"

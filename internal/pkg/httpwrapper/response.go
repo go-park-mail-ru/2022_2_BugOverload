@@ -7,6 +7,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+// Response is a function for giving any response with a JSON body
 func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {

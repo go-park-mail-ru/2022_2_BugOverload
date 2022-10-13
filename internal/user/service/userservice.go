@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -19,15 +18,13 @@ type UserService interface {
 
 // userService is implementation for users service corresponding to the UserService interface.
 type userService struct {
-	userRepo       repository.UserRepository
-	contextTimeout time.Duration
+	userRepo repository.UserRepository
 }
 
-// NewUserService is constructor for userService. Accepts UserRepository interfaces and context timeout.
-func NewUserService(ur repository.UserRepository, timeout time.Duration) UserService {
+// NewUserService is constructor for userService. Accepts UserRepository interfaces.
+func NewUserService(ur repository.UserRepository) UserService {
 	return &userService{
-		userRepo:       ur,
-		contextTimeout: timeout,
+		userRepo: ur,
 	}
 }
 

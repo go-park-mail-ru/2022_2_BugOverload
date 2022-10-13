@@ -10,7 +10,6 @@ import (
 	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -23,8 +22,8 @@ func NewHandlersMap() map[string]interfaces.Handler {
 	userStorage := memoryUser.NewUserCash()
 	cookieStorage := memoryCookie.NewCookieCash()
 
-	userService := serviceUser.NewUserService(userStorage, params.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cookieStorage, params.ContextTimeout)
+	userService := serviceUser.NewUserService(userStorage)
+	authService := serviceAuth.NewAuthService(cookieStorage)
 
 	authHandler := handlers2.NewAuthHandler(userService, authService)
 	res[AuthRequest] = authHandler
@@ -44,7 +43,7 @@ func NewHandlersMap() map[string]interfaces.Handler {
 
 	colStorage := memoryCollection.NewCollectionCash(pathPopular, pathInCinema)
 
-	collectionService := serviceCollection.NewCollectionService(colStorage, params.ContextTimeout)
+	collectionService := serviceCollection.NewCollectionService(colStorage)
 
 	inCinemaHandler := handlers4.NewInCinemaHandler(collectionService)
 	res[InCinemaRequest] = inCinemaHandler
@@ -57,7 +56,7 @@ func NewHandlersMap() map[string]interfaces.Handler {
 
 	filmsS := memoryFilms.NewFilmCash(pathPreview)
 
-	filmsService := serviceFilms.NewFilmService(filmsS, params.ContextTimeout)
+	filmsService := serviceFilms.NewFilmService(filmsS)
 
 	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService, authService)
 	res[RecommendationRequest] = recommendationHandler

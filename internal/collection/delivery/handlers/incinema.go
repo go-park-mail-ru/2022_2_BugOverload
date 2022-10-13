@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
@@ -29,11 +29,11 @@ func NewInCinemaHandler(uc service.CollectionService) interfaces.Handler {
 func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetInCinema(r.Context())
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return
 	}
 
 	collectionInCinema := models.NewFilmsInCinemaRequest(collection)
 
-	httpwrapper2.Response(w, http.StatusOK, collectionInCinema.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
 }

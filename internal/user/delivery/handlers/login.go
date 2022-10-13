@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -34,7 +34,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := loginRequest.Bind(r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -42,17 +42,17 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	userLogged, err := h.userService.Login(r.Context(), user)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	newSession, err := h.authService.CreateSession(r.Context(), &userLogged)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	w.Header().Set("Set-Cookie", newSession)
 
-	httpwrapper2.Response(w, http.StatusOK, loginRequest.ToPublic(&userLogged))
+	httpwrapper.Response(w, http.StatusOK, loginRequest.ToPublic(&userLogged))
 }

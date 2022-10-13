@@ -2,13 +2,13 @@ package handlers
 
 import (
 	"context"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
@@ -36,7 +36,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := logoutRequest.Bind(r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -46,11 +46,11 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	badCookie, err := h.authService.DeleteSession(ctx)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	w.Header().Set("Set-Cookie", badCookie)
 
-	httpwrapper2.NoContent(w)
+	httpwrapper.NoContent(w)
 }

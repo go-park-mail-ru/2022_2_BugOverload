@@ -2,8 +2,6 @@ package tests_test
 
 import (
 	"context"
-	http2 "go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +13,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
 	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -54,16 +53,16 @@ func TestRecommendationHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cs)
 
 	// Films
 	pathPreview := "../../../test/data/preview.json"
 
 	fs := memoryFilms.NewFilmCash(pathPreview)
 
-	filmsService := serviceFilms.NewFilmService(fs, params.ContextTimeout)
+	filmsService := serviceFilms.NewFilmService(fs)
 
-	recommendationHandler := http2.NewRecommendationFilmHandler(filmsService, authService)
+	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService, authService)
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)

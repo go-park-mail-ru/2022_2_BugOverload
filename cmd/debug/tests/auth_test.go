@@ -2,8 +2,6 @@ package tests_test
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,6 +14,7 @@ import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
@@ -66,8 +65,8 @@ func TestAuthHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	userService := serviceUser.NewUserService(us, params.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
+	userService := serviceUser.NewUserService(us)
+	authService := serviceAuth.NewAuthService(cs)
 	authHandler := handlers.NewAuthHandler(userService, authService)
 
 	for caseNum, item := range cases {

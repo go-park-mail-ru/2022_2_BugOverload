@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -10,6 +9,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
@@ -50,11 +50,11 @@ func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Reques
 
 	filmRecommendation, err := h.filmService.GerRecommendation(r.Context())
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	response := models.NewRecommendFilmRequest(filmRecommendation)
 
-	httpwrapper2.Response(w, http.StatusOK, response.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, response.ToPublic())
 }

@@ -2,8 +2,6 @@ package tests_test
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +13,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
@@ -109,8 +109,8 @@ func TestSignupHandler(t *testing.T) {
 	us := memoryUser.NewUserCash()
 	cs := memoryCookie.NewCookieCash()
 
-	userService := serviceUser.NewUserService(us, params.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
+	userService := serviceUser.NewUserService(us)
+	authService := serviceAuth.NewAuthService(cs)
 	signupHandler := handlers.NewSingUpHandler(userService, authService)
 
 	for caseNum, item := range cases {

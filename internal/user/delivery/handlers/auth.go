@@ -2,13 +2,13 @@ package handlers
 
 import (
 	"context"
-	httpwrapper2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
@@ -36,7 +36,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(r)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
@@ -46,9 +46,9 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {
-		httpwrapper2.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
-	httpwrapper2.Response(w, http.StatusOK, authRequest.ToPublic(&user))
+	httpwrapper.Response(w, http.StatusOK, authRequest.ToPublic(&user))
 }
