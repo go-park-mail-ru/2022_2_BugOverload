@@ -31,11 +31,11 @@ func NewRouter() *mux.Router {
 	userMutex := &sync.Mutex{}
 	authMutex := &sync.Mutex{}
 
-	us := memoryUser.NewUserRepo(userMutex)
-	cs := memoryCookie.NewCookieRepo(authMutex)
+	userS := memoryUser.NewUserRepo(userMutex)
+	cookieS := memoryCookie.NewCookieRepo(authMutex)
 
-	userService := serviceUser.NewUserService(us, params.ContextTimeout)
-	authService := serviceAuth.NewAuthService(cs, params.ContextTimeout)
+	userService := serviceUser.NewUserService(userS, params.ContextTimeout)
+	authService := serviceAuth.NewAuthService(cookieS, params.ContextTimeout)
 
 	authHandler := authhandler.NewHandler(userService, authService)
 	logoutHandler := logouthandler.NewHandler(userService, authService)
@@ -67,9 +67,9 @@ func NewRouter() *mux.Router {
 
 	filmsMutex := &sync.Mutex{}
 
-	fs := memoryFilms.NewFilmRepo(filmsMutex, pathPreview)
+	filmsS := memoryFilms.NewFilmRepo(filmsMutex, pathPreview)
 
-	filmsService := serviceFilms.NewFilmService(fs, params.ContextTimeout)
+	filmsService := serviceFilms.NewFilmService(filmsS, params.ContextTimeout)
 
 	recommendationHandler := recommendationfilmhandler.NewHandler(filmsService, authService)
 
