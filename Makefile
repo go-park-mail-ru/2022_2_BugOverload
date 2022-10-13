@@ -2,8 +2,6 @@
 
 all: check build run_tests
 
-TARGET = ./cmd/defaultlaunch/main.go
-ARGS= --config-path ./configs/config.toml
 LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...
@@ -19,11 +17,14 @@ check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
-launch:
-	go run ${TARGET} ${ARGS}
+launch_debug:
+	go run ./cmd/debug/main.go --config-path ./cmd/debug/configs/config.toml
+
+launch_prod:
+	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
 build:
-	go build ${TARGET}
+	go build cmd/debug/main.go ${TARGET}
 
 launch_docker:
 	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
