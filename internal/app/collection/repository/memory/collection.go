@@ -13,13 +13,16 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
+// collectionRepo is implementation repository of collection
+// in memory corresponding to the CollectionService interface.
 type collectionRepo struct {
 	storagePopular  []models.Film
 	storageInCinema []models.Film
 	mu              *sync.Mutex
 }
 
-func NewCollectionRepo(mu *sync.Mutex, pathPopular string, pathInCinema string) interfaces.CollectionRepository {
+// NewCollectionRepo is constructor for collectionRepo. Accepts mutex and paths to data collection.
+func NewCollectionRepo(mu *sync.Mutex, pathPopular string, pathInCinema string) interfaces.CollectionService {
 	res := &collectionRepo{
 		make([]models.Film, 0),
 		make([]models.Film, 0),
@@ -32,6 +35,7 @@ func NewCollectionRepo(mu *sync.Mutex, pathPopular string, pathInCinema string) 
 	return res
 }
 
+// GetPopular it gives away popular movies from the repository.
 func (c *collectionRepo) GetPopular(ctx context.Context) ([]models.Film, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -43,6 +47,7 @@ func (c *collectionRepo) GetPopular(ctx context.Context) ([]models.Film, error) 
 	return c.storagePopular, nil
 }
 
+// GetInCinema it gives away movies in cinema from the repository.
 func (c *collectionRepo) GetInCinema(ctx context.Context) ([]models.Film, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -54,6 +59,7 @@ func (c *collectionRepo) GetInCinema(ctx context.Context) ([]models.Film, error)
 	return c.storageInCinema, nil
 }
 
+// FillRepo for filling repository from file by path.
 func (c *collectionRepo) FillRepo(path string, storage string) {
 	file, err := os.ReadFile(path)
 	if err != nil {

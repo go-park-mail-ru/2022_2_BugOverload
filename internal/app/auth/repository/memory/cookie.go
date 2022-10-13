@@ -14,12 +14,14 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )
 
+// cookieRepo is implementation repository of sessions in memory corresponding to the AuthRepository interface.
 type cookieRepo struct {
 	storageCookie     map[string]http.Cookie
 	storageUserCookie map[string]*models.User
 	mu                *sync.Mutex
 }
 
+// NewCookieRepo is constructor for cookieRepo. Accepts only mutex.
 func NewCookieRepo(mu *sync.Mutex) interfaces.AuthRepository {
 	return &cookieRepo{
 		make(map[string]http.Cookie),
@@ -28,6 +30,7 @@ func NewCookieRepo(mu *sync.Mutex) interfaces.AuthRepository {
 	}
 }
 
+// CheckExist is a check for the existence of such a session - cookie by name.
 func (cs *cookieRepo) CheckExist(cookie string) bool {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
@@ -36,6 +39,7 @@ func (cs *cookieRepo) CheckExist(cookie string) bool {
 	return ok
 }
 
+// GetUserBySession is returns all user attributes by name session.
 func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error) {
 	cookie, _ := ctx.Value(params.CookieKey).(string)
 
@@ -51,6 +55,7 @@ func (cs *cookieRepo) GetUserBySession(ctx context.Context) (models.User, error)
 	return *user, nil
 }
 
+// CreateSession is creates a new cookie and its link to the user.
 func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (string, error) {
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
@@ -76,6 +81,7 @@ func (cs *cookieRepo) CreateSession(ctx context.Context, user *models.User) (str
 	return cookie.String(), nil
 }
 
+// GetSession is to get all attributes of a cookie in string format.
 func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	cookie, _ := ctx.Value(params.CookieKey).(string)
 
@@ -91,6 +97,9 @@ func (cs *cookieRepo) GetSession(ctx context.Context) (string, error) {
 	return resCookie.String(), nil
 }
 
+// DeleteSession is takes the cookie by name, rolls back the time in it so that it becomes
+// irrelevant (it is necessary that the browser deletes the cookie on its side) returns
+// the cookie with the new date, and the repository deletes the cookie itself and the connection with the user.
 func (cs *cookieRepo) DeleteSession(ctx context.Context) (string, error) {
 	cookie, _ := ctx.Value(params.CookieKey).(string)
 
