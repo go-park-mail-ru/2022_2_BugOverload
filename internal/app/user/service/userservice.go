@@ -27,7 +27,7 @@ func NewUserService(ur userInterface.UserRepository, timeout time.Duration) user
 
 // Login is the service that accesses the interface UserRepository.
 // Validation: request password and password user from repository equal.
-func (u userService) Login(ctx context.Context, user *models.User) (models.User, error) {
+func (u *userService) Login(ctx context.Context, user *models.User) (models.User, error) {
 	userRepo, err := u.userRepo.GetUser(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Login")
@@ -41,7 +41,7 @@ func (u userService) Login(ctx context.Context, user *models.User) (models.User,
 }
 
 // Signup is the service that accesses the interface UserRepository
-func (u userService) Signup(ctx context.Context, user *models.User) (models.User, error) {
+func (u *userService) Signup(ctx context.Context, user *models.User) (models.User, error) {
 	newUser, err := u.userRepo.CreateUser(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")

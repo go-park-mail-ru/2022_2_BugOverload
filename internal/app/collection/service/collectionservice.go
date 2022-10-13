@@ -26,7 +26,7 @@ func NewCollectionService(cr interfaces.CollectionRepository, timeout time.Durat
 }
 
 // GetPopular is the service that accesses the interface CollectionRepository
-func (c collectionService) GetPopular(ctx context.Context) ([]models.Film, error) {
+func (c *collectionService) GetPopular(ctx context.Context) ([]models.Film, error) {
 	inCinemaCollection, err := c.collectionRepo.GetPopular(ctx)
 	if err != nil {
 		return []models.Film{}, stdErrors.Wrap(err, "GetPopular")
@@ -36,7 +36,7 @@ func (c collectionService) GetPopular(ctx context.Context) ([]models.Film, error
 }
 
 // GetInCinema is the service that accesses the interface CollectionRepository
-func (c collectionService) GetInCinema(ctx context.Context) ([]models.Film, error) {
+func (c *collectionService) GetInCinema(ctx context.Context) ([]models.Film, error) {
 	popularCollection, err := c.collectionRepo.GetInCinema(ctx)
 	if err != nil {
 		return []models.Film{}, stdErrors.Wrap(err, "GetInCinema")

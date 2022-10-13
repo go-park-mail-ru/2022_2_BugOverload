@@ -24,7 +24,7 @@ func NewFilmService(cr interfaces.FilmsRepository, timeout time.Duration) interf
 	}
 }
 
-func (c filmService) GerRecommendation(ctx context.Context) (models.Film, error) {
+func (c *filmService) GerRecommendation(ctx context.Context) (models.Film, error) {
 	inCinemaCollection, err := c.filmsRepo.GerRecommendation(ctx)
 	if err != nil {
 		return models.Film{}, stdErrors.Wrap(err, "GerRecommendation")
