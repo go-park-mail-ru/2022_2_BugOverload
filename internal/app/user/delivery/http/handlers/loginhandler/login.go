@@ -13,11 +13,13 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
+// handler is the structure that handles the request for login user.
 type handler struct {
 	userService userInterface.UserService
 	authService authInterface.AuthService
 }
 
+// NewHandler is constructor for handler in this pkg - login.
 func NewHandler(us userInterface.UserService, as authInterface.AuthService) interfaces.Handler {
 	return &handler{
 		us,
@@ -25,6 +27,8 @@ func NewHandler(us userInterface.UserService, as authInterface.AuthService) inte
 	}
 }
 
+// Action is a method for initial validation of the request and data and
+// delivery of the data to the service at the business logic level.
 func (h *handler) Action(w http.ResponseWriter, r *http.Request) {
 	var loginRequest models.UserLoginRequest
 

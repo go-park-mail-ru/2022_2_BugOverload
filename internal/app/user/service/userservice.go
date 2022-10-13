@@ -11,11 +11,13 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
+// userService is implementation for users service corresponding to the UserService interface.
 type userService struct {
 	userRepo       userInterface.UserRepository
 	contextTimeout time.Duration
 }
 
+// NewUserService is constructor for userService. Accepts UserRepository interfaces and context timeout.
 func NewUserService(ur userInterface.UserRepository, timeout time.Duration) userInterface.UserService {
 	return &userService{
 		userRepo:       ur,
@@ -23,6 +25,8 @@ func NewUserService(ur userInterface.UserRepository, timeout time.Duration) user
 	}
 }
 
+// Login is the service that accesses the interface UserRepository.
+// Validation: request password and password user from repository equal.
 func (u userService) Login(ctx context.Context, user *models.User) (models.User, error) {
 	userRepo, err := u.userRepo.GetUser(ctx, user)
 	if err != nil {
@@ -36,6 +40,7 @@ func (u userService) Login(ctx context.Context, user *models.User) (models.User,
 	return userRepo, nil
 }
 
+// Signup is the service that accesses the interface UserRepository
 func (u userService) Signup(ctx context.Context, user *models.User) (models.User, error) {
 	newUser, err := u.userRepo.CreateUser(ctx, user)
 	if err != nil {
