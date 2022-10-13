@@ -26,8 +26,8 @@ func (u *UserAuthRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (u *UserAuthRequest) ToPublic(user *models.User) models.User {
-	return models.User{
+func (u *UserAuthRequest) ToPublic(user *models.User) UserAuthRequest {
+	return UserAuthRequest{
 		Email:    user.Email,
 		Nickname: user.Nickname,
 		Avatar:   user.Avatar,

@@ -33,7 +33,7 @@ func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionPopular := models.NewFilmsPopularRequest(collection)
+	collectionPopular := models.NewFilmCollectionRequest("Популярное", collection)
 
 	httpwrapper.Response(w, http.StatusOK, collectionPopular.ToPublic())
 }
