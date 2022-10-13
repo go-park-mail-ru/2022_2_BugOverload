@@ -2,6 +2,7 @@ package logouthandler
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -10,7 +11,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/delivery/http/models"
 	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )

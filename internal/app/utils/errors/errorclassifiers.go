@@ -6,11 +6,11 @@ import (
 	stdErrors "github.com/pkg/errors"
 )
 
-type ErrClassifier interface {
+type errClassifier interface {
 	GetCode(error) int
 }
 
-type ErrClassifierDefaultValidation struct {
+type errClassifierDefaultValidation struct {
 	table map[error]int
 }
 
@@ -20,19 +20,19 @@ var (
 	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
 )
 
-func NewErrClassifierValidation() ErrClassifierDefaultValidation {
+func NewErrClassifierValidation() errClassifier {
 	res := make(map[error]int)
 
 	res[ErrCJSONUnexpectedEnd] = http.StatusBadRequest
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
 	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
 
-	return ErrClassifierDefaultValidation{
+	return &errClassifierDefaultValidation{
 		table: res,
 	}
 }
 
-func (ec *ErrClassifierDefaultValidation) GetCode(err error) int {
+func (ec *errClassifierDefaultValidation) GetCode(err error) int {
 	code, exist := ec.table[err]
 	if !exist {
 		return http.StatusInternalServerError
@@ -51,11 +51,11 @@ var (
 	ErrCookieNotExist           = stdErrors.New("no such cookie")
 )
 
-type ErrClassifierAuth struct {
+type errClassifierAuth struct {
 	table map[error]int
 }
 
-func NewErrClassifierAuth() ErrClassifierAuth {
+func NewErrClassifierAuth() errClassifier {
 	res := make(map[error]int)
 
 	res[ErrEmptyFieldAuth] = http.StatusBadRequest
@@ -67,12 +67,12 @@ func NewErrClassifierAuth() ErrClassifierAuth {
 	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrCookieNotExist] = http.StatusUnauthorized
 
-	return ErrClassifierAuth{
+	return &errClassifierAuth{
 		table: res,
 	}
 }
 
-func (ec *ErrClassifierAuth) GetCode(err error) int {
+func (ec *errClassifierAuth) GetCode(err error) int {
 	code, exist := ec.table[err]
 	if !exist {
 		return http.StatusInternalServerError
@@ -86,22 +86,22 @@ var (
 	ErrFilmsNotFound = stdErrors.New("no such films")
 )
 
-type ErrClassifierFilms struct {
+type errClassifierFilms struct {
 	table map[error]int
 }
 
-func NewErrClassifierFilms() ErrClassifierFilms {
+func NewErrClassifierFilms() errClassifier {
 	res := make(map[error]int)
 
 	res[ErrFilmNotFound] = http.StatusNotFound
 	res[ErrFilmsNotFound] = http.StatusNotFound
 
-	return ErrClassifierFilms{
+	return &errClassifierFilms{
 		table: res,
 	}
 }
 
-func (ec *ErrClassifierFilms) GetCode(err error) int {
+func (ec *errClassifierFilms) GetCode(err error) int {
 	code, exist := ec.table[err]
 	if !exist {
 		return http.StatusInternalServerError

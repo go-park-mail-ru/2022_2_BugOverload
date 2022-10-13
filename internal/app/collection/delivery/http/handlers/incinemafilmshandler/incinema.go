@@ -1,6 +1,7 @@
 package incinemafilmshandler
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -8,7 +9,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/delivery/http/models"
 	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 

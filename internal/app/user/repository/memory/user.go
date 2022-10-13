@@ -2,11 +2,11 @@ package memory
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"sync"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 // userRepo is implementation repository of users in memory corresponding to the UserRepository interface.

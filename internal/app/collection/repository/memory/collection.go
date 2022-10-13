@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"os"
 	"sync"
 
@@ -10,7 +11,6 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/collection/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 // collectionRepo is implementation repository of collection

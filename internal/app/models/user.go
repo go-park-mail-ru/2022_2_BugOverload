@@ -2,12 +2,11 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"io"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 type User struct {

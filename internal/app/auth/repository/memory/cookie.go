@@ -2,6 +2,7 @@ package memory
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 	"strconv"
 	"sync"
@@ -10,7 +11,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/auth/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/params"
 )
 

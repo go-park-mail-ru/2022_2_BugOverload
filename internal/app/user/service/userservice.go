@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"time"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/models"
 	userInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/user/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 )
 
 // userService is implementation for users service corresponding to the UserService interface.

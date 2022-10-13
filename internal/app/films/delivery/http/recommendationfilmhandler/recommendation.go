@@ -1,6 +1,7 @@
 package recommendationfilmhandler
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -9,7 +10,6 @@ import (
 	filmModels "go-park-mail-ru/2022_2_BugOverload/internal/app/films/delivery/http/models"
 	collectionInterface "go-park-mail-ru/2022_2_BugOverload/internal/app/films/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/app/utils/httpwrapper"
 )
 
