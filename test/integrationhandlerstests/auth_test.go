@@ -35,13 +35,13 @@ func TestAuthHandler(t *testing.T) {
 		integrationhandlerstests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Action: [no such cookie]"}`,
+			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Cookie is missing
 		integrationhandlerstests.TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"Action: [request has no cookies]"}`,
+			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}

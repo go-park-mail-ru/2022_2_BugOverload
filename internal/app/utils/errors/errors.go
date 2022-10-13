@@ -26,7 +26,7 @@ type AuthError struct {
 }
 
 func (e AuthError) Error() string {
-	return fmt.Sprintf("Action: [%s]", e.Reason)
+	return fmt.Sprintf("Auth: [%s]", e.Reason)
 }
 
 func NewErrAuth(err error) AuthError {

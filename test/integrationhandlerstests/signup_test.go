@@ -39,7 +39,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Action: [such a login exists]"}`,
+			ResponseBody: `{"error":"Auth: [such a login exists]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -74,7 +74,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
@@ -83,7 +83,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
 
-			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - nickname
@@ -92,7 +92,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/json",
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Action: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
