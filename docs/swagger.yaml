@@ -62,7 +62,7 @@ definitions:
         example: "2008"
         type: string
     type: object
-  models.UserAuthRequest:
+  models.UserAuthResponse:
     properties:
       avatar:
         example: '{{ссылка}}'
@@ -167,7 +167,7 @@ paths:
         "200":
           description: successfully auth
           schema:
-            $ref: '#/definitions/models.UserAuthRequest'
+            $ref: '#/definitions/models.UserAuthResponse'
         "400":
           description: return error
           schema:

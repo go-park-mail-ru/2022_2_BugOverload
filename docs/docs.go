@@ -35,7 +35,7 @@ const docTemplate = `{
                     "200": {
                         "description": "successfully auth",
                         "schema": {
-                            "$ref": "#/definitions/models.UserAuthRequest"
+                            "$ref": "#/definitions/models.UserAuthResponse"
                         }
                     },
                     "400": {
@@ -386,7 +386,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.UserAuthRequest": {
+        "models.UserAuthResponse": {
             "type": "object",
             "properties": {
                 "avatar": {

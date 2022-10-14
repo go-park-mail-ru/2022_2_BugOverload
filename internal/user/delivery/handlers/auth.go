@@ -35,7 +35,7 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) inte
 // @Description Sending login and password
 // @tags user
 // @Produce json
-// @Success 200 {object} models.UserAuthRequest "successfully auth"
+// @Success 200 {object} models.UserAuthResponse "successfully auth"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
@@ -61,5 +61,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpwrapper.Response(w, http.StatusOK, authRequest.ToPublic(&user))
+	authResponse := models.NewUserAuthResponse()
+
+	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic(&user))
 }
