@@ -11,17 +11,17 @@ import (
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
-type UtilitiesMiddleware struct {
+type LoggerMiddleware struct {
 	log *logrus.Logger
 }
 
-func NewUtilitiesMiddleware(log *logrus.Logger) UtilitiesMiddleware {
-	return UtilitiesMiddleware{
+func NewLoggerMiddleware(log *logrus.Logger) LoggerMiddleware {
+	return LoggerMiddleware{
 		log: log,
 	}
 }
 
-func (umd UtilitiesMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
+func (umd *LoggerMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), pkgInner.LoggerKey, umd.log)
 
@@ -29,7 +29,7 @@ func (umd UtilitiesMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.H
 	})
 }
 
-func (umd UtilitiesMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler {
+func (umd *LoggerMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := r.Context().Value(pkgInner.LoggerKey).(*logrus.Logger)
 		if !ok {
@@ -43,9 +43,6 @@ func (umd UtilitiesMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) htt
 			"remote_addr": r.RemoteAddr,
 			"req_id":      uuid.NewV4(),
 		})
-
-		upgradeLogger.Info(r.URL.Path)
-
 		upgradeLogger.Debug()
 
 		ctx := context.WithValue(r.Context(), pkgInner.LoggerKey, upgradeLogger)

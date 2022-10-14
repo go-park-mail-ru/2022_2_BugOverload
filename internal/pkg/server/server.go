@@ -29,7 +29,7 @@ func (s *Server) Launch() error {
 	router := NewRouter(handlers)
 	routerCors := middleware.SetCors(&s.config.Cors, router)
 
-	utilsMiddleware := middleware.NewUtilitiesMiddleware(s.logger)
+	utilsMiddleware := middleware.NewLoggerMiddleware(s.logger)
 	router.Use(utilsMiddleware.SetDefaultLoggerMiddleware, utilsMiddleware.UpdateDefaultLoggerMiddleware)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
