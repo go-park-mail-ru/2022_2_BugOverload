@@ -30,7 +30,7 @@ func NewPopularFilmsHandler(uc service.CollectionService) interfaces.Handler {
 // @Description Films from the "popular" category
 // @tags collections
 // @Produce json
-// @Success 200 {object} models.FilmCollectionRequest "returns an array of movies"
+// @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
@@ -42,7 +42,7 @@ func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionPopular := models.NewFilmCollectionRequest("Популярное", collection)
+	collectionPopular := models.NewFilmCollectionResponse("Популярное", collection)
 
 	httpwrapper.Response(w, http.StatusOK, collectionPopular.ToPublic())
 }

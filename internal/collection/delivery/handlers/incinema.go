@@ -33,7 +33,7 @@ func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionInCinema := models.NewFilmCollectionRequest("Сейчас в кино", collection)
+	collectionInCinema := models.NewFilmCollectionResponse("Сейчас в кино", collection)
 
 	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
 }

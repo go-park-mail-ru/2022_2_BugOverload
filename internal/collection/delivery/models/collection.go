@@ -4,7 +4,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
-type filmInCollectionRequest struct {
+type filmInCollectionResponse struct {
 	ID        uint     `json:"film_id,omitempty" example:"23"`
 	Name      string   `json:"film_name,omitempty" example:"Game of Thrones"`
 	YearProd  string   `json:"year_prod,omitempty" example:"2014"`
@@ -13,20 +13,20 @@ type filmInCollectionRequest struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
-type FilmCollectionRequest struct {
-	Title string                    `json:"title,omitempty" example:"Популярное"`
-	Films []filmInCollectionRequest `json:"films,omitempty"`
+type FilmCollectionResponse struct {
+	Title string                     `json:"title,omitempty" example:"Популярное"`
+	Films []filmInCollectionResponse `json:"films,omitempty"`
 }
 
-func NewFilmCollectionRequest(title string, films []models.Film) *FilmCollectionRequest {
-	res := &FilmCollectionRequest{
+func NewFilmCollectionResponse(title string, films []models.Film) *FilmCollectionResponse {
+	res := &FilmCollectionResponse{
 		Title: title,
 	}
 
-	res.Films = make([]filmInCollectionRequest, len(films))
+	res.Films = make([]filmInCollectionResponse, len(films))
 
 	for idx, value := range films {
-		res.Films[idx] = filmInCollectionRequest{
+		res.Films[idx] = filmInCollectionResponse{
 			ID:        value.ID,
 			Name:      value.Name,
 			YearProd:  value.YearProd,
@@ -39,6 +39,6 @@ func NewFilmCollectionRequest(title string, films []models.Film) *FilmCollection
 	return res
 }
 
-func (fcr *FilmCollectionRequest) ToPublic() *FilmCollectionRequest {
+func (fcr *FilmCollectionResponse) ToPublic() *FilmCollectionResponse {
 	return fcr
 }
