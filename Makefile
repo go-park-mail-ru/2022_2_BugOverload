@@ -7,7 +7,7 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 PKG = ./...
 
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out
+	sudo rm -rf main coverage.html coverage.out c.out *.log
 
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
