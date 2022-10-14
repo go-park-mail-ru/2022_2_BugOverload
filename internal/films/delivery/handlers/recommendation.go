@@ -32,6 +32,15 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.A
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
+// @Summary Recommendation film
+// @Description Getting a recommended movie for the user
+// @tags films
+// @Produce json
+// @Success 200 {object} models.RecommendFilmResponse "returns recommendation film movies for auth user or not auth"
+// @Failure 400 "return error"
+// @Failure 405 "method not allowed"
+// @Failure 500 "something unusual has happened"
+// @Router /v1/recommendation_film [GET]
 func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Request) {
 	//  cookieStr := r.Header.Get("Cookie")
 	//
@@ -54,7 +63,7 @@ func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	response := models.NewRecommendFilmRequest()
+	response := models.NewRecommendFilmResponse()
 
 	httpwrapper.Response(w, http.StatusOK, response.ToPublic(&filmRecommendation))
 }

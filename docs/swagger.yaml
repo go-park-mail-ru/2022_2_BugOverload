@@ -24,14 +24,42 @@ definitions:
         example: 'Auth: [such user doesn''t exist]'
         type: string
     type: object
-  models.FilmCollectionRequest:
+  models.FilmCollectionResponse:
     properties:
       films:
         items:
-          $ref: '#/definitions/models.filmInCollectionRequest'
+          $ref: '#/definitions/models.filmInCollectionResponse'
         type: array
       title:
         example: Популярное
+        type: string
+    type: object
+  models.RecommendFilmResponse:
+    properties:
+      film_id:
+        example: 23
+        type: integer
+      film_name:
+        example: Терминатор
+        type: string
+      genres:
+        example:
+        - фантастика
+        - боевик
+        items:
+          type: string
+        type: array
+      poster_hor:
+        example: '{{ссылка}}'
+        type: string
+      ratio:
+        example: "8.8"
+        type: string
+      short_description:
+        example: Идет борьба сопротивления людей против машин
+        type: string
+      year_prod:
+        example: "2008"
         type: string
     type: object
   models.UserAuthRequest:
@@ -94,7 +122,7 @@ definitions:
         example: StepByyyy
         type: string
     type: object
-  models.filmInCollectionRequest:
+  models.filmInCollectionResponse:
     properties:
       film_id:
         example: 23
@@ -105,7 +133,7 @@ definitions:
       genres:
         example:
         - фэнтези
-        - ' приключения'
+        - приключения
         items:
           type: string
         type: array
@@ -252,6 +280,25 @@ paths:
       summary: New user registration
       tags:
       - user
+  /v1/in_cinema:
+    get:
+      description: Films from the "in cinema" category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: returns an array of movies
+          schema:
+            $ref: '#/definitions/models.FilmCollectionResponse'
+        "400":
+          description: return error
+        "405":
+          description: method not allowed
+        "500":
+          description: something unusual has happened
+      summary: In cinema movies
+      tags:
+      - collections
   /v1/popular_films:
     get:
       description: Films from the "popular" category
@@ -261,7 +308,7 @@ paths:
         "200":
           description: returns an array of movies
           schema:
-            $ref: '#/definitions/models.FilmCollectionRequest'
+            $ref: '#/definitions/models.FilmCollectionResponse'
         "400":
           description: return error
         "405":
@@ -271,4 +318,23 @@ paths:
       summary: Popular movies
       tags:
       - collections
+  /v1/recommendation_film:
+    get:
+      description: Getting a recommended movie for the user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: returns recommendation film movies for auth user or not auth
+          schema:
+            $ref: '#/definitions/models.RecommendFilmResponse'
+        "400":
+          description: return error
+        "405":
+          description: method not allowed
+        "500":
+          description: something unusual has happened
+      summary: Recommendation film
+      tags:
+      - films
 swagger: "2.0"

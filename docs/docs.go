@@ -207,6 +207,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/in_cinema": {
+            "get": {
+                "description": "Films from the \"in cinema\" category",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "collections"
+                ],
+                "summary": "In cinema movies",
+                "responses": {
+                    "200": {
+                        "description": "returns an array of movies",
+                        "schema": {
+                            "$ref": "#/definitions/models.FilmCollectionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "return error"
+                    },
+                    "405": {
+                        "description": "method not allowed"
+                    },
+                    "500": {
+                        "description": "something unusual has happened"
+                    }
+                }
+            }
+        },
         "/v1/popular_films": {
             "get": {
                 "description": "Films from the \"popular\" category",
@@ -221,7 +250,36 @@ const docTemplate = `{
                     "200": {
                         "description": "returns an array of movies",
                         "schema": {
-                            "$ref": "#/definitions/models.FilmCollectionRequest"
+                            "$ref": "#/definitions/models.FilmCollectionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "return error"
+                    },
+                    "405": {
+                        "description": "method not allowed"
+                    },
+                    "500": {
+                        "description": "something unusual has happened"
+                    }
+                }
+            }
+        },
+        "/v1/recommendation_film": {
+            "get": {
+                "description": "Getting a recommended movie for the user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "films"
+                ],
+                "summary": "Recommendation film",
+                "responses": {
+                    "200": {
+                        "description": "returns recommendation film movies for auth user or not auth",
+                        "schema": {
+                            "$ref": "#/definitions/models.RecommendFilmResponse"
                         }
                     },
                     "400": {
@@ -274,18 +332,57 @@ const docTemplate = `{
                 }
             }
         },
-        "models.FilmCollectionRequest": {
+        "models.FilmCollectionResponse": {
             "type": "object",
             "properties": {
                 "films": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.filmInCollectionRequest"
+                        "$ref": "#/definitions/models.filmInCollectionResponse"
                     }
                 },
                 "title": {
                     "type": "string",
                     "example": "Популярное"
+                }
+            }
+        },
+        "models.RecommendFilmResponse": {
+            "type": "object",
+            "properties": {
+                "film_id": {
+                    "type": "integer",
+                    "example": 23
+                },
+                "film_name": {
+                    "type": "string",
+                    "example": "Терминатор"
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "фантастика",
+                        "боевик"
+                    ]
+                },
+                "poster_hor": {
+                    "type": "string",
+                    "example": "{{ссылка}}"
+                },
+                "ratio": {
+                    "type": "string",
+                    "example": "8.8"
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "Идет борьба сопротивления людей против машин"
+                },
+                "year_prod": {
+                    "type": "string",
+                    "example": "2008"
                 }
             }
         },
@@ -374,7 +471,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.filmInCollectionRequest": {
+        "models.filmInCollectionResponse": {
             "type": "object",
             "properties": {
                 "film_id": {
@@ -392,7 +489,7 @@ const docTemplate = `{
                     },
                     "example": [
                         "фэнтези",
-                        " приключения"
+                        "приключения"
                     ]
                 },
                 "poster_ver": {
