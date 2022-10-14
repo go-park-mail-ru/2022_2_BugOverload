@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"context"
-	stdErrors "github.com/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
-	"time"
+
+	stdErrors "github.com/pkg/errors"
 
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
@@ -42,8 +42,6 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.
 // @Failure 500 "something unusual has happened"
 // @Router /v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
-	time.Sleep(1 * time.Second)
-
 	authRequest := models.NewUserAuthRequest()
 
 	err := authRequest.Bind(r)
