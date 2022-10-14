@@ -13,7 +13,7 @@
 
 ## Деплой [MovieGate](http://movie-gate.online/)
 
-## Ссылка на [swagger](https://app.swaggerhub.com/apis/BugOverload/API-Kinopoisk/1.0.0)
+## Ссылка на [swagger](https://app.swaggerhub.com/apis/BugOverload/API-Kino/1.0.0)
 
 ## Ссылка на [figma](https://www.figma.com/file/WIbsjIKSCPSJph8XJ12ArL/Untitled?node-id=90%3A185)
 

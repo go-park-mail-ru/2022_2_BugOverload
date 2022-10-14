@@ -29,6 +29,18 @@ func NewLoginHandler(us serviceUser.UserService, as serviceAuth.AuthService) int
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
+// @Summary User authentication
+// @Description Sending login and password
+// @tags user
+// @Accept json
+// @Produce json
+// @Param user body models.UserLoginRequest true "Request body for login"
+// @Success 200 {object} models.UserLoginResponse "successfully login"
+// @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
+// @Failure 405 "method not allowed"
+// @Failure 500 "something unusual has happened"
+// @Router /v1/auth/login [POST]
 func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 	loginRequest := models.NewUserLoginRequest()
 
@@ -54,5 +66,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Set-Cookie", newSession)
 
-	httpwrapper.Response(w, http.StatusOK, loginRequest.ToPublic(&userLogged))
+	loginResponse := models.NewUserLoginResponse()
+
+	httpwrapper.Response(w, http.StatusOK, loginResponse.ToPublic(&userLogged))
 }

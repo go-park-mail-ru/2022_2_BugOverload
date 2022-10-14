@@ -31,6 +31,17 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) inte
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
+// @Summary Defining an authorized user
+// @Description Sending login and password
+// @tags user
+// @Produce json
+// @Success 200 {object} models.UserAuthRequest "successfully auth"
+// @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
+// @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
+// @Failure 405 "method not allowed"
+// @Failure 500 "something unusual has happened"
+// @Router /v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	authRequest := models.NewUserAuthRequest()
 

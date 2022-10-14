@@ -10,6 +10,17 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/server"
 )
 
+// @title MovieGate
+// @version 1.0
+// @description Server for MovieGate application.
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host movie-gate.online
+// @BasePath  /
+// @termsOfService http://swagger.io/terms/
+// @servers http://movie-gate.online
 func main() {
 	var configPath string
 

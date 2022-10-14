@@ -26,12 +26,12 @@ func NewErrClassifierAuth() errClassifier {
 
 	res[ErrEmptyFieldAuth] = http.StatusBadRequest
 	res[ErrUserExist] = http.StatusBadRequest
-	res[ErrUserNotExist] = http.StatusBadRequest
+	res[ErrUserNotExist] = http.StatusNotFound
 	res[ErrSignupUserExist] = http.StatusBadRequest
 
 	res[ErrLoginCombinationNotFound] = http.StatusUnauthorized
 	res[ErrNoCookie] = http.StatusUnauthorized
-	res[ErrCookieNotExist] = http.StatusUnauthorized
+	res[ErrCookieNotExist] = http.StatusNotFound
 
 	return &errClassifierAuth{
 		table: res,

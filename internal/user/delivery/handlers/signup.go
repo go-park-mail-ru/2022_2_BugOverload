@@ -29,6 +29,18 @@ func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) in
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
+// @Summary New user registration
+// @Description Sending login and password for registration
+// @tags user
+// @Accept json
+// @Produce json
+// @Param user body models.UserSignupRequest true "Request body for login"
+// @Success 200 {object} models.UserSignupResponse "successfully login"
+// @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
+// @Failure 405 "method not allowed"
+// @Failure 500 "something unusual has happened"
+// @Router /v1/auth/signup [POST]
 func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	signupRequest := models.NewUserSignupRequest()
 
@@ -52,5 +64,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Set-Cookie", newSession)
 
-	httpwrapper.Response(w, http.StatusCreated, signupRequest.ToPublic(&user))
+	signupResponse := models.NewUserSignUpResponse()
+
+	httpwrapper.Response(w, http.StatusCreated, signupResponse.ToPublic(&user))
 }

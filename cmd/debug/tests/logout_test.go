@@ -33,14 +33,14 @@ func TestLogoutHandler(t *testing.T) {
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
 			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
-			StatusCode:   http.StatusUnauthorized,
+			StatusCode:   http.StatusNotFound,
 		},
 		// Wrong cookie
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
 			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
-			StatusCode:   http.StatusUnauthorized,
+			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
 		tests.TestCase{
@@ -70,6 +70,7 @@ func TestLogoutHandler(t *testing.T) {
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
+	cases[1].Cookie = strings.Split(cookie, ";")[0]
 
 	userService := serviceUser.NewUserService(us)
 	authService := serviceAuth.NewAuthService(cs)

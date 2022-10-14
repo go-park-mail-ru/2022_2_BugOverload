@@ -8,10 +8,9 @@ import (
 )
 
 type UserAuthRequest struct {
-	Nickname string `json:"nickname,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
-	Avatar   string `json:"avatar,omitempty"`
+	Nickname string `json:"nickname,omitempty" example:"Bot373"`
+	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
+	Avatar   string `json:"avatar,omitempty" example:"{{ссылка}}"`
 }
 
 func NewUserAuthRequest() *UserAuthRequest {

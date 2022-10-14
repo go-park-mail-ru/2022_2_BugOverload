@@ -39,3 +39,6 @@ get_coverage:
 get_coverage_stat:
 	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
 	go tool cover -func=c.out
+
+create_doc:
+	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs

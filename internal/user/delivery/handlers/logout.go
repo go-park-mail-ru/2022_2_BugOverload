@@ -31,6 +31,16 @@ func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.AuthService) in
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
+// @Summary User logout
+// @Description Session delete
+// @tags user
+// @Success 204 "successfully logout"
+// @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
+// @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
+// @Failure 405 "method not allowed"
+// @Failure 500 "something unusual has happened"
+// @Router /v1/auth/logout [GET]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var logoutRequest models.UserLogoutRequest
 

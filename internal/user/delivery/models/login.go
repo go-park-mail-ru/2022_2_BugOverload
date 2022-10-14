@@ -12,10 +12,9 @@ import (
 )
 
 type UserLoginRequest struct {
-	Nickname string `json:"nickname,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
-	Avatar   string `json:"avatar,omitempty"`
+	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
+	Email    string `json:"email,omitempty" example:"YasaPupkinEzji@top.world"`
+	Password string `json:"password,omitempty" example:"Widget Adapter"`
 }
 
 func NewUserLoginRequest() *UserLoginRequest {
@@ -59,11 +58,20 @@ func (u *UserLoginRequest) GetUser() *models.User {
 		Email:    u.Email,
 		Nickname: u.Nickname,
 		Password: u.Password,
-		Avatar:   u.Avatar,
 	}
 }
 
-func (u *UserLoginRequest) ToPublic(user *models.User) models.User {
+type UserLoginResponse struct {
+	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
+	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
+	Avatar   string `json:"avatar,omitempty" example:"{{ссылка}}"`
+}
+
+func NewUserLoginResponse() *UserLoginResponse {
+	return &UserLoginResponse{}
+}
+
+func (u *UserLoginResponse) ToPublic(user *models.User) models.User {
 	return models.User{
 		Email:    user.Email,
 		Nickname: user.Nickname,

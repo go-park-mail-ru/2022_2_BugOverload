@@ -1,13 +1,14 @@
 package server
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factories"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"net/http"
 	"time"
 
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factories"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 type Server struct {
