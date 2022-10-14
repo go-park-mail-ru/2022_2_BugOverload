@@ -2,3 +2,6 @@
 coverage.*
 main
 c.out
+
+docs/docs.go
+docs/swagger*
