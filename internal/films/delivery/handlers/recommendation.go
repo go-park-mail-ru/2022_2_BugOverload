@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -10,7 +11,6 @@ import (
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
 // recommendationFilmHandler is the structure that handles the request for
@@ -21,7 +21,7 @@ type recommendationFilmHandler struct {
 }
 
 // NewRecommendationFilmHandler is constructor for recommendationFilmHandler in this pkg - recommendation film.
-func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.AuthService) interfaces.Handler {
+func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.AuthService) pkg.Handler {
 	return &recommendationFilmHandler{
 		fs,
 		as,

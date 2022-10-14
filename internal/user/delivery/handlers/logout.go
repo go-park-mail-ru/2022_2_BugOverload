@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -9,8 +10,6 @@ import (
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -22,7 +21,7 @@ type logoutHandler struct {
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.AuthService) interfaces.Handler {
+func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
 	return &logoutHandler{
 		us,
 		as,
@@ -52,7 +51,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	ctx := context.WithValue(r.Context(), params.CookieKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.CookieKey, cookieStr)
 
 	badCookie, err := h.authService.DeleteSession(ctx)
 	if err != nil {

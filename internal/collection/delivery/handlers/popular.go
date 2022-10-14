@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -9,7 +10,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
 // PopularFilmsHandler is the structure that handles the request for popular movies.
@@ -18,7 +18,7 @@ type PopularFilmsHandler struct {
 }
 
 // NewPopularFilmsHandler is constructor for PopularFilmsHandler in this pkg - popular.
-func NewPopularFilmsHandler(uc service.CollectionService) interfaces.Handler {
+func NewPopularFilmsHandler(uc service.CollectionService) pkg.Handler {
 	return &PopularFilmsHandler{
 		uc,
 	}

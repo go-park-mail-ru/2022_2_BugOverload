@@ -1,14 +1,11 @@
-package params
+package pkg
 
 import "time"
 
 type ContextType string
 
 var CookieKey ContextType = "cookie"
-
-const countSeconds = 10
-
-var ContextTimeout = time.Duration(countSeconds) * time.Second
+var LoggerKey ContextType = "logger"
 
 const (
 	CookieValueLength = 40

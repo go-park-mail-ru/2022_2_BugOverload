@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"context"
+	pkg2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,6 @@ import (
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -135,7 +135,7 @@ func TestLoginHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), params.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), pkg2.CookieKey, cookieName)
 
 			var nameSession string
 			nameSession, err = authService.GetSession(ctx)

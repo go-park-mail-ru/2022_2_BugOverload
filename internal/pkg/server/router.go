@@ -1,15 +1,15 @@
 package server
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factories"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
-func NewRouter(handlers map[string]interfaces.Handler) *mux.Router {
+func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	router := mux.NewRouter()
 
 	// Auth

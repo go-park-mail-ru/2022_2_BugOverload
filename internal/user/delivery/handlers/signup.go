@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -8,7 +9,6 @@ import (
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -20,7 +20,7 @@ type signupHandler struct {
 }
 
 // NewSingUpHandler is constructor for signupHandler in this pkg - auth.
-func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) interfaces.Handler {
+func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
 	return &signupHandler{
 		us,
 		as,

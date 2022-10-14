@@ -6,18 +6,20 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factories"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 type Server struct {
-	config *pkg.Config
+	config *pkgInner.Config
+	logger *logrus.Logger
 }
 
-func New(config *pkg.Config) *Server {
+func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
 	return &Server{
 		config: config,
+		logger: logger,
 	}
 }
 
@@ -25,9 +27,10 @@ func (s *Server) Launch() error {
 	handlers := factories.NewHandlersMap()
 
 	router := NewRouter(handlers)
+	routerCors := middleware.SetCors(&s.config.Cors, router)
 
-	cors := middleware.NewCorsMiddleware(&s.config.Cors)
-	routerCors := cors.SetCors(router)
+	utilsMiddleware := middleware.NewUtilitiesMiddleware(s.logger)
+	router.Use(utilsMiddleware.SetDefaultLoggerMiddleware, utilsMiddleware.UpdateDefaultLoggerMiddleware)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 

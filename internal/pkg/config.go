@@ -18,10 +18,16 @@ type Context struct {
 	Timeout int `toml:"timeout"`
 }
 
+type Logger struct {
+	LogLevel string `toml:"log_level"`
+	LogAddr  string `toml:"log_path"`
+}
+
 type Config struct {
 	Server  Server  `toml:"server"`
 	Cors    Cors    `toml:"cors"`
 	Context Context `toml:"context"`
+	Logger  Logger  `toml:"logger"`
 }
 
 func NewConfig() *Config {

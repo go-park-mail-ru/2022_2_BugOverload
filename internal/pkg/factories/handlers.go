@@ -9,14 +9,14 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
 	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap() map[string]interfaces.Handler {
-	res := make(map[string]interfaces.Handler)
+func NewHandlersMap() map[string]pkg.Handler {
+	res := make(map[string]pkg.Handler)
 
 	// Auth
 	userStorage := memoryUser.NewUserCash()

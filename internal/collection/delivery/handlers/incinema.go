@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -9,7 +10,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
 )
 
 // inCinemaHandler is the structure that handles the request for movies in cinemas.
@@ -18,7 +18,7 @@ type inCinemaHandler struct {
 }
 
 // NewInCinemaHandler is constructor for inCinemaHandler in this pkg - in cinema.
-func NewInCinemaHandler(uc service.CollectionService) interfaces.Handler {
+func NewInCinemaHandler(uc service.CollectionService) pkg.Handler {
 	return &inCinemaHandler{
 		uc,
 	}

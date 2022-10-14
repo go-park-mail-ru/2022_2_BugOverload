@@ -2,15 +2,14 @@ package handlers
 
 import (
 	"context"
-	"net/http"
-
 	stdErrors "github.com/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"net/http"
+	"time"
 
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/interfaces"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -22,7 +21,7 @@ type authHandler struct {
 }
 
 // NewAuthHandler is constructor for authHandler in this pkg - auth.
-func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) interfaces.Handler {
+func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
 	return &authHandler{
 		us,
 		as,
@@ -43,6 +42,8 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) inte
 // @Failure 500 "something unusual has happened"
 // @Router /v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(1 * time.Second)
+
 	authRequest := models.NewUserAuthRequest()
 
 	err := authRequest.Bind(r)
@@ -53,7 +54,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	ctx := context.WithValue(r.Context(), params.CookieKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.CookieKey, cookieStr)
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {

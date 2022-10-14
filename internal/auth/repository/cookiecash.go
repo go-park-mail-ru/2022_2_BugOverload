@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"strconv"
 	"sync"
@@ -9,7 +10,6 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/params"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -49,7 +49,7 @@ func (cs *cookieCash) CheckExist(cookie string) bool {
 
 // GetUserBySession is returns all user attributes by name session.
 func (cs *cookieCash) GetUserBySession(ctx context.Context) (models.User, error) {
-	cookie, _ := ctx.Value(params.CookieKey).(string)
+	cookie, _ := ctx.Value(pkgInner.CookieKey).(string)
 
 	if !cs.CheckExist(cookie) {
 		return models.User{}, errors.ErrCookieNotExist
@@ -68,11 +68,11 @@ func (cs *cookieCash) CreateSession(ctx context.Context, user *models.User) (str
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	expiration := time.Now().Add(params.TimeoutLiveCookie)
+	expiration := time.Now().Add(pkgInner.TimeoutLiveCookie)
 
 	sessionID := strconv.Itoa(len(cs.storageCookie) + 1)
 
-	newCookieValue, _ := pkg.CryptoString(params.CookieValueLength)
+	newCookieValue, _ := pkg.CryptoString(pkgInner.CookieValueLength)
 
 	cookie := http.Cookie{
 		Name:     sessionID,
@@ -91,7 +91,7 @@ func (cs *cookieCash) CreateSession(ctx context.Context, user *models.User) (str
 
 // GetSession is to get all attributes of a cookie in string format.
 func (cs *cookieCash) GetSession(ctx context.Context) (string, error) {
-	cookie, _ := ctx.Value(params.CookieKey).(string)
+	cookie, _ := ctx.Value(pkgInner.CookieKey).(string)
 
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist
@@ -109,7 +109,7 @@ func (cs *cookieCash) GetSession(ctx context.Context) (string, error) {
 // irrelevant (it is necessary that the browser deletes the cookie on its side) returns
 // the cookie with the new date, and the repository deletes the cookie itself and the connection with the user.
 func (cs *cookieCash) DeleteSession(ctx context.Context) (string, error) {
-	cookie, _ := ctx.Value(params.CookieKey).(string)
+	cookie, _ := ctx.Value(pkgInner.CookieKey).(string)
 
 	if !cs.CheckExist(cookie) {
 		return "", errors.ErrCookieNotExist
@@ -123,7 +123,7 @@ func (cs *cookieCash) DeleteSession(ctx context.Context) (string, error) {
 
 	oldCookie := cs.storageCookie[cookie]
 
-	oldCookie.Expires = time.Now().Add(-params.TimeoutLiveCookie)
+	oldCookie.Expires = time.Now().Add(-pkgInner.TimeoutLiveCookie)
 
 	return oldCookie.String(), nil
 }
