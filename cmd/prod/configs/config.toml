@@ -6,6 +6,10 @@ write_timeout = 5
 [context]
 timeout = 5
 
+[logger]
+log_level = "info"
+log_path = "movie-gate.online"
+
 [cors]
 methods = ["POST", "GET"]
 urls = ["http://movie-gate.online"]
