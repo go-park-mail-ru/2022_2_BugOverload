@@ -15,3 +15,7 @@ type ErrResponseAuthDefault struct {
 type ErrResponseAuthNoSuchUser struct {
 	ErrMassage string `json:"error,omitempty" example:"Auth: [such user doesn't exist]"`
 }
+
+type ErrResponseAuthWrongLoginCombination struct {
+	ErrMassage string `json:"error,omitempty" example:"Auth: [no such combination of login and password]"`
+}

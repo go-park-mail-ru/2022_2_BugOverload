@@ -17,16 +17,16 @@ type FilmsRepository interface {
 	GerRecommendation(ctx context.Context) (models.Film, error)
 }
 
-// filmsCash is implementation repository of films in memory corresponding to the FilmsRepository interface.
-type filmsCash struct {
+// filmsCache is implementation repository of films in memory corresponding to the FilmsRepository interface.
+type filmsCache struct {
 	storage []models.Film
-	mu      *sync.Mutex
+	mu      *sync.RWMutex
 }
 
-// NewFilmCash is constructor for filmsCash. Accepts mutex and path to data films.
-func NewFilmCash(path string) FilmsRepository {
-	res := &filmsCash{
-		mu: &sync.Mutex{},
+// NewFilmCache is constructor for filmsCache. Accepts mutex and path to data films.
+func NewFilmCache(path string) FilmsRepository {
+	res := &filmsCache{
+		mu: &sync.RWMutex{},
 	}
 
 	res.FillRepo(path)
@@ -35,7 +35,7 @@ func NewFilmCash(path string) FilmsRepository {
 }
 
 // FillRepo for filling repository from file by path.
-func (fs *filmsCash) FillRepo(path string) {
+func (fs *filmsCache) FillRepo(path string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		logrus.Error("FillRepoFilms: can't get data from file")
@@ -52,11 +52,14 @@ func (fs *filmsCash) FillRepo(path string) {
 }
 
 // CheckExist is a check for the existence of such a film by ID.
-func (fs *filmsCash) CheckExist(filmID uint) bool {
+func (fs *filmsCache) CheckExist(filmID uint) bool {
+	fs.mu.RLock()
+	defer fs.mu.RUnlock()
+
 	return filmID <= uint(fs.GetStorageCapacity())
 }
 
-func (fs *filmsCash) AddFilm(f models.Film) {
+func (fs *filmsCache) AddFilm(f models.Film) {
 	if !fs.CheckExist(f.ID) {
 		fs.mu.Lock()
 		defer fs.mu.Unlock()
@@ -65,15 +68,18 @@ func (fs *filmsCash) AddFilm(f models.Film) {
 	}
 }
 
-func (fs *filmsCash) GetStorageCapacity() int {
-	fs.mu.Lock()
-	defer fs.mu.Unlock()
+func (fs *filmsCache) GetStorageCapacity() int {
+	fs.mu.RLock()
+	defer fs.mu.RUnlock()
 
 	return len(fs.storage)
 }
 
 // GerRecommendation it gives away recommendation film from the repository for unauthorized users.
-func (fs *filmsCash) GerRecommendation(ctx context.Context) (models.Film, error) {
+func (fs *filmsCache) GerRecommendation(ctx context.Context) (models.Film, error) {
+	fs.mu.RLock()
+	defer fs.mu.RUnlock()
+
 	randIndex := pkg.Rand(fs.GetStorageCapacity())
 
 	filmRecommendation := fs.storage[randIndex]

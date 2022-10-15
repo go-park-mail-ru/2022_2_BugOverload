@@ -34,8 +34,8 @@ func TestRecommendationHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth"
 
 	// Base
-	us := memoryUser.NewUserCash()
-	cs := memoryCookie.NewCookieCash()
+	us := memoryUser.NewUserCache()
+	cs := memoryCookie.NewCookieCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -58,7 +58,7 @@ func TestRecommendationHandler(t *testing.T) {
 	// Films
 	pathPreview := "../../../test/data/preview.json"
 
-	fs := memoryFilms.NewFilmCash(pathPreview)
+	fs := memoryFilms.NewFilmCache(pathPreview)
 
 	filmsService := serviceFilms.NewFilmService(fs)
 

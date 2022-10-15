@@ -14,22 +14,22 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (models.User, error)
 }
 
-// userCash is implementation repository of users in memory corresponding to the UserRepository interface.
-type userCash struct {
+// userCache is implementation repository of users in memory corresponding to the UserRepository interface.
+type userCache struct {
 	storage map[string]models.User
 	mu      *sync.Mutex
 }
 
-// NewUserCash is constructor for userCash. Accepts only mutex.
-func NewUserCash() UserRepository {
-	return &userCash{
+// NewUserCache is constructor for userCache. Accepts only mutex.
+func NewUserCache() UserRepository {
+	return &userCache{
 		make(map[string]models.User),
 		&sync.Mutex{},
 	}
 }
 
 // CheckExist is a check for the existence of such a user by email.
-func (us *userCash) CheckExist(email string) bool {
+func (us *userCache) CheckExist(email string) bool {
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
@@ -39,7 +39,7 @@ func (us *userCash) CheckExist(email string) bool {
 }
 
 // CreateUser is creates a new user and set default avatar.
-func (us *userCash) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
+func (us *userCache) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
 	if us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrSignupUserExist
 	}
@@ -55,7 +55,7 @@ func (us *userCash) CreateUser(ctx context.Context, user *models.User) (models.U
 }
 
 // GetUser is returns all user attributes by part user attributes.
-func (us *userCash) GetUser(ctx context.Context, user *models.User) (models.User, error) {
+func (us *userCache) GetUser(ctx context.Context, user *models.User) (models.User, error) {
 	if !us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrUserNotExist
 	}

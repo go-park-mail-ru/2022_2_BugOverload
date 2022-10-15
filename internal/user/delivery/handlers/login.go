@@ -37,6 +37,7 @@ func NewLoginHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg
 // @Param user body models.UserLoginRequest true "Request body for login"
 // @Success 200 {object} models.UserLoginResponse "successfully login"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
+// @Failure 401 {object} httpmodels.ErrResponseAuthWrongLoginCombination "wrong combination"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"

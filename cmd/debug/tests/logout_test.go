@@ -52,8 +52,8 @@ func TestLogoutHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/logput"
 
-	us := memoryUser.NewUserCash()
-	cs := memoryCookie.NewCookieCash()
+	us := memoryUser.NewUserCache()
+	cs := memoryCookie.NewCookieCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",

@@ -34,8 +34,8 @@ func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) pk
 // @tags user
 // @Accept json
 // @Produce json
-// @Param user body models.UserSignupRequest true "Request body for login"
-// @Success 200 {object} models.UserSignupResponse "successfully login"
+// @Param user body models.UserSignupRequest true "Request body for signup"
+// @Success 201 {object} models.UserSignupResponse "successfully signup"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
 // @Failure 405 "method not allowed"

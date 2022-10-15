@@ -31,7 +31,7 @@ func TestInCinemaHandler(t *testing.T) {
 	pathPopular := "../../../test/data/popular.json"
 
 	//  init
-	cs := memoryCollection.NewCollectionCash(pathPopular, pathInCinema)
+	cs := memoryCollection.NewCollectionCache(pathPopular, pathInCinema)
 
 	collectionService := serviceCollection.NewCollectionService(cs)
 	inCinemaHandler := handlers.NewInCinemaHandler(collectionService)

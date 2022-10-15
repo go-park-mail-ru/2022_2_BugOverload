@@ -19,8 +19,8 @@ func NewHandlersMap() map[string]pkg.Handler {
 	res := make(map[string]pkg.Handler)
 
 	// Auth
-	userStorage := memoryUser.NewUserCash()
-	cookieStorage := memoryCookie.NewCookieCash()
+	userStorage := memoryUser.NewUserCache()
+	cookieStorage := memoryCookie.NewCookieCache()
 
 	userService := serviceUser.NewUserService(userStorage)
 	authService := serviceAuth.NewAuthService(cookieStorage)
@@ -41,7 +41,7 @@ func NewHandlersMap() map[string]pkg.Handler {
 	pathInCinema := "test/data/incinema.json"
 	pathPopular := "test/data/popular.json"
 
-	colStorage := memoryCollection.NewCollectionCash(pathPopular, pathInCinema)
+	colStorage := memoryCollection.NewCollectionCache(pathPopular, pathInCinema)
 
 	collectionService := serviceCollection.NewCollectionService(colStorage)
 
@@ -54,7 +54,7 @@ func NewHandlersMap() map[string]pkg.Handler {
 	// Films
 	pathPreview := "test/data/preview.json"
 
-	filmsS := memoryFilms.NewFilmCash(pathPreview)
+	filmsS := memoryFilms.NewFilmCache(pathPreview)
 
 	filmsService := serviceFilms.NewFilmService(filmsS)
 

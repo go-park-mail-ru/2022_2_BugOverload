@@ -18,20 +18,20 @@ type CollectionRepository interface {
 	GetInCinema(ctx context.Context) ([]models.Film, error)
 }
 
-// collectionCash is implementation repository of collection
+// collectionCache is implementation repository of collection
 // in memory corresponding to the CollectionService interface.
-type collectionCash struct {
+type collectionCache struct {
 	storagePopular  []models.Film
 	storageInCinema []models.Film
-	mu              *sync.Mutex
+	mu              *sync.RWMutex
 }
 
-// NewCollectionCash is constructor for collectionCash. Accepts paths to data collection.
-func NewCollectionCash(pathPopular string, pathInCinema string) CollectionRepository {
-	res := &collectionCash{
+// NewCollectionCache is constructor for collectionCache. Accepts paths to data collection.
+func NewCollectionCache(pathPopular string, pathInCinema string) CollectionRepository {
+	res := &collectionCache{
 		make([]models.Film, 0),
 		make([]models.Film, 0),
-		&sync.Mutex{},
+		&sync.RWMutex{},
 	}
 
 	res.FillRepo(pathPopular, "popular")
@@ -41,9 +41,9 @@ func NewCollectionCash(pathPopular string, pathInCinema string) CollectionReposi
 }
 
 // GetPopular it gives away popular movies from the repository.
-func (c *collectionCash) GetPopular(ctx context.Context) ([]models.Film, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+func (c *collectionCache) GetPopular(ctx context.Context) ([]models.Film, error) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 
 	if len(c.storagePopular) == 0 {
 		return []models.Film{}, errors.ErrFilmNotFound
@@ -53,9 +53,9 @@ func (c *collectionCash) GetPopular(ctx context.Context) ([]models.Film, error) 
 }
 
 // GetInCinema it gives away movies in cinema from the repository.
-func (c *collectionCash) GetInCinema(ctx context.Context) ([]models.Film, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+func (c *collectionCache) GetInCinema(ctx context.Context) ([]models.Film, error) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 
 	if len(c.storageInCinema) == 0 {
 		return []models.Film{}, errors.ErrFilmsNotFound
@@ -65,7 +65,7 @@ func (c *collectionCash) GetInCinema(ctx context.Context) ([]models.Film, error)
 }
 
 // FillRepo for filling repository from file by path.
-func (c *collectionCash) FillRepo(path string, storage string) {
+func (c *collectionCache) FillRepo(path string, storage string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		logrus.Error("FillRepoCollection: can't get data from file")
