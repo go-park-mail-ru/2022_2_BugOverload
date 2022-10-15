@@ -1,0 +1,18 @@
+[server]
+bind_addr_http = ":8088"
+read_timeout = 10
+write_timeout = 10
+
+[context]
+timeout = 10
+
+[logger]
+log_level = "debug"
+log_path = "localhost"
+
+[cors]
+methods = ["POST", "GET"]
+urls = ["http://localhost:3001"]
+headers = ["Content-Type", "Content-length"]
+credentials = true
+debug = true

@@ -1,0 +1,18 @@
+[server]
+bind_addr_http = ":8088"
+read_timeout = 5
+write_timeout = 5
+
+[context]
+timeout = 5
+
+[logger]
+log_level = "info"
+log_path = "movie-gate.online"
+
+[cors]
+methods = ["POST", "GET"]
+urls = ["http://movie-gate.online"]
+headers = ["Content-Type", "Content-length"]
+credentials = true
+debug = false
