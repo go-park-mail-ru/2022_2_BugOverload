@@ -17,21 +17,21 @@ type UserRepository interface {
 // userCache is implementation repository of users in memory corresponding to the UserRepository interface.
 type userCache struct {
 	storage map[string]models.User
-	mu      *sync.Mutex
+	mu      *sync.RWMutex
 }
 
 // NewUserCache is constructor for userCache. Accepts only mutex.
 func NewUserCache() UserRepository {
 	return &userCache{
 		make(map[string]models.User),
-		&sync.Mutex{},
+		&sync.RWMutex{},
 	}
 }
 
 // CheckExist is a check for the existence of such a user by email.
 func (us *userCache) CheckExist(email string) bool {
-	us.mu.Lock()
-	defer us.mu.Unlock()
+	us.mu.RLock()
+	defer us.mu.RUnlock()
 
 	_, ok := us.storage[email]
 
@@ -60,8 +60,8 @@ func (us *userCache) GetUser(ctx context.Context, user *models.User) (models.Use
 		return models.User{}, errors.ErrUserNotExist
 	}
 
-	us.mu.Lock()
-	defer us.mu.Unlock()
+	us.mu.RLock()
+	defer us.mu.RUnlock()
 
 	return us.storage[user.Email], nil
 }
