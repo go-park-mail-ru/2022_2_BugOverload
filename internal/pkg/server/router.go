@@ -15,8 +15,8 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	// Auth
 	router.HandleFunc("/v1/auth", handlers[factories.AuthRequest].Action).Methods(http.MethodGet)
 	router.HandleFunc("/v1/auth/login", handlers[factories.LoginRequest].Action).Methods(http.MethodPost)
-	router.HandleFunc("/v1/auth/signup", handlers[factories.LogoutRequest].Action).Methods(http.MethodPost)
-	router.HandleFunc("/v1/auth/logout", handlers[factories.SignupRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/v1/auth/signup", handlers[factories.SignupRequest].Action).Methods(http.MethodPost)
+	router.HandleFunc("/v1/auth/logout", handlers[factories.LogoutRequest].Action).Methods(http.MethodGet)
 
 	// Collections
 	router.HandleFunc("/v1/in_cinema", handlers[factories.InCinemaRequest].Action).Methods(http.MethodGet)

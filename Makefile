@@ -27,7 +27,7 @@ build:
 	go build cmd/debug/main.go ${TARGET}
 
 launch_docker:
-	sudo docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
+	docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
 
 run_tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -42,3 +42,6 @@ get_coverage_stat:
 
 create_doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
+
+launch_project:
+	docker-compose up

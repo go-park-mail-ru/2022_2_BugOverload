@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  server:
+    image: andeo1812/golang_web
+
+    command: make -C project launch_debug
+
+    network_mode: "host"
+
+    volumes:
+      - .:/project
