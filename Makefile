@@ -44,4 +44,7 @@ create_doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
 launch_project:
-	docker-compose up
+	docker-compose up & TZ=$(cat /etc/timezone)
+
+stop_project:
+	docker-compose kill

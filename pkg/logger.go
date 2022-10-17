@@ -20,9 +20,8 @@ func NewLogger(config *pkg.Logger) (*logrus.Logger, func() error) {
 
 	currentTime := time.Now().In(time.UTC)
 
-	formatted := config.LogAddr + "__" + fmt.Sprintf("Date:%d-.%02d.%02d__Time:%02d:%02d:%02d",
-		currentTime.Year(), currentTime.Month(), currentTime.Day(),
-		currentTime.Hour(), currentTime.Minute(), currentTime.Second()) + ".log"
+	formatted := config.LogAddr + "__" + fmt.Sprintf("Date:%d.%02d.%02d",
+		currentTime.Year(), currentTime.Month(), currentTime.Day()) + ".log"
 
 	f, err := os.OpenFile(formatted, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
