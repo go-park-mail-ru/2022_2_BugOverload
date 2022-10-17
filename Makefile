@@ -26,9 +26,6 @@ launch_prod:
 build:
 	go build cmd/debug/main.go ${TARGET}
 
-launch_docker:
-	docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
-
 run_tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
 
@@ -49,3 +46,7 @@ launch_project:
 stop_project:
 	docker-compose kill
 	docker-compose down
+
+#OLD
+launch_docker:
+	docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
