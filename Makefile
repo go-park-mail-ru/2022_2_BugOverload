@@ -7,7 +7,7 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 PKG = ./...
 
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log
+	sudo rm -rf main coverage.html coverage.out c.out *.log data bin
 
 create_env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
@@ -44,7 +44,8 @@ create_doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
 launch_project:
-	docker-compose up & TZ=$(cat /etc/timezone)
+	docker-compose up &
 
 stop_project:
 	docker-compose kill
+	docker-compose down

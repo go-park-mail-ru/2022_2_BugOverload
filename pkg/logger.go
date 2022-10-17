@@ -18,10 +18,13 @@ func NewLogger(config *pkg.Logger) (*logrus.Logger, func() error) {
 
 	logger := logrus.New()
 
-	currentTime := time.Now().In(time.UTC)
+	location, err := time.LoadLocation("Europe/Moscow")
 
-	formatted := config.LogAddr + "__" + fmt.Sprintf("Date:%d.%02d.%02d",
-		currentTime.Year(), currentTime.Month(), currentTime.Day()) + ".log"
+	currentTime := time.Now().In(location)
+
+	formatted := config.LogAddr + "__" + fmt.Sprintf("Date:%d.%02d.%02d__Time:%02d:%02d:%02d",
+		currentTime.Year(), currentTime.Month(), currentTime.Day(),
+		currentTime.Hour(), currentTime.Minute(), currentTime.Second()) + ".log"
 
 	f, err := os.OpenFile(formatted, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
