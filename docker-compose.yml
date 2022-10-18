@@ -1,10 +1,11 @@
 version: "3.7"
 
 services:
-  server:
-    container_name: "server"
+  app:
+    network_mode: host
+    container_name: "app"
     image: andeo1812/golang_web
-    command: make -C project launch_debug
+    command: make -C project debug-mode
     volumes:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
@@ -23,7 +24,7 @@ services:
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
 
-      - SERVICES=s3,sqs,lambda,cloudformation,sts,iam,cloudwatch,apigateway,events,dynamodb,dynamodbstreams
+      - SERVICES=s3,sqs,lambda,cloudformation,sts,iam,cloudwatch,apigateway,events,dynamodb
       # - DEBUG=1
 
       - DATA_DIR=/tmp/localstack/data
@@ -44,6 +45,8 @@ services:
       - ./data:/tmp/localstack
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
+
+
   dynamodb-admin:
     networks:
       - localstack-net

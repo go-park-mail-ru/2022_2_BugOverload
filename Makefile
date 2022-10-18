@@ -6,10 +6,15 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...
 
+SERVICE_APP = app
+SERVICE_DYNAMODB_ADMIN = dynamodb-admin
+SERVICE_LOCALSTACK =localstack
+
+# develop
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log data bin
 
-create_env:
+create-env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
 
@@ -17,36 +22,41 @@ check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
-launch_debug:
+debug-mode:
 	go run ./cmd/debug/main.go --config-path ./cmd/debug/configs/config.toml
-
-launch_prod:
-	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
 build:
 	go build cmd/debug/main.go ${TARGET}
 
-run_tests:
+run-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
 
-get_coverage:
+get-coverage:
 	go test ${PKG} -coverprofile coverage.out
 	go tool cover -html coverage.out -o coverage.html
 
-get_coverage_stat:
+get-stat-coverage:
 	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
 	go tool cover -func=c.out
 
-create_doc:
+generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
-launch_project:
-	docker-compose up &
+# production
+prod-mode:
+	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
-stop_project:
+# infrastructure
+launch:
+	docker-compose up -d
+
+stop:
 	docker-compose kill
 	docker-compose down
 
+compose-log:
+	docker-compose logs -f
+
 #OLD
-launch_docker:
+docker-launch:
 	docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
