@@ -24,4 +24,4 @@ jobs:
     needs: [ build ]
     steps:
       - uses: actions/checkout@v2
-      - run: make run_tests
+      - run: make run-tests
