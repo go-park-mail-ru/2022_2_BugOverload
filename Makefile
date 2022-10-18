@@ -1,4 +1,4 @@
-.PHONY: all clear generate-api-doc check launch build
+.PHONY: all clear generate-api-doc check launch build run-tests
 
 all: check build run-tests
 
