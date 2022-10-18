@@ -23,6 +23,7 @@ services:
       - SERVICES=s3
       # - DEBUG=1
       - DATA_DIR=/tmp/localstack/data
+      - EAGER_SERVICE_LOADING=1
       - PORT_WEB_UI=8080
       - LAMBDA_EXECUTOR=docker-reuse
       - LAMBDA_REMOTE_DOCKER=false
