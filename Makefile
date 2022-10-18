@@ -48,7 +48,7 @@ prod-mode:
 
 # infrastructure
 launch:
-	docker-compose up --remove-orphans &
+	docker-compose up --remove-orphans -d
 
 stop:
 	docker-compose kill
