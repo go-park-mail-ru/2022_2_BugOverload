@@ -9,7 +9,10 @@ services:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+
+
   localstack:
+    hostname: localstack
     networks:
       - localstack-net
     container_name: "localstack"
@@ -20,7 +23,7 @@ services:
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
 
-      - SERVICES=s3,sqs,lambda,cloudformation,sts,iam,cloudwatch,apigateway,events
+      - SERVICES=s3,sqs,lambda,cloudformation,sts,iam,cloudwatch,apigateway,events,dynamodb,dynamodbstreams
       # - DEBUG=1
 
       - DATA_DIR=/tmp/localstack/data
@@ -45,22 +48,20 @@ services:
     networks:
       - localstack-net
     container_name: "dynamodb-admin"
-    image: aaronshaf/dynamodb-admin
+    image: aaronshaf/dynamodb-admin:latest
     ports:
       - 8001:8001
     environment:
-      DYNAMO_ENDPOINT: http://localhost:4566
+      DYNAMO_ENDPOINT: http://localstack:4566
       AWS_REGION: ${AWS_REGION:-us-east-1}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-foo}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-bar}
     depends_on:
       - localstack
+
+
 networks:
   localstack-net:
     external: false
     driver: bridge
     name: localstack-net
-  dynamodb-admin-net:
-    external: false
-    driver: bridge
-    name: dynamodb-admin-net
