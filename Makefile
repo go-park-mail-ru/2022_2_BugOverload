@@ -1,6 +1,6 @@
-.PHONY: all clear create_env check launch build launch_docker run_tests check_coverage check_full_coverage
+.PHONY: all clear generate-api-doc check launch build
 
-all: check build run_tests
+all: check build run-tests
 
 LINTERS_CONFIG = ./configs/.golangci.yml
 
