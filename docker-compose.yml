@@ -46,21 +46,22 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
 
-
-  dynamodb-admin:
-    networks:
-      - localstack-net
-    container_name: "dynamodb-admin"
-    image: aaronshaf/dynamodb-admin:latest
-    ports:
-      - 8001:8001
-    environment:
-      DYNAMO_ENDPOINT: http://localstack:4566
-      AWS_REGION: ${AWS_REGION:-us-east-1}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-foo}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-bar}
-    depends_on:
-      - localstack
+# DynamoDB — система управления базами данных класса NoSQL в формате «ключ — значение»,
+#  предлагаемая Amazon.com как часть пакета Amazon Web Services.
+#  dynamodb-admin:
+#    networks:
+#      - localstack-net
+#    container_name: "dynamodb-admin"
+#    image: aaronshaf/dynamodb-admin:latest
+#    ports:
+#      - 8001:8001
+#    environment:
+#      DYNAMO_ENDPOINT: http://localstack:4566
+#      AWS_REGION: ${AWS_REGION:-us-east-1}
+#      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-foo}
+#      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-bar}
+#    depends_on:
+#      - localstack
 
 
 networks:

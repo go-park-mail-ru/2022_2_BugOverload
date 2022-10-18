@@ -12,7 +12,7 @@ SERVICE_LOCALSTACK =localstack
 
 # develop
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log data bin
+	sudo rm -rf main coverage.html coverage.out c.out *.log data
 
 create-env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
@@ -48,7 +48,7 @@ prod-mode:
 
 # infrastructure
 launch:
-	docker-compose up -d
+	docker-compose up --remove-orphans &
 
 stop:
 	docker-compose kill
