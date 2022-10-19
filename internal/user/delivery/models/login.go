@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -26,7 +27,7 @@ func (u *UserLoginRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
 
-	if r.Header.Get("Content-Type") != contentTypeJSON {
+	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
 		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 

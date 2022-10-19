@@ -43,7 +43,6 @@ func (umd *LoggerMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.
 			"remote_addr": r.RemoteAddr,
 			"req_id":      uuid.NewV4(),
 		})
-		upgradeLogger.Debug()
 
 		ctx := context.WithValue(r.Context(), pkgInner.LoggerKey, upgradeLogger)
 

@@ -8,4 +8,6 @@ const (
 	InCinemaRequest       = "InCinemaRequest"
 	PopularRequest        = "PopularRequest"
 	RecommendationRequest = "RecommendationRequest"
+	GetImageRequest       = "GetImageRequest"
+	PutImageRequest       = "PutImageRequest"
 )

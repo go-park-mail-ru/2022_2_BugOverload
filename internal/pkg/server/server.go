@@ -24,7 +24,7 @@ func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
 }
 
 func (s *Server) Launch() error {
-	handlers := factories.NewHandlersMap()
+	handlers := factories.NewHandlersMap(s.config)
 
 	router := NewRouter(handlers)
 	routerCors := middleware.SetCors(&s.config.Cors, router)

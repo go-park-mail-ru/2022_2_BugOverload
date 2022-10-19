@@ -8,7 +8,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-// UserRepository provides the versatility of films repositories.
+// UserRepository provides the versatility of users repositories.
 type UserRepository interface {
 	GetUser(ctx context.Context, user *models.User) (models.User, error)
 	CreateUser(ctx context.Context, user *models.User) (models.User, error)

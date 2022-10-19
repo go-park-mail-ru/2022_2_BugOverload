@@ -23,9 +23,17 @@ type Logger struct {
 	LogAddr  string `toml:"log_path"`
 }
 
+type S3 struct {
+	ID       string `toml:"aws_access_key_id"`
+	Secret   string `toml:"aws_secret_access_key"`
+	Region   string `toml:"region"`
+	Endpoint string `toml:"endpoint"`
+}
+
 type Config struct {
 	Server  Server  `toml:"server"`
 	Cors    Cors    `toml:"cors"`
+	S3      S3      `toml:"S3"`
 	Context Context `toml:"context"`
 	Logger  Logger  `toml:"logger"`
 }

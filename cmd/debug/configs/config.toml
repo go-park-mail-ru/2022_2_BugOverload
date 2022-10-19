@@ -10,6 +10,12 @@ timeout = 10
 log_level = "debug"
 log_path = "localhost"
 
+[S3]
+region = "us-east-1"
+endpoint = "http://localhost:4566"
+aws_access_key_id = "foo"
+aws_secret_access_key = "bar"
+
 [cors]
 methods = ["POST", "GET"]
 urls = ["http://localhost:3001"]
