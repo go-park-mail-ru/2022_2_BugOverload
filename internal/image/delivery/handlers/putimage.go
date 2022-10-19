@@ -27,6 +27,7 @@ func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) pk
 	}
 }
 
+/*
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary New user registration
@@ -41,6 +42,7 @@ func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) pk
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /v1/auth/signup [POST]
+*/
 func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	signupRequest := models.NewUserSignupRequest()
 

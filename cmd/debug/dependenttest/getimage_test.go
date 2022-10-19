@@ -1,7 +1,6 @@
 package dependenttest_test
 
 import (
-	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +12,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
 	S3Image "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
+	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )

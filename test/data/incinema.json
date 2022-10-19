@@ -1,9 +1,9 @@
 [
   {
-    "film_id": 22,
+    "film_id": 1,
     "film_name": "Три тысячи лет желаний",
     "year_prod": "2022",
-    "poster_ver": "asserts/img/posters/17.png",
+    "poster_ver": "posters/ver/1.jpeg",
     "ratio": "7.0",
     "genres": [
       "фэнтези",
@@ -11,40 +11,40 @@
     ]
   },
   {
-    "film_id": 23,
+    "film_id": 2,
     "film_name": "Джиперс Криперс: Возрожденный",
     "year_prod": "2022",
-    "poster_ver": "asserts/img/posters/18.png",
+    "poster_ver": "posters/ver/2.jpeg",
     "ratio": "3.5",
     "genres": [
       "ужасы"
     ]
   },
   {
-    "film_id": 24,
+    "film_id": 3,
     "film_name": "Эра выживания",
     "year_prod": "2022",
-    "poster_ver": "asserts/img/posters/19.png",
+    "poster_ver": "posters/ver/3.jpeg",
     "ratio": "5.5",
     "genres": [
       "фантастика"
     ]
   },
   {
-    "film_id": 25,
+    "film_id": 4,
     "film_name": "Проклятие Плачущей. Возвращение",
     "year_prod": "2022",
-    "poster_ver": "asserts/img/posters/20.png",
+    "poster_ver": "posters/ver/4.jpeg",
     "ratio": "4.2",
     "genres": [
       "ужасы"
     ]
   },
   {
-    "film_id": 12,
+    "film_id": 5,
     "film_name": "Люси",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/2.png",
+    "poster_ver": "posters/ver/5.jpeg",
     "ratio": "8.9",
     "genres": [
       "фэнтези",
@@ -52,10 +52,10 @@
     ]
   },
   {
-    "film_id": 13,
+    "film_id": 6,
     "film_name": "Властелин колец. Братство кольца",
     "year_prod": "2001",
-    "poster_ver": "asserts/img/posters/3.png",
+    "poster_ver": "posters/ver/6.jpeg",
     "ratio": "8.4",
     "genres": [
       "фэнтези",
@@ -63,10 +63,10 @@
     ]
   },
   {
-    "film_id": 14,
+    "film_id": 7,
     "film_name": "Дом, который построил Джек",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/4.png",
+    "poster_ver": "posters/ver/7.jpeg",
     "ratio": "7.2",
     "genres": [
       "фэнтези",
@@ -74,10 +74,10 @@
     ]
   },
   {
-    "film_id": 15,
+    "film_id": 8,
     "film_name": "Интерстеллар",
     "year_prod": "2014",
-    "poster_ver": "asserts/img/posters/10.png",
+    "poster_ver": "posters/ver/8.jpeg",
     "ratio": "8.6",
     "genres": [
       "фантастика",
@@ -85,10 +85,10 @@
     ]
   },
   {
-    "film_id": 16,
+    "film_id": 9,
     "film_name": "1+1",
     "year_prod": "2011",
-    "poster_ver": "asserts/img/posters/11.png",
+    "poster_ver": "posters/ver/9.jpeg",
     "ratio": "8.8",
     "genres": [
       "комедия",
@@ -96,10 +96,10 @@
     ]
   },
   {
-    "film_id": 17,
+    "film_id": 10,
     "film_name": "Темный рыцарь",
     "year_prod": "2008",
-    "poster_ver": "asserts/img/posters/12.png",
+    "poster_ver": "posters/ver/10.jpeg",
     "ratio": "8.5",
     "genres": [
       "фантастика",
@@ -107,10 +107,10 @@
     ]
   },
   {
-    "film_id": 18,
+    "film_id": 11,
     "film_name": "Бойцовский клуб",
     "year_prod": "1999",
-    "poster_ver": "asserts/img/posters/13.png",
+    "poster_ver": "posters/ver/11.jpeg",
     "ratio": "8.6",
     "genres": [
       "триллер",
@@ -118,10 +118,10 @@
     ]
   },
   {
-    "film_id": 19,
+    "film_id": 12,
     "film_name": "Титаник",
     "year_prod": "1997",
-    "poster_ver": "asserts/img/posters/14.png",
+    "poster_ver": "posters/ver/12.jpeg",
     "ratio": "8.6",
     "genres": [
       "мелодрама",
@@ -129,10 +129,10 @@
     ]
   },
   {
-    "film_id": 20,
+    "film_id": 13,
     "film_name": "Ходячий замок",
     "year_prod": "2004",
-    "poster_ver": "asserts/img/posters/15.png",
+    "poster_ver": "posters/ver/13.jpeg",
     "ratio": "8.3",
     "genres": [
       "мультфильм",
@@ -140,10 +140,10 @@
     ]
   },
   {
-    "film_id": 21,
+    "film_id": 14,
     "film_name": "Волк с Уолл-стрит",
     "year_prod": "2013",
-    "poster_ver": "asserts/img/posters/16.png",
+    "poster_ver": "posters/ver/14.jpeg",
     "ratio": "7.9",
     "genres": [
       "криминал",

@@ -5,9 +5,10 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	awsSession "github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -37,7 +38,7 @@ func NewImageS3(config *innerPKG.Config) (ImageRepository, error) {
 	token, _ := pkg.CryptoRandString(innerPKG.TokenS3Length)
 	awsConfig.Credentials = credentials.NewStaticCredentials(config.S3.ID, config.S3.Secret, token)
 
-	sess, err := awsSession.NewSession(awsConfig)
+	sess, err := session.NewSession(awsConfig)
 	if err != nil {
 		logrus.Error("Init fatal error: NewSession: ", err)
 

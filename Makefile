@@ -1,6 +1,6 @@
 .PHONY: all clear generate-api-doc check launch build run-tests
 
-all: check build run-tests
+all: check build run-all-tests
 
 LINTERS_CONFIG = ./configs/.golangci.yml
 
