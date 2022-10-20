@@ -1,11 +1,11 @@
 package server
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factories"
 )
 
@@ -26,7 +26,7 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	router.HandleFunc("/v1/recommendation_film", handlers[factories.RecommendationRequest].Action).Methods(http.MethodGet)
 
 	// Images
-	router.HandleFunc("/v1/static", handlers[factories.GetImageRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/v1/get_static", handlers[factories.GetImageRequest].Action).Methods(http.MethodGet)
 
 	http.Handle("/", router)
 

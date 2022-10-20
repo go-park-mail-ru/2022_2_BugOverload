@@ -73,7 +73,7 @@ func TestGetImageHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/static"
+	url := "http://localhost:8088/v1/get_static"
 	config := innerPKG.NewConfig()
 
 	config.S3.Region = "us-east-1"

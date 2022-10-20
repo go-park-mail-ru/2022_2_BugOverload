@@ -31,13 +31,13 @@ func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @tags image
 // @Accept json
 // @Produce json
-// @Param user body models.GetImageRequest true "Request body for get image"
+// @Param image body models.GetImageRequest true "Request body for get image"
 // @Success 200 "successfully getting"
 // @Failure 400 "return error"
 // @Failure 404 "such image not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/static [POST]
+// @Router /v1/image [GET]
 func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	getImageRequest := models.NewGetImageRequest()
 
