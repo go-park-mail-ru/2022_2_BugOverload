@@ -23,7 +23,7 @@ func TestGetImageHandler(t *testing.T) {
 		tests.TestCase{
 			Method:      http.MethodGet,
 			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"bucket":"films/","item":"posters/hor/test.jpeg"}`,
+			RequestBody: `{"bucket":"default/","item":"test.jpeg"}`,
 
 			ResponseBody: "GeneratedData",
 			StatusCode:   http.StatusOK,
@@ -32,7 +32,7 @@ func TestGetImageHandler(t *testing.T) {
 		tests.TestCase{
 			Method:      http.MethodGet,
 			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"bucket":"films/","item":"posters/hor/test.jpeg123"}`,
+			RequestBody: `{"bucket":"default/","item":"test.jpeg123"}`,
 
 			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
 			StatusCode:   http.StatusNotFound,

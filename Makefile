@@ -48,14 +48,13 @@ get-stat-coverage:
 generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
-fill-S3-tests:
-	./scripts/fill_test_data_S3.sh
-
+# Example: make fill-S3 SOURCE=/home/andeo/Загрузки/images
 fill-S3:
 	./scripts/fill_data_S3.sh ${SOURCE}
 
+# Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
-	./scripts/fill_data_S3.sh ${TARGET} ${FORMAT}
+	./scripts/set_format.sh ${TARGET} ${FORMAT}
 
 # production
 prod-mode:
@@ -63,9 +62,7 @@ prod-mode:
 
 # infrastructure
 launch:
-	docker-compose up --remove-orphans &
-	sleep 6
-	make fill-S3
+	docker-compose up --remove-orphans -d
 
 stop:
 	docker-compose kill

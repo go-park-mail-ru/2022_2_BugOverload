@@ -24,7 +24,7 @@ services:
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
 
-      - SERVICES=s3,sqs,lambda,cloudformation,sts,iam,cloudwatch,apigateway,events,dynamodb
+      - SERVICES=s3
       # - DEBUG=1
 
       - DATA_DIR=/tmp/localstack/data
