@@ -10,11 +10,13 @@ import (
 var (
 	ErrEmptyFieldAuth           = stdErrors.New("request has empty fields (nickname | email | password)")
 	ErrLoginCombinationNotFound = stdErrors.New("no such combination of login and password")
-	ErrUserExist                = stdErrors.New("such user exist")
-	ErrUserNotExist             = stdErrors.New("such user doesn't exist")
-	ErrSignupUserExist          = stdErrors.New("such a login exists")
-	ErrNoCookie                 = stdErrors.New("request has no cookies")
-	ErrCookieNotExist           = stdErrors.New("no such cookie")
+
+	ErrUserExist       = stdErrors.New("such user exist")
+	ErrUserNotExist    = stdErrors.New("no such user")
+	ErrSignupUserExist = stdErrors.New("such a login exists")
+
+	ErrNoCookie       = stdErrors.New("request has no cookies")
+	ErrCookieNotExist = stdErrors.New("no such cookie")
 )
 
 type errClassifierAuth struct {

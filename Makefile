@@ -48,9 +48,9 @@ get-stat-coverage:
 generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
-# Example: make fill-S3 SOURCE=/home/andeo/Загрузки/images
+# Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images
 fill-S3:
-	./scripts/fill_data_S3.sh ${SOURCE}
+	./scripts/fill_data_S3.sh ${IMAGES}
 
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
@@ -61,10 +61,11 @@ prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
 # infrastructure
-launch:
+# Example: make deploy IMAGES=/home/andeo/Загрузки/images
+deploy:
 	docker-compose up --remove-orphans -d
 	sleep 10
-	make fill-S3 SOURCE=/home/andeo/Загрузки/images
+	make fill-S3 ${IMAGES}
 
 stop:
 	docker-compose kill
@@ -74,10 +75,10 @@ compose-log:
 	docker-compose logs -f
 
 app-restart:
-	docker-compose restart  $(SERVICE_APP)
+	docker-compose restart $(SERVICE_APP)
 
 S3-restart:
-	docker-compose restart  $(SERVICE_LOCALSTACK)
+	docker-compose restart $(SERVICE_LOCALSTACK)
 
 # OLD
 docker-launch:

@@ -1,6 +1,6 @@
 package models
 
 type Image struct {
-	Bucket string `json:"bucket"`
-	Item   string `json:"item"`
+	Key    string `json:"key"`
+	Object string `json:"object"`
 }

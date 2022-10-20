@@ -26,7 +26,9 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	router.HandleFunc("/v1/recommendation_film", handlers[factories.RecommendationRequest].Action).Methods(http.MethodGet)
 
 	// Images
-	router.HandleFunc("/v1/get_static", handlers[factories.GetImageRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/v1/image", handlers[factories.GetImageRequest].Action).
+		Methods(http.MethodGet).
+		Queries("object", "{object}", "key", "{key}")
 
 	http.Handle("/", router)
 

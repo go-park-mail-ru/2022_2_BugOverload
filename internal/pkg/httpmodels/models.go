@@ -13,9 +13,17 @@ type ErrResponseAuthDefault struct {
 }
 
 type ErrResponseAuthNoSuchUser struct {
-	ErrMassage string `json:"error,omitempty" example:"Auth: [such user doesn't exist]"`
+	ErrMassage string `json:"error,omitempty" example:"Auth: [no such user]"`
 }
 
 type ErrResponseAuthWrongLoginCombination struct {
 	ErrMassage string `json:"error,omitempty" example:"Auth: [no such combination of login and password]"`
+}
+
+type ErrResponseImageNoSuchImage struct {
+	ErrMassage string `json:"error,omitempty" example:"Image: [no such image]"`
+}
+
+type ErrResponseImageDefault struct {
+	ErrMassage string `json:"error,omitempty" example:"Image: [{{Reason}}]"`
 }

@@ -29,12 +29,13 @@ func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Summary Get image
 // @Description Getting image by path
 // @tags image
-// @Accept json
-// @Produce json
-// @Param image body models.GetImageRequest true "Request body for get image"
+// @produce json
+// @produce jpeg
+// @Param   object    query  string  true  "type object"
+// @Param   key       query  string  true  "key for found"
 // @Success 200 "successfully getting"
-// @Failure 400 "return error"
-// @Failure 404 "such image not found"
+// @Failure 400 {object} httpmodels.ErrResponseImageDefault "return error"
+// @Failure 404 {object} httpmodels.ErrResponseImageNoSuchImage "such image not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /v1/image [GET]

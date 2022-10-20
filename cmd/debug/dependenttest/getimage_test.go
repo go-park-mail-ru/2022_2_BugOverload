@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	urlNet "net/url"
 	"strings"
 	"testing"
 
@@ -22,8 +23,9 @@ func TestGetImageHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodGet,
-			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"bucket":"default/","item":"test.jpeg"}`,
+			RequestBody: `{"object":"default","key":"test"}`,
+			Keys:        []string{"default", "test"},
+			Values:      []string{"object", "key"},
 
 			ResponseBody: "GeneratedData",
 			StatusCode:   http.StatusOK,
@@ -31,45 +33,19 @@ func TestGetImageHandler(t *testing.T) {
 		// Not such image
 		tests.TestCase{
 			Method:      http.MethodGet,
-			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"bucket":"default/","item":"test.jpeg123"}`,
+			RequestBody: `{"object":"default","key":"test123"}`,
 
 			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
 			StatusCode:   http.StatusNotFound,
 		},
-		// Broken JSON
+		// Content-Type is not for get image
 		tests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
-
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
-			StatusCode:   http.StatusBadRequest,
-		},
-		// Body is empty
-		tests.TestCase{
-			Method:      http.MethodPost,
-			ContentType: innerPKG.ContentTypeJSON,
-
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
-			StatusCode:   http.StatusBadRequest,
-		},
-		// Body not image/jpeg
-		tests.TestCase{
-			Method:      http.MethodPost,
-			ContentType: "application/xml",
-			RequestBody: `<Name>Ellen Adams</Name>`,
+			RequestBody: `{"password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
-		},
-		// Content-Type not set
-		tests.TestCase{
-			Method:      http.MethodPost,
-			RequestBody: `{"password":"Widget Adapter"}`,
-
-			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
-			StatusCode:   http.StatusBadRequest,
 		},
 	}
 
@@ -93,6 +69,16 @@ func TestGetImageHandler(t *testing.T) {
 		req := httptest.NewRequest(item.Method, url, reader)
 		if item.ContentType != "" {
 			req.Header.Set("Content-Type", item.ContentType)
+		}
+
+		if len(item.Values) > 0 {
+			v := urlNet.Values{}
+
+			for i, _ := range item.Values {
+				v.Add(item.Values[i], item.Keys[i])
+			}
+
+			req.Form = v
 		}
 
 		w := httptest.NewRecorder()

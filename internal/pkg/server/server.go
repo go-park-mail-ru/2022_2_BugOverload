@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/NYTimes/gziphandler"
 	"net/http"
 	"time"
 
@@ -32,11 +33,13 @@ func (s *Server) Launch() error {
 	utilsMiddleware := middleware.NewLoggerMiddleware(s.logger)
 	router.Use(utilsMiddleware.SetDefaultLoggerMiddleware, utilsMiddleware.UpdateDefaultLoggerMiddleware)
 
+	routerCorsWithGz := gziphandler.GzipHandler(routerCors)
+
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,
-		Handler:      routerCors,
+		Handler:      routerCorsWithGz,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
 	}

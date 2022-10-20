@@ -33,6 +33,15 @@ func TestLoginHandler(t *testing.T) {
 			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
 			StatusCode:     http.StatusOK,
 		},
+		// No such user
+		tests.TestCase{
+			Method:      http.MethodPost,
+			ContentType: "application/json",
+			RequestBody: `{"email":"YasaPupkinEzji@top.world123","password":"Widget Adapter"}`,
+
+			ResponseBody: `{"error":"Auth: [no such user]"}`,
+			StatusCode:   http.StatusNotFound,
+		},
 		// Wrong password
 		tests.TestCase{
 			Method:      http.MethodPost,

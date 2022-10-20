@@ -40,9 +40,7 @@ func NewImageS3(config *innerPKG.Config) (ImageRepository, error) {
 
 	sess, err := session.NewSession(awsConfig)
 	if err != nil {
-		logrus.Error("Init fatal error: NewSession: ", err)
-
-		return nil, err
+		logrus.Fatalf("Init ImageS3Storage fatal error: NewSession: %s", err.Error())
 	}
 
 	res := &imageS3{
@@ -55,21 +53,23 @@ func NewImageS3(config *innerPKG.Config) (ImageRepository, error) {
 
 // GetImage getting image by path
 func (is *imageS3) GetImage(ctx context.Context, image *models.Image) ([]byte, error) {
+	imageS3Pattern := NewImageS3Pattern(image)
+
 	res := make([]byte, innerPKG.BufSizeImage)
 
 	w := aws.NewWriteAtBuffer(res)
 
 	getObjectInput := &s3.GetObjectInput{
-		Bucket: aws.String(image.Bucket),
-		Key:    aws.String(image.Item),
+		Bucket: aws.String(imageS3Pattern.Bucket),
+		Key:    aws.String(imageS3Pattern.Key),
 	}
 
-	_, err := is.downloaderS3.Download(w, getObjectInput)
+	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
 		return nil, errors.ErrImageNotFound
 	}
 
-	return w.Bytes(), nil
+	return w.Bytes()[:realSize], nil
 }
 
 // PutImage download image into storage
