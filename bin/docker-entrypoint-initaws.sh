@@ -16,7 +16,7 @@ echo "output = json" >> ~/.aws/config
 # Создаем bucket для фильмов
 aws --endpoint-url=$LOCALSTACK_S3_URL s3api create-bucket --bucket films
 
-aws --endpoint-url=$LOCALSTACK_S3_URL s3api put-object --bucket films --key posters/hor/
-aws --endpoint-url=$LOCALSTACK_S3_URL s3api put-object --bucket films --key posters/ver/
+# Создаем bucket для стандартных картинок
+aws --endpoint-url=$LOCALSTACK_S3_URL s3api create-bucket --bucket default
 
 set +x

@@ -49,7 +49,10 @@ generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
 fill-S3-tests:
-	sudo ./scripts/fill_test_data_S3.sh
+	./scripts/fill_test_data_S3.sh
+
+fill-S3:
+	./scripts/fill_data_S3.sh ${SOURCE}
 
 # production
 prod-mode:
@@ -58,6 +61,8 @@ prod-mode:
 # infrastructure
 launch:
 	docker-compose up --remove-orphans &
+	sleep 6
+	make fill-S3
 
 stop:
 	docker-compose kill
