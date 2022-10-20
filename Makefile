@@ -54,6 +54,9 @@ fill-S3-tests:
 fill-S3:
 	./scripts/fill_data_S3.sh ${SOURCE}
 
+set-format:
+	./scripts/fill_data_S3.sh ${TARGET} ${FORMAT}
+
 # production
 prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
