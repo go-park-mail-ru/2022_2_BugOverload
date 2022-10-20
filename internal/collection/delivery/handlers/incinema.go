@@ -28,7 +28,7 @@ func NewInCinemaHandler(uc service.CollectionService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary In cinema movies
 // @Description Films from the "in cinema" category
-// @tags collections
+// @tags collection
 // @Produce json
 // @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"

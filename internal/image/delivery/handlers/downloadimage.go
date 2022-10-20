@@ -26,8 +26,8 @@ func NewDownloadImageHandler(is serviceImage.ImageService) pkg.Handler {
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Get image
-// @Description Getting image by object and key
+// @Summary Download image
+// @Description Download image by object and key
 // @tags image
 // @produce json
 // @produce jpeg

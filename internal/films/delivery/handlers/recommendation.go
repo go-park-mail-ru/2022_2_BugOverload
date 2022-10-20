@@ -34,7 +34,7 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.A
 // delivery of the data to the service at the business logic level.
 // @Summary Recommendation film
 // @Description Getting a recommended movie for the user
-// @tags films
+// @tags film
 // @Produce json
 // @Success 200 {object} models.RecommendFilmResponse "returns recommendation film movies for auth user or not auth"
 // @Failure 400 "return error"

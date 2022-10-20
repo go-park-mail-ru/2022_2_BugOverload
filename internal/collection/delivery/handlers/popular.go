@@ -28,7 +28,7 @@ func NewPopularFilmsHandler(uc service.CollectionService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Popular movies
 // @Description Films from the "popular" category
-// @tags collections
+// @tags collection
 // @Produce json
 // @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
