@@ -63,6 +63,8 @@ prod-mode:
 # infrastructure
 launch:
 	docker-compose up --remove-orphans -d
+	sleep 10
+	make fill-S3 SOURCE=/home/andeo/Загрузки/images
 
 stop:
 	docker-compose kill

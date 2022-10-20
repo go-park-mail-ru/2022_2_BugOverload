@@ -3,8 +3,6 @@ printf "Configuring localstack components..."
 
 readonly LOCALSTACK_S3_URL=http://localstack:4566
 
-sleep 5;
-
 set -x
 
 aws configure set aws_access_key_id foo
