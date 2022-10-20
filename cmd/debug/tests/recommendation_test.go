@@ -25,9 +25,11 @@ func TestRecommendationHandler(t *testing.T) {
 	cases := []tests.TestCase{
 		// Success
 		tests.TestCase{
-			Method:     http.MethodGet,
-			Cookie:     "GeneratedData",
-			StatusCode: http.StatusOK,
+			Method: http.MethodGet,
+			Cookie: "GeneratedData",
+
+			ResponseBody: "GeneratedData",
+			StatusCode:   http.StatusOK,
 		},
 	}
 
@@ -78,13 +80,15 @@ func TestRecommendationHandler(t *testing.T) {
 
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+		if item.ResponseBody != "" {
+			var body []byte
+			body, err = io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
 
-		require.True(t, string(body) != "", pkg.TestErrorMessage(caseNum, "Wrong body"))
+			require.True(t, string(body) != "", pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

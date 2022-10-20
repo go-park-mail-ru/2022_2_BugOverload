@@ -86,11 +86,11 @@ func TestLogoutHandler(t *testing.T) {
 
 		logoutHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
 		if item.ResponseCookie != "" {
+			resp := w.Result()
+
 			respCookie := resp.Header.Get("Set-Cookie")
 
 			nameCookieDel := strings.Split(respCookie, ";")[0]

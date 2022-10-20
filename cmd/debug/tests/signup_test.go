@@ -2,7 +2,6 @@ package tests_test
 
 import (
 	"context"
-	pkg2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +13,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -25,7 +25,7 @@ func TestSignupHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseCookie: "1=testmail@yandex.ru",
@@ -35,7 +35,7 @@ func TestSignupHandler(t *testing.T) {
 		// Such user exists
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseBody: `{"error":"Auth: [such a login exists]"}`,
@@ -44,7 +44,7 @@ func TestSignupHandler(t *testing.T) {
 		// Broken JSON
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
 
 			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
@@ -53,7 +53,7 @@ func TestSignupHandler(t *testing.T) {
 		// Body is empty
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 
 			ResponseBody: `{"error":"Def validation: [empty body]"}`,
 			StatusCode:   http.StatusBadRequest,
@@ -70,7 +70,7 @@ func TestSignupHandler(t *testing.T) {
 		// Empty required field - email
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
@@ -79,7 +79,7 @@ func TestSignupHandler(t *testing.T) {
 		// Empty required field - password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
 
 			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
@@ -88,7 +88,7 @@ func TestSignupHandler(t *testing.T) {
 		// Empty required field - nickname
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
 
 			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
@@ -134,7 +134,7 @@ func TestSignupHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), pkg2.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
 			nameSession, err := authService.GetSession(ctx)
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
 

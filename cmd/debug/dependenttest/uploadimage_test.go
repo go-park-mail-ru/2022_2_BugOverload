@@ -29,8 +29,7 @@ func TestUploadImageHandler(t *testing.T) {
 			Keys:        []string{"default", "test123123"},
 			Values:      []string{"object", "key"},
 
-			ResponseBody: "GeneratedData",
-			StatusCode:   http.StatusNoContent,
+			StatusCode: http.StatusNoContent,
 		},
 		// Content-Type is not for get image
 		tests.TestCase{
@@ -38,8 +37,14 @@ func TestUploadImageHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `image`,
 
-			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
-			StatusCode:   http.StatusUnsupportedMediaType,
+			StatusCode: http.StatusUnsupportedMediaType,
+		},
+		// Body is empty
+		tests.TestCase{
+			Method:      http.MethodPost,
+			ContentType: innerPKG.ContentTypeJPEG,
+
+			StatusCode: http.StatusBadRequest,
 		},
 	}
 
@@ -66,7 +71,11 @@ func TestUploadImageHandler(t *testing.T) {
 	getImageHandler := handlers.NewUploadImageHandler(imageService)
 
 	for caseNum, item := range cases {
-		var reader = bytes.NewReader(buf)
+		var reader = bytes.NewReader([]byte{})
+
+		if item.RequestBody != "" {
+			reader.Reset(buf)
+		}
 
 		req := httptest.NewRequest(item.Method, url, reader)
 		if item.ContentType != "" {
@@ -87,16 +96,20 @@ func TestUploadImageHandler(t *testing.T) {
 
 		getImageHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
-		require.NotNil(t, body, pkg.TestErrorMessage(caseNum, "body must be not nil"))
+		if item.ResponseBody != "" {
+			resp := w.Result()
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			var body []byte
+
+			body, err = io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+			require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

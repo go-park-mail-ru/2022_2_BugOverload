@@ -2,7 +2,7 @@ package tests_test
 
 import (
 	"context"
-	pkg2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -26,7 +26,7 @@ func TestLoginHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
 			ResponseCookie: "GeneratedData",
@@ -36,7 +36,7 @@ func TestLoginHandler(t *testing.T) {
 		// No such user
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world123","password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Auth: [no such user]"}`,
@@ -45,7 +45,7 @@ func TestLoginHandler(t *testing.T) {
 		// Wrong password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
 			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
@@ -54,7 +54,7 @@ func TestLoginHandler(t *testing.T) {
 		// Broken JSON
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
 			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
@@ -63,7 +63,7 @@ func TestLoginHandler(t *testing.T) {
 		// Body is empty
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 
 			ResponseBody: `{"error":"Def validation: [empty body]"}`,
 			StatusCode:   http.StatusBadRequest,
@@ -80,7 +80,7 @@ func TestLoginHandler(t *testing.T) {
 		// Empty required field - email
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
@@ -89,7 +89,7 @@ func TestLoginHandler(t *testing.T) {
 		// Empty required field - password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
 
 			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
@@ -135,16 +135,16 @@ func TestLoginHandler(t *testing.T) {
 
 		loginHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
+
+		resp := w.Result()
 
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), pkg2.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
 
 			var nameSession string
 			nameSession, err = authService.GetSession(ctx)
@@ -153,13 +153,16 @@ func TestLoginHandler(t *testing.T) {
 			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+		if item.ResponseBody != "" {
+			var body []byte
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			body, err = io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-		require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+			require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

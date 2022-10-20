@@ -27,16 +27,14 @@ func TestDownloadImageHandler(t *testing.T) {
 			Keys:        []string{"default", "test"},
 			Values:      []string{"object", "key"},
 
-			ResponseBody: "GeneratedData",
-			StatusCode:   http.StatusOK,
+			StatusCode: http.StatusOK,
 		},
 		// Not such image
 		tests.TestCase{
 			Method:      http.MethodGet,
 			RequestBody: `{"object":"default","key":"test123"}`,
 
-			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
-			StatusCode:   http.StatusNotFound,
+			StatusCode: http.StatusNotFound,
 		},
 		// Content-Type is not for get image
 		tests.TestCase{
@@ -84,15 +82,18 @@ func TestDownloadImageHandler(t *testing.T) {
 
 		getImageHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		body, err := io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
-		require.NotNil(t, body, pkg.TestErrorMessage(caseNum, "body must be not nil"))
+		if item.ResponseBody != "" {
+			resp := w.Result()
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			body, err := io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+			require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }
