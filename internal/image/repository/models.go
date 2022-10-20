@@ -13,6 +13,7 @@ const (
 type ImageS3 struct {
 	Bucket string `json:"bucket" example:"films/"`
 	Key    string `json:"key" example:"posters/hor/1.jpeg"`
+	Bytes  []byte `json:"-"`
 }
 
 func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
@@ -30,6 +31,8 @@ func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
 	}
 
 	image.Key += imageParams.Key + ".jpeg"
+
+	image.Bytes = imageParams.Bytes
 
 	return image
 }

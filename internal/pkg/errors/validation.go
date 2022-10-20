@@ -15,6 +15,7 @@ var (
 	ErrCJSONUnexpectedEnd   = stdErrors.New("unexpected end of JSON input")
 	ErrContentTypeUndefined = stdErrors.New("content-type undefined")
 	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
+	ErrEmptyBody            = stdErrors.New("empty body")
 )
 
 func NewErrClassifierValidation() errClassifier {
@@ -23,6 +24,7 @@ func NewErrClassifierValidation() errClassifier {
 	res[ErrCJSONUnexpectedEnd] = http.StatusBadRequest
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
 	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
+	res[ErrEmptyBody] = http.StatusBadRequest
 
 	return &errClassifierDefaultValidation{
 		table: res,

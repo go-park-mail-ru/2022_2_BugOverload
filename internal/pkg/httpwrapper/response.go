@@ -2,9 +2,9 @@ package httpwrapper
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -29,7 +29,7 @@ func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 
 // ResponseImage is a function for giving any response with a body - image
 func ResponseImage(w http.ResponseWriter, statusCode int, image []byte) {
-	w.Header().Set("Content-Type", pkg.ContentTypeImage)
+	w.Header().Set("Content-Type", pkg.ContentTypeJPEG)
 
 	w.WriteHeader(statusCode)
 

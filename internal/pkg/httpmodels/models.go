@@ -21,9 +21,9 @@ type ErrResponseAuthWrongLoginCombination struct {
 }
 
 type ErrResponseImageNoSuchImage struct {
-	ErrMassage string `json:"error,omitempty" example:"Image: [no such image]"`
+	ErrMassage string `json:"error,omitempty" example:"Bytes: [no such image]"`
 }
 
 type ErrResponseImageDefault struct {
-	ErrMassage string `json:"error,omitempty" example:"Image: [{{Reason}}]"`
+	ErrMassage string `json:"error,omitempty" example:"Bytes: [{{Reason}}]"`
 }

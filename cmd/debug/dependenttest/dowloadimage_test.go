@@ -18,7 +18,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-func TestGetImageHandler(t *testing.T) {
+func TestDownloadImageHandler(t *testing.T) {
 	cases := []tests.TestCase{
 		// Success
 		tests.TestCase{
@@ -49,7 +49,7 @@ func TestGetImageHandler(t *testing.T) {
 		},
 	}
 
-	url := "http://localhost:8088/v1/get_static"
+	url := "http://localhost:8088/v1/image"
 	config := innerPKG.NewConfig()
 
 	config.S3.Region = "us-east-1"
@@ -57,11 +57,10 @@ func TestGetImageHandler(t *testing.T) {
 	config.S3.Secret = "bar"
 	config.S3.ID = "foo"
 
-	is, err := S3Image.NewImageS3(config)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "NewImageS3 must be success"))
+	is := S3Image.NewImageS3(config)
 
 	imageService := serviceImage.NewImageService(is)
-	getImageHandler := handlers.NewGetImageHandler(imageService)
+	getImageHandler := handlers.NewDownloadImageHandler(imageService)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -89,8 +88,7 @@ func TestGetImageHandler(t *testing.T) {
 
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 		require.NotNil(t, body, pkg.TestErrorMessage(caseNum, "body must be not nil"))
 

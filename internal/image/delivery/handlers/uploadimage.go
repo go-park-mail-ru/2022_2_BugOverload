@@ -12,35 +12,33 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
-// getImageHandler is the structure that handles the request for auth.
-type getImageHandler struct {
+// uploadImageHandler is the structure that handles the request for auth.
+type uploadImageHandler struct {
 	imageService serviceImage.ImageService
 }
 
-// NewGetImageHandler is constructor for getImageHandler in this pkg - auth.
-func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
-	return &getImageHandler{
+// NewUploadImageHandler is constructor for uploadImageHandler in this pkg - auth.
+func NewUploadImageHandler(is serviceImage.ImageService) pkg.Handler {
+	return &uploadImageHandler{
 		is,
 	}
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Get image
-// @Description Getting image by path
+// @Summary Upload image
+// @Description Upload new image by type object and key
 // @tags image
 // @produce json
-// @produce jpeg
 // @Param   object    query  string  true  "type object"
 // @Param   key       query  string  true  "key for found"
-// @Success 200 "successfully getting"
+// @Success 200 "successfully upload"
 // @Failure 400 {object} httpmodels.ErrResponseImageDefault "return error"
-// @Failure 404 {object} httpmodels.ErrResponseImageNoSuchImage "such image not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/image [GET]
-func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getImageRequest := models.NewGetImageRequest()
+// @Router /v1/image [POST]
+func (h *uploadImageHandler) Action(w http.ResponseWriter, r *http.Request) {
+	getImageRequest := models.NewUploadImageRequest()
 
 	err := getImageRequest.Bind(r)
 	if err != nil {
@@ -50,11 +48,11 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	image := getImageRequest.GetImage()
 
-	binImage, err := h.imageService.GetImage(r.Context(), image)
+	err = h.imageService.UploadImage(r.Context(), image)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
 		return
 	}
 
-	httpwrapper.ResponseImage(w, http.StatusOK, binImage)
+	httpwrapper.NoContent(w)
 }

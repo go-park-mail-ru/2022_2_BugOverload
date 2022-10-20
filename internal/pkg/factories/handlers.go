@@ -29,16 +29,16 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	authService := serviceAuth.NewAuthService(cookieStorage)
 
 	authHandler := handlers2.NewAuthHandler(userService, authService)
-	res[AuthRequest] = authHandler
+	res[pkg.AuthRequest] = authHandler
 
 	logoutHandler := handlers2.NewLogoutHandler(userService, authService)
-	res[LoginRequest] = logoutHandler
+	res[pkg.LoginRequest] = logoutHandler
 
 	loginHandler := handlers2.NewLoginHandler(userService, authService)
-	res[LogoutRequest] = loginHandler
+	res[pkg.LogoutRequest] = loginHandler
 
 	singUpHandler := handlers2.NewSingUpHandler(userService, authService)
-	res[SignupRequest] = singUpHandler
+	res[pkg.SignupRequest] = singUpHandler
 
 	// Collections
 	pathInCinema := "test/data/incinema.json"
@@ -49,10 +49,10 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	collectionService := serviceCollection.NewCollectionService(colStorage)
 
 	inCinemaHandler := handlers4.NewInCinemaHandler(collectionService)
-	res[InCinemaRequest] = inCinemaHandler
+	res[pkg.InCinemaRequest] = inCinemaHandler
 
 	popularHandler := handlers4.NewPopularFilmsHandler(collectionService)
-	res[PopularRequest] = popularHandler
+	res[pkg.PopularRequest] = popularHandler
 
 	// Films
 	pathPreview := "test/data/preview.json"
@@ -62,15 +62,18 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	filmsService := serviceFilms.NewFilmService(filmsStorage)
 
 	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService, authService)
-	res[RecommendationRequest] = recommendationHandler
+	res[pkg.RecommendationRequest] = recommendationHandler
 
 	// Images
-	is, _ := S3Image.NewImageS3(config)
+	is := S3Image.NewImageS3(config)
 
 	imageService := serviceImage.NewImageService(is)
 
-	getImageHandler := handlers5.NewGetImageHandler(imageService)
-	res[GetImageRequest] = getImageHandler
+	downloadImageHandler := handlers5.NewDownloadImageHandler(imageService)
+	res[pkg.DownloadImageRequest] = downloadImageHandler
+
+	uploadImageHandler := handlers5.NewUploadImageHandler(imageService)
+	res[pkg.UploadImageRequest] = uploadImageHandler
 
 	return res
 }

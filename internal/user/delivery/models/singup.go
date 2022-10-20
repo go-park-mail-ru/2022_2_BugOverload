@@ -42,6 +42,10 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 		}
 	}()
 
+	if len(body) == 0 {
+		return errors.NewErrValidation(errors.ErrEmptyBody)
+	}
+
 	err = json.Unmarshal(body, u)
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)

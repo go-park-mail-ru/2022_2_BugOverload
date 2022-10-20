@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -19,8 +20,8 @@ import (
 
 // ImageRepository provides the versatility of images repositories.
 type ImageRepository interface {
-	GetImage(ctx context.Context, image *models.Image) ([]byte, error)
-	PutImage(ctx context.Context) error
+	DownloadImage(ctx context.Context, image *models.Image) (models.Image, error)
+	UploadImage(ctx context.Context, image *models.Image) error
 }
 
 // imageS3 is implementation repository of users in S3 corresponding to the ImageRepository interface.
@@ -30,7 +31,7 @@ type imageS3 struct {
 }
 
 // NewImageS3 is constructor for imageS3. Accepts only mutex.
-func NewImageS3(config *innerPKG.Config) (ImageRepository, error) {
+func NewImageS3(config *innerPKG.Config) ImageRepository {
 	awsConfig := aws.NewConfig()
 	awsConfig.Region = aws.String(config.S3.Region)
 	awsConfig.Endpoint = aws.String(config.S3.Endpoint)
@@ -48,11 +49,11 @@ func NewImageS3(config *innerPKG.Config) (ImageRepository, error) {
 		s3manager.NewUploader(sess),
 	}
 
-	return res, nil
+	return res
 }
 
-// GetImage getting image by path
-func (is *imageS3) GetImage(ctx context.Context, image *models.Image) ([]byte, error) {
+// DownloadImage getting image by path
+func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
 	imageS3Pattern := NewImageS3Pattern(image)
 
 	res := make([]byte, innerPKG.BufSizeImage)
@@ -66,13 +67,28 @@ func (is *imageS3) GetImage(ctx context.Context, image *models.Image) ([]byte, e
 
 	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
-		return nil, errors.ErrImageNotFound
+		return models.Image{}, errors.ErrImageNotFound
 	}
 
-	return w.Bytes()[:realSize], nil
+	return models.Image{Bytes: w.Bytes()[:realSize]}, nil
 }
 
-// PutImage download image into storage
-func (is *imageS3) PutImage(ctx context.Context) error {
+// UploadImage download image into storage
+func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
+	imageS3Pattern := NewImageS3Pattern(image)
+
+	body := bytes.NewReader(image.Bytes)
+
+	getObjectInput := &s3manager.UploadInput{
+		Bucket: aws.String(imageS3Pattern.Bucket),
+		Key:    aws.String(imageS3Pattern.Key),
+		Body:   body,
+	}
+
+	_, err := is.uploaderS3.UploadWithContext(ctx, getObjectInput)
+	if err != nil {
+		return errors.ErrImageNotFound
+	}
+
 	return nil
 }

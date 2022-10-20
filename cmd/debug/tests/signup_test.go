@@ -55,7 +55,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: "application/json",
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: `{"error":"Def validation: [empty body]"}`,
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON

@@ -11,8 +11,8 @@ import (
 
 // ImageService provides universal service for work with images.
 type ImageService interface {
-	GetImage(ctx context.Context, image *models.Image) ([]byte, error)
-	PutImage(ctx context.Context) error
+	DownloadImage(ctx context.Context, image *models.Image) (models.Image, error)
+	UploadImage(ctx context.Context, image *models.Image) error
 }
 
 // imageService is implementation for users service corresponding to the ImageService interface.
@@ -27,21 +27,21 @@ func NewImageService(ur repository.ImageRepository) ImageService {
 	}
 }
 
-// GetImage is the service that accesses the interface ImageRepository.
-func (i *imageService) GetImage(ctx context.Context, image *models.Image) ([]byte, error) {
-	binImage, err := i.imageRepo.GetImage(ctx, image)
+// DownloadImage is the service that accesses the interface ImageRepository.
+func (i *imageService) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
+	binImage, err := i.imageRepo.DownloadImage(ctx, image)
 	if err != nil {
-		return binImage, stdErrors.Wrap(err, "GetImage")
+		return binImage, stdErrors.Wrap(err, "DownloadImage")
 	}
 
 	return binImage, nil
 }
 
-// PutImage is the service that accesses the interface ImageRepository
-func (i *imageService) PutImage(ctx context.Context) error {
-	err := i.imageRepo.PutImage(ctx)
+// UploadImage is the service that accesses the interface ImageRepository
+func (i *imageService) UploadImage(ctx context.Context, image *models.Image) error {
+	err := i.imageRepo.UploadImage(ctx, image)
 	if err != nil {
-		return stdErrors.Wrap(err, "PutImage")
+		return stdErrors.Wrap(err, "UploadImage")
 	}
 
 	return nil
