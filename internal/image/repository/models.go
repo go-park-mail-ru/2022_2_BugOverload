@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
@@ -31,8 +30,6 @@ func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
 	}
 
 	image.Key += imageParams.Key + ".jpeg"
-
-	fmt.Println(image.Bucket, image.Key)
 
 	return image
 }

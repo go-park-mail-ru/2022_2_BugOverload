@@ -1,10 +1,10 @@
 package server
 
 import (
-	"github.com/NYTimes/gziphandler"
 	"net/http"
 	"time"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/sirupsen/logrus"
 
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"

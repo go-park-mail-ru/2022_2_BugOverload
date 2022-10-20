@@ -74,7 +74,7 @@ func TestGetImageHandler(t *testing.T) {
 		if len(item.Values) > 0 {
 			v := urlNet.Values{}
 
-			for i, _ := range item.Values {
+			for i := range item.Values {
 				v.Add(item.Values[i], item.Keys[i])
 			}
 
