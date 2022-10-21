@@ -23,9 +23,9 @@ func TestDownloadImageHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodGet,
-			RequestBody: `{"object":"default","key":"test"}`,
 			Keys:        []string{"default", "test"},
 			Values:      []string{"object", "key"},
+			RequestBody: `{"object":"default","key":"test"}`,
 
 			StatusCode: http.StatusOK,
 		},

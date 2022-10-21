@@ -69,7 +69,7 @@ func (u *UserSignupRequest) GetUser() *models.User {
 type UserSignupResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
-	Avatar   string `json:"avatar,omitempty" example:"{{ссылка}}"`
+	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
 }
 
 func NewUserSignUpResponse() *UserSignupResponse {

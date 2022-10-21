@@ -31,7 +31,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
 			ResponseCookie: "GeneratedData",
-			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"default"}`,
 			StatusCode:     http.StatusOK,
 		},
 		// No such user

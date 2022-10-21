@@ -13,7 +13,7 @@ import (
 
 type UploadImageRequest struct {
 	Key    string `json:"key" example:"1"`
-	Object string `json:"object" example:"film_hor"`
+	Object string `json:"object" example:"film_poster_hor"`
 	Bytes  []byte `json:"-"`
 }
 

@@ -2,12 +2,7 @@ package repository
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-)
-
-const (
-	ImageObjectFilmPosterHor = "film_hor"
-	ImageObjectFilmPosterVer = "film_ver"
-	ImageObjectDefault       = "default"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type ImageS3 struct {
@@ -20,13 +15,16 @@ func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
 	image := &ImageS3{}
 
 	switch imageParams.Object {
-	case ImageObjectFilmPosterVer:
+	case pkg.ImageObjectFilmPosterVer:
 		image.Bucket = "films/"
 		image.Key = "posters/ver/"
-	case ImageObjectFilmPosterHor:
+	case pkg.ImageObjectFilmPosterHor:
 		image.Bucket = "films/"
 		image.Key = "posters/hor/"
-	case ImageObjectDefault:
+	case pkg.ImageObjectAvatar:
+		image.Bucket = "users/"
+		image.Key = "avatar/"
+	case pkg.ImageObjectDefault:
 		image.Bucket = "default/"
 	}
 

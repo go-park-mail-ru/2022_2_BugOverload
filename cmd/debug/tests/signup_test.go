@@ -30,7 +30,7 @@ func TestSignupHandler(t *testing.T) {
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseCookie: "1=testmail@yandex.ru",
-			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"default"}`,
 			StatusCode:     http.StatusCreated,
 		},
 		// Such user exists

@@ -27,7 +27,7 @@ func NewUploadImageHandler(is serviceImage.ImageService) pkg.Handler {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Upload image
-// @Description Upload new image by type object and key
+// @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar"
 // @tags image
 // @produce json
 // @Param   object    query  string  true  "type object"

@@ -9,7 +9,7 @@ type RecommendFilmResponse struct {
 	Name             string   `json:"film_name,omitempty" example:"Терминатор"`
 	ShortDescription string   `json:"short_description,omitempty" example:"Идет борьба сопротивления людей против машин"`
 	YearProd         string   `json:"year_prod,omitempty" example:"2008"`
-	PosterHor        string   `json:"poster_hor,omitempty" example:"{{ссылка}}"`
+	PosterHor        string   `json:"poster_hor,omitempty" example:"{{ключ}}"`
 	Rating           string   `json:"ratio,omitempty" example:"8.8"`
 	Genres           []string `json:"genres,omitempty" example:"фантастика,боевик"`
 }

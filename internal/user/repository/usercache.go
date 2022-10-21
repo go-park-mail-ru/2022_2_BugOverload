@@ -47,7 +47,7 @@ func (us *userCache) CreateUser(ctx context.Context, user *models.User) (models.
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
-	user.Avatar = "asserts/img/invisibleMan.jpeg"
+	user.Avatar = "default"
 
 	us.storage[user.Email] = *user
 
