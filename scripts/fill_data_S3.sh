@@ -6,7 +6,7 @@ VER='ver'
 DEFAULT='default'
 AVATAR='avatar'
 
-readonly LOCALSTACK_S3_URL=http://localhost:4566
+readonly LOCALSTACK_S3_URL=$2
 
 for file in $(find "$1" -type f -name "*"); do
   if [[ "$file" == *"$HOR"* ]]; then

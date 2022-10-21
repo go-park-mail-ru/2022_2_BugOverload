@@ -50,7 +50,7 @@ generate-api-doc:
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images
 fill-S3:
-	./scripts/fill_data_S3.sh ${IMAGES}
+	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT}
 
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
@@ -61,11 +61,11 @@ prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
 # infrastructure
-# Example: make deploy IMAGES=/home/andeo/Загрузки/images
+# Example: make deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 deploy:
 	docker-compose up --remove-orphans -d
 	sleep 20
-	make fill-S3 ${IMAGES}
+	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill
