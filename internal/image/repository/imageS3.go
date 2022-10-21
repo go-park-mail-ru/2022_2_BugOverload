@@ -32,7 +32,6 @@ type imageS3 struct {
 // NewImageS3 is constructor for imageS3. Accepts only mutex.
 func NewImageS3(config *innerPKG.Config) ImageRepository {
 	awsConfig := aws.NewConfig()
-	awsConfig.Region = aws.String(config.S3.Region)
 	awsConfig.Endpoint = aws.String(config.S3.Endpoint)
 
 	awsConfig.Credentials = credentials.NewEnvCredentials()

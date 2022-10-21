@@ -24,9 +24,6 @@ type Logger struct {
 }
 
 type S3 struct {
-	ID       string `toml:"aws_access_key_id"`
-	Secret   string `toml:"aws_secret_access_key"`
-	Region   string `toml:"region"`
 	Endpoint string `toml:"endpoint"`
 }
 
