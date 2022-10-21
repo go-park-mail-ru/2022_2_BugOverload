@@ -18,6 +18,7 @@ var (
 	ErrEmptyBody            = stdErrors.New("empty body")
 	ErrBigRequest           = stdErrors.New("big request")
 	ErrConvertLength        = stdErrors.New("getting content-length failed")
+	ErrBigImage             = stdErrors.New("big image")
 )
 
 func NewErrClassifierValidation() errClassifier {

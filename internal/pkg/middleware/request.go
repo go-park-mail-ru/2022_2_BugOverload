@@ -4,23 +4,18 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sirupsen/logrus"
-
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
-type RequestMiddleware struct {
+type RequestMiddleware struct{}
+
+func NewRequestMiddleware() RequestMiddleware {
+	return RequestMiddleware{}
 }
 
-func NewRequestMiddleware(log *logrus.Logger) LoggerMiddleware {
-	return LoggerMiddleware{
-		log: log,
-	}
-}
-
-func (umd *LoggerMiddleware) SetSizeRequest(h http.Handler) http.Handler {
+func (umd *RequestMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		strLength := r.Header.Get("Content-Length")
 		length, err := strconv.Atoi(strLength)
@@ -29,7 +24,7 @@ func (umd *LoggerMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 			return
 		}
 
-		if length*4 > innerPKG.BufSizeRequest {
+		if length > innerPKG.BufSizeRequest {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrBigRequest))
 			return
 		}

@@ -44,6 +44,10 @@ func (i *UploadImageRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrEmptyBody)
 	}
 
+	if len(body) > pkg.BufSizeImage {
+		return errors.NewErrValidation(errors.ErrBigImage)
+	}
+
 	i.Bytes = body
 
 	return nil

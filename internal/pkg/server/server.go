@@ -28,13 +28,15 @@ func (s *Server) Launch() error {
 	handlers := factories.NewHandlersMap(s.config)
 
 	router := NewRouter(handlers)
-	corsMiddleware := middleware.NewCORSMiddleware(&s.config.Cors)
-	utilsMiddleware := middleware.NewLoggerMiddleware(s.logger)
+	corsMW := middleware.NewCORSMiddleware(&s.config.Cors)
+	loggerMW := middleware.NewLoggerMiddleware(s.logger)
+	requestParamsMW := middleware.NewRequestMiddleware()
 
 	router.Use(
-		utilsMiddleware.SetDefaultLoggerMiddleware,
-		utilsMiddleware.UpdateDefaultLoggerMiddleware,
-		corsMiddleware.SetCORSMiddleware,
+		loggerMW.SetDefaultLoggerMiddleware,
+		loggerMW.UpdateDefaultLoggerMiddleware,
+		corsMW.SetCORSMiddleware,
+		requestParamsMW.SetSizeRequest,
 		gziphandler.GzipHandler,
 	)
 

@@ -1,12 +1,12 @@
 package dependenttest_test
 
 import (
-	"bytes"
+	_ "embed"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	urlNet "net/url"
-	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -19,14 +19,17 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
+//go:embed testup.jpeg
+var imageBin1 string
+
 func TestUploadImageHandler(t *testing.T) {
 	cases := []tests.TestCase{
 		// Success
 		tests.TestCase{
 			Method:      http.MethodGet,
 			ContentType: innerPKG.ContentTypeJPEG,
-			RequestBody: `image`,
-			Keys:        []string{"default", "test123123"},
+			RequestBody: imageBin1,
+			Keys:        []string{"default", "testupload1"},
 			Values:      []string{"object", "key"},
 
 			StatusCode: http.StatusNoContent,
@@ -35,7 +38,7 @@ func TestUploadImageHandler(t *testing.T) {
 		tests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `image`,
+			RequestBody: imageBin1,
 
 			StatusCode: http.StatusUnsupportedMediaType,
 		},
@@ -47,15 +50,6 @@ func TestUploadImageHandler(t *testing.T) {
 			StatusCode: http.StatusBadRequest,
 		},
 	}
-
-	file, err := os.Open("testup.jpeg")
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err open file for test"))
-
-	buf := make([]byte, innerPKG.BufSizeImage)
-	numBytes, err := file.Read(buf)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err read file for test"))
-
-	buf = buf[:numBytes]
 
 	url := "http://localhost:8088/v1/image"
 	config := innerPKG.NewConfig()
@@ -71,11 +65,7 @@ func TestUploadImageHandler(t *testing.T) {
 	getImageHandler := handlers.NewUploadImageHandler(imageService)
 
 	for caseNum, item := range cases {
-		var reader = bytes.NewReader([]byte{})
-
-		if item.RequestBody != "" {
-			reader.Reset(buf)
-		}
+		var reader = strings.NewReader(item.RequestBody)
 
 		req := httptest.NewRequest(item.Method, url, reader)
 		if item.ContentType != "" {
@@ -101,9 +91,7 @@ func TestUploadImageHandler(t *testing.T) {
 		if item.ResponseBody != "" {
 			resp := w.Result()
 
-			var body []byte
-
-			body, err = io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
 			err = resp.Body.Close()

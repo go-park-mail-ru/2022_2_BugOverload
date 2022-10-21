@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -33,13 +34,13 @@ func TestAuthHandler(t *testing.T) {
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
 		tests.TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrNoCookie)),
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}

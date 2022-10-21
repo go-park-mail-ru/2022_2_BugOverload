@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -38,7 +39,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [such a login exists]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSignupUserExist)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
@@ -47,7 +48,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
@@ -55,7 +56,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			ContentType: innerPKG.ContentTypeJSON,
 
-			ResponseBody: `{"error":"Def validation: [empty body]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrEmptyBody)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -64,7 +65,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrUnsupportedMediaType)),
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
@@ -73,7 +74,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
@@ -82,7 +83,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - nickname
@@ -91,7 +92,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
@@ -99,7 +100,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrContentTypeUndefined)),
 			StatusCode:   http.StatusBadRequest,
 		},
 	}

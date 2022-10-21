@@ -6,7 +6,7 @@ const (
 	ContentTypeJSON = "application/json"
 	ContentTypeJPEG = "image/jpeg"
 
-	BufSizeRequest = 1024 * 1024 * 4
+	BufSizeRequest = 1024 * 1024 * 2.5
 	BufSizeImage   = 1024 * 1024 * 2
 	TokenS3Length  = 20
 
