@@ -72,7 +72,7 @@ func (cs *cookieCache) CreateSession(ctx context.Context, user *models.User) (st
 
 	sessionID := strconv.Itoa(len(cs.storageCookie) + 1)
 
-	newCookieValue, _ := pkg.CryptoString(pkgInner.CookieValueLength)
+	newCookieValue, _ := pkg.CryptoRandString(pkgInner.CookieValueLength)
 
 	cookie := http.Cookie{
 		Name:     sessionID,

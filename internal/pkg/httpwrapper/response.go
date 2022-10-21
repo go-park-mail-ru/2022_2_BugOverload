@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -15,11 +16,24 @@ func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", pkg.ContentTypeJSON)
 
 	w.WriteHeader(statusCode)
 
 	_, err = w.Write(out)
+	if err != nil {
+		DefaultHandlerError(w, err)
+		return
+	}
+}
+
+// ResponseImage is a function for giving any response with a body - image
+func ResponseImage(w http.ResponseWriter, statusCode int, image []byte) {
+	w.Header().Set("Content-Type", pkg.ContentTypeJPEG)
+
+	w.WriteHeader(statusCode)
+
+	_, err := w.Write(image)
 	if err != nil {
 		DefaultHandlerError(w, err)
 		return

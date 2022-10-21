@@ -2,7 +2,8 @@ package tests_test
 
 import (
 	"context"
-	pkg2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -26,37 +27,46 @@ func TestLoginHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
 			ResponseCookie: "GeneratedData",
-			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"default"}`,
 			StatusCode:     http.StatusOK,
+		},
+		// No such user
+		tests.TestCase{
+			Method:      http.MethodPost,
+			ContentType: innerPKG.ContentTypeJSON,
+			RequestBody: `{"email":"YasaPupkinEzji@top.world123","password":"Widget Adapter"}`,
+
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrUserNotExist)),
+			StatusCode:   http.StatusNotFound,
 		},
 		// Wrong password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
-			ResponseBody: `{"error":"Auth: [no such combination of login and password]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrLoginCombinationNotFound)),
 			StatusCode:   http.StatusUnauthorized,
 		},
 		// Broken JSON
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrEmptyBody)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -65,25 +75,25 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrUnsupportedMediaType)),
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"YasaPupkinEzji@top.world"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
@@ -91,7 +101,7 @@ func TestLoginHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"password":"Widget Adapter"}`,
 
-			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrContentTypeUndefined)),
 			StatusCode:   http.StatusBadRequest,
 		},
 	}
@@ -126,16 +136,16 @@ func TestLoginHandler(t *testing.T) {
 
 		loginHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
+
+		resp := w.Result()
 
 		if item.ResponseCookie != "" {
 			respCookie := resp.Header.Get("Set-Cookie")
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), pkg2.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
 
 			var nameSession string
 			nameSession, err = authService.GetSession(ctx)
@@ -144,13 +154,16 @@ func TestLoginHandler(t *testing.T) {
 			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+		if item.ResponseBody != "" {
+			var body []byte
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			body, err = io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-		require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+			require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

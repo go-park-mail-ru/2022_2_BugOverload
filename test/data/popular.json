@@ -1,9 +1,9 @@
 [
   {
-    "film_id": 0,
+    "film_id": 15,
     "film_name": "Дюна",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/dune_poster.jpg",
+    "poster_ver": "15",
     "ratio": "9.9",
     "genres": [
       "фэнтези",
@@ -11,10 +11,10 @@
     ]
   },
   {
-    "film_id": 1,
+    "film_id": 16,
     "film_name": "Убить Билла",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/8.png",
+    "poster_ver": "16",
     "ratio": "9.0",
     "genres": [
       "боевик",
@@ -22,10 +22,10 @@
     ]
   },
   {
-    "film_id": 2,
+    "film_id": 17,
     "film_name": "Головокружение",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/9.png",
+    "poster_ver": "17",
     "ratio": "7.1",
     "genres": [
       "триллер",
@@ -33,10 +33,10 @@
     ]
   },
   {
-    "film_id": 3,
+    "film_id": 18,
     "film_name": "Петровы в гриппе",
     "year_prod": "2020",
-    "poster_ver": "asserts/img/posters/30.png",
+    "poster_ver": "18",
     "ratio": "6.8",
     "genres": [
       "драма",
@@ -44,10 +44,10 @@
     ]
   },
   {
-    "film_id": 4,
+    "film_id": 19,
     "film_name": "Она",
     "year_prod": "2013",
-    "poster_ver": "asserts/img/posters/31.png",
+    "poster_ver": "19",
     "ratio": "7.6",
     "genres": [
       "мелодрама",
@@ -55,10 +55,10 @@
     ]
   },
   {
-    "film_id": 5,
+    "film_id": 20,
     "film_name": "Плата за страх",
     "year_prod": "1952",
-    "poster_ver": "asserts/img/posters/32.png",
+    "poster_ver": "20",
     "ratio": "8.0",
     "genres": [
       "мелодрама",
@@ -66,10 +66,10 @@
     ]
   },
   {
-    "film_id": 6,
+    "film_id": 21,
     "film_name": "Черное зеркало",
     "year_prod": "2011-2019",
-    "poster_ver": "asserts/img/posters/33.png",
+    "poster_ver": "21",
     "ratio": "8.5",
     "genres": [
       "фантастика",
@@ -77,10 +77,10 @@
     ]
   },
   {
-    "film_id": 7,
+    "film_id": 22,
     "film_name": "Олдбой",
     "year_prod": "2003",
-    "poster_ver": "asserts/img/posters/34.png",
+    "poster_ver": "22",
     "ratio": "8.1",
     "genres": [
       "триллер",
@@ -88,10 +88,10 @@
     ]
   },
   {
-    "film_id": 8,
+    "film_id": 23,
     "film_name": "Доказательство смерти",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/5.png",
+    "poster_ver": "23",
     "ratio": "3.3",
     "genres": [
       "фэнтези",
@@ -99,10 +99,10 @@
     ]
   },
   {
-    "film_id": 9,
+    "film_id": 24,
     "film_name": "Чунгингский экспресс",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/7.png",
+    "poster_ver": "24",
     "ratio": "7.1",
     "genres": [
       "фэнтези",
@@ -110,10 +110,10 @@
     ]
   },
   {
-    "film_id": 10,
+    "film_id": 25,
     "film_name": "Девушка с татуировкой дракона",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/6.png",
+    "poster_ver": "25",
     "ratio": "5.7",
     "genres": [
       "триллер",
@@ -121,10 +121,10 @@
     ]
   },
   {
-    "film_id": 11,
+    "film_id": 26,
     "film_name": "Человек",
     "year_prod": "2021",
-    "poster_ver": "asserts/img/posters/1.png",
+    "poster_ver": "26",
     "ratio": "7.1",
     "genres": [
       "документальный",

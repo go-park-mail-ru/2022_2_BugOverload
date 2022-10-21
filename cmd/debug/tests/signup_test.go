@@ -2,7 +2,7 @@ package tests_test
 
 import (
 	"context"
-	pkg2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +14,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -25,37 +26,37 @@ func TestSignupHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseCookie: "1=testmail@yandex.ru",
-			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"default"}`,
 			StatusCode:     http.StatusCreated,
 		},
 		// Such user exists
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [such a login exists]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSignupUserExist)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Broken JSON
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 
-			ResponseBody: `{"error":"Def validation: [unexpected end of JSON input]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrEmptyBody)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body not JSON
@@ -64,34 +65,34 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: "application/xml",
 			RequestBody: `<Name>Ellen Adams</Name>`,
 
-			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrUnsupportedMediaType)),
 			StatusCode:   http.StatusUnsupportedMediaType,
 		},
 		// Empty required field - email
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - password
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Empty required field - nickname
 		tests.TestCase{
 			Method:      http.MethodPost,
-			ContentType: "application/json",
+			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Auth: [request has empty fields (nickname | email | password)]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrEmptyFieldAuth)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Content-Type not set
@@ -99,7 +100,7 @@ func TestSignupHandler(t *testing.T) {
 			Method:      http.MethodPost,
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
-			ResponseBody: `{"error":"Def validation: [content-type undefined]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrContentTypeUndefined)),
 			StatusCode:   http.StatusBadRequest,
 		},
 	}
@@ -134,7 +135,7 @@ func TestSignupHandler(t *testing.T) {
 
 			cookieName := strings.Split(respCookie, ";")[0]
 
-			ctx := context.WithValue(context.TODO(), pkg2.CookieKey, cookieName)
+			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
 			nameSession, err := authService.GetSession(ctx)
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
 

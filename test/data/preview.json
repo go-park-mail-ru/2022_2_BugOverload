@@ -1,21 +1,21 @@
 [
   {
-    "film_id": 26,
+    "film_id": 27,
     "film_name": "Звёздные войны. Эпизод IV: Новая надежда",
     "short_description": "Галактическая империя порабощает целые системы, повстанцы будут мешать этому",
     "year_prod": "2021",
-    "poster_hor": "asserts/img/StarWars.jpeg",
+    "poster_hor": "27",
     "genres": [
       "фэнтези",
       "приключения"
     ]
   },
   {
-    "film_id": 27,
+    "film_id": 15,
     "film_name": "Дюна",
     "short_description": "Наследник дома Атрейдесов отправляется на одну из самых опасных планет во Вселенной — Арракис",
     "year_prod": "2021",
-    "poster_hor": "asserts/img/dune.jpg",
+    "poster_hor": "15",
     "genres": [
       "фэнтези",
       "приключения"
@@ -26,7 +26,7 @@
     "film_name": "Джокер",
     "short_description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
     "year_prod": "2021",
-    "poster_hor": "asserts/img/joker_hor.jpg",
+    "poster_hor": "28",
     "genres": [
       "драма"
     ]
@@ -36,7 +36,7 @@
     "film_name": "2001: Космическая одисея",
     "short_description": "Экипаж космического корабля «Дискавери» должен исследовать район галактики",
     "year_prod": "1968",
-    "poster_hor": "asserts/img/space_odyssey_hor.jpg",
+    "poster_hor": "29",
     "genres": [
       "фэнтези",
       "приключения"

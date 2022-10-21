@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -32,20 +33,20 @@ func TestLogoutHandler(t *testing.T) {
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Wrong cookie
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
 		tests.TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrNoCookie)),
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}
@@ -86,11 +87,11 @@ func TestLogoutHandler(t *testing.T) {
 
 		logoutHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
 		if item.ResponseCookie != "" {
+			resp := w.Result()
+
 			respCookie := resp.Header.Get("Set-Cookie")
 
 			nameCookieDel := strings.Split(respCookie, ";")[0]

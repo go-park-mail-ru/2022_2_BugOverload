@@ -8,7 +8,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
-func SetCors(config *pkg.Cors, handler http.Handler) http.Handler {
+type CORSMiddleware struct {
+	cors *cors.Cors
+}
+
+func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 	cors := cors.New(cors.Options{
 		AllowedMethods:   config.Methods,
 		AllowedOrigins:   config.Origins,
@@ -17,5 +21,11 @@ func SetCors(config *pkg.Cors, handler http.Handler) http.Handler {
 		Debug:            config.Debug,
 	})
 
-	return cors.Handler(handler)
+	return &CORSMiddleware{
+		cors: cors,
+	}
+}
+
+func (cmd *CORSMiddleware) SetCORSMiddleware(h http.Handler) http.Handler {
+	return cmd.cors.Handler(h)
 }

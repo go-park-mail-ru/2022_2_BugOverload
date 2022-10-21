@@ -10,4 +10,6 @@ type TestCase struct {
 	ResponseCookie  string
 	ResponseBody    string
 	StatusCode      int
+	Keys            []string
+	Values          []string
 }

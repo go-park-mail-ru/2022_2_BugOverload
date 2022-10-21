@@ -44,24 +44,26 @@ func TestPopularHandler(t *testing.T) {
 
 		popularHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		body, err := io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+		if item.ResponseBody != "" {
+			resp := w.Result()
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			body, err := io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
-		collectionResponse := models2.NewFilmCollection("", []models2.Film{})
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
 
-		err = json.Unmarshal(body, collectionResponse)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Marshal must be success"))
+			collectionResponse := models2.NewFilmCollection("", []models2.Film{})
 
-		collection, err := cs.GetPopular(context.TODO())
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "GetPopular must be success"))
+			err = json.Unmarshal(body, collectionResponse)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Marshal must be success"))
 
-		require.Equal(t, collection, collectionResponse.Films, pkg.TestErrorMessage(caseNum, "Wrong body"))
+			collection, err := cs.GetInCinema(context.TODO())
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "GetInCinema must be success"))
+
+			require.Equal(t, collection, collectionResponse.Films, pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

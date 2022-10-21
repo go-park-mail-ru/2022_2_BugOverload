@@ -51,7 +51,7 @@ func (fs *filmsCache) FillRepo(path string) {
 	fs.storage = films
 }
 
-// CheckExist is a check for the existence of such a film by ID.
+// CheckExist is a check for the existence of such a film by Key.
 func (fs *filmsCache) CheckExist(filmID uint) bool {
 	fs.mu.RLock()
 	defer fs.mu.RUnlock()

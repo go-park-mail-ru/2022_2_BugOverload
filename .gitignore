@@ -7,3 +7,4 @@ docs/docs.go
 docs/swagger*
 
 *.log
+data

@@ -10,9 +10,12 @@ timeout = 10
 log_level = "debug"
 log_path = "localhost"
 
+[S3]
+endpoint = "http://localstack:4566"
+
 [cors]
 methods = ["POST", "GET"]
-urls = ["http://localhost:3001"]
+urls = ["http://localhost:3001", "http://movie-gate.online"]
 headers = ["Content-Type", "Content-length"]
 credentials = true
 debug = true

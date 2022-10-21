@@ -1,7 +1,13 @@
 package pkg
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func TestErrorMessage(number int, message string) string {
 	return fmt.Sprintf("Case[%d] FAIL: %s", number, message)
+}
+
+func NewTestErrorResponse(err error) string {
+	return `{"error":"` + err.Error() + `"}`
 }

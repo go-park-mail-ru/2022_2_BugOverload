@@ -31,4 +31,10 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		Response(w, errFilms.Code, errResp)
 		return
 	}
+
+	var errImages errors.ImagesError
+	if ok := stdErrors.As(err, &errImages); ok {
+		Response(w, errImages.Code, errResp)
+		return
+	}
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -26,7 +27,7 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
 
-	if r.Header.Get("Content-Type") != "application/json" {
+	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
 		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 
@@ -40,6 +41,10 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 			logrus.Error(err)
 		}
 	}()
+
+	if len(body) == 0 {
+		return errors.NewErrValidation(errors.ErrEmptyBody)
+	}
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
@@ -64,7 +69,7 @@ func (u *UserSignupRequest) GetUser() *models.User {
 type UserSignupResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
-	Avatar   string `json:"avatar,omitempty" example:"{{ссылка}}"`
+	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
 }
 
 func NewUserSignUpResponse() *UserSignupResponse {

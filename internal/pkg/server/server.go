@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/sirupsen/logrus"
 
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -24,19 +25,26 @@ func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
 }
 
 func (s *Server) Launch() error {
-	handlers := factories.NewHandlersMap()
+	handlers := factories.NewHandlersMap(s.config)
 
 	router := NewRouter(handlers)
-	routerCors := middleware.SetCors(&s.config.Cors, router)
+	corsMW := middleware.NewCORSMiddleware(&s.config.Cors)
+	loggerMW := middleware.NewLoggerMiddleware(s.logger)
+	requestParamsMW := middleware.NewRequestMiddleware()
 
-	utilsMiddleware := middleware.NewLoggerMiddleware(s.logger)
-	router.Use(utilsMiddleware.SetDefaultLoggerMiddleware, utilsMiddleware.UpdateDefaultLoggerMiddleware)
+	router.Use(
+		loggerMW.SetDefaultLoggerMiddleware,
+		loggerMW.UpdateDefaultLoggerMiddleware,
+		corsMW.SetCORSMiddleware,
+		requestParamsMW.SetSizeRequest,
+		gziphandler.GzipHandler,
+	)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,
-		Handler:      routerCors,
+		Handler:      router,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
 	}

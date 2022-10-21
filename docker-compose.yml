@@ -1,0 +1,63 @@
+version: "3.7"
+
+services:
+  app:
+    container_name: "app"
+    networks:
+      - localstack-net
+    image: andeo1812/golang_web:latest
+    command: make -C project debug-mode
+    ports:
+      - "8088:8088"
+    environment:
+      - AWS_PROFILE=default
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=default
+    volumes:
+      - .:/project
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+
+
+  localstack:
+    hostname: localstack
+    networks:
+      - localstack-net
+    container_name: "localstack"
+    image: localstack/localstack:latest
+    ports:
+      - "4566-4599:4566-4599"
+    environment:
+      - LOCALSTACK_HOSTNAME=localstack
+      - EXTERNAL_HOSTNAME=localstack
+
+      - SERVICES=s3
+      # - DEBUG=1
+
+      - DATA_DIR=/tmp/localstack/data
+      - EAGER_SERVICE_LOADING=1
+      - LEGACY_DIRECTORIES=1
+
+      - LAMBDA_EXECUTOR=docker-reuse
+      - LAMBDA_REMOTE_DOCKER=false
+      - LAMBDA_REMOVE_CONTAINERS=true
+
+      - KINESIS_STREAM_SHARDS=1
+      - KINESIS_ERROR_PROBABILITY=0.0
+      - KINESIS_STREAM_NAME=kinesis-stream
+      - KINESIS_PROVIDER=kinesalite
+
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./data:/tmp/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./bin:/docker-entrypoint-initaws.d
+
+
+networks:
+  localstack-net:
+    external: false
+    driver: bridge
+    name: localstack-net

@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -26,20 +27,20 @@ func TestAuthHandler(t *testing.T) {
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "GeneratedData",
-			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"asserts/img/invisibleMan.jpeg"}`,
+			ResponseBody: `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"default"}`,
 			StatusCode:   http.StatusOK,
 		},
 		// Wrong cookie
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: `{"error":"Auth: [no such cookie]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
 		tests.TestCase{
 			Method:       http.MethodGet,
-			ResponseBody: `{"error":"Auth: [request has no cookies]"}`,
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrNoCookie)),
 			StatusCode:   http.StatusUnauthorized,
 		},
 	}
@@ -79,17 +80,20 @@ func TestAuthHandler(t *testing.T) {
 
 		authHandler.Action(w, req)
 
-		resp := w.Result()
-
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
-		var body []byte
-		body, err = io.ReadAll(resp.Body)
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+		if item.ResponseBody != "" {
+			resp := w.Result()
 
-		err = resp.Body.Close()
-		require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+			var body []byte
 
-		require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+			body, err = io.ReadAll(resp.Body)
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
+
+			err = resp.Body.Close()
+			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
+
+			require.Equal(t, item.ResponseBody, string(body), pkg.TestErrorMessage(caseNum, "Wrong body"))
+		}
 	}
 }

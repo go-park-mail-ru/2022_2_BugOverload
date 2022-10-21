@@ -30,14 +30,14 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-// CryptoString returns a URL-safe, base64 encoded
+// CryptoRandString returns a URL-safe, base64 encoded
 // securely generated random string.
 // It will return an error if the system's secure random
 // number generator fails to function correctly, in which
 // case the caller should not continue. This should be used
 // when there are concerns about security and need something
 // cryptographically secure.
-func CryptoString(n int) (string, error) {
+func CryptoRandString(n int) (string, error) {
 	b, err := GenerateRandomBytes(n)
 	return base64.URLEncoding.EncodeToString(b), err
 }
