@@ -50,10 +50,7 @@ func TestDownloadImageHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/image"
 	config := innerPKG.NewConfig()
 
-	config.S3.Region = "us-east-1"
 	config.S3.Endpoint = "http://localhost:4566"
-	config.S3.Secret = "bar"
-	config.S3.ID = "foo"
 
 	is := S3Image.NewImageS3(config)
 
