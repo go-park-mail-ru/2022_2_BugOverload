@@ -6,8 +6,9 @@ const (
 	ContentTypeJSON = "application/json"
 	ContentTypeJPEG = "image/jpeg"
 
-	BufSizeImage  = 1024 * 1024 * 24
-	TokenS3Length = 20
+	BufSizeRequest = 1024 * 1024 * 4
+	BufSizeImage   = 1024 * 1024 * 2
+	TokenS3Length  = 20
 
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour

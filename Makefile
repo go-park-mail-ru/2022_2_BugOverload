@@ -64,7 +64,7 @@ prod-mode:
 # Example: make deploy IMAGES=/home/andeo/Загрузки/images
 deploy:
 	docker-compose up --remove-orphans -d
-	sleep 10
+	sleep 15
 	make fill-S3 ${IMAGES}
 
 stop:

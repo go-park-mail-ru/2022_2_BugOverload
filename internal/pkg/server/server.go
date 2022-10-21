@@ -28,18 +28,21 @@ func (s *Server) Launch() error {
 	handlers := factories.NewHandlersMap(s.config)
 
 	router := NewRouter(handlers)
-	routerCors := middleware.SetCors(&s.config.Cors, router)
-
+	corsMiddleware := middleware.NewCORSMiddleware(&s.config.Cors)
 	utilsMiddleware := middleware.NewLoggerMiddleware(s.logger)
-	router.Use(utilsMiddleware.SetDefaultLoggerMiddleware, utilsMiddleware.UpdateDefaultLoggerMiddleware)
 
-	routerCorsWithGz := gziphandler.GzipHandler(routerCors)
+	router.Use(
+		utilsMiddleware.SetDefaultLoggerMiddleware,
+		utilsMiddleware.UpdateDefaultLoggerMiddleware,
+		corsMiddleware.SetCORSMiddleware,
+		gziphandler.GzipHandler,
+	)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,
-		Handler:      routerCorsWithGz,
+		Handler:      router,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
 	}

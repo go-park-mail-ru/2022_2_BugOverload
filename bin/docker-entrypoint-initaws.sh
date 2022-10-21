@@ -3,7 +3,7 @@ printf "Configuring localstack components..."
 
 readonly LOCALSTACK_S3_URL=http://localstack:4566
 
-sleep 6
+sleep 5
 
 set -x
 
