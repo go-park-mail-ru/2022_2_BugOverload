@@ -6,20 +6,22 @@ VER='ver'
 DEFAULT='default'
 AVATAR='avatar'
 
+readonly LOCALSTACK_S3_URL=http://localhost:4566
+
 for file in $(find "$1" -type f -name "*"); do
   if [[ "$file" == *"$HOR"* ]]; then
-    awslocal s3 cp "$file" s3://films/posters/hor/
+    aws --endpoint-url=$LOCALSTACK_S3_URL s3 cp "$file" s3://films/posters/hor/
   fi
 
   if [[ "$file" == *"$VER"* ]]; then
-    awslocal s3 cp "$file" s3://films/posters/ver/
+    aws --endpoint-url=$LOCALSTACK_S3_URL s3 cp "$file" s3://films/posters/ver/
   fi
 
   if [[ "$file" == *"$DEFAULT"* ]]; then
-    awslocal s3 cp "$file" s3://default/
+    aws --endpoint-url=$LOCALSTACK_S3_URL s3 cp "$file" s3://default/
   fi
 
   if [[ "$file" == *"$AVATAR"* ]]; then
-      awslocal s3 cp "$file" s3://users/avatar/
+      aws --endpoint-url=$LOCALSTACK_S3_URL s3 cp "$file" s3://users/avatar/
     fi
 done
