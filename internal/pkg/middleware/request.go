@@ -18,6 +18,11 @@ func NewRequestMiddleware() RequestMiddleware {
 func (umd *RequestMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		strLength := r.Header.Get("Content-Length")
+		if strLength == "" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
 		length, err := strconv.Atoi(strLength)
 		if err != nil {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrConvertLength))
