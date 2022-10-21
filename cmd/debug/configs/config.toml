@@ -11,7 +11,7 @@ log_level = "debug"
 log_path = "localhost"
 
 [S3]
-endpoint = "http://localhost:4566"
+endpoint = "http://localstack:4566"
 
 [cors]
 methods = ["POST", "GET"]

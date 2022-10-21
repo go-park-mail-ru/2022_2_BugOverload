@@ -2,10 +2,13 @@ version: "3.7"
 
 services:
   app:
-    network_mode: host
     container_name: "app"
+    networks:
+      - localstack-net
     image: andeo1812/golang_web:latest
     command: make -C project debug-mode
+    ports:
+      - "8088:8088"
     environment:
       - AWS_PROFILE=default
       - AWS_ACCESS_KEY_ID=foo
