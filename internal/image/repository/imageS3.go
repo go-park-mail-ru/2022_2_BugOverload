@@ -15,7 +15,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 // ImageRepository provides the versatility of images repositories.
@@ -36,8 +35,7 @@ func NewImageS3(config *innerPKG.Config) ImageRepository {
 	awsConfig.Region = aws.String(config.S3.Region)
 	awsConfig.Endpoint = aws.String(config.S3.Endpoint)
 
-	token, _ := pkg.CryptoRandString(innerPKG.TokenS3Length)
-	awsConfig.Credentials = credentials.NewStaticCredentials(config.S3.ID, config.S3.Secret, token)
+	awsConfig.Credentials = credentials.NewEnvCredentials()
 
 	sess, err := session.NewSession(awsConfig)
 	if err != nil {

@@ -71,7 +71,7 @@ stop:
 	docker-compose kill
 	docker-compose down
 
-compose-log:
+logs:
 	docker-compose logs -f
 
 app-restart:

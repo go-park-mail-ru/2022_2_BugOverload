@@ -4,8 +4,14 @@ services:
   app:
     network_mode: host
     container_name: "app"
-    image: andeo1812/golang_web
+    image: andeo1812/golang_web:latest
     command: make -C project debug-mode
+    environment:
+      - AWS_PROFILE=default
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=default
     volumes:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
@@ -45,23 +51,6 @@ services:
       - ./data:/tmp/localstack
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
-
-# DynamoDB — система управления базами данных класса NoSQL в формате «ключ — значение»,
-#  предлагаемая Amazon.com как часть пакета Amazon Web Services.
-#  dynamodb-admin:
-#    networks:
-#      - localstack-net
-#    container_name: "dynamodb-admin"
-#    image: aaronshaf/dynamodb-admin:latest
-#    ports:
-#      - 8001:8001
-#    environment:
-#      DYNAMO_ENDPOINT: http://localstack:4566
-#      AWS_REGION: ${AWS_REGION:-us-east-1}
-#      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-foo}
-#      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-bar}
-#    depends_on:
-#      - localstack
 
 
 networks:
