@@ -14,7 +14,6 @@ services:
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=bar
       - AWS_REGION=us-east-1
-      - AWS_ENDPOINT=default
     volumes:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"

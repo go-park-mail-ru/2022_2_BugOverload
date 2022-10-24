@@ -19,7 +19,7 @@ create-env-linters:
 	${GOPATH}/bin/golangci-lint
 
 create-env-S3:
-	./scripts/set_env_S3.sh
+	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar
 
 check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
