@@ -25,6 +25,7 @@ type Logger struct {
 
 type S3 struct {
 	Endpoint string `toml:"endpoint"`
+	Region   string `toml:"region"`
 }
 
 type Config struct {

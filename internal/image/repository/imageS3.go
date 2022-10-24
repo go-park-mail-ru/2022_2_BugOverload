@@ -64,6 +64,7 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 
 	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
+		logrus.Error(err)
 		return models.Image{}, errors.ErrImageNotFound
 	}
 
