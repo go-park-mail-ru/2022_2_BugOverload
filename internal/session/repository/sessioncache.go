@@ -10,22 +10,22 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-// AuthRepository provides the versatility of session-related repositories.
+// SessionRepository provides the versatility of session-related repositories.
 // Needed to work with stateful session pattern.
-type AuthRepository interface {
+type SessionRepository interface {
 	GetUserBySession(ctx context.Context) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (string, error)
 	DeleteSession(ctx context.Context) (string, error)
 }
 
-// sessionCache is implementation repository of sessions in memory corresponding to the AuthRepository interface.
+// sessionCache is implementation repository of sessions in memory corresponding to the SessionRepository interface.
 type sessionCache struct {
 	storageUserSession map[string]*models.User
 	mu                 *sync.RWMutex
 }
 
-// NewCookieCache is constructor for sessionCache.
-func NewCookieCache() AuthRepository {
+// NewSessionCache is constructor for sessionCache.
+func NewSessionCache() SessionRepository {
 	return &sessionCache{
 		make(map[string]*models.User),
 		&sync.RWMutex{},
@@ -64,11 +64,9 @@ func (cs *sessionCache) CreateSession(ctx context.Context, user *models.User) (s
 
 	newCookieValue, _ := pkg.CryptoRandString(pkgInner.CookieValueLength)
 
-	cookieKey := "session_id=" + newCookieValue
+	cs.storageUserSession[newCookieValue] = user
 
-	cs.storageUserSession[cookieKey] = user
-
-	return cookieKey, nil
+	return newCookieValue, nil
 }
 
 // DeleteSession is takes the cookie by name, rolls back the time in it so that it becomes

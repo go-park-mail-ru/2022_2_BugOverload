@@ -6,15 +6,14 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -48,7 +47,7 @@ func TestAuthHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth"
 
 	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	cs := memoryCookie.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -60,14 +59,14 @@ func TestAuthHandler(t *testing.T) {
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var cookie string
-	cookie, err = cs.CreateSession(context.TODO(), testUser)
+	var session string
+	session, err = cs.CreateSession(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
 
-	cases[0].Cookie = strings.Split(cookie, ";")[0]
+	cases[0].Cookie = "session_id=" + session + ";"
 
 	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewAuthService(cs)
+	authService := serviceAuth.NewSessionService(cs)
 	authHandler := handlers.NewAuthHandler(userService, authService)
 
 	for caseNum, item := range cases {

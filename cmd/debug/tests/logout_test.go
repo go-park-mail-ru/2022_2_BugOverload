@@ -5,15 +5,14 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -54,7 +53,7 @@ func TestLogoutHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth/logput"
 
 	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	cs := memoryCookie.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -70,11 +69,11 @@ func TestLogoutHandler(t *testing.T) {
 	session, err = cs.CreateSession(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-session for test"))
 
-	cases[0].Cookie = strings.Split(session, ";")[0]
-	cases[1].Cookie = strings.Split(session, ";")[0]
+	cases[0].Cookie = "session_id=" + session + ";"
+	cases[1].Cookie = "session_id=" + session + ";"
 
 	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewAuthService(cs)
+	authService := serviceAuth.NewSessionService(cs)
 	logoutHandler := handlers.NewLogoutHandler(userService, authService)
 
 	for caseNum, item := range cases {

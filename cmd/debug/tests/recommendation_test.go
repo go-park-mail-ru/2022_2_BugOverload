@@ -11,12 +11,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
 	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -37,7 +37,7 @@ func TestRecommendationHandler(t *testing.T) {
 
 	// Base
 	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	cs := memoryCookie.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -55,7 +55,7 @@ func TestRecommendationHandler(t *testing.T) {
 
 	cases[0].Cookie = strings.Split(cookie, ";")[0]
 
-	authService := serviceAuth.NewAuthService(cs)
+	authService := serviceAuth.NewSessionService(cs)
 
 	// Films
 	pathPreview := "../../../test/data/preview.json"

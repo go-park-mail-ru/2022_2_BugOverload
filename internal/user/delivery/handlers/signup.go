@@ -7,9 +7,9 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -17,11 +17,11 @@ import (
 // signupHandler is the structure that handles the request for auth.
 type signupHandler struct {
 	userService serviceUser.UserService
-	authService serviceAuth.AuthService
+	authService serviceAuth.SessionService
 }
 
 // NewSingUpHandler is constructor for signupHandler in this pkg - auth.
-func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
+func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
 	return &signupHandler{
 		us,
 		as,

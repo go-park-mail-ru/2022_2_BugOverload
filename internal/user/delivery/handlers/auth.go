@@ -6,10 +6,10 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -17,11 +17,11 @@ import (
 // authHandler is the structure that handles the request for auth.
 type authHandler struct {
 	userService serviceUser.UserService
-	authService serviceAuth.AuthService
+	authService serviceAuth.SessionService
 }
 
 // NewAuthHandler is constructor for authHandler in this pkg - auth.
-func NewAuthHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
+func NewAuthHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
 	return &authHandler{
 		us,
 		as,
@@ -50,9 +50,9 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookieStr := r.Header.Get("Cookie")
+	cookie := r.Cookies()[0]
 
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {

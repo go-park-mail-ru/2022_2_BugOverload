@@ -8,9 +8,9 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -18,11 +18,11 @@ import (
 // logoutHandler is the structure that handles the request for auth.
 type logoutHandler struct {
 	userService serviceUser.UserService
-	authService serviceAuth.AuthService
+	authService serviceAuth.SessionService
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.AuthService) pkg.Handler {
+func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
 	return &logoutHandler{
 		us,
 		as,
@@ -50,9 +50,9 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookieStr := r.Header.Get("Cookie")
+	cookie := r.Cookies()[0]
 
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
 	badSession, err := h.authService.DeleteSession(ctx)
 	if err != nil {
@@ -60,14 +60,14 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := &http.Cookie{
+	badCookie := &http.Cookie{
 		Name:     "session_id",
 		Value:    badSession,
 		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
 		HttpOnly: true,
 	}
 
-	http.SetCookie(w, cookie)
+	http.SetCookie(w, badCookie)
 
 	httpwrapper.NoContent(w)
 }

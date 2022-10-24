@@ -6,22 +6,22 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // recommendationFilmHandler is the structure that handles the request for
 // getting recommendation film for authorized ot unauthorized user.
 type recommendationFilmHandler struct {
 	filmService serviceFilms.FilmsService
-	authService serviceAuth.AuthService
+	authService serviceAuth.SessionService
 }
 
 // NewRecommendationFilmHandler is constructor for recommendationFilmHandler in this pkg - recommendation film.
-func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.AuthService) pkg.Handler {
+func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.SessionService) pkg.Handler {
 	return &recommendationFilmHandler{
 		fs,
 		as,

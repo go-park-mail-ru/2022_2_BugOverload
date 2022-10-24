@@ -63,13 +63,13 @@ prod-mode:
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --remove-orphans
-	sleep 20
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up --remove-orphans -d
-	sleep 20
+	docker-compose up -d
+	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
 stop:

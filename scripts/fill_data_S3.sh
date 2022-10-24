@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 printf "Fill S3 storage data..."
 
-readonly LOCALSTACK_S3_URL=$2
+LOCALSTACK_S3_URL=$2
 
 HOR='hor'
 VER='ver'
