@@ -79,11 +79,12 @@ stop:
 logs:
 	docker-compose logs -f
 
-app-restart:
+app-debug-restart:
 	docker-compose restart $(SERVICE_APP)
 
-app-debug:
-	docker-compose exec $(SERVICE_APP) make -C project debug-mode
+app-prod-restart:
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_APP)
+
 
 S3-restart:
 	docker-compose restart $(SERVICE_LOCALSTACK)
