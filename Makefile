@@ -48,7 +48,7 @@ get-stat-coverage:
 generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
-# Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images
+# Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3:
 	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT}
 
