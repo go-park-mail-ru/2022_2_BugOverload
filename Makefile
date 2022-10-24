@@ -61,8 +61,13 @@ prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
 
 # infrastructure
-# Example: make deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
-deploy:
+# Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
+prod-deploy:
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --remove-orphans
+	sleep 20
+	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
+
+debug-deploy:
 	docker-compose up --remove-orphans -d
 	sleep 20
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
@@ -76,6 +81,9 @@ logs:
 
 app-restart:
 	docker-compose restart $(SERVICE_APP)
+
+app-debug:
+	docker-compose exec $(SERVICE_APP) make -C project debug-mode
 
 S3-restart:
 	docker-compose restart $(SERVICE_LOCALSTACK)

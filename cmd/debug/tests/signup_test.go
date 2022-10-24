@@ -1,7 +1,6 @@
 package tests_test
 
 import (
-	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
@@ -131,15 +130,9 @@ func TestSignupHandler(t *testing.T) {
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookie := resp.Cookies()[0]
 
-			cookieName := strings.Split(respCookie, ";")[0]
-
-			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
-			nameSession, err := authService.GetSession(ctx)
-			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
-
-			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Equal(t, "session_id", cookie.Name, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		body, err := io.ReadAll(resp.Body)

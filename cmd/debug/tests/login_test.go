@@ -141,17 +141,9 @@ func TestLoginHandler(t *testing.T) {
 		resp := w.Result()
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookie := resp.Cookies()[0]
 
-			cookieName := strings.Split(respCookie, ";")[0]
-
-			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
-
-			var nameSession string
-			nameSession, err = authService.GetSession(ctx)
-			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
-
-			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Equal(t, "session_id", cookie.Name, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		if item.ResponseBody != "" {

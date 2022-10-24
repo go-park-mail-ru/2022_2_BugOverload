@@ -52,7 +52,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	ctx := context.WithValue(r.Context(), pkg.CookieKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookieStr)
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {

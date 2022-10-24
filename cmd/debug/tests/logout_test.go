@@ -36,7 +36,7 @@ func TestLogoutHandler(t *testing.T) {
 			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
-		// Wrong cookie
+		// Wrong session
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
@@ -66,12 +66,12 @@ func TestLogoutHandler(t *testing.T) {
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var cookie string
-	cookie, err = cs.CreateSession(context.TODO(), testUser)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
+	var session string
+	session, err = cs.CreateSession(context.TODO(), testUser)
+	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-session for test"))
 
-	cases[0].Cookie = strings.Split(cookie, ";")[0]
-	cases[1].Cookie = strings.Split(cookie, ";")[0]
+	cases[0].Cookie = strings.Split(session, ";")[0]
+	cases[1].Cookie = strings.Split(session, ";")[0]
 
 	userService := serviceUser.NewUserService(us)
 	authService := serviceAuth.NewAuthService(cs)
@@ -92,12 +92,10 @@ func TestLogoutHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			resp := w.Result()
 
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookieResp := resp.Cookies()[0]
 
-			nameCookieDel := strings.Split(respCookie, ";")[0]
-
-			require.Equal(t, item.Cookie, nameCookieDel,
-				pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Contains(t, cookieResp.Name, "session_id",
+				pkg.TestErrorMessage(caseNum, "Created and received session not equal"))
 		}
 	}
 }

@@ -36,5 +36,5 @@ const (
 
 type ContextType string
 
-var CookieKey ContextType = "cookie"
+var SessionKey ContextType = "cookie"
 var LoggerKey ContextType = "logger"

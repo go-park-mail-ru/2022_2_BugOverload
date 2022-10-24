@@ -13,7 +13,6 @@ import (
 type AuthService interface {
 	GetUserBySession(ctx context.Context) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (string, error)
-	GetSession(ctx context.Context) (string, error)
 	DeleteSession(ctx context.Context) (string, error)
 }
 
@@ -47,16 +46,6 @@ func (a *authService) CreateSession(ctx context.Context, user *models.User) (str
 	}
 
 	return newSession, nil
-}
-
-// GetSession is the service that accesses the interface AuthRepository
-func (a *authService) GetSession(ctx context.Context) (string, error) {
-	session, err := a.authRepo.GetSession(ctx)
-	if err != nil {
-		return "", errors.Wrap(err, "GetSession")
-	}
-
-	return session, nil
 }
 
 // DeleteSession is the service that accesses the interface AuthRepository

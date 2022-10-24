@@ -3,6 +3,7 @@ package handlers
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
+	"time"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -62,7 +63,14 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Set-Cookie", newSession)
+	cookie := &http.Cookie{
+		Name:     "session_id",
+		Value:    newSession,
+		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, cookie)
 
 	signupResponse := models.NewUserSignUpResponse()
 

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	urlNet "net/url"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -22,17 +21,15 @@ func TestDownloadImageHandler(t *testing.T) {
 	cases := []tests.TestCase{
 		// Success
 		tests.TestCase{
-			Method:      http.MethodGet,
-			Keys:        []string{"default", "test"},
-			Values:      []string{"object", "key"},
-			RequestBody: `{"object":"default","key":"test"}`,
+			Method: http.MethodGet,
+			Keys:   []string{"default", "test"},
+			Values: []string{"object", "key"},
 
 			StatusCode: http.StatusOK,
 		},
 		// Not such image
 		tests.TestCase{
-			Method:      http.MethodGet,
-			RequestBody: `{"object":"default","key":"test123"}`,
+			Method: http.MethodGet,
 
 			StatusCode: http.StatusNotFound,
 		},
@@ -40,7 +37,6 @@ func TestDownloadImageHandler(t *testing.T) {
 		tests.TestCase{
 			Method:      http.MethodPost,
 			ContentType: innerPKG.ContentTypeJSON,
-			RequestBody: `{"password":"Widget Adapter"}`,
 
 			ResponseBody: `{"error":"Def validation: [unsupported media type]"}`,
 			StatusCode:   http.StatusUnsupportedMediaType,
@@ -58,9 +54,7 @@ func TestDownloadImageHandler(t *testing.T) {
 	getImageHandler := handlers.NewDownloadImageHandler(imageService)
 
 	for caseNum, item := range cases {
-		var reader = strings.NewReader(item.RequestBody)
-
-		req := httptest.NewRequest(item.Method, url, reader)
+		req := httptest.NewRequest(item.Method, url, nil)
 		if item.ContentType != "" {
 			req.Header.Set("Content-Type", item.ContentType)
 		}

@@ -1,14 +1,17 @@
 [server]
 bind_addr_http = ":8088"
-read_timeout = 5
-write_timeout = 5
+read_timeout = 4
+write_timeout = 4
 
 [context]
-timeout = 5
+timeout = 4
 
 [logger]
 log_level = "info"
-log_path = "movie-gate.online"
+log_path = "movie-gate"
+
+[S3]
+endpoint = "http://localstack:4566"
 
 [cors]
 methods = ["POST", "GET"]

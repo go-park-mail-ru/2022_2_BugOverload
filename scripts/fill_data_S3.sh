@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 printf "Fill S3 storage data..."
 
+readonly LOCALSTACK_S3_URL=$2
+
+# Создаем bucket для фильмов
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket films
+
+# Создаем bucket для стандартных картинок
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket default
+
+# Создаем bucket для пользователей
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket users
+
 HOR='hor'
 VER='ver'
 DEFAULT='default'
 AVATAR='avatar'
-
-readonly LOCALSTACK_S3_URL=$2
 
 for file in $(find "$1" -type f -name "*"); do
   if [[ "$file" == *"$HOR"* ]]; then

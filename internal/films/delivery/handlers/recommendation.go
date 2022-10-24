@@ -48,7 +48,7 @@ func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Reques
 	//  var err error
 	//
 	//  if cookieStr != "" {
-	//	ctx := context.WithValue(r.Context(), params.CookieKey, cookieStr)
+	//	ctx := context.WithValue(r.Context(), params.SessionKey, cookieStr)
 	//
 	//	user, err = h.authService.GetUserBySession(ctx)
 	//	if err != nil {

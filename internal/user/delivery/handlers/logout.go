@@ -4,6 +4,7 @@ import (
 	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
+	"time"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -51,15 +52,22 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookieStr := r.Header.Get("Cookie")
 
-	ctx := context.WithValue(r.Context(), pkg.CookieKey, cookieStr)
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookieStr)
 
-	badCookie, err := h.authService.DeleteSession(ctx)
+	badSession, err := h.authService.DeleteSession(ctx)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
-	w.Header().Set("Set-Cookie", badCookie)
+	cookie := &http.Cookie{
+		Name:     "session_id",
+		Value:    badSession,
+		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, cookie)
 
 	httpwrapper.NoContent(w)
 }
