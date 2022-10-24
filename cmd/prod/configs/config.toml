@@ -16,7 +16,7 @@ region = "us-east-1"
 
 [cors]
 methods = ["POST", "GET"]
-urls = ["http://movie-gate.online/"]
-headers = ["Content-Type", "Content-length"]
+urls = ["http://movie-gate.online/", "http://movie-gate.online"]
+headers = ["Content-Type", "Content-Length"]
 credentials = true
 debug = false
