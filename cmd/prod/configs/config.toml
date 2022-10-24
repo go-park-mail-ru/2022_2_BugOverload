@@ -12,7 +12,6 @@ log_path = "movie-gate"
 
 [S3]
 endpoint = "http://localstack:4566"
-region = "us-east-1"
 
 [cors]
 methods = ["POST", "GET"]
