@@ -33,9 +33,9 @@ func (s *Server) Launch() error {
 	requestParamsMW := middleware.NewRequestMiddleware()
 
 	router.Use(
+		corsMW.SetCORSMiddleware,
 		loggerMW.SetDefaultLoggerMiddleware,
 		loggerMW.UpdateDefaultLoggerMiddleware,
-		corsMW.SetCORSMiddleware,
 		requestParamsMW.SetSizeRequest,
 		gziphandler.GzipHandler,
 	)
