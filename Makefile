@@ -6,7 +6,7 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...
 
-SERVICE_APP = app
+SERVICE_MAIN = main
 SERVICE_DYNAMODB_ADMIN = dynamodb-admin
 SERVICE_LOCALSTACK =localstack
 
@@ -51,7 +51,7 @@ generate-api-doc:
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3:
-	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT}
+	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT} &
 
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
