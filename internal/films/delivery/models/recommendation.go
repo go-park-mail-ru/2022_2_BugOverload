@@ -23,7 +23,7 @@ func (rfr *RecommendFilmResponse) ToPublic(film *models.Film) models.Film {
 		ID:               film.ID,
 		Name:             film.Name,
 		ShortDescription: film.ShortDescription,
-		YearProd:         film.YearProd,
+		ProdDate:         film.ProdDate,
 		PosterHor:        film.PosterHor,
 		Genres:           film.Genres,
 		Rating:           film.Rating,

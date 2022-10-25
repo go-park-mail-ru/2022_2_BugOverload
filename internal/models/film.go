@@ -6,7 +6,8 @@ type Film struct {
 	Description      string   `json:"description,omitempty"`
 	ShortDescription string   `json:"short_description,omitempty"`
 	Type             string   `json:"film_type,omitempty"`
-	YearProd         string   `json:"year_prod,omitempty"`
+	ProdDate         string   `json:"prod_date,omitempty"`
+	EndDate          string   `json:"end_date,omitempty"`
 	ProdCompany      string   `json:"prod_company,omitempty"`
 	ProdCountry      string   `json:"prod_country,omitempty"`
 	AgeLimit         string   `json:"age_limit,omitempty"`

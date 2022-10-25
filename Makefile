@@ -7,8 +7,6 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 PKG = ./...
 
 SERVICE_MAIN = main
-SERVICE_DYNAMODB_ADMIN = dynamodb-admin
-SERVICE_LOCALSTACK =localstack
 
 # develop
 clear:
@@ -89,9 +87,6 @@ main-debug-restart:
 main-prod-restart:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
 
-
-S3-restart:
-	docker-compose restart $(SERVICE_LOCALSTACK)
 
 # OLD
 docker-launch:

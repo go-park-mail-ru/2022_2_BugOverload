@@ -29,7 +29,7 @@ func NewFilmCollectionResponse(title string, films []models.Film) *FilmCollectio
 		res.Films[idx] = filmInCollectionResponse{
 			ID:        value.ID,
 			Name:      value.Name,
-			YearProd:  value.YearProd,
+			YearProd:  value.ProdDate,
 			PosterVer: value.PosterVer,
 			Rating:    value.Rating,
 			Genres:    value.Genres,
