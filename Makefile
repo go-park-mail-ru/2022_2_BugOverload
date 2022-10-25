@@ -83,11 +83,11 @@ stop:
 logs:
 	docker-compose logs -f
 
-app-debug-restart:
-	docker-compose restart $(SERVICE_APP)
+main-debug-restart:
+	docker-compose restart $(SERVICE_MAIN)
 
-app-prod-restart:
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_APP)
+main-prod-restart:
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
 
 
 S3-restart:
