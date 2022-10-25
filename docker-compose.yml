@@ -5,10 +5,9 @@ services:
     container_name: "app"
     networks:
       - localstack-net
+      - postgres-net
     image: andeo1812/golang_web:latest
     command: make -C project debug-mode
-    ports:
-      - "8088:8088"
     environment:
       - AWS_PROFILE=default
       - AWS_ACCESS_KEY_ID=foo
@@ -18,6 +17,8 @@ services:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "8088:8088"
 
 
   localstack:
@@ -26,8 +27,7 @@ services:
       - localstack-net
     container_name: "localstack"
     image: localstack/localstack:latest
-    ports:
-      - "4566-4599:4566-4599"
+    restart: unless-stopped
     environment:
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
@@ -53,10 +53,64 @@ services:
       - ./data:/tmp/localstack
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
+    ports:
+      - "4566-4599:4566-4599"
 
+
+  db:
+    container_name: "db"
+    networks:
+      - postgres-net
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "habrdb"
+      POSTGRES_USER: "habrpguser"
+      POSTGRES_PASSWORD: "pgpwd4habr"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - .:/var/lib/postgresql/data
+      - ./bin:/docker-entrypoint-initdb.d
+
+
+#  dbadmin:
+#    container_name: "dbadmin"
+#    networks:
+#      - postgres
+#    image: dpage/pgadmin4:5.7
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
+#      PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
+#      PGADMIN_CONFIG_SERVER_MODE: "False"
+#    volumes:
+#      - ./pgadmin:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+#    restart: unless-stopped
+#
+#  dbmonitor:
+#    container_name: dbmonitor
+#    networks:
+#      - postgres-net
+#    image: prometheuscommunity/postgres-exporter:v0.10.0
+#    environment:
+#      DATA_SOURCE_URI: "postgres:5432/habrdb?sslmode=disable"
+#      DATA_SOURCE_USER: "habrpguser"
+#      DATA_SOURCE_PASS: "pgpwd4habr"
+#      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+#    volumes:
+#      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+#    ports:
+#      - "9187:9187"
+#    restart: unless-stopped
 
 networks:
   localstack-net:
     external: false
     driver: bridge
     name: localstack-net
+  postgres-net:
+    external: false
+    driver: bridge
+    name:   postgres-net

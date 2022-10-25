@@ -3,6 +3,15 @@ printf "Fill S3 storage data..."
 
 LOCALSTACK_S3_URL=$2
 
+# Создаем bucket для фильмов
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket films
+
+# Создаем bucket для стандартных картинок
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket default
+
+# Создаем bucket для пользователей
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket users
+
 HOR='hor'
 VER='ver'
 DEFAULT='default'
