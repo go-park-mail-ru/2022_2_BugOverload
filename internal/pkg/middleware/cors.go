@@ -22,7 +22,11 @@ func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 		Debug:            config.Debug,
 	})
 
+	logrus.Debug(config.Methods)
 	logrus.Debug(config.Origins)
+	logrus.Debug(config.Credentials)
+	logrus.Debug(config.Headers)
+	logrus.Debug(config.Debug)
 
 	return &CORSMiddleware{
 		cors: cors,
