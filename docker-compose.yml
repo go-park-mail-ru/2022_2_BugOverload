@@ -121,6 +121,7 @@ services:
     depends_on:
       - main_db
 
+
   monitor_db:
     container_name: "monitor_db"
     networks:
