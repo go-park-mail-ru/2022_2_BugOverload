@@ -37,14 +37,15 @@ func (s *Server) Launch() error {
 		loggerMW.UpdateDefaultLoggerMiddleware,
 		requestParamsMW.SetSizeRequest,
 		gziphandler.GzipHandler,
-		corsMW.SetCORSMiddleware,
 	)
+
+	routerCORS := corsMW.Cors.Handler(router)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
 	server := http.Server{
 		Addr:         s.config.Server.BindHTTPAddr,
-		Handler:      router,
+		Handler:      routerCORS,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
 	}

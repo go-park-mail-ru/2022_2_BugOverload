@@ -1,16 +1,17 @@
 package middleware
 
 import (
-	"github.com/sirupsen/logrus"
 	"net/http"
 
 	"github.com/rs/cors"
+
+	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type CORSMiddleware struct {
-	cors *cors.Cors
+	Cors *cors.Cors
 }
 
 func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
@@ -29,10 +30,10 @@ func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 	logrus.Info(config.Debug)
 
 	return &CORSMiddleware{
-		cors: cors,
+		Cors: cors,
 	}
 }
 
 func (cmd *CORSMiddleware) SetCORSMiddleware(h http.Handler) http.Handler {
-	return cmd.cors.Handler(h)
+	return cmd.Cors.Handler(h)
 }
