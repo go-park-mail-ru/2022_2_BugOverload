@@ -39,7 +39,7 @@ func (s *Server) Launch() error {
 		gziphandler.GzipHandler,
 	)
 
-	routerCORS := corsMW.Cors.Handler(router)
+	routerCORS := corsMW.SetCORSMiddleware(router)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 
