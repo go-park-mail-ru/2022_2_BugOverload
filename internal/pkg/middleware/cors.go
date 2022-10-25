@@ -5,8 +5,6 @@ import (
 
 	"github.com/rs/cors"
 
-	"github.com/sirupsen/logrus"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
@@ -22,12 +20,6 @@ func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 		AllowedHeaders:   config.Headers,
 		Debug:            config.Debug,
 	})
-
-	logrus.Info(config.Methods)
-	logrus.Info(config.Origins)
-	logrus.Info(config.Credentials)
-	logrus.Info(config.Headers)
-	logrus.Info(config.Debug)
 
 	return &CORSMiddleware{
 		Cors: cors,
