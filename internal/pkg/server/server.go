@@ -33,11 +33,11 @@ func (s *Server) Launch() error {
 	requestParamsMW := middleware.NewRequestMiddleware()
 
 	router.Use(
-		corsMW.SetCORSMiddleware,
 		loggerMW.SetDefaultLoggerMiddleware,
 		loggerMW.UpdateDefaultLoggerMiddleware,
 		requestParamsMW.SetSizeRequest,
 		gziphandler.GzipHandler,
+		corsMW.SetCORSMiddleware,
 	)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
