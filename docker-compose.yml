@@ -1,24 +1,27 @@
 version: "3.7"
 
 services:
-  app:
-    container_name: "app"
+  main:
+    container_name: "main"
     networks:
       - localstack-net
       - postgres-net
     image: andeo1812/golang_web:latest
     command: make -C project debug-mode
     environment:
-      - AWS_PROFILE=default
-      - AWS_ACCESS_KEY_ID=foo
-      - AWS_SECRET_ACCESS_KEY=bar
-      - AWS_REGION=us-east-1
+      AWS_PROFILE: "${AWS_PROFILE}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "${AWS_REGION}"
     volumes:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     ports:
       - "8088:8088"
+    depends_on:
+      - localstack
+      - main_db
 
 
   localstack:
@@ -57,53 +60,84 @@ services:
       - "4566-4599:4566-4599"
 
 
-  db:
-    container_name: "db"
+  main_db:
+    container_name: "main_db"
     networks:
       - postgres-net
-    image: postgres:13.3
+    image: postgres:latest
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
     environment:
-      POSTGRES_DB: "habrdb"
-      POSTGRES_USER: "habrpguser"
-      POSTGRES_PASSWORD: "pgpwd4habr"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
+
+
+  admin_db:
+    container_name: "admin_db"
+    networks:
+      - postgres-net
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.admin"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
     restart: unless-stopped
+    depends_on:
+      - main_db
+
+  monitor_db:
+    container_name: "monitor_db"
+    networks:
+      - postgres-net
+    image: prometheuscommunity/postgres-exporter:latest
+    environment:
+      DATA_SOURCE_URI: "main_db:5432/${POSTGRES_DB}?sslmode=disable"
+      DATA_SOURCE_USER: "${POSTGRES_USER}"
+      DATA_SOURCE_PASS: "${POSTGRES_PASSWORD}"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
-      - .:/var/lib/postgresql/data
-      - ./bin:/docker-entrypoint-initdb.d
+      - ./scripts/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    depends_on:
+      - main_db
 
-
-#  dbadmin:
-#    container_name: "dbadmin"
-#    networks:
-#      - postgres
-#    image: dpage/pgadmin4:5.7
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
-#      PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
-#      PGADMIN_CONFIG_SERVER_MODE: "False"
-#    volumes:
-#      - ./pgadmin:/var/lib/pgadmin
-#    ports:
-#      - "5050:80"
-#    restart: unless-stopped
-#
-#  dbmonitor:
-#    container_name: dbmonitor
-#    networks:
-#      - postgres-net
-#    image: prometheuscommunity/postgres-exporter:v0.10.0
-#    environment:
-#      DATA_SOURCE_URI: "postgres:5432/habrdb?sslmode=disable"
-#      DATA_SOURCE_USER: "habrpguser"
-#      DATA_SOURCE_PASS: "pgpwd4habr"
-#      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
-#    volumes:
-#      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
-#    ports:
-#      - "9187:9187"
-#    restart: unless-stopped
 
 networks:
   localstack-net:
@@ -111,6 +145,5 @@ networks:
     driver: bridge
     name: localstack-net
   postgres-net:
-    external: false
     driver: bridge
     name:   postgres-net

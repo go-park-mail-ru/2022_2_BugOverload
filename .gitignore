@@ -8,3 +8,5 @@ docs/swagger*
 
 *.log
 data
+pgdata
+pgadmin

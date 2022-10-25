@@ -18,8 +18,9 @@ create-env-linters:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
 
-create-env-S3:
-	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar
+env:
+	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar &&
+	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass
 
 check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
@@ -55,6 +56,9 @@ fill-S3:
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
 	./scripts/set_format.sh ${TARGET} ${FORMAT}
+
+open-last-log:
+	./scripts/print_last_log.sh
 
 # production
 prod-mode:
