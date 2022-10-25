@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/sirupsen/logrus"
 	"net/http"
 
 	"github.com/rs/cors"
@@ -20,6 +21,8 @@ func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 		AllowedHeaders:   config.Headers,
 		Debug:            config.Debug,
 	})
+
+	logrus.Debug(config.Origins)
 
 	return &CORSMiddleware{
 		cors: cors,
