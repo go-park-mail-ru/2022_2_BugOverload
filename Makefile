@@ -16,7 +16,6 @@ create-env:
 	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
-	pip install -y migrate
 
 env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar &&
