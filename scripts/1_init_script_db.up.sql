@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS user
 (
-    "user_id"       serial      NOT NULL PRIMARY KEY,
-    "nickname"      varchar(64) NOT NULL,
-    "email"         varchar(64) NOT NULL,
-    "hash_password" text        NOT NULL,
-    "joined_date"   DATE        NOT NULL,
-    "is_superuser"  BOOLEAN     NOT NULL DEFAULT false
+    "user_id"      serial      NOT NULL PRIMARY KEY,
+    "nickname"     varchar(64) NOT NULL,
+    "email"        varchar(64) NOT NULL,
+    "password"     text        NOT NULL,
+    "joined_date"  DATE        NOT NULL,
+    "is_superuser" BOOLEAN     NOT NULL DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS profile
@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS cinema
     "poster_ver"             varchar(80)  NOT NULL DEFAULT 'default',
     "rating"                 FLOAT        NOT NULL,
     "count_scores"           integer      NOT NULL,
+    "count_reviews"          integer      NOT NULL,
     "count_negative_reviews" integer      NOT NULL,
     "count_neutral_reviews"  integer      NOT NULL,
     "count_positive_reviews" integer      NOT NULL
