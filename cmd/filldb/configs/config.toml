@@ -1,0 +1,2 @@
+[database]
+URL = "postgresql://mguser:mgpass@localhost:5432/mgdb?sslmode=disable"

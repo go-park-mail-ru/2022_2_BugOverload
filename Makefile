@@ -17,6 +17,8 @@ create-env:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
 
+	curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
+
 env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar &&
 	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
@@ -59,6 +61,9 @@ set-format:
 
 open-last-log:
 	./scripts/print_last_log.sh
+
+get-db_url:
+	cat ./cmd/filldb/configs/config.toml | grep -w URL | awk '{ print $3 }'
 
 # production
 prod-mode:
