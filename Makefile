@@ -62,7 +62,7 @@ set-format:
 open-last-log:
 	./scripts/print_last_log.sh
 
-get-db_url:
+get-db-url:
 	cat ./cmd/filldb/configs/config.toml | grep -w URL | awk '{ print $3 }'
 
 # production
