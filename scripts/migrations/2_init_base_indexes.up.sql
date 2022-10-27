@@ -1,4 +1,5 @@
 --  PostgreSQL автоматически создает индексы по PRIMARY KEY
+
 CREATE INDEX IF NOT EXISTS idx_film_name_prod_date_rating
     ON films USING btree
         (name, prod_date, rating);

@@ -1,4 +1,4 @@
-.PHONY: all clear generate-api-doc check launch build run-tests
+.PHONY: all clear generate-api-doc check launch build run-tests migrate-debug-up DB_URL
 
 all: check build run-all-tests
 
@@ -8,22 +8,21 @@ PKG = ./...
 
 SERVICE_MAIN = main
 
-# develop
-clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log data
-
-create-env:
+# ENV
+create-env-lint:
 	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 	${GOPATH}/bin/golangci-lint
 
+migrate-install:
 	curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
+	sudo mv --backup=existing migrate /bin
 
 env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar &&
-	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
-	export POSTGRESQL_URL='postgres://mguser:mgpass@localhost:5432/mgdb?sslmode=disable'
+	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass
 
+# Development
 check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
@@ -55,16 +54,6 @@ generate-api-doc:
 fill-S3:
 	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT} &
 
-# Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
-set-format:
-	./scripts/set_format.sh ${TARGET} ${FORMAT}
-
-open-last-log:
-	./scripts/print_last_log.sh
-
-get-db-url:
-	cat ./cmd/filldb/configs/config.toml | grep -w URL | awk '{ print $3 }'
-
 # production
 prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
@@ -94,7 +83,23 @@ main-debug-restart:
 main-prod-restart:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
 
+# Migrations
+MIGRATIONS_DIR = scripts/migrations
+DB_URL:=$(shell cat ./cmd/filldb/configs/config.toml | grep -w URL | awk '{ print $$3 }')
 
-# OLD
-docker-launch:
-	docker run -it --net=host -v "$(shell pwd):/project" --rm  andeo1812/golang_web
+migrate-debug-up:
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
+
+migrate-debug-down:
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down ${COUNT}
+
+# Utils
+clear:
+	sudo rm -rf main coverage.html coverage.out c.out *.log data
+
+open-last-log:
+	./scripts/print_last_log.sh
+
+# Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
+set-format:
+	./scripts/set_format.sh ${TARGET} ${FORMAT}

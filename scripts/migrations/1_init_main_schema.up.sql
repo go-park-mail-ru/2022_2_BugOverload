@@ -23,18 +23,16 @@ CREATE TABLE IF NOT EXISTS films
 (
     "film_id"                serial       NOT NULL PRIMARY KEY,
     "name"                   varchar(128) NOT NULL,
+    "prod_date"              DATE         NOT NULL,
+    "type"                   varchar(64)  NOT NULL DEFAULT 'film',
     "description"            TEXT         NOT NULL,
     "short_description"      TEXT         NOT NULL,
-    "type"                   varchar(64)  NOT NULL DEFAULT 'film',
-    "prod_date"              DATE         NOT NULL,
-    "end_date"               DATE                  DEFAULT NULL,
-    "count_seasons"          integer               DEFAULT NULL,
-    "prod_company"           varchar(64)  NOT NULL,
-    "prod_country"           varchar(64)  NOT NULL,
     "age_limit"              integer      NOT NULL,
     "duration"               TIME         NOT NULL,
     "poster_hor"             varchar(80)  NOT NULL DEFAULT 'default',
     "poster_ver"             varchar(80)  NOT NULL DEFAULT 'default',
+    "end_date"               DATE                  DEFAULT NULL,
+    "count_seasons"          integer               DEFAULT NULL,
     "rating"                 FLOAT        NOT NULL,
     "count_scores"           integer      NOT NULL,
     "count_reviews"          integer      NOT NULL,
@@ -52,6 +50,12 @@ CREATE TABLE IF NOT EXISTS genres
 CREATE TABLE IF NOT EXISTS countries
 (
     "country_id" serial      NOT NULL PRIMARY KEY,
+    "name"       varchar(80) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS companies
+(
+    "company_id" serial      NOT NULL PRIMARY KEY,
     "name"       varchar(64) NOT NULL
 );
 
@@ -60,6 +64,7 @@ CREATE TABLE IF NOT EXISTS persons
     "person_id"   serial       NOT NULL PRIMARY KEY,
     "name"        varchar(128) NOT NULL,
     "birth_date"  DATE         NOT NULL,
+    "gender"      varchar(64)  NOT NULL DEFAULT 'male',
     "count_films" integer      NOT NULL
 );
 
@@ -75,16 +80,15 @@ CREATE TABLE IF NOT EXISTS collections
     "name"              varchar(128) NOT NULL,
     "description"       TEXT         NOT NULL,
     "short_description" TEXT         NOT NULL,
-    "type"              varchar(64)  NOT NULL,
-    "date_interval"     TEXT         NOT NULL,
-    "count_films"       integer      NOT NULL,
-    "count_likes"       integer      NOT NULL,
-    "sum_duration"      TIME         NOT NULL,
     "age_limit"         integer      NOT NULL,
     "poster_ver"        varchar(80)  NOT NULL DEFAULT 'default',
     "poster_hor"        varchar(80)  NOT NULL DEFAULT 'default',
     "is_public"         BOOLEAN      NOT NULL,
-    "create_date"       DATE         NOT NULL DEFAULT NOW()
+    "create_date"       TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "date_interval"     TEXT         NOT NULL,
+    "count_films"       integer      NOT NULL,
+    "count_likes"       integer      NOT NULL,
+    "sum_duration"      INTERVAL     NOT NULL
 );
 
 
@@ -108,6 +112,7 @@ CREATE TABLE IF NOT EXISTS film_genres
 (
     "fk_film_id"  integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_genre_id" integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
+    "weight"      integer NOT NULL,
     PRIMARY KEY (fk_film_id, fk_genre_id)
 );
 
@@ -115,15 +120,25 @@ CREATE TABLE IF NOT EXISTS film_countries
 (
     "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_country_id" integer NOT NULL REFERENCES countries (country_id) ON DELETE CASCADE,
+    "weight"        integer NOT NULL,
     PRIMARY KEY (fk_film_id, fk_country_id)
+);
+
+CREATE TABLE IF NOT EXISTS film_companies
+(
+    "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "fk_company_id" integer NOT NULL REFERENCES companies (company_id) ON DELETE CASCADE,
+    "weight"        integer NOT NULL,
+    PRIMARY KEY (fk_film_id, fk_company_id)
 );
 
 CREATE TABLE IF NOT EXISTS film_persons
 (
-    "fk_film_id"       integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
+    "fk_film_id"       integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_profession_id" integer NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
-    PRIMARY KEY (fk_film_id, fk_person_id, fk_profession_id)
+    "weight"           integer NOT NULL,
+    PRIMARY KEY (fk_person_id, fk_film_id, fk_profession_id)
 );
 
 CREATE TABLE IF NOT EXISTS profile_ratings
@@ -145,11 +160,11 @@ CREATE TABLE IF NOT EXISTS profile_views_films
 
 CREATE TABLE IF NOT EXISTS profile_reviews
 (
-    "fk_profile_id" integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
-    "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    "score"         FLOAT   NOT NULL,
-    "description"   TEXT    NOT NULL,
-    "create_date"   DATE    NOT NULL DEFAULT NOW(),
+    "fk_profile_id" integer   NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
+    "fk_film_id"    integer   NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "score"         FLOAT     NOT NULL,
+    "description"   TEXT      NOT NULL,
+    "create_time"   TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 
@@ -164,6 +179,7 @@ CREATE TABLE IF NOT EXISTS person_professions
 (
     "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
     "fk_profession_id" integer NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
+    "weight"           integer NOT NULL,
     PRIMARY KEY (fk_person_id, fk_profession_id)
 );
 
@@ -171,6 +187,7 @@ CREATE TABLE IF NOT EXISTS person_genres
 (
     "fk_person_id" integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
     "fk_genre_id"  integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
+    "weight"       integer NOT NULL,
     PRIMARY KEY (fk_person_id, fk_genre_id)
 );
 
@@ -178,20 +195,21 @@ CREATE TABLE IF NOT EXISTS collections_genres
 (
     "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
     "fk_genre_id"      integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
+    "weight"           integer NOT NULL,
     PRIMARY KEY (fk_collection_id, fk_genre_id)
 );
 
 CREATE TABLE IF NOT EXISTS collection_likes
 (
-    "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
     "fk_profile_id"    integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
+    "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
     "create_date"      DATE    NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (fk_collection_id, fk_profile_id)
+    PRIMARY KEY (fk_profile_id, fk_collection_id)
 );
 
 CREATE TABLE IF NOT EXISTS collections_films
 (
-    "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
     "fk_film_id"       integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    PRIMARY KEY (fk_collection_id, fk_film_id)
+    "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
+    PRIMARY KEY (fk_film_id, fk_collection_id)
 );
