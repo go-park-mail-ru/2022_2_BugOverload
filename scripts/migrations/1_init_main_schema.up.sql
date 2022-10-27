@@ -21,24 +21,25 @@ CREATE TABLE IF NOT EXISTS profiles
 
 CREATE TABLE IF NOT EXISTS films
 (
-    "film_id"                serial       NOT NULL PRIMARY KEY,
-    "name"                   varchar(128) NOT NULL,
-    "prod_date"              DATE         NOT NULL,
-    "type"                   varchar(64)  NOT NULL DEFAULT 'film',
-    "description"            TEXT         NOT NULL,
-    "short_description"      TEXT         NOT NULL,
-    "age_limit"              integer      NOT NULL,
-    "duration"               TIME         NOT NULL,
-    "poster_hor"             varchar(80)  NOT NULL DEFAULT 'default',
-    "poster_ver"             varchar(80)  NOT NULL DEFAULT 'default',
-    "end_date"               DATE                  DEFAULT NULL,
-    "count_seasons"          integer               DEFAULT NULL,
-    "rating"                 FLOAT        NOT NULL,
-    "count_scores"           integer      NOT NULL,
-    "count_reviews"          integer      NOT NULL,
-    "count_negative_reviews" integer      NOT NULL,
-    "count_neutral_reviews"  integer      NOT NULL,
-    "count_positive_reviews" integer      NOT NULL
+    "film_id"                serial        NOT NULL PRIMARY KEY,
+    "name"                   varchar(128)  NOT NULL,
+    "prod_date"              DATE          NOT NULL,
+    "type"                   varchar(64)   NOT NULL DEFAULT 'film',
+    "description"            TEXT          NOT NULL,
+    "short_description"      TEXT          NOT NULL,
+    "age_limit"              integer       NOT NULL,
+    "box office"             integer                DEFAULT NULL,
+    "duration"               TIME          NOT NULL,
+    "poster_hor"             varchar(80)   NOT NULL DEFAULT 'default',
+    "poster_ver"             varchar(80)   NOT NULL DEFAULT 'default',
+    "end_date"               DATE                   DEFAULT NULL,
+    "count_seasons"          integer                DEFAULT NULL,
+    "rating"                 NUMERIC(3, 1) NOT NULL,
+    "count_scores"           integer       NOT NULL,
+    "count_reviews"          integer       NOT NULL,
+    "count_negative_reviews" integer       NOT NULL,
+    "count_neutral_reviews"  integer       NOT NULL,
+    "count_positive_reviews" integer       NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS genres
@@ -143,10 +144,10 @@ CREATE TABLE IF NOT EXISTS film_persons
 
 CREATE TABLE IF NOT EXISTS profile_ratings
 (
-    "fk_profile_id" integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
-    "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    "score"         FLOAT   NOT NULL,
-    "create_date"   DATE    NOT NULL DEFAULT NOW(),
+    "fk_profile_id" integer       NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
+    "fk_film_id"    integer       NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "score"         NUMERIC(3, 1) NOT NULL,
+    "create_date"   DATE          NOT NULL DEFAULT NOW(),
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 
@@ -160,11 +161,11 @@ CREATE TABLE IF NOT EXISTS profile_views_films
 
 CREATE TABLE IF NOT EXISTS profile_reviews
 (
-    "fk_profile_id" integer   NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
-    "fk_film_id"    integer   NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    "score"         FLOAT     NOT NULL,
-    "description"   TEXT      NOT NULL,
-    "create_time"   TIMESTAMP NOT NULL DEFAULT NOW(),
+    "fk_profile_id" integer       NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
+    "fk_film_id"    integer       NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "score"         NUMERIC(3, 1) NOT NULL,
+    "description"   TEXT          NOT NULL,
+    "create_time"   TIMESTAMP     NOT NULL DEFAULT NOW(),
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 
