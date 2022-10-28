@@ -15,8 +15,8 @@ var (
 	ErrUserNotExist    = stdErrors.New("no such user")
 	ErrSignupUserExist = stdErrors.New("such a login exists")
 
-	ErrNoCookie       = stdErrors.New("request has no cookies")
-	ErrCookieNotExist = stdErrors.New("no such cookie")
+	ErrNoCookie        = stdErrors.New("request has no cookies")
+	ErrSessionNotExist = stdErrors.New("no such cookie")
 )
 
 type errClassifierAuth struct {
@@ -33,7 +33,7 @@ func NewErrClassifierAuth() errClassifier {
 
 	res[ErrLoginCombinationNotFound] = http.StatusUnauthorized
 	res[ErrNoCookie] = http.StatusUnauthorized
-	res[ErrCookieNotExist] = http.StatusNotFound
+	res[ErrSessionNotExist] = http.StatusNotFound
 
 	return &errClassifierAuth{
 		table: res,

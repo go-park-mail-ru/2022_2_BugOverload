@@ -22,7 +22,7 @@ func TestDownloadImageHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method: http.MethodGet,
-			Keys:   []string{"default", "test"},
+			Keys:   []string{"default", "login"},
 			Values: []string{"object", "key"},
 
 			StatusCode: http.StatusOK,

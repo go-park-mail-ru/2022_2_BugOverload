@@ -42,7 +42,7 @@ func NewLoginHandler(us serviceUser.UserService, as serviceAuth.SessionService) 
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/auth/login [POST]
+// @Router /api/v1/auth/login [POST]
 func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 	loginRequest := models.NewUserLoginRequest()
 
@@ -68,7 +68,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
-		Value:    newSession,
+		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
 		HttpOnly: true,
 	}

@@ -12,25 +12,25 @@ import (
 // SessionService provides universal service for authorization. Needed for stateful session pattern.
 type SessionService interface {
 	GetUserBySession(ctx context.Context) (models.User, error)
-	CreateSession(ctx context.Context, user *models.User) (string, error)
-	DeleteSession(ctx context.Context) (string, error)
+	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
+	DeleteSession(ctx context.Context) (models.Session, error)
 }
 
 // sessionService is implementation for auth service corresponding to the SessionService interface.
 type sessionService struct {
-	authRepo repository.SessionRepository
+	sessionRepo repository.SessionRepository
 }
 
 // NewSessionService is constructor for sessionService. Accepts SessionRepository interfaces.
 func NewSessionService(ar repository.SessionRepository) SessionService {
 	return &sessionService{
-		authRepo: ar,
+		sessionRepo: ar,
 	}
 }
 
 // GetUserBySession is the service that accesses the interface SessionRepository
 func (a *sessionService) GetUserBySession(ctx context.Context) (models.User, error) {
-	user, err := a.authRepo.GetUserBySession(ctx)
+	user, err := a.sessionRepo.GetUserBySession(ctx)
 	if err != nil {
 		return models.User{}, errors.Wrap(err, "GetUserBySession")
 	}
@@ -39,20 +39,20 @@ func (a *sessionService) GetUserBySession(ctx context.Context) (models.User, err
 }
 
 // CreateSession is the service that accesses the interface SessionRepository
-func (a *sessionService) CreateSession(ctx context.Context, user *models.User) (string, error) {
-	newSession, err := a.authRepo.CreateSession(ctx, user)
+func (a *sessionService) CreateSession(ctx context.Context, user *models.User) (models.Session, error) {
+	newSession, err := a.sessionRepo.CreateSession(ctx, user)
 	if err != nil {
-		return "", errors.Wrap(err, "CreateSession")
+		return models.Session{}, errors.Wrap(err, "CreateSession")
 	}
 
 	return newSession, nil
 }
 
 // DeleteSession is the service that accesses the interface SessionRepository
-func (a *sessionService) DeleteSession(ctx context.Context) (string, error) {
-	delSession, err := a.authRepo.DeleteSession(ctx)
+func (a *sessionService) DeleteSession(ctx context.Context) (models.Session, error) {
+	delSession, err := a.sessionRepo.DeleteSession(ctx)
 	if err != nil {
-		return "", errors.Wrap(err, "DeleteSession")
+		return models.Session{}, errors.Wrap(err, "DeleteSession")
 	}
 
 	return delSession, nil

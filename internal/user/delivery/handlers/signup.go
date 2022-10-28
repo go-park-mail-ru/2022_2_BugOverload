@@ -41,7 +41,7 @@ func NewSingUpHandler(us serviceUser.UserService, as serviceAuth.SessionService)
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/auth/signup [POST]
+// @Router /api/v1/auth/signup [POST]
 func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	signupRequest := models.NewUserSignupRequest()
 
@@ -65,7 +65,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
-		Value:    newSession,
+		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
 		HttpOnly: true,
 	}

@@ -31,10 +31,10 @@ func NewUserAuthResponse() *UserAuthResponse {
 	return &UserAuthResponse{}
 }
 
-func (u *UserAuthResponse) ToPublic(user *models.User) UserAuthResponse {
-	return UserAuthResponse{
+func (u *UserAuthResponse) ToPublic(user *models.User) *UserAuthResponse {
+	return &UserAuthResponse{
 		Email:    user.Email,
 		Nickname: user.Nickname,
-		Avatar:   user.Avatar,
+		Avatar:   user.Profile.Avatar,
 	}
 }

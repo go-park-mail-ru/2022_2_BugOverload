@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -43,17 +42,16 @@ func TestRecommendationHandler(t *testing.T) {
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var cookie string
-	cookie, err = cs.CreateSession(context.TODO(), testUser)
+	var session models.Session
+	session, err = cs.CreateSession(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
 
-	cases[0].Cookie = strings.Split(cookie, ";")[0]
+	cases[0].Cookie = "session_id=" + session.ID + ";"
 
 	authService := serviceAuth.NewSessionService(cs)
 

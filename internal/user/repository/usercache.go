@@ -47,7 +47,9 @@ func (us *userCache) CreateUser(ctx context.Context, user *models.User) (models.
 	us.mu.Lock()
 	defer us.mu.Unlock()
 
-	user.Avatar = "default"
+	user.Profile = models.Profile{
+		Avatar: "avatar",
+	}
 
 	us.storage[user.Email] = *user
 

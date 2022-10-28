@@ -40,7 +40,7 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.SessionService) p
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/auth [GET]
+// @Router /api/v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	authRequest := models.NewUserAuthRequest()
 

@@ -38,7 +38,7 @@ func NewDownloadImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Failure 404 {object} httpmodels.ErrResponseImageNoSuchImage "such image not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/image [GET]
+// @Router /api/v1/image [GET]
 func (h *downloadImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	getImageRequest := models.NewDownloadImageRequest()
 

@@ -40,7 +40,7 @@ func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.SessionService)
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/auth/logout [GET]
+// @Router /api/v1/auth/logout [GET]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var logoutRequest models.UserLogoutRequest
 
@@ -62,7 +62,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	badCookie := &http.Cookie{
 		Name:     "session_id",
-		Value:    badSession,
+		Value:    badSession.ID,
 		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
 		HttpOnly: true,
 	}

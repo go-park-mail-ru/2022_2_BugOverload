@@ -36,7 +36,7 @@ func NewUploadImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Failure 400 {object} httpmodels.ErrResponseImageDefault "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/image [POST]
+// @Router /api/v1/image [POST]
 func (h *uploadImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	getImageRequest := models.NewUploadImageRequest()
 

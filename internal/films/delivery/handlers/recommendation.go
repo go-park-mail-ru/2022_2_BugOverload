@@ -40,7 +40,7 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.S
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /v1/recommendation_film [GET]
+// @Router /api/v1/films/recommendation [GET]
 func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Request) {
 	//  cookieStr := r.Header.Get("Cookie")
 	//

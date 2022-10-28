@@ -76,10 +76,10 @@ func NewUserSignUpResponse() *UserSignupResponse {
 	return &UserSignupResponse{}
 }
 
-func (u *UserSignupResponse) ToPublic(user *models.User) models.User {
-	return models.User{
+func (u *UserSignupResponse) ToPublic(user *models.User) *UserSignupResponse {
+	return &UserSignupResponse{
 		Email:    user.Email,
 		Nickname: user.Nickname,
-		Avatar:   user.Avatar,
+		Avatar:   user.Profile.Avatar,
 	}
 }

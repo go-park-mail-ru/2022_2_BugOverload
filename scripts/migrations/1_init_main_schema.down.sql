@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS collection_likes;
 
 DROP TABLE IF EXISTS collections_films;
 
+DROP TABLE IF EXISTS reviews_likes;
+
 -- Зависимые таблицы 1:M
 DROP TABLE IF EXISTS film_images;
 
@@ -32,6 +34,8 @@ DROP TABLE IF EXISTS person_images;
 
 -- Главные таблицы
 DROP TABLE IF EXISTS profiles;
+
+DROP TABLE IF EXISTS reviews;
 
 DROP TABLE IF EXISTS users;
 

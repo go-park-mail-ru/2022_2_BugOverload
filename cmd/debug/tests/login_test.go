@@ -31,7 +31,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
 			ResponseCookie: "GeneratedData",
-			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"default"}`,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"avatar"}`,
 			StatusCode:     http.StatusOK,
 		},
 		// No such user
@@ -114,7 +114,6 @@ func TestLoginHandler(t *testing.T) {
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)

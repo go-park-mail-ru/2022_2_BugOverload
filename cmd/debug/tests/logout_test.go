@@ -32,14 +32,14 @@ func TestLogoutHandler(t *testing.T) {
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSessionNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Wrong session
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSessionNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
@@ -59,18 +59,17 @@ func TestLogoutHandler(t *testing.T) {
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var session string
+	var session models.Session
 	session, err = cs.CreateSession(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-session for test"))
 
-	cases[0].Cookie = "session_id=" + session + ";"
-	cases[1].Cookie = "session_id=" + session + ";"
+	cases[0].Cookie = "session_id=" + session.ID + ";"
+	cases[1].Cookie = "session_id=" + session.ID + ";"
 
 	userService := serviceUser.NewUserService(us)
 	authService := serviceAuth.NewSessionService(cs)
