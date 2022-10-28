@@ -5,21 +5,20 @@ import (
 )
 
 type filmInCollectionResponse struct {
-	ID         uint     `json:"film_id,omitempty" example:"23"`
-	Name       string   `json:"film_name,omitempty" example:"Game of Thrones"`
-	ProdDate   string   `json:"prod_date,omitempty" example:"2014"`
-	PosterVer  string   `json:"poster_ver,omitempty" example:"{{ссылка}}"`
-	Rating     float32  `json:"rating,omitempty" example:"7.9"`
-	Genres     []string `json:"genres,omitempty" example:"фэнтези,приключения"`
-	CountLikes string   `json:"count_likes,omitempty"`
+	ID        uint     `json:"film_id,omitempty" example:"23"`
+	Name      string   `json:"film_name,omitempty" example:"Game of Thrones"`
+	ProdDate  string   `json:"prod_date,omitempty" example:"2014"`
+	PosterVer string   `json:"poster_ver,omitempty" example:"{{key}}"`
+	Rating    float32  `json:"rating,omitempty" example:"7.9"`
+	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
 type FilmCollectionResponse struct {
 	Name        string                     `json:"name,omitempty" example:"Популярное"`
-	Description string                     `json:"description,omitempty"`
-	Poster      string                     `json:"poster,omitempty"`
-	Time        string                     `json:"time,omitempty"`
-	CountLikes  string                     `json:"count_likes,omitempty"`
+	Description string                     `json:"description,omitempty"  example:"Лучшие фильмы на данный момент"`
+	Poster      string                     `json:"poster,omitempty" example:"42"`
+	Time        string                     `json:"time,omitempty" example:"2023.01.04 15:12:23'"`
+	CountLikes  float32                    `json:"count_likes,omitempty" example:"502"`
 	Films       []filmInCollectionResponse `json:"films,omitempty"`
 }
 

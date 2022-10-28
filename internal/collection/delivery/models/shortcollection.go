@@ -5,10 +5,10 @@ import (
 )
 
 type ShortFilmCollectionResponse struct {
-	Name       string `json:"name,omitempty" example:"Популярное"`
-	Poster     string `json:"poster,omitempty"`
-	CountLikes string `json:"count_likes,omitempty"`
-	CountFilms string `json:"count_films,omitempty"`
+	Name       string  `json:"name,omitempty" example:"Популярное"`
+	Poster     string  `json:"poster,omitempty" example:"42"`
+	CountLikes float32 `json:"count_likes,omitempty" example:"1023"`
+	CountFilms float32 `json:"count_films,omitempty"  example:"10"`
 }
 
 func NewShortFilmCollectionResponse(collection *models.Collection) *ShortFilmCollectionResponse {

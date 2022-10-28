@@ -30,11 +30,11 @@ func NewInCinemaHandler(uc service.CollectionService) pkg.Handler {
 // @Description Films from the "in cinema" category
 // @tags collection
 // @Produce json
-// @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
+// @Success 200 {object} models.FilmCollectionInCinemaResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collection/in_cinema [GET]
+// @Router /api/v1/collections/in_cinema [GET]
 func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetInCinema(r.Context())
 	if err != nil {
@@ -42,7 +42,7 @@ func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionInCinema := models.NewFilmCollectionResponse(&collection)
+	collectionInCinema := models.NewFilmInCollectionInCinemaResponse(&collection)
 
 	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
 }
