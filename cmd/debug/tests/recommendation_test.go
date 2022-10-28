@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
-	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
+	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"

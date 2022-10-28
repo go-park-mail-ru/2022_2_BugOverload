@@ -5,11 +5,11 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
-// FilmsService provides universal service for work with films.
+// FilmsService provides universal service for work with film.
 type FilmsService interface {
 	GerRecommendation(ctx context.Context) (models.Film, error)
 }

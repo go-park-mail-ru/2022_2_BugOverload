@@ -34,7 +34,7 @@ func NewPopularFilmsHandler(uc service.CollectionService) pkg.Handler {
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collections/popular [GET]
+// @Router /api/v1/collection/popular [GET]
 func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetPopular(r.Context())
 	if err != nil {

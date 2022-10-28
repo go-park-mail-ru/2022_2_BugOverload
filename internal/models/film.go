@@ -3,7 +3,7 @@ package models
 type Film struct {
 	ID                   uint     `json:"id,omitempty"`
 	Name                 string   `json:"name,omitempty"`
-	ProdDate             string   `json:"prod_date,omitempty"`
+	ProdYear             int      `json:"prod_year,omitempty"`
 	Type                 string   `json:"type,omitempty"`
 	Description          string   `json:"description,omitempty"`
 	ShortDescription     string   `json:"short_description,omitempty"`
@@ -13,7 +13,7 @@ type Film struct {
 	PosterHor            string   `json:"poster_hor,omitempty"`
 	PosterVer            string   `json:"poster_ver,omitempty"`
 	CountSeasons         int      `json:"count_seasons,omitempty"`
-	EndDate              string   `json:"end_date,omitempty"`
+	EndYear              int      `json:"end_year,omitempty"`
 	Rating               float32  `json:"rating,omitempty"`
 	CountScores          int      `json:"count_scores,omitempty"`
 	CountNegativeReviews int      `json:"count_negative_reviews,omitempty"`

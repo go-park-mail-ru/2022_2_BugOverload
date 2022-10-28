@@ -34,7 +34,7 @@ func NewInCinemaHandler(uc service.CollectionService) pkg.Handler {
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collections/in_cinema [GET]
+// @Router /api/v1/collection/in_cinema [GET]
 func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetInCinema(r.Context())
 	if err != nil {

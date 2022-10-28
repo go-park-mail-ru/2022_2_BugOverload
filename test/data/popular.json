@@ -1,10 +1,10 @@
 {
-  "name": "popular",
+  "name": "Популярное",
   "films": [
     {
-      "film_id": 15,
-      "film_name": "Дюна",
-      "year_prod": "2021",
+      "id": 15,
+      "name": "Дюна",
+      "prod_year": 2021,
       "poster_ver": "15",
       "rating": 9.9,
       "genres": [
@@ -13,9 +13,9 @@
       ]
     },
     {
-      "film_id": 16,
-      "film_name": "Убить Билла",
-      "year_prod": "2021",
+      "id": 16,
+      "name": "Убить Билла",
+      "prod_year": 2021,
       "poster_ver": "16",
       "rating": 9.0,
       "genres": [
@@ -24,9 +24,9 @@
       ]
     },
     {
-      "film_id": 17,
-      "film_name": "Головокружение",
-      "year_prod": "2021",
+      "id": 17,
+      "name": "Головокружение",
+      "prod_year": 2021,
       "poster_ver": "17",
       "rating": 7.1,
       "genres": [
@@ -35,9 +35,9 @@
       ]
     },
     {
-      "film_id": 18,
-      "film_name": "Петровы в гриппе",
-      "year_prod": "2020",
+      "id": 18,
+      "name": "Петровы в гриппе",
+      "prod_year": 2020,
       "poster_ver": "18",
       "rating": 6.8,
       "genres": [
@@ -46,9 +46,9 @@
       ]
     },
     {
-      "film_id": 19,
-      "film_name": "Она",
-      "year_prod": "2013",
+      "id": 19,
+      "name": "Она",
+      "prod_year": 2013,
       "poster_ver": "19",
       "rating": 7.6,
       "genres": [
@@ -57,9 +57,9 @@
       ]
     },
     {
-      "film_id": 20,
-      "film_name": "Плата за страх",
-      "year_prod": "1952",
+      "id": 20,
+      "name": "Плата за страх",
+      "prod_year": 1952,
       "poster_ver": "20",
       "rating": 8.0,
       "genres": [
@@ -68,9 +68,10 @@
       ]
     },
     {
-      "film_id": 21,
-      "film_name": "Черное зеркало",
-      "year_prod": "2011-2019",
+      "id": 21,
+      "name": "Черное зеркало",
+      "prod_year": 2011,
+      "end_year": 2019,
       "poster_ver": "21",
       "rating": 8.5,
       "genres": [
@@ -79,9 +80,9 @@
       ]
     },
     {
-      "film_id": 22,
-      "film_name": "Олдбой",
-      "year_prod": "2003",
+      "id": 22,
+      "name": "Олдбой",
+      "prod_year": 2003,
       "poster_ver": "22",
       "rating": 8.1,
       "genres": [
@@ -90,9 +91,9 @@
       ]
     },
     {
-      "film_id": 23,
-      "film_name": "Доказательство смерти",
-      "year_prod": "2021",
+      "id": 23,
+      "name": "Доказательство смерти",
+      "prod_year": 2021,
       "poster_ver": "23",
       "rating": 3.3,
       "genres": [
@@ -101,9 +102,9 @@
       ]
     },
     {
-      "film_id": 24,
-      "film_name": "Чунгингский экспресс",
-      "year_prod": "2021",
+      "id": 24,
+      "name": "Чунгингский экспресс",
+      "prod_year": 2021,
       "poster_ver": "24",
       "rating": 7.1,
       "genres": [
@@ -112,9 +113,9 @@
       ]
     },
     {
-      "film_id": 25,
-      "film_name": "Девушка с татуировкой дракона",
-      "year_prod": "2021",
+      "id": 25,
+      "name": "Девушка с татуировкой дракона",
+      "prod_year": 2021,
       "poster_ver": "25",
       "rating": 5.7,
       "genres": [
@@ -123,9 +124,9 @@
       ]
     },
     {
-      "film_id": 26,
-      "film_name": "Человек",
-      "year_prod": "2021",
+      "id": 26,
+      "name": "Человек",
+      "prod_year": 2021,
       "poster_ver": "26",
       "rating": 7.1,
       "genres": [

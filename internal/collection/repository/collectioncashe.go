@@ -78,13 +78,11 @@ func (c *collectionCache) FillRepo(path string, storage string) {
 
 	if storage == "popular" {
 		c.Popular = collection
-
 		return
 	}
 
 	if storage == "in_cinema" {
 		c.InCinema = collection
-
 		return
 	}
 }

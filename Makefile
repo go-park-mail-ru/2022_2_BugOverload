@@ -54,6 +54,9 @@ generate-api-doc:
 fill-S3:
 	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT} &
 
+dev-fill-db:
+	go run ./cmd/filldb/main.go --config-path ./cmd/filldb/configs/config.toml --data-path ./test/newdata
+
 # production
 prod-mode:
 	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
@@ -85,7 +88,7 @@ main-prod-restart:
 
 # Migrations
 MIGRATIONS_DIR = scripts/migrations
-DB_URL:=$(shell cat ./cmd/filldb/configs/config.toml | grep -w URL | awk '{ print $$3 }')
+DB_URL:=$(shell cat ./cmd/debug/configs/config.toml | grep -w URL | awk '{ print $$3 }')
 
 migrate-debug-up:
 	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
@@ -93,9 +96,17 @@ migrate-debug-up:
 migrate-debug-down:
 	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down ${COUNT}
 
+migrate-debug-force:
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} force ${COUNT}
+
+reboot-db:
+	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up
+	make dev-fill-db
+
 # Utils
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log data
+	sudo rm -rf main coverage.html coverage.out c.out *.log
 
 open-last-log:
 	./scripts/print_last_log.sh

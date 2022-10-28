@@ -6,8 +6,8 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/models"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
@@ -40,7 +40,7 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService, as serviceAuth.S
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/films/recommendation [GET]
+// @Router /api/v1/film/recommendation [GET]
 func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Request) {
 	//  cookieStr := r.Header.Get("Cookie")
 	//

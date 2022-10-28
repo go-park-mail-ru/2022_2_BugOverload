@@ -18,11 +18,11 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	router.HandleFunc("/api/v1/auth/logout", handlers[pkg.LogoutRequest].Action).Methods(http.MethodGet)
 
 	// Collections
-	router.HandleFunc("/api/v1/collections/in_cinema", handlers[pkg.InCinemaRequest].Action).Methods(http.MethodGet)
-	router.HandleFunc("/api/v1/collections/popular_films", handlers[pkg.PopularRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/collection/in_cinema", handlers[pkg.InCinemaRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/collection/popular", handlers[pkg.PopularRequest].Action).Methods(http.MethodGet)
 
 	// Films
-	router.HandleFunc("/api/v1/films/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/film/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)
 
 	// Images
 	router.HandleFunc("/api/v1/image", handlers[pkg.DownloadImageRequest].Action).

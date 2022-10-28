@@ -5,9 +5,10 @@ import (
 )
 
 type filmInCollectionPopularResponse struct {
-	ID        uint     `json:"film_id,omitempty" example:"23"`
-	Name      string   `json:"film_name,omitempty" example:"Game of Thrones"`
-	ProdDate  string   `json:"prod_date,omitempty" example:"2014"`
+	ID        uint     `json:"id,omitempty" example:"23"`
+	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
+	ProdYear  int      `json:"prod_year,omitempty" example:"2014"`
+	EndYear   int      `json:"end_year,omitempty" example:"2013"`
 	PosterVer string   `json:"poster_ver,omitempty" example:"{{key}}"`
 	Rating    float32  `json:"rating,omitempty" example:"7.9"`
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
@@ -15,7 +16,7 @@ type filmInCollectionPopularResponse struct {
 
 type FilmCollectionPopularResponse struct {
 	Name  string                            `json:"name,omitempty" example:"Популярное"`
-	Films []filmInCollectionPopularResponse `json:"films,omitempty"`
+	Films []filmInCollectionPopularResponse `json:"film,omitempty"`
 }
 
 func NewFilmInCollectionPopularResponse(collection *models.Collection) *FilmCollectionPopularResponse {
@@ -29,7 +30,8 @@ func NewFilmInCollectionPopularResponse(collection *models.Collection) *FilmColl
 		res.Films[idx] = filmInCollectionPopularResponse{
 			ID:        value.ID,
 			Name:      value.Name,
-			ProdDate:  value.ProdDate,
+			ProdYear:  value.ProdYear,
+			EndYear:   value.EndYear,
 			PosterVer: value.PosterVer,
 			Rating:    value.Rating,
 			Genres:    value.Genres,

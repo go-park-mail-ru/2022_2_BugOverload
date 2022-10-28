@@ -12,18 +12,18 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-// FilmsRepository provides the versatility of films repositories.
+// FilmsRepository provides the versatility of film repositories.
 type FilmsRepository interface {
 	GerRecommendation(ctx context.Context) (models.Film, error)
 }
 
-// filmsCache is implementation repository of films in memory corresponding to the FilmsRepository interface.
+// filmsCache is implementation repository of film in memory corresponding to the FilmsRepository interface.
 type filmsCache struct {
 	storage []models.Film
 	mu      *sync.RWMutex
 }
 
-// NewFilmCache is constructor for filmsCache. Accepts mutex and path to data films.
+// NewFilmCache is constructor for filmsCache. Accepts mutex and path to data film.
 func NewFilmCache(path string) FilmsRepository {
 	res := &filmsCache{
 		mu: &sync.RWMutex{},

@@ -7,5 +7,6 @@ type Person struct {
 	Death       string   `json:"death,omitempty"`
 	Gender      string   `json:"gender,omitempty"`
 	CountFilms  int      `json:"count_films,omitempty"`
-	Professions []string `json:"professions,omitempty"`
+	Professions []string `json:"professions.txt,omitempty"`
+	Genres      []string `json:"genres,omitempty"`
 }

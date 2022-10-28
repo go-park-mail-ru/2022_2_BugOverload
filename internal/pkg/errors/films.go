@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrFilmNotFound  = stdErrors.New("no such film")
-	ErrFilmsNotFound = stdErrors.New("no such films")
+	ErrFilmsNotFound = stdErrors.New("no such film")
 )
 
 type errClassifierFilms struct {
