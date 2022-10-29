@@ -1,12 +1,15 @@
 package models
 
 type Person struct {
-	ID          uint     `json:"user_id,omitempty"`
-	Name        string   `json:"name,omitempty"`
-	Birthday    string   `json:"birthday,omitempty"`
-	Death       string   `json:"death,omitempty"`
-	Gender      string   `json:"gender,omitempty"`
-	CountFilms  int      `json:"count_films,omitempty"`
-	Professions []string `json:"professions.txt,omitempty"`
-	Genres      []string `json:"genres,omitempty"`
+	ID           uint     `json:"id,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	OriginalName string   `json:"original_name,omitempty"`
+	Birthday     string   `json:"birthday,omitempty"`
+	Death        string   `json:"death,omitempty"`
+	Growth       float32  `json:"growth,omitempty"`
+	Gender       string   `json:"gender,omitempty"`
+	CountFilms   int      `json:"count_films,omitempty"`
+	Professions  []string `json:"professions,omitempty"`
+	Genres       []string `json:"genres,omitempty"`
+	Images       []string `json:"images,omitempty"`
 }

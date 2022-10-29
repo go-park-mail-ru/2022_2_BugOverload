@@ -31,7 +31,7 @@ func NewPopularFilmsHandler(uc service.CollectionService) pkg.Handler {
 // @tags collection
 // @Produce json
 // @Success 200 {object} models.FilmCollectionPopularResponse "returns an array of movies"
-// @Failure 400 "return error"
+// @Failure 400 {object} httpmodels.ErrResponseFilmNoSuchFilm "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection/popular [GET]

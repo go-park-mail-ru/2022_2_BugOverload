@@ -10,12 +10,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -52,8 +52,8 @@ func TestLogoutHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/logput"
 
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewSessionCache()
+	us := repoAuth.NewAuthCache()
+	cs := repoSession.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -71,8 +71,8 @@ func TestLogoutHandler(t *testing.T) {
 	cases[0].Cookie = "session_id=" + session.ID + ";"
 	cases[1].Cookie = "session_id=" + session.ID + ";"
 
-	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewSessionService(cs)
+	userService := serviceAuth.NewUserService(us)
+	authService := serviceSession.NewSessionService(cs)
 	logoutHandler := handlers.NewLogoutHandler(userService, authService)
 
 	for caseNum, item := range cases {

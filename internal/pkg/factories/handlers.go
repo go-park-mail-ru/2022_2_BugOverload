@@ -1,6 +1,9 @@
 package factories
 
 import (
+	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	handlers4 "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
 	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
@@ -13,16 +16,13 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res := make(map[string]pkg.Handler)
 
 	// Auth
-	userStorage := memoryUser.NewUserCache()
+	userStorage := memoryUser.NewAuthCache()
 	sessionStorage := memoryCookie.NewSessionCache()
 
 	userService := serviceUser.NewUserService(userStorage)
@@ -69,10 +69,10 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 
 	imageService := serviceImage.NewImageService(is)
 
-	downloadImageHandler := handlers5.NewDownloadImageHandler(imageService)
+	downloadImageHandler := handlers5.NewGetImageHandler(imageService)
 	res[pkg.DownloadImageRequest] = downloadImageHandler
 
-	uploadImageHandler := handlers5.NewUploadImageHandler(imageService)
+	uploadImageHandler := handlers5.NewPutImageHandler(imageService)
 	res[pkg.UploadImageRequest] = uploadImageHandler
 
 	return res

@@ -8,28 +8,28 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-// UserRepository provides the versatility of users repositories.
-type UserRepository interface {
+// AuthRepository provides the versatility of users repositories.
+type AuthRepository interface {
 	GetUser(ctx context.Context, user *models.User) (models.User, error)
 	CreateUser(ctx context.Context, user *models.User) (models.User, error)
 }
 
-// userCache is implementation repository of users in memory corresponding to the UserRepository interface.
-type userCache struct {
+// AuthCache is implementation repository of users in memory corresponding to the AuthRepository interface.
+type AuthCache struct {
 	storage map[string]models.User
 	mu      *sync.RWMutex
 }
 
-// NewUserCache is constructor for userCache. Accepts only mutex.
-func NewUserCache() UserRepository {
-	return &userCache{
+// NewAuthCache is constructor for AuthCache. Accepts only mutex.
+func NewAuthCache() AuthRepository {
+	return &AuthCache{
 		make(map[string]models.User),
 		&sync.RWMutex{},
 	}
 }
 
 // CheckExist is a check for the existence of such a user by email.
-func (us *userCache) CheckExist(email string) bool {
+func (us *AuthCache) CheckExist(email string) bool {
 	us.mu.RLock()
 	defer us.mu.RUnlock()
 
@@ -39,7 +39,7 @@ func (us *userCache) CheckExist(email string) bool {
 }
 
 // CreateUser is creates a new user and set default avatar.
-func (us *userCache) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
+func (us *AuthCache) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
 	if us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrSignupUserExist
 	}
@@ -57,7 +57,7 @@ func (us *userCache) CreateUser(ctx context.Context, user *models.User) (models.
 }
 
 // GetUser is returns all user attributes by part user attributes.
-func (us *userCache) GetUser(ctx context.Context, user *models.User) (models.User, error) {
+func (us *AuthCache) GetUser(ctx context.Context, user *models.User) (models.User, error) {
 	if !us.CheckExist(user.Email) {
 		return models.User{}, errors.ErrUserNotExist
 	}

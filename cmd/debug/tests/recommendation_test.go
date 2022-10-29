@@ -10,13 +10,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
-	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -35,8 +35,8 @@ func TestRecommendationHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth"
 
 	// Base
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewSessionCache()
+	us := repoAuth.NewAuthCache()
+	cs := repoSession.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
@@ -53,12 +53,12 @@ func TestRecommendationHandler(t *testing.T) {
 
 	cases[0].Cookie = "session_id=" + session.ID + ";"
 
-	authService := serviceAuth.NewSessionService(cs)
+	authService := serviceSession.NewSessionService(cs)
 
 	// Films
 	pathPreview := "../../../test/data/preview.json"
 
-	fs := memoryFilms.NewFilmCache(pathPreview)
+	fs := repoFilms.NewFilmCache(pathPreview)
 
 	filmsService := serviceFilms.NewFilmService(fs)
 

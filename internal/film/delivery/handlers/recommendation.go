@@ -63,7 +63,7 @@ func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	response := models.NewRecommendFilmResponse()
+	response := models.NewRecommendFilmResponse(&filmRecommendation)
 
-	httpwrapper.Response(w, http.StatusOK, response.ToPublic(&filmRecommendation))
+	httpwrapper.Response(w, http.StatusOK, response.ToPublic())
 }

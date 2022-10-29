@@ -48,7 +48,7 @@ type ImagesError struct {
 }
 
 func (e ImagesError) Error() string {
-	return fmt.Sprintf("Images: [%s]", e.Reason)
+	return fmt.Sprintf("Image: [%s]", e.Reason)
 }
 
 func NewErrImages(err error) ImagesError {

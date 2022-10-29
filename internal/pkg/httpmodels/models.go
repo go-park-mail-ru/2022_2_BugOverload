@@ -21,9 +21,17 @@ type ErrResponseAuthWrongLoginCombination struct {
 }
 
 type ErrResponseImageNoSuchImage struct {
-	ErrMassage string `json:"error,omitempty" example:"Bytes: [no such image]"`
+	ErrMassage string `json:"error,omitempty" example:"Image: [no such image]"`
 }
 
 type ErrResponseImageDefault struct {
-	ErrMassage string `json:"error,omitempty" example:"Bytes: [{{Reason}}]"`
+	ErrMassage string `json:"error,omitempty" example:"Image: [{{Reason}}]"`
+}
+
+type ErrResponseFilmNoSuchFilm struct {
+	ErrMassage string `json:"error,omitempty" example:"Film: [no such film]"`
+}
+
+type ErrResponsePersonNoSuchPerson struct {
+	ErrMassage string `json:"error,omitempty" example:"Person: [no such person]"`
 }

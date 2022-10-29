@@ -59,7 +59,7 @@ func TestUploadImageHandler(t *testing.T) {
 	is := S3Image.NewImageS3(config)
 
 	imageService := serviceImage.NewImageService(is)
-	getImageHandler := handlers.NewUploadImageHandler(imageService)
+	getImageHandler := handlers.NewPutImageHandler(imageService)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)

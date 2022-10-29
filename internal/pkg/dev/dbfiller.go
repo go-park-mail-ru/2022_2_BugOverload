@@ -2,17 +2,18 @@ package dev
 
 import (
 	"bufio"
+	"database/sql"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/net/context"
 	"log"
 	"os"
 	"strings"
 	"time"
 
-	"database/sql"
+	//   justifying it
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/net/context"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
@@ -21,8 +22,8 @@ type DBSQL struct {
 	Connection *sql.DB
 }
 
-func NewPostgreSQLRepository(URL string) *DBSQL {
-	connection, err := sql.Open("pgx", URL)
+func NewPostgreSQLRepository(url string) *DBSQL {
+	connection, err := sql.Open("pgx", url)
 	if err != nil {
 		log.Fatalln("Can't parse config", err)
 	}
@@ -126,32 +127,28 @@ func (f *DBFiller) Action() {
 	logrus.Info("SUCCESS")
 }
 
+const countAttributesFilms = 6
+
 func (f *DBFiller) UploadFilms() {
-	var (
-		placeholders []string
-		values       []interface{}
-	)
+	var values []interface{}
 
-	for index, value := range f.films {
-		placeholders = append(placeholders, fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d)",
-			index*6+1,
-			index*6+2,
-			index*6+3,
-			index*6+4,
-			index*6+5,
-			index*6+6,
-		))
+	placeholders := CreatePlaceholders(countAttributesFilms, len(f.films))
 
-		values = append(values, value.Name, value.ProdYear, value.PosterVer, value.PosterHor, value.Description, value.ShortDescription)
+	for _, value := range f.films {
+		values = append(values,
+			value.Name,
+			value.ProdYear,
+			value.PosterVer,
+			value.PosterHor,
+			value.Description,
+			value.ShortDescription)
 	}
 
 	query := "INSERT INTO films(name, prod_year, poster_ver, poster_hor, description, short_description) VALUES"
 
-	insertStatement := fmt.Sprintf("%s %s", query, strings.Join(placeholders, ",\n"))
+	insertStatement := fmt.Sprintf("%s %s", query, placeholders)
 
-	logrus.Info(insertStatement)
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout))
 	defer cancelFunc()
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
@@ -171,4 +168,20 @@ func (f *DBFiller) UploadFilms() {
 	}
 
 	logrus.Infof("%d films created", rows)
+}
+
+func CreatePlaceholders(countAttributes int, countValues int) string {
+	values := make([]string, countAttributes*countValues)
+
+	for i := 0; i < countAttributes*countValues; i++ {
+		values[i] = fmt.Sprintf("$%d", i+1)
+	}
+
+	valuesRow := make([]string, countValues)
+
+	for i := 0; i < countValues; i++ {
+		valuesRow[i] = "(" + strings.Join(values[i*countAttributes:countAttributes*(i+1)], ",") + ")"
+	}
+
+	return strings.Join(valuesRow, ",\n")
 }

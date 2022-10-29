@@ -30,8 +30,11 @@ func TestDownloadImageHandler(t *testing.T) {
 		// Not such image
 		tests.TestCase{
 			Method: http.MethodGet,
+			Keys:   []string{"default", "login11"},
+			Values: []string{"object", "key"},
 
-			StatusCode: http.StatusNotFound,
+			ResponseBody: `{"error":"Image: [no such image]"}`,
+			StatusCode:   http.StatusNotFound,
 		},
 		// Content-Type is not for get image
 		tests.TestCase{
@@ -51,7 +54,7 @@ func TestDownloadImageHandler(t *testing.T) {
 	is := S3Image.NewImageS3(config)
 
 	imageService := serviceImage.NewImageService(is)
-	getImageHandler := handlers.NewDownloadImageHandler(imageService)
+	getImageHandler := handlers.NewGetImageHandler(imageService)
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)

@@ -7,21 +7,21 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 // loginHandler is the structure that handles the request for auth.
 type loginHandler struct {
-	userService serviceUser.UserService
+	userService serviceUser.AuthService
 	authService serviceAuth.SessionService
 }
 
 // NewLoginHandler is constructor for loginHandler in this pkg - auth.
-func NewLoginHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
+func NewLoginHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
 	return &loginHandler{
 		us,
 		as,
@@ -32,14 +32,14 @@ func NewLoginHandler(us serviceUser.UserService, as serviceAuth.SessionService) 
 // delivery of the data to the service at the business logic level.
 // @Summary User authentication
 // @Description Sending login and password
-// @tags user
+// @tags auth
 // @Accept json
 // @Produce json
 // @Param user body models.UserLoginRequest true "Request body for login"
 // @Success 200 {object} models.UserLoginResponse "successfully login"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthWrongLoginCombination "wrong combination"
-// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "such user not found"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "no such user"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/login [POST]
@@ -75,7 +75,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, cookie)
 
-	loginResponse := models.NewUserLoginResponse()
+	loginResponse := models.NewUserLoginResponse(&userLogged)
 
-	httpwrapper.Response(w, http.StatusOK, loginResponse.ToPublic(&userLogged))
+	httpwrapper.Response(w, http.StatusOK, loginResponse.ToPublic())
 }

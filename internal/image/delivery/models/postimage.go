@@ -11,17 +11,17 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type UploadImageRequest struct {
+type PostImageRequest struct {
 	Key    string `json:"key" example:"1"`
 	Object string `json:"object" example:"film_poster_hor"`
 	Bytes  []byte `json:"-"`
 }
 
-func NewUploadImageRequest() *UploadImageRequest {
-	return &UploadImageRequest{}
+func NewPostImageRequest() *PostImageRequest {
+	return &PostImageRequest{}
 }
 
-func (i *UploadImageRequest) Bind(r *http.Request) error {
+func (i *PostImageRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") != pkg.ContentTypeJPEG {
 		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
@@ -53,7 +53,7 @@ func (i *UploadImageRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (i *UploadImageRequest) GetImage() *models.Image {
+func (i *PostImageRequest) GetImage() *models.Image {
 	return &models.Image{
 		Object: i.Object,
 		Key:    i.Key,

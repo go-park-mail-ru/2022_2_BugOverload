@@ -6,23 +6,23 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-// authHandler is the structure that handles the request for auth.
-type authHandler struct {
-	userService serviceUser.UserService
+// getSettingsHandler is the structure that handles the request for auth.
+type getSettingsHandler struct {
+	userService serviceUser.AuthService
 	authService serviceAuth.SessionService
 }
 
-// NewAuthHandler is constructor for authHandler in this pkg - auth.
-func NewAuthHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
-	return &authHandler{
+// NewGetSettingsHandler is constructor for getSettingsHandler in this pkg - settings.
+func NewGetSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+	return &getSettingsHandler{
 		us,
 		as,
 	}
@@ -30,21 +30,21 @@ func NewAuthHandler(us serviceUser.UserService, as serviceAuth.SessionService) p
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Defining an authorized user
-// @Description Sending login and password
-// @tags user
+// @Summary Getting user stat and info
+// @Description Sending login and password. Needed auth
+// @tags in_dev
 // @Produce json
-// @Success 200 {object} models.UserAuthResponse "successfully auth"
+// @Success 200 {object} models.GetUserSettingsResponse "successfully getting"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
-// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/auth [GET]
-func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
-	authRequest := models.NewUserAuthRequest()
+// @Router /api/v1/user/settings [GET]
+func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
+	settingsRequest := models.NewGetUserSettingsRequest()
 
-	err := authRequest.Bind(r)
+	err := settingsRequest.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
@@ -60,7 +60,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authResponse := models.NewUserAuthResponse()
+	authResponse := models.NewGetUserSettingsResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic(&user))
+	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic())
 }

@@ -11,12 +11,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	memoryAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	memorySession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -106,12 +106,12 @@ func TestSignupHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/signup"
 
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewSessionCache()
+	us := memoryAuth.NewAuthCache()
+	cs := memorySession.NewSessionCache()
 
-	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewSessionService(cs)
-	signupHandler := handlers.NewSingUpHandler(userService, authService)
+	authService := serviceAuth.NewUserService(us)
+	sessionService := serviceSession.NewSessionService(cs)
+	signupHandler := handlers.NewSingUpHandler(authService, sessionService)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)

@@ -8,8 +8,7 @@ import (
 )
 
 var (
-	ErrFilmNotFound  = stdErrors.New("no such film")
-	ErrFilmsNotFound = stdErrors.New("no such film")
+	ErrFilmNotFound = stdErrors.New("no such film")
 )
 
 type errClassifierFilms struct {
@@ -20,7 +19,6 @@ func NewErrClassifierFilms() errClassifier {
 	res := make(map[error]int)
 
 	res[ErrFilmNotFound] = http.StatusNotFound
-	res[ErrFilmsNotFound] = http.StatusNotFound
 
 	return &errClassifierFilms{
 		table: res,

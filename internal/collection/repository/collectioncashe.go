@@ -56,7 +56,7 @@ func (c *collectionCache) GetInCinema(ctx context.Context) (models.Collection, e
 	defer c.mu.RUnlock()
 
 	if len(c.InCinema.Films) == 0 {
-		return models.Collection{}, errors.ErrFilmsNotFound
+		return models.Collection{}, errors.ErrFilmNotFound
 	}
 
 	return c.InCinema, nil

@@ -27,14 +27,14 @@ type UserAuthResponse struct {
 	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
 }
 
-func NewUserAuthResponse() *UserAuthResponse {
-	return &UserAuthResponse{}
-}
-
-func (u *UserAuthResponse) ToPublic(user *models.User) *UserAuthResponse {
+func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 	return &UserAuthResponse{
 		Email:    user.Email,
 		Nickname: user.Nickname,
 		Avatar:   user.Profile.Avatar,
 	}
+}
+
+func (u *UserAuthResponse) ToPublic() *UserAuthResponse {
+	return u
 }

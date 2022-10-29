@@ -8,21 +8,21 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 // logoutHandler is the structure that handles the request for auth.
 type logoutHandler struct {
-	userService serviceUser.UserService
+	userService serviceUser.AuthService
 	authService serviceAuth.SessionService
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.SessionService) pkg.Handler {
+func NewLogoutHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
 	return &logoutHandler{
 		us,
 		as,
@@ -32,12 +32,12 @@ func NewLogoutHandler(us serviceUser.UserService, as serviceAuth.SessionService)
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary User logout
-// @Description Session delete
-// @tags user
+// @Description Session delete. Needed auth
+// @tags auth
 // @Success 204 "successfully logout"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
-// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "such cookie not found"
+// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/logout [GET]
@@ -69,5 +69,5 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, badCookie)
 
-	httpwrapper.NoContent(w)
+	httpwrapper.NoBody(w, http.StatusNoContent)
 }

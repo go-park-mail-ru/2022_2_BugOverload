@@ -10,7 +10,8 @@ type Volume struct {
 }
 
 type Database struct {
-	URL string `toml:"URL"`
+	URL     string `toml:"URL"`
+	Timeout int    `toml:"timeout"`
 }
 
 type Config struct {

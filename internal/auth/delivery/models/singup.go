@@ -12,17 +12,17 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type UserLoginRequest struct {
+type UserSignupRequest struct {
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"YasaPupkinEzji@top.world"`
 	Password string `json:"password,omitempty" example:"Widget Adapter"`
 }
 
-func NewUserLoginRequest() *UserLoginRequest {
-	return &UserLoginRequest{}
+func NewUserSignupRequest() *UserSignupRequest {
+	return &UserSignupRequest{}
 }
 
-func (u *UserLoginRequest) Bind(r *http.Request) error {
+func (u *UserSignupRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
 		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
@@ -51,14 +51,14 @@ func (u *UserLoginRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
 	}
 
-	if (u.Nickname == "" && u.Email == "") || u.Password == "" {
+	if u.Nickname == "" || u.Email == "" || u.Password == "" {
 		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
 	}
 
 	return nil
 }
 
-func (u *UserLoginRequest) GetUser() *models.User {
+func (u *UserSignupRequest) GetUser() *models.User {
 	return &models.User{
 		Email:    u.Email,
 		Nickname: u.Nickname,
@@ -66,20 +66,20 @@ func (u *UserLoginRequest) GetUser() *models.User {
 	}
 }
 
-type UserLoginResponse struct {
+type UserSignupResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
 	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
 }
 
-func NewUserLoginResponse() *UserLoginResponse {
-	return &UserLoginResponse{}
-}
-
-func (u *UserLoginResponse) ToPublic(user *models.User) *UserLoginResponse {
-	return &UserLoginResponse{
+func NewUserSignUpResponse(user *models.User) *UserSignupResponse {
+	return &UserSignupResponse{
 		Email:    user.Email,
 		Nickname: user.Nickname,
 		Avatar:   user.Profile.Avatar,
 	}
+}
+
+func (u *UserSignupResponse) ToPublic() *UserSignupResponse {
+	return u
 }

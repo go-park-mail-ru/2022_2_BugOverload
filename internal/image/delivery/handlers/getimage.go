@@ -12,14 +12,14 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
-// downloadImageHandler is the structure that handles the request for auth.
-type downloadImageHandler struct {
+// getImageHandler is the structure that handles the request for auth.
+type getImageHandler struct {
 	imageService serviceImage.ImageService
 }
 
-// NewDownloadImageHandler is constructor for downloadImageHandler in this pkg - auth.
-func NewDownloadImageHandler(is serviceImage.ImageService) pkg.Handler {
-	return &downloadImageHandler{
+// NewGetImageHandler is constructor for getImageHandler in this pkg - auth.
+func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
+	return &getImageHandler{
 		is,
 	}
 }
@@ -39,8 +39,8 @@ func NewDownloadImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/image [GET]
-func (h *downloadImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getImageRequest := models.NewDownloadImageRequest()
+func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
+	getImageRequest := models.NewGetImageRequest()
 
 	err := getImageRequest.Bind(r)
 	if err != nil {
