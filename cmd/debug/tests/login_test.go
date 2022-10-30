@@ -50,7 +50,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
 			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrLoginCombinationNotFound)),
-			StatusCode:   http.StatusUnauthorized,
+			StatusCode:   http.StatusForbidden,
 		},
 		// Broken JSON
 		tests.TestCase{
