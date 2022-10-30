@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -38,6 +37,7 @@ func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // @Success 204 "successfully changes"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
+// @Failure 403 {object} httpmodels.ErrResponseAuthWrongLoginCombination "wrong pass"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
@@ -45,15 +45,11 @@ func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	settingsRequest := models.NewPutUserSettingsRequest()
 
-	err := settingsRequest.Bind(r)
+	ctx, err := settingsRequest.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
-
-	cookie := r.Cookies()[0]
-
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
 	_, err = h.authService.GetUserBySession(ctx)
 	if err != nil {

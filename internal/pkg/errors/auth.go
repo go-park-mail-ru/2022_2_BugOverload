@@ -31,7 +31,7 @@ func NewErrClassifierAuth() errClassifier {
 	res[ErrUserNotExist] = http.StatusNotFound
 	res[ErrSignupUserExist] = http.StatusBadRequest
 
-	res[ErrLoginCombinationNotFound] = http.StatusUnauthorized
+	res[ErrLoginCombinationNotFound] = http.StatusForbidden
 	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrSessionNotExist] = http.StatusNotFound
 

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -20,22 +21,22 @@ func NewPutUserSettingsRequest() *UserPutSettingsRequest {
 	return &UserPutSettingsRequest{}
 }
 
-func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
+func (u *UserPutSettingsRequest) Bind(r *http.Request) (context.Context, error) {
 	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
+		return nil, errors.NewErrAuth(errors.ErrNoCookie)
 	}
 
 	if r.Header.Get("Content-Type") == "" {
-		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
+		return nil, errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}
 
 	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return nil, errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer func() {
 		err = r.Body.Close()
@@ -45,13 +46,17 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 	}()
 
 	if len(body) == 0 {
-		return errors.NewErrValidation(errors.ErrEmptyBody)
+		return nil, errors.NewErrValidation(errors.ErrEmptyBody)
 	}
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
+		return nil, errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
 	}
 
-	return nil
+	cookie := r.Cookies()[0]
+
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
+
+	return ctx, nil
 }
