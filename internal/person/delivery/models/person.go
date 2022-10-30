@@ -5,7 +5,7 @@ import (
 )
 
 type PersonResponse struct {
-	ID           uint     `json:"id,omitempty" example:"4526"`
+	ID           int      `json:"id,omitempty" example:"4526"`
 	Name         string   `json:"name,omitempty" example:"Шон Коннери"`
 	OriginalName string   `json:"original_name,omitempty" example:"Sean Connery"`
 	Birthday     string   `json:"birthday,omitempty" example:"1930-08-25"`

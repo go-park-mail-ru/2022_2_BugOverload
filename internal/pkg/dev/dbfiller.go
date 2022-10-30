@@ -4,16 +4,12 @@ import (
 	"bufio"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
-	"strings"
-	"time"
 
-	//   justifying it
+	// justifying it
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/net/context"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
@@ -121,67 +117,13 @@ func (f *DBFiller) fillStorages(path string) {
 	f.fillStorage(persons, &f.persons)
 }
 
-func (f *DBFiller) Action() {
-	f.UploadFilms()
-
-	logrus.Info("SUCCESS")
-}
-
-const countAttributesFilms = 6
-
-func (f *DBFiller) UploadFilms() {
-	var values []interface{}
-
-	placeholders := CreatePlaceholders(countAttributesFilms, len(f.films))
-
-	for _, value := range f.films {
-		values = append(values,
-			value.Name,
-			value.ProdYear,
-			value.PosterVer,
-			value.PosterHor,
-			value.Description,
-			value.ShortDescription)
-	}
-
-	query := "INSERT INTO films(name, prod_year, poster_ver, poster_hor, description, short_description) VALUES"
-
-	insertStatement := fmt.Sprintf("%s %s", query, placeholders)
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout))
-	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+func (f *DBFiller) Action() error {
+	count, err := f.UploadFilms()
 	if err != nil {
-		logrus.Fatalf("Error %s when preparing SQL statement", err)
-	}
-	defer stmt.Close()
-
-	res, err := stmt.ExecContext(ctx, values...)
-	if err != nil {
-		logrus.Fatalf("Error %s when inserting row into films table", err)
+		return err
 	}
 
-	rows, err := res.RowsAffected()
-	if err != nil {
-		logrus.Fatalf("Error %s when finding rows affected", err)
-	}
+	logrus.Infof("%d films created", count)
 
-	logrus.Infof("%d films created", rows)
-}
-
-func CreatePlaceholders(countAttributes int, countValues int) string {
-	values := make([]string, countAttributes*countValues)
-
-	for i := 0; i < countAttributes*countValues; i++ {
-		values[i] = fmt.Sprintf("$%d", i+1)
-	}
-
-	valuesRow := make([]string, countValues)
-
-	for i := 0; i < countValues; i++ {
-		valuesRow[i] = "(" + strings.Join(values[i*countAttributes:countAttributes*(i+1)], ",") + ")"
-	}
-
-	return strings.Join(valuesRow, ",\n")
+	return nil
 }

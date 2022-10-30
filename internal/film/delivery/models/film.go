@@ -5,18 +5,18 @@ import (
 )
 
 type FilmActorResponse struct {
-	ID     uint   `json:"id,omitempty" example:"2132"`
+	ID     int    `json:"id,omitempty" example:"2132"`
 	Name   string `json:"name,omitempty" example:"Питер Динклэйдж"`
 	Avatar int    `json:"avatar,omitempty" example:"2132"`
 }
 
 type FilmPersonResponse struct {
-	ID   uint   `json:"id,omitempty" example:"123123"`
+	ID   int    `json:"id,omitempty" example:"123123"`
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
 type FilmResponse struct {
-	ID           uint   `json:"id,omitempty" example:"23"`
+	ID           int    `json:"id,omitempty" example:"23"`
 	Name         string `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName string `json:"original_name,omitempty" example:"Game of Thrones"`
 	ProdYear     int    `json:"prod_year,omitempty" example:"2011"`

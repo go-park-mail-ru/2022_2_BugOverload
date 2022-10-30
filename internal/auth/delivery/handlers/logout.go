@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"time"
@@ -44,15 +43,11 @@ func NewLogoutHandler(us serviceUser.AuthService, as serviceAuth.SessionService)
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var logoutRequest models.UserLogoutRequest
 
-	err := logoutRequest.Bind(r)
+	ctx, err := logoutRequest.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
-
-	cookie := r.Cookies()[0]
-
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
 	badSession, err := h.authService.DeleteSession(ctx)
 	if err != nil {

@@ -1,18 +1,18 @@
 package models
 
 type FilmActor struct {
-	ID     uint   `json:"id,omitempty"`
+	ID     int    `json:"id,omitempty"`
 	Name   string `json:"name,omitempty"`
 	Avatar int    `json:"avatar,omitempty"`
 }
 
 type FilmPerson struct {
-	ID   uint   `json:"id,omitempty"`
+	ID   int    `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
 type Film struct {
-	ID               uint   `json:"id,omitempty"`
+	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name,omitempty"`
 	OriginalName     string `json:"original_name,omitempty"`
 	ProdYear         int    `json:"prod_year,omitempty"`
@@ -47,4 +47,6 @@ type Film struct {
 	Operators     []FilmPerson `json:"operators,omitempty"`
 	Montage       []FilmPerson `json:"montage,omitempty"`
 	Composers     []FilmPerson `json:"composers,omitempty"`
+
+	Reviews []Review
 }

@@ -31,7 +31,7 @@ func NewGetSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user stat and info
-// @Description Sending login and password. Needed auth
+// @Description Getting user info and info for changes. Needed auth
 // @tags in_dev
 // @Produce json
 // @Success 200 {object} models.GetUserSettingsResponse "successfully getting"
@@ -60,7 +60,7 @@ func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authResponse := models.NewGetUserSettingsResponse(&user)
+	settingsResponse := models.NewGetUserSettingsResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, settingsResponse.ToPublic())
 }

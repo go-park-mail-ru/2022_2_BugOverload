@@ -1,7 +1,7 @@
 package models
 
 type Collection struct {
-	ID          uint    `json:"id,omitempty"`
+	ID          int     `json:"id,omitempty"`
 	Name        string  `json:"name,omitempty"`
 	Description string  `json:"description,omitempty"`
 	Poster      string  `json:"poster,omitempty"`

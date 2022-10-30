@@ -5,7 +5,7 @@ import (
 )
 
 type filmInCollectionResponse struct {
-	ID        uint     `json:"id,omitempty" example:"23"`
+	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
 	ProdYear  int      `json:"prod_year,omitempty" example:"2014"`
 	EndYear   int      `json:"end_year,omitempty" example:"2013"`

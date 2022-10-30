@@ -1,7 +1,7 @@
 [database]
 URL = "user=mguser dbname=mgdb password=mgpass host=localhost port=5432 sslmode=disable"
-#milliseconds
-timeoyt = 500
+#seconds
+timeout = 1
 
 [volume]
 count_users = 5

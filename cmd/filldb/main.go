@@ -25,7 +25,10 @@ func main() {
 
 	filler := dev.NewDBFiller(dataPath, config)
 
-	filler.Action()
+	err = filler.Action()
+	if err != nil {
+		logrus.Fatalf("FAILED [%s]", err)
+	}
 
-	logrus.Info("Filling and generate success end")
+	logrus.Info("SUCCESS")
 }

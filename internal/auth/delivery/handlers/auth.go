@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -44,15 +43,11 @@ func NewAuthHandler(us serviceUser.AuthService, as serviceAuth.SessionService) p
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	authRequest := models.NewUserAuthRequest()
 
-	err := authRequest.Bind(r)
+	ctx, err := authRequest.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
-
-	cookie := r.Cookies()[0]
-
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
 	user, err := h.authService.GetUserBySession(ctx)
 	if err != nil {

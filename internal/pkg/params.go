@@ -32,6 +32,9 @@ const (
 	ImageObjectFilmPosterVer = "film_poster_ver"
 	ImageObjectDefault       = "default"
 	ImageObjectAvatar        = "user_avatar"
+
+	// GetReviewsRequest
+	GetReviewsRequestParams = "GetReviewsRequestParams"
 )
 
 type ContextType string

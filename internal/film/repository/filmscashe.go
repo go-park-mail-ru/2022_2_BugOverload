@@ -52,11 +52,11 @@ func (fs *filmsCache) FillRepo(path string) {
 }
 
 // CheckExist is a check for the existence of such a film by Key.
-func (fs *filmsCache) CheckExist(filmID uint) bool {
+func (fs *filmsCache) CheckExist(filmID int) bool {
 	fs.mu.RLock()
 	defer fs.mu.RUnlock()
 
-	return filmID <= uint(fs.GetStorageCapacity())
+	return filmID <= fs.GetStorageCapacity()
 }
 
 func (fs *filmsCache) AddFilm(f models.Film) {

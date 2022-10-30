@@ -5,7 +5,7 @@ import (
 )
 
 type RecommendFilmResponse struct {
-	ID               uint   `json:"id,omitempty" example:"23"`
+	ID               int    `json:"id,omitempty" example:"23"`
 	Name             string `json:"name,omitempty" example:"Терминатор"`
 	ShortDescription string `json:"short_description,omitempty" example:"Идет борьба сопротивления людей против машин"`
 	ProdYear         int    `json:"prod_year,omitempty" example:"2008"`

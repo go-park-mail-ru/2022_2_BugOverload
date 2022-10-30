@@ -31,7 +31,8 @@ VALUES ('аниме'),
        ('концерт'),
        ('новости'),
        ('сериал'),
-       ('реальное ТВ');
+       ('реальное ТВ')
+returning genre_id;
 
 INSERT INTO countries (name)
 VALUES ('Австралия'),

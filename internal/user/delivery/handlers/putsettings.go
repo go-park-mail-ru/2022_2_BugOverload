@@ -31,9 +31,10 @@ func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Change user auth data
-// @Description Sending login and password. Needed auth
+// @Description Request for change user settings and data. Needed auth
 // @tags in_dev
 // @Produce json
+// @Param user body models.UserPutSettingsRequest true "Request body for change user data"
 // @Success 204 "successfully changes"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
@@ -54,13 +55,11 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
 
-	user, err := h.authService.GetUserBySession(ctx)
+	_, err = h.authService.GetUserBySession(ctx)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
-
-	user.Profile.CountViewsFilms = 0
 
 	httpwrapper.NoBody(w, http.StatusNoContent)
 }

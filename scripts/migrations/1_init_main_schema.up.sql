@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS profiles
 (
     "profile_id"        serial  NOT NULL PRIMARY KEY REFERENCES users (user_id) ON DELETE CASCADE,
-    "avatar"            varchar(80)      DEFAULT NULL,
+    "avatar"            varchar(32)      DEFAULT NULL,
     "joined_date"       date    NOT NULL DEFAULT NOW(),
     "count_views_films" integer NOT NULL DEFAULT 0,
     "count_collections" integer NOT NULL DEFAULT 0,
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS films
     "age_limit"              integer       NOT NULL DEFAULT 13,
     "box_office"             integer                DEFAULT 0,
     "duration"               integer       NOT NULL DEFAULT 90,
-    "poster_hor"             varchar(80)            DEFAULT NULL,
-    "poster_ver"             varchar(80)            DEFAULT NULL,
+    "poster_hor"             varchar(32)            DEFAULT NULL,
+    "poster_ver"             varchar(32)            DEFAULT NULL,
     "end_year"               integer                DEFAULT NULL,
     "count_seasons"          integer                DEFAULT NULL,
     "rating"                 numeric(3, 1) NOT NULL DEFAULT 0,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS genres
 CREATE TABLE IF NOT EXISTS countries
 (
     "country_id" serial      NOT NULL PRIMARY KEY,
-    "name"       varchar(80) NOT NULL
+    "name"       varchar(64) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS companies
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS persons
     "growth"      numeric(3, 2) NOT NULL,
     "avatar"      varchar(80)            DEFAULT NULL,
     "death"       date          NOT NULL,
-    "gender"      varchar(32)            DEFAULT NULL,
+    "gender"      varchar(16)            DEFAULT NULL,
     "count_films" integer       NOT NULL DEFAULT 1
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS collections
     "collection_id" serial       NOT NULL PRIMARY KEY,
     "name"          varchar(128) NOT NULL,
     "description"   TEXT         NOT NULL,
-    "poster"        varchar(80)           DEFAULT NULL,
+    "poster"        varchar(32)           DEFAULT NULL,
     "is_public"     boolean      NOT NULL,
     "create_time"   timestamp    NOT NULL DEFAULT NOW(),
     "count_likes"   integer      NOT NULL DEFAULT 0,
@@ -94,12 +94,12 @@ CREATE TABLE IF NOT EXISTS collections
 
 CREATE TABLE IF NOT EXISTS reviews
 (
-    "review_id"   serial        NOT NULL PRIMARY KEY,
-    "name"        VARCHAR(80)   NOT NULL,
-    "score"       NUMERIC(3, 1) NOT NULL,
-    "description" TEXT          NOT NULL,
-    "count_likes" integer       NOT NULL DEFAULT 0,
-    "create_time" TIMESTAMP     NOT NULL DEFAULT NOW()
+    "review_id"   serial      NOT NULL PRIMARY KEY,
+    "name"        VARCHAR(64) NOT NULL,
+    "type"        VARCHAR(16) NOT NULL,
+    "body"        TEXT        NOT NULL,
+    "count_likes" integer     NOT NULL DEFAULT 0,
+    "create_time" TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
 
