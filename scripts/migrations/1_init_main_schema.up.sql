@@ -47,19 +47,25 @@ CREATE TABLE IF NOT EXISTS films
 CREATE TABLE IF NOT EXISTS genres
 (
     "genre_id" serial      NOT NULL PRIMARY KEY,
-    "name"     varchar(64) NOT NULL
+    "name"     varchar(64) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS countries
 (
     "country_id" serial      NOT NULL PRIMARY KEY,
-    "name"       varchar(64) NOT NULL
+    "name"       varchar(64) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS companies
 (
     "company_id" serial      NOT NULL PRIMARY KEY,
-    "name"       varchar(64) NOT NULL
+    "name"       varchar(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS tags
+(
+    "tag_id" serial      NOT NULL PRIMARY KEY,
+    "name"   varchar(64) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS persons
@@ -123,6 +129,13 @@ CREATE TABLE IF NOT EXISTS film_genres
     "fk_genre_id" integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
     "weight"      integer NOT NULL,
     PRIMARY KEY (fk_film_id, fk_genre_id)
+);
+
+CREATE TABLE IF NOT EXISTS film_tags
+(
+    "fk_film_id" integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "fk_tag_id"  integer NOT NULL REFERENCES tags (tag_id) ON DELETE CASCADE,
+    PRIMARY KEY (fk_film_id, fk_tag_id)
 );
 
 CREATE TABLE IF NOT EXISTS film_countries

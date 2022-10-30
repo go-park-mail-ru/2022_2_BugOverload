@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS film_countries;
 
 DROP TABLE IF EXISTS film_companies;
 
+DROP TABLE IF EXISTS film_tags;
+
 DROP TABLE IF EXISTS film_persons;
 
 DROP TABLE IF EXISTS profile_ratings;
@@ -42,6 +44,8 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS films;
 
 DROP TABLE IF EXISTS genres;
+
+DROP TABLE IF EXISTS tags;
 
 DROP TABLE IF EXISTS countries;
 
