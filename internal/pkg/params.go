@@ -27,17 +27,19 @@ const (
 	UploadImageRequest    = "UploadImageRequest"
 	ChangeImageRequest    = "ChangeImageRequest"
 
-	// S3 params request
+	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
 	ImageObjectFilmPosterVer = "film_poster_ver"
 	ImageObjectDefault       = "default"
 	ImageObjectAvatar        = "user_avatar"
 
-	// GetReviewsRequest
-	GetReviewsRequestParams = "GetReviewsRequestParams"
+	// GetReviewsParams
+	GetReviewsParams = "GetReviewsRequestParams"
 )
 
 type ContextType string
 
 var SessionKey ContextType = "cookie"
 var LoggerKey ContextType = "logger"
+
+var GetReviewsParamsKey ContextType = GetReviewsParams

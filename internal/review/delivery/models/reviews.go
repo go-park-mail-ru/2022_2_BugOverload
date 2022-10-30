@@ -2,12 +2,14 @@ package models
 
 import (
 	"context"
+	"net/http"
+	"strconv"
+
 	"github.com/gorilla/mux"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"net/http"
-	"strconv"
 )
 
 type GetReviewsParams struct {
@@ -48,7 +50,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 }
 
 func (rr *ReviewsRequest) GetParams(ctx context.Context) (*models.Film, context.Context) {
-	ctx = context.WithValue(ctx, innerPKG.GetReviewsRequestParams, rr.Params)
+	ctx = context.WithValue(ctx, innerPKG.GetReviewsParamsKey, rr.Params)
 
 	filmParams := &models.Film{
 		ID: rr.FilmID,
