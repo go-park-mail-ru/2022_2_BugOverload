@@ -26,10 +26,11 @@ CREATE TABLE IF NOT EXISTS films
     "type"                   varchar(64)            DEFAULT NULL,
     "original_name"          varchar(80)            DEFAULT NULL,
     "slogan"                 varchar(80)            DEFAULT NULL,
+    "budget"                 int                    DEFAULT NULL,
     "description"            TEXT          NOT NULL,
     "short_description"      varchar(180)  NOT NULL,
     "age_limit"              integer       NOT NULL DEFAULT 13,
-    "box_office"             integer                DEFAULT 0,
+    "box_office"             integer                DEFAULT NULL,
     "duration"               integer       NOT NULL DEFAULT 90,
     "poster_hor"             varchar(32)            DEFAULT NULL,
     "poster_ver"             varchar(32)            DEFAULT NULL,
@@ -156,11 +157,11 @@ CREATE TABLE IF NOT EXISTS film_companies
 
 CREATE TABLE IF NOT EXISTS film_persons
 (
-    "fk_person_id"     integer     NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
-    "fk_film_id"       integer     NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    "fk_profession_id" integer     NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
-    "character"        varchar(80) NOT NULL,
-    "weight"           integer     NOT NULL,
+    "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
+    "fk_film_id"       integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "fk_profession_id" integer NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
+    "character"        varchar(64) DEFAULT NULL,
+    "weight"           integer NOT NULL,
     PRIMARY KEY (fk_person_id, fk_film_id, fk_profession_id)
 );
 

@@ -21,6 +21,7 @@ type Film struct {
 	Description      string `json:"description,omitempty"`
 	AgeLimit         int    `json:"age_limit,omitempty"`
 	BoxOffice        int    `json:"box_office,omitempty"`
+	Budget           int    `json:"budget,omitempty"`
 	Duration         int    `json:"duration,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`

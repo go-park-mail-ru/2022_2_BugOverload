@@ -23,6 +23,7 @@ type FilmResponse struct {
 	Slogan       string `json:"slogan,omitempty" example:"Победа или смерть"`
 	Description  string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
 	AgeLimit     int    `json:"age_limit,omitempty" example:"18"`
+	Budget       int    `json:"budget,omitempty" example:"18323222"`
 	BoxOffice    int    `json:"box_office,omitempty" example:"60000000"`
 	Duration     int    `json:"duration,omitempty" example:"55"`
 	PosterVer    string `json:"poster_ver,omitempty" example:"23"`
@@ -80,6 +81,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		Description:  film.Description,
 		AgeLimit:     film.AgeLimit,
 		BoxOffice:    film.BoxOffice,
+		Budget:       film.Budget,
 		Duration:     film.Duration,
 		PosterVer:    film.PosterVer,
 
