@@ -71,7 +71,8 @@ VALUES ('Австралия'),
        ('Швеция'),
        ('Япония'),
        ('Мексика'),
-       ('Тайвань');
+       ('Тайвань'),
+       ('Тунис');
 
 INSERT INTO professions (name)
 VALUES ('актер'),
@@ -109,7 +110,7 @@ VALUES ('20th Century Fox'),
        ('HBO'),
        ('Illumination Entertainment'),
        ('Lakeshore Entertainment'),
-       ('DLegendary Pictures'),
+       ('Legendary Pictures'),
        ('Lionsgate'),
        ('Lucasfilm'),
        ('Marvel Studios'),
@@ -149,7 +150,8 @@ VALUES ('20th Century Fox'),
        ('Союзмультфильм'),
        ('Централ Партнершип'),
        ('Infinity Films'),
-       ('Natrix Natrix');
+       ('Natrix Natrix'),
+       ('Eurimages');
 
 -- Азербайджан
 -- Албания
@@ -329,7 +331,6 @@ VALUES ('20th Century Fox'),
 -- Тонга
 -- Тринидад и Тобаго
 -- Тувалу
--- Тунис
 -- Туркменистан
 -- Турция
 -- Уганда

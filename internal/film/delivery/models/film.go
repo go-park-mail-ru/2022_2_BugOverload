@@ -24,10 +24,12 @@ type FilmResponse struct {
 	Slogan       string `json:"slogan,omitempty" example:"Победа или смерть"`
 	Description  string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
 	AgeLimit     int    `json:"age_limit,omitempty" example:"18"`
-	Budget       int    `json:"budget,omitempty" example:"18323222"`
-	BoxOffice    int    `json:"box_office,omitempty" example:"60000000"`
 	Duration     int    `json:"duration,omitempty" example:"55"`
 	PosterVer    string `json:"poster_ver,omitempty" example:"23"`
+
+	Budget         int    `json:"budget,omitempty" example:"18323222"`
+	BoxOffice      int    `json:"box_office,omitempty" example:"60000000"`
+	CurrencyBudget string `json:"currency_budget,omitempty"  example:"USD"`
 
 	CountSeasons int    `json:"count_seasons,omitempty" example:"8"`
 	EndYear      int    `json:"end_year,omitempty" example:"2019"`
@@ -75,17 +77,18 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	return &FilmResponse{
-		ID:           film.ID,
-		Name:         film.Name,
-		OriginalName: film.OriginalName,
-		ProdYear:     film.ProdYear,
-		Slogan:       film.Slogan,
-		Description:  film.Description,
-		AgeLimit:     film.AgeLimit,
-		BoxOffice:    film.BoxOffice,
-		Budget:       film.Budget,
-		Duration:     film.Duration,
-		PosterVer:    film.PosterVer,
+		ID:             film.ID,
+		Name:           film.Name,
+		OriginalName:   film.OriginalName,
+		ProdYear:       film.ProdYear,
+		Slogan:         film.Slogan,
+		Description:    film.Description,
+		AgeLimit:       film.AgeLimit,
+		BoxOffice:      film.BoxOffice,
+		Budget:         film.Budget,
+		CurrencyBudget: film.CurrencyBudget,
+		Duration:       film.Duration,
+		PosterVer:      film.PosterVer,
 
 		CountSeasons: film.CountSeasons,
 		EndYear:      film.EndYear,
