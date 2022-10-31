@@ -70,22 +70,47 @@ func (f *DBFiller) UploadReviews() (int, error) {
 }
 
 func (f *DBFiller) LinkReviewsLikes() (int, error) {
-	countInserts := len(f.faceReviews)
+	countInserts := f.Config.Volume.CountReviewsLikes
 
 	insertStatement, countAttributes := GetBatchInsertReviewsLikes(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	for idx, value := range f.faceReviews {
-		posAttr := 0
-		posValue := idx * countAttributes
+	offset := 0
+	posValue := 0
 
-		values[posValue+posAttr] = value.ID
-		posAttr++
-		values[posValue+posAttr] = f.faceUsers[pkg.Rand(len(f.faceUsers))].ID
+	for i := 0; i < countInserts; {
+		posValue += offset
+		offset = 0
+
+		for _, value := range f.faceReviews {
+			countBatchLikes := pkg.Rand(f.Config.Volume.MaxLikesOnReview)
+			if (countInserts - i) < countBatchLikes {
+				countBatchLikes = countInserts - i
+			}
+
+			if countBatchLikes == 0 {
+				break
+			}
+
+			sequence := pkg.CryptoRandSequence(len(f.faceUsers)+1, 1)
+
+			logrus.Info(countBatchLikes, sequence, len(sequence))
+
+			for j := 0; j < countBatchLikes; j++ {
+				values[posValue+offset] = value.ID
+				offset++
+				values[posValue+offset] = sequence[j]
+				offset++
+			}
+
+			i += countBatchLikes
+		}
 	}
 
 	target := "reviews likes"
+
+	logrus.Info(insertStatement, "\n\n", values)
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()

@@ -41,3 +41,46 @@ func CryptoRandString(n int) (string, error) {
 	b, err := GenerateRandomBytes(n)
 	return base64.URLEncoding.EncodeToString(b), err
 }
+
+func CryptoRandInInterval(max int, min int) int {
+	if max == 0 {
+		return 0
+	}
+
+	if min == 0 {
+		return Rand(max)
+	}
+
+	return Rand(max-min) + min
+}
+
+func CryptoRandSequence(max int, min int) []int {
+	length := max - min
+
+	res := make([]int, length)
+
+	inserted := make(map[int]bool)
+
+	for i := 0; ; {
+		try := CryptoRandInInterval(max, min)
+
+		_, ok := inserted[try]
+		if !ok {
+			inserted[try] = true
+			res[i] = try
+			i++
+
+			if try == max {
+				max--
+			}
+
+			if try == min {
+				min++
+			}
+		}
+
+		if i == length {
+			return res
+		}
+	}
+}

@@ -1,13 +1,14 @@
 package fillerdb
 
 type Volume struct {
-	CountUser               int  `toml:"count_users"`
-	CountProfileViews       int  `toml:"count_views"`
-	CountProfileRatings     int  `toml:"count_ratings"`
-	CountProfileCollections int  `toml:"count_collections"`
-	CountReviews            int  `toml:"count_reviews"`
-	MaxLengthReviewsBody    uint `toml:"max_length_review_body"`
-	CountReviewsLikes       int  `toml:"count_reviews_likes"`
+	CountUser            int  `toml:"count_users"`
+	CountViews           int  `toml:"count_views"`
+	CountRatings         int  `toml:"count_ratings"`
+	CountCollections     int  `toml:"count_collections"`
+	CountReviews         int  `toml:"count_reviews"`
+	MaxLengthReviewsBody uint `toml:"max_length_review_body"`
+	MaxLikesOnReview     int  `toml:"max_likes_on_review"`
+	CountReviewsLikes    int  `toml:"count_reviews_likes"`
 }
 
 type Database struct {
