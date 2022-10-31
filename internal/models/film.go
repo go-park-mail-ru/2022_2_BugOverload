@@ -1,9 +1,10 @@
 package models
 
 type FilmActor struct {
-	ID     int    `json:"id,omitempty"`
-	Name   string `json:"name,omitempty"`
-	Avatar int    `json:"avatar,omitempty"`
+	ID        int    `json:"id,omitempty"`
+	Name      string `json:"name,omitempty"`
+	Avatar    string `json:"avatar,omitempty"`
+	Character string `json:"character,omitempty"`
 }
 
 type FilmPerson struct {

@@ -5,9 +5,10 @@ import (
 )
 
 type FilmActorResponse struct {
-	ID     int    `json:"id,omitempty" example:"2132"`
-	Name   string `json:"name,omitempty" example:"Питер Динклэйдж"`
-	Avatar int    `json:"avatar,omitempty" example:"2132"`
+	ID        int    `json:"id,omitempty" example:"2132"`
+	Name      string `json:"name,omitempty" example:"Питер Динклэйдж"`
+	Avatar    string `json:"avatar,omitempty" example:"2132"`
+	Character string `json:"character,omitempty" example:"Тирион Ланистер"`
 }
 
 type FilmPersonResponse struct {
@@ -59,6 +60,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		actors[idx].ID = val.ID
 		actors[idx].Name = val.Name
 		actors[idx].Avatar = val.Avatar
+		actors[idx].Character = val.Character
 	}
 
 	fillPersons := func(someStruct []models.FilmPerson) []FilmPersonResponse {
