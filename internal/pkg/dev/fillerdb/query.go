@@ -100,3 +100,15 @@ func GetBatchInsertPersonProfessions(countInserts int) (string, int) {
 
 	return insertStatement, countAttributes
 }
+
+func GetBatchInsertFilmReviews(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO profile_reviews(fk_review_id, fk_profile_id, fk_film_id) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}

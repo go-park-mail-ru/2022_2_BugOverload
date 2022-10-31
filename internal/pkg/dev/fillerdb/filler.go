@@ -191,5 +191,11 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d face reviews likes link end", count)
 
+	count, err = f.LinkFilmsReviews()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d film reviews link end", count)
+
 	return nil
 }

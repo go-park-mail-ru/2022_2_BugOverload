@@ -11,4 +11,5 @@ count_collections = 30
 count_reviews = 30
 max_length_review_body = 150
 max_likes_on_review = 6
+max_reviews_on_film = 8
 count_reviews_likes = 25

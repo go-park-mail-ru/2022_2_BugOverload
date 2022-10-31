@@ -76,36 +76,25 @@ func (f *DBFiller) LinkReviewsLikes() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
+	i := 0
 
-	for i := 0; i < countInserts; {
-		posValue += offset
-		offset = 0
-
-		for _, value := range f.faceReviews {
-			countBatchLikes := pkg.Rand(f.Config.Volume.MaxLikesOnReview)
-			if (countInserts - i) < countBatchLikes {
-				countBatchLikes = countInserts - i
-			}
-
-			if countBatchLikes == 0 {
-				break
-			}
-
-			sequence := pkg.CryptoRandSequence(len(f.faceUsers)+1, 1)
-
-			logrus.Info(countBatchLikes, sequence, len(sequence))
-
-			for j := 0; j < countBatchLikes; j++ {
-				values[posValue+offset] = value.ID
-				offset++
-				values[posValue+offset] = sequence[j]
-				offset++
-			}
-
-			i += countBatchLikes
+	for _, value := range f.faceReviews {
+		count := pkg.Rand(f.Config.Volume.MaxLikesOnReview)
+		if (countInserts - i) < count {
+			count = countInserts - i
 		}
+
+		sequence := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
+
+		for j := 0; j < count; j++ {
+			values[pos] = value.ID
+			pos++
+			values[pos] = sequence[j]
+			pos++
+		}
+
+		i += count
 	}
 
 	target := "reviews likes"

@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
 
 	"github.com/pkg/errors"
@@ -88,6 +89,66 @@ func (f *DBFiller) UploadFilms() (int, error) {
 		f.films[counter].ID = int(insertID)
 		counter++
 	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) LinkFilmsReviews() (int, error) {
+	countInserts := len(f.faceReviews)
+
+	insertStatement, countAttributes := GetBatchInsertFilmReviews(countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+	i := 0
+
+	sequenceReviews := pkg.CryptoRandSequence(f.faceReviews[len(f.faceReviews)-1].ID+1, f.faceReviews[0].ID)
+
+	for _, value := range f.films {
+		countBatch := pkg.Rand(f.Config.Volume.MaxReviewsOnFilm)
+		if (countInserts - i) < countBatch {
+			countBatch = countInserts - i
+		}
+
+		sequenceUsers := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
+
+		for j := 0; j < countBatch; j++ {
+			values[pos] = sequenceReviews[i:][j]
+			pos++
+			values[pos] = sequenceUsers[j]
+			pos++
+			values[pos] = value.ID
+			pos++
+		}
+
+		i += countBatch
+	}
+
+	target := "film reviews"
+
+	logrus.Info(insertStatement, "\n\n", values)
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
 
 	return countInserts, nil
 }

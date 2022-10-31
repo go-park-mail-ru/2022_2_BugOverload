@@ -8,6 +8,7 @@ type Volume struct {
 	CountReviews         int  `toml:"count_reviews"`
 	MaxLengthReviewsBody uint `toml:"max_length_review_body"`
 	MaxLikesOnReview     int  `toml:"max_likes_on_review"`
+	MaxReviewsOnFilm     int  `toml:"max_reviews_on_film"`
 	CountReviewsLikes    int  `toml:"count_reviews_likes"`
 }
 
