@@ -1,4 +1,4 @@
-package factories
+package factory
 
 import (
 	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"

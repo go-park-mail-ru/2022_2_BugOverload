@@ -1,4 +1,4 @@
-package dev
+package fillerdb
 
 import (
 	"bufio"
@@ -11,7 +11,10 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/sirupsen/logrus"
 
+	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
 )
 
 type DBSQL struct {
@@ -37,13 +40,21 @@ type DBFiller struct {
 
 	DB *DBSQL
 
-	films   []models.Film
-	persons []models.Person
+	films    []models.Film
+	filmsSQL []modelsFilmRepo.FilmSQL
+
+	persons    []models.Person
+	personsSQL []modelsPersonRepo.PersonSQL
 
 	genres      map[string]int
 	countries   map[string]int
 	companies   map[string]int
 	professions map[string]int
+
+	generator *generatordatadb.DBGenerator
+
+	faceUsers   []generatordatadb.UserFace
+	faceReviews []generatordatadb.ReviewFace
 }
 
 func NewDBFiller(path string, config *Config) *DBFiller {
@@ -53,12 +64,16 @@ func NewDBFiller(path string, config *Config) *DBFiller {
 		countries:   make(map[string]int),
 		companies:   make(map[string]int),
 		professions: make(map[string]int),
+
+		generator: generatordatadb.NewDBGenerator(),
 	}
 
 	res.DB = NewPostgreSQLRepository(res.Config.Database.URL)
 
 	res.fillGuides(path)
 	res.fillStorages(path)
+
+	res.convertStructs()
 
 	return res
 }
@@ -117,13 +132,52 @@ func (f *DBFiller) fillStorages(path string) {
 	f.fillStorage(persons, &f.persons)
 }
 
+func (f *DBFiller) convertStructs() {
+	f.filmsSQL = make([]modelsFilmRepo.FilmSQL, len(f.films))
+
+	for idx, value := range f.films {
+		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQL(value)
+	}
+
+	f.personsSQL = make([]modelsPersonRepo.PersonSQL, len(f.persons))
+
+	for idx, value := range f.persons {
+		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQL(value)
+	}
+}
+
 func (f *DBFiller) Action() error {
 	count, err := f.UploadFilms()
 	if err != nil {
 		return err
 	}
+	logrus.Infof("%d films upload", count)
 
-	logrus.Infof("%d films created", count)
+	count, err = f.UploadPersons()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d persons upload", count)
+
+	f.faceUsers = f.generator.GenerateUsers(f.Config.Volume.CountUser)
+	count, err = f.UploadUsers()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face users upload", count)
+
+	count, err = f.LinkUsersProfiles()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face users profiles link end", count)
+
+	f.faceReviews = f.generator.GenerateReviews(f.Config.Volume.CountReviews, f.Config.Volume.MaxLengthReviewsBody)
+	count, err = f.UploadReviews()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face reviews upload", count)
 
 	return nil
 }

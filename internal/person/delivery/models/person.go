@@ -30,6 +30,7 @@ func NewPersonResponse(person *models.Person) *PersonResponse {
 		CountFilms:  person.CountFilms,
 		Professions: person.Professions,
 		Genres:      person.Genres,
+		Avatar:      person.Avatar,
 	}
 }
 

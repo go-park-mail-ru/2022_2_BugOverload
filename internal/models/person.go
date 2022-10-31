@@ -5,6 +5,7 @@ type Person struct {
 	Name         string   `json:"name,omitempty"`
 	OriginalName string   `json:"original_name,omitempty"`
 	Birthday     string   `json:"birthday,omitempty"`
+	Avatar       string   `json:"avatar,omitempty"`
 	Death        string   `json:"death,omitempty"`
 	Growth       float32  `json:"growth,omitempty"`
 	Gender       string   `json:"gender,omitempty"`

@@ -4,46 +4,47 @@ CREATE TABLE IF NOT EXISTS users
     "nickname"     varchar(64) NOT NULL,
     "email"        varchar(64) NOT NULL,
     "password"     text        NOT NULL,
-    "is_superuser" boolean     NOT NULL DEFAULT false
+    "is_superuser" boolean     NOT NULL DEFAULT false,
+    "last_update"  date        NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS profiles
 (
-    "profile_id"        serial  NOT NULL PRIMARY KEY REFERENCES users (user_id) ON DELETE CASCADE,
-    "avatar"            varchar(32)      DEFAULT NULL,
-    "joined_date"       date    NOT NULL DEFAULT NOW(),
-    "count_views_films" integer NOT NULL DEFAULT 0,
-    "count_collections" integer NOT NULL DEFAULT 0,
-    "count_reviews"     integer NOT NULL DEFAULT 0,
-    "count_ratings"     integer NOT NULL DEFAULT 0
+    "profile_id"        serial NOT NULL PRIMARY KEY REFERENCES users (user_id) ON DELETE CASCADE,
+    "avatar"            varchar(32) DEFAULT NULL,
+    "joined_date"       date        DEFAULT NOW(),
+    "count_views_films" integer     DEFAULT NULL,
+    "count_collections" integer     DEFAULT NULL,
+    "count_reviews"     integer     DEFAULT NULL,
+    "count_ratings"     integer     DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films
 (
-    "film_id"                serial        NOT NULL PRIMARY KEY,
-    "name"                   varchar(80)   NOT NULL,
-    "prod_year"              integer       NOT NULL,
-    "type"                   varchar(64)            DEFAULT NULL,
-    "original_name"          varchar(80)            DEFAULT NULL,
-    "slogan"                 varchar(128)            DEFAULT NULL,
-    "description"            TEXT          NOT NULL,
-    "short_description"      varchar(180)  NOT NULL,
-    "age_limit"              integer       NOT NULL DEFAULT 13,
-    "budget"                 integer                DEFAULT NULL,
-    "box_office"             integer                DEFAULT NULL,
-    "currency_budget"        varchar(8)             DEFAULT NULL,
-    "duration"               integer       NOT NULL DEFAULT 90,
-    "poster_hor"             varchar(32)            DEFAULT NULL,
-    "poster_ver"             varchar(32)            DEFAULT NULL,
-    "end_year"               integer                DEFAULT NULL,
-    "count_seasons"          integer                DEFAULT NULL,
-    "rating"                 numeric(3, 1) NOT NULL DEFAULT 0,
-    "count_actors"           integer       NOT NULL DEFAULT 0,
-    "count_scores"           integer       NOT NULL DEFAULT 0,
-    "count_negative_reviews" integer       NOT NULL DEFAULT 0,
-    "count_neutral_reviews"  integer       NOT NULL DEFAULT 0,
-    "count_positive_reviews" integer       NOT NULL DEFAULT 0,
-    "update_time"            timestamp     NOT NULL DEFAULT NOW()
+    "film_id"                serial       NOT NULL PRIMARY KEY,
+    "name"                   varchar(80)  NOT NULL,
+    "prod_year"              integer      NOT NULL,
+    "description"            TEXT         NOT NULL,
+    "short_description"      varchar(180) NOT NULL,
+    "duration"               integer      NOT NULL,
+    "type"                   varchar(64)   DEFAULT NULL,
+    "original_name"          varchar(80)   DEFAULT NULL,
+    "slogan"                 varchar(128)  DEFAULT NULL,
+    "age_limit"              integer       DEFAULT NULL,
+    "budget"                 integer       DEFAULT NULL,
+    "box_office"             integer       DEFAULT NULL,
+    "currency_budget"        varchar(8)    DEFAULT NULL,
+    "poster_hor"             varchar(32)   DEFAULT NULL,
+    "poster_ver"             varchar(32)   DEFAULT NULL,
+    "end_year"               integer       DEFAULT NULL,
+    "count_seasons"          integer       DEFAULT NULL,
+    "rating"                 numeric(3, 1) DEFAULT NULL,
+    "count_actors"           integer       DEFAULT NULL,
+    "count_scores"           integer       DEFAULT NULL,
+    "count_negative_reviews" integer       DEFAULT NULL,
+    "count_neutral_reviews"  integer       DEFAULT NULL,
+    "count_positive_reviews" integer       DEFAULT NULL,
+    "update_time"            timestamp     DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS genres
@@ -72,14 +73,15 @@ CREATE TABLE IF NOT EXISTS tags
 
 CREATE TABLE IF NOT EXISTS persons
 (
-    "person_id"   serial        NOT NULL PRIMARY KEY,
-    "name"        varchar(128)  NOT NULL,
-    "birthday"    date          NOT NULL,
-    "growth"      numeric(3, 2) NOT NULL,
-    "avatar"      varchar(80)            DEFAULT NULL,
-    "death"       date          NOT NULL,
-    "gender"      varchar(16)            DEFAULT NULL,
-    "count_films" integer       NOT NULL DEFAULT 1
+    "person_id"     serial        NOT NULL PRIMARY KEY,
+    "name"          varchar(128)  NOT NULL,
+    "birthday"      date          NOT NULL,
+    "growth"        numeric(3, 2) NOT NULL,
+    "original_name" varchar(80) DEFAULT NULL,
+    "avatar"        varchar(80) DEFAULT NULL,
+    "death"         date        DEFAULT NULL,
+    "gender"        varchar(16) DEFAULT NULL,
+    "count_films"   integer     DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS professions
@@ -94,10 +96,10 @@ CREATE TABLE IF NOT EXISTS collections
     "name"          varchar(128) NOT NULL,
     "description"   TEXT         NOT NULL,
     "poster"        varchar(32)           DEFAULT NULL,
-    "is_public"     boolean      NOT NULL,
+    "is_public"     boolean      NOT NULL DEFAULT false,
     "create_time"   timestamp    NOT NULL DEFAULT NOW(),
-    "count_likes"   integer      NOT NULL DEFAULT 0,
-    "count_films"   integer      NOT NULL DEFAULT 0
+    "count_likes"   integer               DEFAULT NULL,
+    "count_films"   integer               DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS reviews
@@ -106,7 +108,7 @@ CREATE TABLE IF NOT EXISTS reviews
     "name"        VARCHAR(64) NOT NULL,
     "type"        VARCHAR(16) NOT NULL,
     "body"        TEXT        NOT NULL,
-    "count_likes" integer     NOT NULL DEFAULT 0,
+    "count_likes" integer              DEFAULT NULL,
     "create_time" TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
