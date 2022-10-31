@@ -100,7 +100,7 @@ func (f *DBFiller) createGuide(path string, someGuide map[string]int) {
 
 	scanner := bufio.NewScanner(stream)
 
-	count := 0
+	count := 1
 
 	for scanner.Scan() {
 		someGuide[scanner.Text()] = count
@@ -159,6 +159,12 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d persons upload", count)
 
+	count, err = f.LinkPersonProfession()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d persons professions link end", count)
+
 	f.faceUsers = f.generator.GenerateUsers(f.Config.Volume.CountUser)
 	count, err = f.UploadUsers()
 	if err != nil {
@@ -178,6 +184,12 @@ func (f *DBFiller) Action() error {
 		return err
 	}
 	logrus.Infof("%d face reviews upload", count)
+
+	count, err = f.LinkReviewsLikes()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face reviews likes link end", count)
 
 	return nil
 }

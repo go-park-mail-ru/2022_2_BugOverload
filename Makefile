@@ -102,6 +102,7 @@ migrate-debug-force:
 reboot-db:
 	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
 	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up
+	sleep 0.5
 	make dev-fill-db
 
 # Utils

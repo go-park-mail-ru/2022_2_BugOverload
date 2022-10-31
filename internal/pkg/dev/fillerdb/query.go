@@ -76,3 +76,27 @@ func GetBatchInsertProfiles(countInserts int) (string, int) {
 
 	return insertStatement, countAttributes
 }
+
+func GetBatchInsertReviewsLikes(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO reviews_likes(fk_review_id, fk_profile_id) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}
+
+func GetBatchInsertPersonProfessions(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO person_professions(fk_person_id, fk_profession_id, weight) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}
