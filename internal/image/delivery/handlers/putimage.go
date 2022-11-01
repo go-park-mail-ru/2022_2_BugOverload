@@ -31,7 +31,7 @@ func NewPutImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @tags image
 // @produce json
 // @Param   object    query  string  true  "type object"
-// @Param   key       query  string  true  "key for found"
+// @Param   key       query  string  true  "key for found id for sessions"
 // @Success 204 "successfully upload"
 // @Failure 400 {object} httpmodels.ErrResponseImageDefault "return error"
 // @Failure 405 "method not allowed"

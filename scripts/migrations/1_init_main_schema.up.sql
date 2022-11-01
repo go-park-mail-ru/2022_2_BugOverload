@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS film_persons
     PRIMARY KEY (fk_person_id, fk_film_id, fk_profession_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profile_ratings
 (
     "fk_profile_id" integer       NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
@@ -192,6 +193,7 @@ CREATE TABLE IF NOT EXISTS profile_ratings
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profile_views_films
 (
     "fk_profile_id" integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
