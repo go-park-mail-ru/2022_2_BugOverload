@@ -117,10 +117,6 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 	defer stmt.Close()
 
 	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
 	if err != nil {
 		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
 		return 0, err
@@ -173,10 +169,6 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 	defer stmt.Close()
 
 	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
 	if err != nil {
 		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
 		return 0, err
