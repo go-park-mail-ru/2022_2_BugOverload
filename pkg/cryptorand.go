@@ -24,8 +24,10 @@ func bigInt(max int64) int64 {
 	return nBig.Int64()
 }
 
+const step = 53
+
 func RandMaxFloat64(max float64, precision int) float64 {
-	randFloat64 := (float64(bigInt(1<<53)) / (1 << 53)) * max
+	randFloat64 := (float64(bigInt(1<<step)) / (1 << step)) * max
 
 	return math.Round(randFloat64*10*float64(precision)) / 10 * float64(precision)
 }
