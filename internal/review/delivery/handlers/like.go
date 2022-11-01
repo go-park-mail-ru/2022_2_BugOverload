@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
 // reviewLikeHandler is the structure that handles the request for
@@ -37,7 +36,6 @@ func NewReviewLikeHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id}/review/like [POST]
 func (h *reviewLikeHandler) Action(w http.ResponseWriter, r *http.Request) {
+	// in dev
 	//  vars := mux.Vars(r)
-
-	httpwrapper.NoBody(w, http.StatusNoContent)
 }

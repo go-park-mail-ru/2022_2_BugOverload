@@ -3,14 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	stdErrors "github.com/pkg/errors"
-
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 )
 
 // putSettingsHandler is the structure that handles the request for auth.
@@ -43,19 +38,5 @@ func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [PUT]
 func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	settingsRequest := models.NewPutUserSettingsRequest()
-
-	ctx, err := settingsRequest.Bind(r)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
-		return
-	}
-
-	_, err = h.authService.GetUserBySession(ctx)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		return
-	}
-
-	httpwrapper.NoBody(w, http.StatusNoContent)
+	// in dev
 }

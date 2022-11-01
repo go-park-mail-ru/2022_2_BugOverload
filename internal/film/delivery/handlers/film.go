@@ -4,12 +4,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
-	stdErrors "github.com/pkg/errors"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
 // filmHandler is the structure that handles the request for
@@ -39,15 +34,6 @@ func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id} [GET]
 func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
+	// in dev
 	//  vars := mux.Vars(r)
-
-	filmRecommendation, err := h.filmService.GerRecommendation(r.Context())
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		return
-	}
-
-	response := models.NewFilmResponse(&filmRecommendation)
-
-	httpwrapper.Response(w, http.StatusOK, response.ToPublic())
 }

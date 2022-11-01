@@ -34,5 +34,6 @@ func NewPersonHandler(fs servicePersons.FilmsService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/person/{id} [GET]
 func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
+	// in dev
 	//  vars := mux.Vars(r)
 }

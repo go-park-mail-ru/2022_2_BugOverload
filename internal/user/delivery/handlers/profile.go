@@ -3,14 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	stdErrors "github.com/pkg/errors"
-
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 )
 
 // userProfileHandler is the structure that handles the request for auth.
@@ -41,21 +36,5 @@ func NewUserProfileHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/{id} [GET]
 func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
-	settingsRequest := models.NewUserProfileRequest()
-
-	err := settingsRequest.Bind(r)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
-		return
-	}
-
-	user, err := h.authService.GetUserBySession(r.Context())
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		return
-	}
-
-	authResponse := models.NewUserProfileResponse(&user)
-
-	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic())
+	// in dev
 }
