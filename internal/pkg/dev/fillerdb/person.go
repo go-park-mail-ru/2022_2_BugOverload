@@ -104,8 +104,6 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		}
 	}
 
-	logrus.Info(insertStatement, values)
-
 	target := "persons professions"
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
