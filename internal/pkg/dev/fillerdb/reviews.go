@@ -10,10 +10,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (f *DBFiller) UploadReviews() (int, error) {
+func (f *DBFiller) uploadReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := GetBatchInsertReviews(countInserts)
+	insertStatement, countAttributes := getBatchInsertReviews(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -69,10 +69,10 @@ func (f *DBFiller) UploadReviews() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkReviewsLikes() (int, error) {
+func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := GetBatchInsertReviewsLikes(countInserts)
+	insertStatement, countAttributes := getBatchInsertReviewsLikes(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -80,7 +80,7 @@ func (f *DBFiller) LinkReviewsLikes() (int, error) {
 	i := 0
 
 	for _, value := range f.faceReviews {
-		count := pkg.Rand(f.Config.Volume.MaxLikesOnReview)
+		count := pkg.RandMaxInt(f.Config.Volume.MaxLikesOnReview)
 		if (countInserts - i) < count {
 			count = countInserts - i
 		}

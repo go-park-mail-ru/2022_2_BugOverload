@@ -5,7 +5,7 @@ import "time"
 const (
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
-	ContentTypeJPEG = "image/jpeg"
+	ContentTypeJPEG = "image/webp"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5

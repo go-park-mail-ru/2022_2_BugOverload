@@ -1,11 +1,12 @@
 package generatordatadb
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"log"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/go-faker/faker/v4/pkg/options"
+
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 type DBGenerator struct{}
@@ -40,7 +41,7 @@ func (g *DBGenerator) GenerateReviews(count int, maxLengthBody uint) []ReviewFac
 			log.Println(err)
 		}
 
-		res[idx].Type = typesReview[pkg.Rand(len(typesReview))]
+		res[idx].Type = typesReview[pkg.RandMaxInt(len(typesReview))]
 	}
 
 	return res

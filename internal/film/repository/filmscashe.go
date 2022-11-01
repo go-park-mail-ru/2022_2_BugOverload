@@ -80,7 +80,7 @@ func (fs *filmsCache) GerRecommendation(ctx context.Context) (models.Film, error
 	fs.mu.RLock()
 	defer fs.mu.RUnlock()
 
-	randIndex := pkg.Rand(fs.GetStorageCapacity())
+	randIndex := pkg.RandMaxInt(fs.GetStorageCapacity())
 
 	filmRecommendation := fs.storage[randIndex]
 

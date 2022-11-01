@@ -1,3 +1,3 @@
-TRUNCATE genres, countries, professions, companies CASCADE;
+TRUNCATE genres, countries, professions, companies, tags CASCADE;
 
 

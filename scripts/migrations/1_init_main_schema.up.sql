@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS companies
     "name"       varchar(64) NOT NULL UNIQUE
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS tags
 (
     "tag_id" serial      NOT NULL PRIMARY KEY,
@@ -145,6 +146,7 @@ CREATE TABLE IF NOT EXISTS film_genres
     PRIMARY KEY (fk_film_id, fk_genre_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_tags
 (
     "fk_film_id" integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -170,6 +172,7 @@ CREATE TABLE IF NOT EXISTS film_companies
     PRIMARY KEY (fk_film_id, fk_company_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_persons
 (
     "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,

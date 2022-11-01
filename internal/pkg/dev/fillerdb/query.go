@@ -1,162 +1,117 @@
 package fillerdb
 
-import (
-	"fmt"
-	"strings"
-)
-
-func GetBatchInsertFilms(countInserts int) (string, int) {
+func getBatchInsertFilms(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO 
     	films(name, prod_year, poster_ver, poster_hor, description, 
     	      short_description, original_name, slogan, age_limit, 
     	      box_office, budget, duration, currency_budget, type, count_seasons, end_year) 
 		VALUES `
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
+	insertStatement, countAttributes := createStatement(queryBegin, countInserts)
 
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
+	queryEnd := " RETURNING film_id;"
 
-	queryEnd := "RETURNING film_id;"
-
-	insertStatement := fmt.Sprintf("%s %s %s", queryBegin, placeholders, queryEnd)
-
-	return insertStatement, countAttributes
+	return insertStatement + queryEnd, countAttributes
 }
 
-func GetBatchInsertPersons(countInserts int) (string, int) {
+func getBatchInsertPersons(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO persons(name, original_name, birthday, growth, avatar,  gender, death) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
+	insertStatement, countAttributes := createStatement(queryBegin, countInserts)
 
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
+	queryEnd := " RETURNING person_id;"
 
-	queryEnd := "RETURNING person_id;"
-
-	insertStatement := fmt.Sprintf("%s %s %s", queryBegin, placeholders, queryEnd)
-
-	return insertStatement, countAttributes
+	return insertStatement + queryEnd, countAttributes
 }
 
-func GetBatchInsertUsers(countInserts int) (string, int) {
+func getBatchInsertUsers(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO users(nickname, email, password) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
+	insertStatement, countAttributes := createStatement(queryBegin, countInserts)
 
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
+	queryEnd := " RETURNING user_id;"
 
-	queryEnd := "RETURNING user_id;"
-
-	insertStatement := fmt.Sprintf("%s %s %s", queryBegin, placeholders, queryEnd)
-
-	return insertStatement, countAttributes
+	return insertStatement + queryEnd, countAttributes
 }
 
-func GetBatchInsertReviews(countInserts int) (string, int) {
+func getBatchInsertReviews(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO reviews(name, type, create_time, body) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
+	insertStatement, countAttributes := createStatement(queryBegin, countInserts)
 
 	queryEnd := "RETURNING review_id;"
 
-	insertStatement := fmt.Sprintf("%s %s %s", queryBegin, placeholders, queryEnd)
-
-	return insertStatement, countAttributes
+	return insertStatement + queryEnd, countAttributes
 }
 
-func GetBatchInsertProfiles(countInserts int) (string, int) {
+func getBatchInsertProfiles(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO profiles(profile_id) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertReviewsLikes(countInserts int) (string, int) {
+func getBatchInsertReviewsLikes(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO reviews_likes(fk_review_id, fk_profile_id) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertPersonProfessions(countInserts int) (string, int) {
+func getBatchInsertPersonProfessions(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO person_professions(fk_person_id, fk_profession_id, weight) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertFilmReviews(countInserts int) (string, int) {
+func getBatchInsertFilmReviews(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO profile_reviews(fk_review_id, fk_profile_id, fk_film_id) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertFilmGenres(countInserts int) (string, int) {
+func getBatchInsertFilmGenres(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO film_genres(fk_film_id, fk_genre_id, weight) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertFilmCountries(countInserts int) (string, int) {
+func getBatchInsertFilmCountries(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO film_countries(fk_film_id, fk_country_id, weight) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertFilmCompanies(countInserts int) (string, int) {
+func getBatchInsertFilmCompanies(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO film_companies(fk_film_id, fk_company_id, weight) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
-
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
-
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
-
-	return insertStatement, countAttributes
+	return createStatement(queryBegin, countInserts)
 }
 
-func GetBatchInsertPersonGenres(countInserts int) (string, int) {
+func getBatchInsertPersonGenres(countInserts int) (string, int) {
 	queryBegin := `INSERT INTO person_genres(fk_person_id, fk_genre_id, weight) VALUES`
 
-	countAttributes := strings.Count(queryBegin, ",") + 1
+	return createStatement(queryBegin, countInserts)
+}
 
-	placeholders := CreatePlaceholders(countAttributes, countInserts)
+func getBatchInsertFilmPersons(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
 
-	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+	return createStatement(queryBegin, countInserts)
+}
 
-	return insertStatement, countAttributes
+func getBatchInsertFilmTags(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO film_tags(fk_film_id, fk_tag_id) VALUES`
+
+	return createStatement(queryBegin, countInserts)
+}
+
+func getBatchInsertProfileViews(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO profile_views_films(fk_profile_id, fk_film_id) VALUES`
+
+	return createStatement(queryBegin, countInserts)
+}
+
+func getBatchInsertProfileRatings(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score) VALUES`
+
+	return createStatement(queryBegin, countInserts)
 }

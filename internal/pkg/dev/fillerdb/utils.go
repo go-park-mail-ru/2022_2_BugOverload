@@ -20,3 +20,13 @@ func CreatePlaceholders(countAttributes int, countValues int) string {
 
 	return strings.Join(valuesRow, ",\n")
 }
+
+func createStatement(query string, countInserts int) (string, int) {
+	countAttributes := strings.Count(query, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", query, placeholders)
+
+	return insertStatement, countAttributes
+}

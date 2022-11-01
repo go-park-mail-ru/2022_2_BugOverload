@@ -3,16 +3,31 @@ package pkg
 import (
 	cryptoRand "crypto/rand"
 	"encoding/base64"
+	"math"
 	"math/big"
 )
 
-func Rand(max int) int {
+func RandMaxInt(max int) int {
 	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max)))
 	if err != nil {
 		return 0
 	}
 
 	return int(number.Int64())
+}
+
+func bigInt(max int64) int64 {
+	nBig, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(max))
+	if err != nil {
+		panic(err)
+	}
+	return nBig.Int64()
+}
+
+func RandMaxFloat64(max float64, precision int) float64 {
+	randFloat64 := (float64(bigInt(1<<53)) / (1 << 53)) * max
+
+	return math.Round(randFloat64*10*float64(precision)) / 10 * float64(precision)
 }
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -48,10 +63,10 @@ func CryptoRandInInterval(max int, min int) int {
 	}
 
 	if min == 0 {
-		return Rand(max)
+		return RandMaxInt(max)
 	}
 
-	return Rand(max-min) + min
+	return RandMaxInt(max-min) + min
 }
 
 func CryptoRandSequence(max int, min int) []int {

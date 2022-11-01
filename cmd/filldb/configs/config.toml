@@ -5,11 +5,22 @@ timeout = 1
 
 [volume]
 count_users = 10
-count_views = 40
+
 count_ratings = 120
-count_collections = 30
+max_rating = 10.0
+max_count_ratings_on_film = 29
+
 count_reviews = 30
 max_length_review_body = 150
-max_likes_on_review = 6
 max_reviews_on_film = 8
 count_reviews_likes = 25
+max_likes_on_review = 6
+
+max_film_actors = 5
+max_film_persons = 2
+max_films_in_tag = 20
+
+count_views = 40
+max_views_on_film = 15
+
+count_collections = 30

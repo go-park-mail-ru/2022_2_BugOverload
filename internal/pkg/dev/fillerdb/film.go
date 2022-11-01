@@ -3,17 +3,19 @@ package fillerdb
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
 
+	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-func (f *DBFiller) UploadFilms() (int, error) {
+func (f *DBFiller) uploadFilms() (int, error) {
 	countInserts := len(f.filmsSQL)
 
-	insertStatement, countAttributes := GetBatchInsertFilms(countInserts)
+	insertStatement, countAttributes := getBatchInsertFilms(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -93,10 +95,10 @@ func (f *DBFiller) UploadFilms() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkFilmsReviews() (int, error) {
+func (f *DBFiller) linkFilmsReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := GetBatchInsertFilmReviews(countInserts)
+	insertStatement, countAttributes := getBatchInsertFilmReviews(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -106,7 +108,7 @@ func (f *DBFiller) LinkFilmsReviews() (int, error) {
 	sequenceReviews := pkg.CryptoRandSequence(f.faceReviews[len(f.faceReviews)-1].ID+1, f.faceReviews[0].ID)
 
 	for _, value := range f.films {
-		countBatch := pkg.Rand(f.Config.Volume.MaxReviewsOnFilm)
+		countBatch := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
 		if (countInserts - i) < countBatch {
 			countBatch = countInserts - i
 		}
@@ -147,14 +149,14 @@ func (f *DBFiller) LinkFilmsReviews() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkFilmGenres() (int, error) {
+func (f *DBFiller) linkFilmGenres() (int, error) {
 	countInserts := 0
 
 	for _, value := range f.films {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := GetBatchInsertFilmGenres(countInserts)
+	insertStatement, countAttributes := getBatchInsertFilmGenres(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -203,14 +205,14 @@ func (f *DBFiller) LinkFilmGenres() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkFilmCountries() (int, error) {
+func (f *DBFiller) linkFilmCountries() (int, error) {
 	countInserts := 0
 
 	for _, value := range f.films {
 		countInserts += len(value.ProdCountries)
 	}
 
-	insertStatement, countAttributes := GetBatchInsertFilmCountries(countInserts)
+	insertStatement, countAttributes := getBatchInsertFilmCountries(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -263,14 +265,14 @@ func (f *DBFiller) LinkFilmCountries() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkFilmCompanies() (int, error) {
+func (f *DBFiller) linkFilmCompanies() (int, error) {
 	countInserts := 0
 
 	for _, value := range f.films {
 		countInserts += len(value.ProdCompanies)
 	}
 
-	insertStatement, countAttributes := GetBatchInsertFilmCompanies(countInserts)
+	insertStatement, countAttributes := getBatchInsertFilmCompanies(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -294,6 +296,112 @@ func (f *DBFiller) LinkFilmCompanies() (int, error) {
 	}
 
 	target := "film companies"
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) linkFilmPersons() (int, error) {
+	values := make([]interface{}, 0)
+
+	countInserts := 0
+
+	for _, value := range f.films {
+		countActors := pkg.RandMaxInt(f.Config.Volume.MaxFilmActors) + 1
+		weightActors := countActors - 1
+
+		sequenceActors := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
+
+		for i := 0; i < countActors; i++ {
+			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], pkg.NewSQLNullString(faker.Word()), weightActors)
+			weightActors--
+		}
+
+		for profession := 2; profession < len(f.professions); profession++ {
+			countPersons := pkg.RandMaxInt(f.Config.Volume.MaxFilmPersons) + 1
+			weightPersons := countPersons - 1
+
+			sequencePersons := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
+
+			for i := 0; i < countPersons; i++ {
+				values = append(values, sequencePersons[i], value.ID, profession, pkg.NewSQLNullString(""), weightPersons)
+				weightPersons--
+			}
+
+			countInserts += countPersons
+		}
+
+		countInserts += countActors
+	}
+
+	insertStatement, _ := getBatchInsertFilmPersons(countInserts)
+
+	target := "film persons"
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) linkFilmTags() (int, error) {
+	countInserts := 0
+
+	values := make([]interface{}, 0)
+
+	for _, value := range f.tags {
+		count := pkg.RandMaxInt(f.Config.Volume.MaxFilmsInTag) + 1
+
+		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
+
+		for i := 0; i < count; i++ {
+			values = append(values, sequence[i], value)
+		}
+
+		countInserts += count
+	}
+
+	insertStatement, _ := getBatchInsertFilmTags(countInserts)
+
+	target := "film tags"
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()

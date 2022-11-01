@@ -50,6 +50,7 @@ type DBFiller struct {
 	countries   map[string]int
 	companies   map[string]int
 	professions map[string]int
+	tags        map[string]int
 
 	generator *generatordatadb.DBGenerator
 
@@ -64,6 +65,7 @@ func NewDBFiller(path string, config *Config) *DBFiller {
 		countries:   make(map[string]int),
 		companies:   make(map[string]int),
 		professions: make(map[string]int),
+		tags:        make(map[string]int),
 
 		generator: generatordatadb.NewDBGenerator(),
 	}
@@ -117,11 +119,13 @@ func (f *DBFiller) fillGuides(path string) {
 	countries := path + "/countries.txt"
 	companies := path + "/companies.txt"
 	professions := path + "/professions.txt"
+	tags := path + "/tags.txt"
 
 	f.createGuide(genres, f.genres)
 	f.createGuide(countries, f.countries)
 	f.createGuide(companies, f.companies)
 	f.createGuide(professions, f.professions)
+	f.createGuide(tags, f.tags)
 }
 
 func (f *DBFiller) fillStorages(path string) {
@@ -147,79 +151,103 @@ func (f *DBFiller) convertStructs() {
 }
 
 func (f *DBFiller) Action() error {
-	count, err := f.UploadFilms()
+	count, err := f.uploadFilms()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d films upload", count)
 
-	count, err = f.LinkFilmGenres()
+	count, err = f.linkFilmGenres()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d films genres link end", count)
 
-	count, err = f.LinkFilmCompanies()
+	count, err = f.linkFilmCompanies()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d films companies link end", count)
 
-	count, err = f.LinkFilmCountries()
+	count, err = f.linkFilmCountries()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d films countries link end", count)
 
-	count, err = f.UploadPersons()
+	count, err = f.linkFilmTags()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d film tags link end", count)
+
+	count, err = f.uploadPersons()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d persons upload", count)
 
-	count, err = f.LinkPersonProfession()
+	count, err = f.linkPersonProfession()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d persons professions link end", count)
 
-	count, err = f.LinkPersonGenres()
+	count, err = f.linkPersonGenres()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d persons genres link end", count)
 
 	f.faceUsers = f.generator.GenerateUsers(f.Config.Volume.CountUser)
-	count, err = f.UploadUsers()
+	count, err = f.uploadUsers()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d face users upload", count)
 
-	count, err = f.LinkUsersProfiles()
+	count, err = f.linkUsersProfiles()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d face users profiles link end", count)
 
+	count, err = f.linkProfileViews()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face users profiles views link end", count)
+
+	count, err = f.linkProfileRatings()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d face users profiles ratings link end", count)
+
 	f.faceReviews = f.generator.GenerateReviews(f.Config.Volume.CountReviews, f.Config.Volume.MaxLengthReviewsBody)
-	count, err = f.UploadReviews()
+	count, err = f.uploadReviews()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d face reviews upload", count)
 
-	count, err = f.LinkReviewsLikes()
+	count, err = f.linkReviewsLikes()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d face reviews likes link end", count)
 
-	count, err = f.LinkFilmsReviews()
+	count, err = f.linkFilmsReviews()
 	if err != nil {
 		return err
 	}
 	logrus.Infof("%d film reviews link end", count)
+
+	count, err = f.linkFilmPersons()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d film persons link end", count)
 
 	return nil
 }

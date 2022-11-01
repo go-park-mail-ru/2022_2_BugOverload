@@ -9,10 +9,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (f *DBFiller) UploadPersons() (int, error) {
+func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := GetBatchInsertPersons(countInserts)
+	insertStatement, countAttributes := getBatchInsertPersons(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -74,14 +74,14 @@ func (f *DBFiller) UploadPersons() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkPersonProfession() (int, error) {
+func (f *DBFiller) linkPersonProfession() (int, error) {
 	countInserts := 0
 
 	for _, value := range f.persons {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := GetBatchInsertPersonProfessions(countInserts)
+	insertStatement, countAttributes := getBatchInsertPersonProfessions(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -130,14 +130,14 @@ func (f *DBFiller) LinkPersonProfession() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) LinkPersonGenres() (int, error) {
+func (f *DBFiller) linkPersonGenres() (int, error) {
 	countInserts := 0
 
 	for _, value := range f.persons {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := GetBatchInsertPersonGenres(countInserts)
+	insertStatement, countAttributes := getBatchInsertPersonGenres(countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -159,8 +159,6 @@ func (f *DBFiller) LinkPersonGenres() (int, error) {
 			offset++
 		}
 	}
-
-	logrus.Info(insertStatement, "\n\n", values)
 
 	target := "persons genres"
 

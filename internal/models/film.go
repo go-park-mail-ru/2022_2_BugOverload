@@ -52,5 +52,5 @@ type Film struct {
 	Montage       []FilmPerson `json:"montage,omitempty"`
 	Composers     []FilmPerson `json:"composers,omitempty"`
 
-	Reviews []Review
+	//Reviews []Review
 }
