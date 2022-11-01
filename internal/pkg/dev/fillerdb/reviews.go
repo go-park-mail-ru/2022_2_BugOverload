@@ -77,12 +77,12 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	i := 0
+	appended := 0
 
 	for _, value := range f.faceReviews {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxLikesOnReview)
-		if (countInserts - i) < count {
-			count = countInserts - i
+		if (countInserts - appended) < count {
+			count = countInserts - appended
 		}
 
 		sequence := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
@@ -94,7 +94,7 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 			pos++
 		}
 
-		i += count
+		appended += count
 	}
 
 	target := "reviews likes"

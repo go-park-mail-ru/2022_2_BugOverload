@@ -103,20 +103,20 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	i := 0
+	appended := 0
 
 	sequenceReviews := pkg.CryptoRandSequence(f.faceReviews[len(f.faceReviews)-1].ID+1, f.faceReviews[0].ID)
 
 	for _, value := range f.films {
-		countBatch := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
-		if (countInserts - i) < countBatch {
-			countBatch = countInserts - i
+		countPartBatch := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
+		if (countInserts - appended) < countPartBatch {
+			countPartBatch = countInserts - appended
 		}
 
 		sequenceUsers := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
 
-		for j := 0; j < countBatch; j++ {
-			values[pos] = sequenceReviews[i:][j]
+		for j := 0; j < countPartBatch; j++ {
+			values[pos] = sequenceReviews[appended:][j]
 			pos++
 			values[pos] = sequenceUsers[j]
 			pos++
@@ -124,7 +124,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 			pos++
 		}
 
-		i += countBatch
+		appended += countPartBatch
 	}
 
 	target := "film reviews"

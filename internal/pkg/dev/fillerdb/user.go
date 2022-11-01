@@ -108,12 +108,12 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	i := 0
+	appended := 0
 
 	for _, value := range f.faceUsers {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxViewOnFilm)
-		if (countInserts - i) < count {
-			count = countInserts - i
+		if (countInserts - appended) < count {
+			count = countInserts - appended
 		}
 
 		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
@@ -125,7 +125,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 			pos++
 		}
 
-		i += count
+		appended += count
 	}
 
 	target := "profile views"
@@ -158,12 +158,12 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	i := 0
+	appended := 0
 
 	for _, value := range f.faceUsers {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxCountRatingsOnFilm)
-		if (countInserts - i) < count {
-			count = countInserts - i
+		if (countInserts - appended) < count {
+			count = countInserts - appended
 		}
 
 		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
@@ -177,7 +177,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			pos++
 		}
 
-		i += count
+		appended += count
 	}
 
 	target := "profile ratings"
