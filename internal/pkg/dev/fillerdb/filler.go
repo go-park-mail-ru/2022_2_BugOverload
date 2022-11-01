@@ -153,6 +153,24 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d films upload", count)
 
+	count, err = f.LinkFilmGenres()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d films genres link end", count)
+
+	count, err = f.LinkFilmCompanies()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d films companies link end", count)
+
+	count, err = f.LinkFilmCountries()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d films countries link end", count)
+
 	count, err = f.UploadPersons()
 	if err != nil {
 		return err
@@ -164,6 +182,12 @@ func (f *DBFiller) Action() error {
 		return err
 	}
 	logrus.Infof("%d persons professions link end", count)
+
+	count, err = f.LinkPersonGenres()
+	if err != nil {
+		return err
+	}
+	logrus.Infof("%d persons genres link end", count)
 
 	f.faceUsers = f.generator.GenerateUsers(f.Config.Volume.CountUser)
 	count, err = f.UploadUsers()

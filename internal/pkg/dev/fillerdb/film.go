@@ -61,7 +61,7 @@ func (f *DBFiller) UploadFilms() (int, error) {
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()
@@ -127,14 +127,180 @@ func (f *DBFiller) LinkFilmsReviews() (int, error) {
 
 	target := "film reviews"
 
-	logrus.Info(insertStatement, "\n\n", values)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) LinkFilmGenres() (int, error) {
+	countInserts := 0
+
+	for _, value := range f.films {
+		countInserts += len(value.Genres)
+	}
+
+	insertStatement, countAttributes := GetBatchInsertFilmGenres(countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	offset := 0
+	posValue := 0
+
+	for _, value := range f.films {
+		posValue += offset
+		offset = 0
+		weight := len(value.Genres)
+
+		for _, genre := range value.Genres {
+			values[posValue+offset] = value.ID
+			offset++
+			values[posValue+offset] = f.genres[genre]
+			weight--
+			offset++
+			values[posValue+offset] = weight
+			offset++
+		}
+	}
+
+	target := "film genres"
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) LinkFilmCountries() (int, error) {
+	countInserts := 0
+
+	for _, value := range f.films {
+		countInserts += len(value.ProdCountries)
+	}
+
+	insertStatement, countAttributes := GetBatchInsertFilmCountries(countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	offset := 0
+	posValue := 0
+
+	for _, value := range f.films {
+		posValue += offset
+		offset = 0
+		weight := len(value.ProdCountries)
+
+		for _, country := range value.ProdCountries {
+			values[posValue+offset] = value.ID
+			offset++
+			_, ok := f.countries[country]
+			if !ok {
+				logrus.Error(country)
+			}
+			values[posValue+offset] = f.countries[country]
+			weight--
+			offset++
+			values[posValue+offset] = weight
+			offset++
+		}
+	}
+
+	target := "film countries"
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) LinkFilmCompanies() (int, error) {
+	countInserts := 0
+
+	for _, value := range f.films {
+		countInserts += len(value.ProdCompanies)
+	}
+
+	insertStatement, countAttributes := GetBatchInsertFilmCompanies(countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	offset := 0
+	posValue := 0
+
+	for _, value := range f.films {
+		posValue += offset
+		offset = 0
+		weight := len(value.ProdCompanies)
+
+		for _, company := range value.ProdCompanies {
+			values[posValue+offset] = value.ID
+			offset++
+			values[posValue+offset] = f.companies[company]
+			weight--
+			offset++
+			values[posValue+offset] = weight
+			offset++
+		}
+	}
+
+	target := "film companies"
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()

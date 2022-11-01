@@ -112,3 +112,51 @@ func GetBatchInsertFilmReviews(countInserts int) (string, int) {
 
 	return insertStatement, countAttributes
 }
+
+func GetBatchInsertFilmGenres(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO film_genres(fk_film_id, fk_genre_id, weight) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}
+
+func GetBatchInsertFilmCountries(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO film_countries(fk_film_id, fk_country_id, weight) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}
+
+func GetBatchInsertFilmCompanies(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO film_companies(fk_film_id, fk_company_id, weight) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}
+
+func GetBatchInsertPersonGenres(countInserts int) (string, int) {
+	queryBegin := `INSERT INTO person_genres(fk_person_id, fk_genre_id, weight) VALUES`
+
+	countAttributes := strings.Count(queryBegin, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", queryBegin, placeholders)
+
+	return insertStatement, countAttributes
+}

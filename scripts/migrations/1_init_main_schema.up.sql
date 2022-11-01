@@ -1,3 +1,4 @@
+-- Generator completed
 CREATE TABLE IF NOT EXISTS users
 (
     "user_id"      serial      NOT NULL PRIMARY KEY,
@@ -8,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     "last_update"  date        NOT NULL DEFAULT NOW()
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profiles
 (
     "profile_id"        serial NOT NULL PRIMARY KEY REFERENCES users (user_id) ON DELETE CASCADE,
@@ -19,6 +21,7 @@ CREATE TABLE IF NOT EXISTS profiles
     "count_ratings"     integer     DEFAULT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS films
 (
     "film_id"                serial       NOT NULL PRIMARY KEY,
@@ -47,18 +50,21 @@ CREATE TABLE IF NOT EXISTS films
     "update_time"            timestamp     DEFAULT NOW()
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS genres
 (
     "genre_id" serial      NOT NULL PRIMARY KEY,
     "name"     varchar(64) NOT NULL UNIQUE
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS countries
 (
     "country_id" serial      NOT NULL PRIMARY KEY,
     "name"       varchar(64) NOT NULL UNIQUE
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS companies
 (
     "company_id" serial      NOT NULL PRIMARY KEY,
@@ -71,6 +77,7 @@ CREATE TABLE IF NOT EXISTS tags
     "name"   varchar(64) NOT NULL UNIQUE
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS persons
 (
     "person_id"     serial        NOT NULL PRIMARY KEY,
@@ -84,6 +91,7 @@ CREATE TABLE IF NOT EXISTS persons
     "count_films"   integer     DEFAULT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS professions
 (
     "profession_id" serial      NOT NULL PRIMARY KEY,
@@ -102,6 +110,7 @@ CREATE TABLE IF NOT EXISTS collections
     "count_films"   integer               DEFAULT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS reviews
 (
     "review_id"   serial      NOT NULL PRIMARY KEY,
@@ -113,7 +122,7 @@ CREATE TABLE IF NOT EXISTS reviews
 );
 
 
--- Зависимые таблицы 1:M
+-- 1:M
 CREATE TABLE IF NOT EXISTS film_images
 (
     "film_id"     serial       NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
@@ -126,7 +135,8 @@ CREATE TABLE IF NOT EXISTS person_images
     "images_list" varchar(100) NOT NULL
 );
 
--- Зависимые таблицы N:M
+-- N:M
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_genres
 (
     "fk_film_id"  integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -142,6 +152,7 @@ CREATE TABLE IF NOT EXISTS film_tags
     PRIMARY KEY (fk_film_id, fk_tag_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_countries
 (
     "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -150,6 +161,7 @@ CREATE TABLE IF NOT EXISTS film_countries
     PRIMARY KEY (fk_film_id, fk_country_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_companies
 (
     "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -185,6 +197,7 @@ CREATE TABLE IF NOT EXISTS profile_views_films
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profile_reviews
 (
     "fk_review_id"  integer NOT NULL REFERENCES reviews (review_id) ON DELETE CASCADE,
@@ -200,6 +213,7 @@ CREATE TABLE IF NOT EXISTS profile_collections
     PRIMARY KEY (fk_profile_id, fk_collection_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS person_professions
 (
     "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
@@ -208,6 +222,7 @@ CREATE TABLE IF NOT EXISTS person_professions
     PRIMARY KEY (fk_person_id, fk_profession_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS person_genres
 (
     "fk_person_id" integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
@@ -239,6 +254,7 @@ CREATE TABLE IF NOT EXISTS collections_films
     PRIMARY KEY (fk_film_id, fk_collection_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS reviews_likes
 (
     "fk_review_id"  integer NOT NULL REFERENCES reviews (review_id) ON DELETE CASCADE,

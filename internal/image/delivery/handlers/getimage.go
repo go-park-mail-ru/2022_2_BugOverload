@@ -30,7 +30,7 @@ func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar"
 // @tags image
 // @produce json
-// @produce jpeg
+// @produce image/webp
 // @Param   object    query  string  true  "type object"
 // @Param   key       query  string  true  "key for found"
 // @Success 200 "successfully getting"

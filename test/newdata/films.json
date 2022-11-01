@@ -11,11 +11,11 @@
       "мелодрама"
     ],
     "original_name": "Three Thousand Years of Longing",
-    "countries": [
+    "prod_countries": [
       "Австралия",
       "США"
     ],
-    "companies": [
+    "prod_companies": [
       "Metro-Goldwyn-Mayer"
     ],
     "slogan": "What would you wish for?",
@@ -34,12 +34,12 @@
       "ужасы"
     ],
     "original_name": "Jeepers Creepers: Reborn",
-    "countries": [
+    "prod_countries": [
       "Великобритания",
       "Финляндия",
       "США"
     ],
-    "companies": [
+    "prod_companies": [
       "Infinity Films"
     ],
     "slogan": "Твоя смерть — его жизнь",
@@ -58,12 +58,12 @@
       "фантастика"
     ],
     "original_name": "Vesper",
-    "countries": [
+    "prod_countries": [
       "Франция",
       "Литва",
       "Бельгия"
     ],
-    "companies": [
+    "prod_companies": [
       "Natrix Natrix"
     ],
     "slogan": "Настала новая эра",
@@ -82,7 +82,7 @@
       "ужасы"
     ],
     "original_name": "The Legend of La Llorona",
-    "countries": [
+    "prod_countries": [
       "Мексика"
     ],
     "slogan": "Она заберет ваших детей",
@@ -101,7 +101,7 @@
       "приключения"
     ],
     "original_name": "Lucy",
-    "countries": [
+    "prod_countries": [
       "Франция",
       "Германия",
       "Тайвань",
@@ -109,7 +109,7 @@
       "США",
       "Великобритания"
     ],
-    "companies": [
+    "prod_companies": [
       "Canal+"
     ],
     "slogan": "Она — ключ к тайнам Вселенной",
@@ -130,11 +130,11 @@
       "драма"
     ],
     "original_name": "The Lord of the Rings: The Fellowship of the Ring",
-    "countries": [
+    "prod_countries": [
       "Новая Зеландия",
       "США"
     ],
-    "companies": [
+    "prod_companies": [
       "New Line Cinema"
     ],
     "slogan": "Power can be held in the smallest of things...",
@@ -156,7 +156,7 @@
       "ужасы"
     ],
     "original_name": "The House That Jack Built",
-    "countries": [
+    "prod_countries": [
       "Дания",
       "Франция",
       "Швеция",
@@ -164,7 +164,7 @@
       "Бельгия",
       "Тунис"
     ],
-    "companies": [
+    "prod_companies": [
       "Eurimages"
     ],
     "slogan": "If you feel like screaming... you definitely should",
@@ -186,12 +186,12 @@
       "приключения"
     ],
     "original_name": "Interstellar",
-    "countries": [
+    "prod_countries": [
       "США",
       "Великобритания",
       "Канада"
     ],
-    "companies": [
+    "prod_companies": [
       "Legendary Pictures"
     ],
     "slogan": "Следующий шаг человечества станет величайшим",
@@ -212,11 +212,11 @@
       "биография"
     ],
     "original_name": "Intouchables",
-    "countries": [
+    "prod_countries": [
       "Франция"
     ],
-    "companies": [
-      "Legendary Pictures"
+    "prod_companies": [
+      "Gaumont"
     ],
     "slogan": "Sometimes you have to reach into someone else's world to find out what's missing in your own",
     "box_office": 677896797,

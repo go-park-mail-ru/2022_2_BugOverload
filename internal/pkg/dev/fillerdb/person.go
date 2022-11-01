@@ -42,7 +42,7 @@ func (f *DBFiller) UploadPersons() (int, error) {
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()
@@ -111,7 +111,65 @@ func (f *DBFiller) LinkPersonProfession() (int, error) {
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if errors.Is(err, sql.ErrNoRows) {
+		logrus.Infof("Info [%s] [%s]", err, target)
+	}
+
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return 0, err
+	}
+	defer rows.Close()
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) LinkPersonGenres() (int, error) {
+	countInserts := 0
+
+	for _, value := range f.persons {
+		countInserts += len(value.Genres)
+	}
+
+	insertStatement, countAttributes := GetBatchInsertPersonGenres(countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	offset := 0
+	posValue := 0
+
+	for _, value := range f.persons {
+		posValue += offset
+		offset = 0
+		weight := len(value.Genres)
+
+		for _, genre := range value.Genres {
+			values[posValue+offset] = value.ID
+			offset++
+			values[posValue+offset] = f.genres[genre]
+			weight--
+			offset++
+			values[posValue+offset] = weight
+			offset++
+		}
+	}
+
+	logrus.Info(insertStatement, "\n\n", values)
+
+	target := "persons genres"
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()

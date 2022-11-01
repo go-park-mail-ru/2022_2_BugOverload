@@ -34,7 +34,7 @@ func (f *DBFiller) UploadUsers() (int, error) {
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()
@@ -84,16 +84,12 @@ func (f *DBFiller) LinkUsersProfiles() (int, error) {
 
 	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement", err)
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
 		return 0, err
 	}
 	defer stmt.Close()
 
 	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
 	if err != nil {
 		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
 		return 0, err

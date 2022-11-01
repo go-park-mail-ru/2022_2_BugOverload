@@ -23,7 +23,7 @@ Gaumont
 HBO
 Illumination Entertainment
 Lakeshore Entertainment
-DLegendary Pictures
+Legendary Pictures
 Lionsgate
 Lucasfilm
 Marvel Studios
@@ -62,5 +62,6 @@ Warner Bros. Pictures
 Мосфильм
 Союзмультфильм
 Централ Партнершип
-Village Roadshow Pictures
-Walt Disney Animation Studios
+Infinity Films
+Natrix Natrix
+Eurimages
