@@ -4,11 +4,11 @@ URL = "user=mguser dbname=mgdb password=mgpass host=localhost port=5432 sslmode=
 timeout = 1
 
 [volume]
-count_users = 10
+count_users = 20
 
 count_ratings = 120
 max_rating = 10.0
-max_count_ratings_on_film = 29
+max_count_ratings_on_film = 20
 
 count_reviews = 30
 max_length_review_body = 150
