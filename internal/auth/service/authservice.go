@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
 // AuthService provides universal service for work with users.
@@ -37,7 +37,7 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
-	if err := security.ComparePassword(userRepo.Password, user.Password); err != nil {
+	if err = security.ComparePassword(userRepo.Password, user.Password); err != nil {
 		return models.User{}, errors.ErrLoginCombinationNotFound
 	}
 
