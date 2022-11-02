@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"github.com/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"log"
 	"os"
 
@@ -22,13 +25,7 @@ type DBSQL struct {
 }
 
 func NewPostgreSQLRepository() *DBSQL {
-	url := "user=" + os.Getenv("POSTGRES_USER") +
-		" dbname=" + os.Getenv("POSTGRES_DB") +
-		" password=" + os.Getenv("POSTGRES_PASSWORD") +
-		" port=" + os.Getenv("POSTGRES_PORT") +
-		" sslmode=" + os.Getenv("POSTGRES_SSLMODE")
-
-	connection, err := sql.Open("pgx", url)
+	connection, err := sql.Open("pgx", pkg.NewPostgresSQLURL())
 	if err != nil {
 		log.Fatalln("Can't parse config", err)
 	}
@@ -86,22 +83,24 @@ func NewDBFiller(path string, config *Config) *DBFiller {
 	return res
 }
 
-func (f *DBFiller) fillStorage(path string, someStorage interface{}) {
+func (f *DBFiller) fillStorage(path string, someStorage interface{}) error {
 	file, err := os.ReadFile(path)
 	if err != nil {
-		logrus.Error("FillStorage: can't get data from file ", err, path)
+		return fmt.Errorf("fillStorage: can't get data from file [%s] - [%w]", path, err)
 	}
 
 	err = json.Unmarshal(file, someStorage)
 	if err != nil {
-		logrus.Error("FillStorage: can't Unmarshal data from file ", err, path)
+		return fmt.Errorf("fillStorage: can't Unmarshal data from file [%s] - [%w]", path, err)
 	}
+
+	return nil
 }
 
-func (f *DBFiller) createGuide(path string, someGuide map[string]int) {
+func (f *DBFiller) createGuide(path string, someGuide map[string]int) error {
 	stream, err := os.Open(path)
 	if err != nil {
-		logrus.Fatal(path, err)
+		return fmt.Errorf("createGuide: err open file [%s] - [%w]", path, err)
 	}
 
 	defer stream.Close()
@@ -116,30 +115,62 @@ func (f *DBFiller) createGuide(path string, someGuide map[string]int) {
 	}
 
 	if err = scanner.Err(); err != nil {
-		logrus.Fatal(path, err)
+		return fmt.Errorf("createGuide: err read from file [%s] - [%w]", path, err)
 	}
+
+	return nil
 }
 
-func (f *DBFiller) fillGuides(path string) {
+func (f *DBFiller) fillGuides(path string) error {
 	genres := path + "/genres.txt"
 	countries := path + "/countries.txt"
 	companies := path + "/companies.txt"
 	professions := path + "/professions.txt"
 	tags := path + "/tags.txt"
 
-	f.createGuide(genres, f.genres)
-	f.createGuide(countries, f.countries)
-	f.createGuide(companies, f.companies)
-	f.createGuide(professions, f.professions)
-	f.createGuide(tags, f.tags)
+	err := f.createGuide(genres, f.genres)
+	if err != nil {
+		return errors.Wrap(err, "fillGuides")
+	}
+
+	err = f.createGuide(countries, f.countries)
+	if err != nil {
+		return errors.Wrap(err, "fillGuides")
+	}
+
+	err = f.createGuide(companies, f.companies)
+	if err != nil {
+		return errors.Wrap(err, "fillGuides")
+	}
+
+	err = f.createGuide(professions, f.professions)
+	if err != nil {
+		return errors.Wrap(err, "fillGuides")
+	}
+
+	err = f.createGuide(tags, f.tags)
+	if err != nil {
+		return errors.Wrap(err, "fillGuides")
+	}
+
+	return nil
 }
 
-func (f *DBFiller) fillStorages(path string) {
+func (f *DBFiller) fillStorages(path string) error {
 	films := path + "/films.json"
 	persons := path + "/persons.json"
 
-	f.fillStorage(films, &f.films)
-	f.fillStorage(persons, &f.persons)
+	err := f.fillStorage(films, &f.films)
+	if err != nil {
+		return errors.Wrap(err, "fillStorages")
+	}
+
+	err = f.fillStorage(persons, &f.persons)
+	if err != nil {
+		return errors.Wrap(err, "fillStorages")
+	}
+
+	return nil
 }
 
 func (f *DBFiller) convertStructs() {
@@ -159,99 +190,99 @@ func (f *DBFiller) convertStructs() {
 func (f *DBFiller) Action() error {
 	count, err := f.uploadFilms()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d films upload", count)
 
 	count, err = f.linkFilmGenres()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d films genres link end", count)
 
 	count, err = f.linkFilmCompanies()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d films companies link end", count)
 
 	count, err = f.linkFilmCountries()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d films countries link end", count)
 
 	count, err = f.linkFilmTags()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d film tags link end", count)
 
 	count, err = f.uploadPersons()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d persons upload", count)
 
 	count, err = f.linkPersonProfession()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d persons professions link end", count)
 
 	count, err = f.linkPersonGenres()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d persons genres link end", count)
 
 	f.faceUsers = f.generator.GenerateUsers(f.Config.Volume.CountUser)
 	count, err = f.uploadUsers()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face users upload", count)
 
 	count, err = f.linkUsersProfiles()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face users profiles link end", count)
 
 	count, err = f.linkProfileViews()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face users profiles views link end", count)
 
 	count, err = f.linkProfileRatings()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face users profiles ratings link end", count)
 
 	f.faceReviews = f.generator.GenerateReviews(f.Config.Volume.CountReviews, f.Config.Volume.MaxLengthReviewsBody)
 	count, err = f.uploadReviews()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face reviews upload", count)
 
 	count, err = f.linkReviewsLikes()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face reviews likes link end", count)
 
 	count, err = f.linkFilmsReviews()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d film reviews link end", count)
 
 	count, err = f.linkFilmPersons()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d film persons link end", count)
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -73,4 +74,14 @@ func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interfa
 	}
 
 	return rows, nil
+}
+
+func NewPostgresSQLURL() string {
+	url := "user=" + os.Getenv("POSTGRES_USER") +
+		" dbname=" + os.Getenv("POSTGRES_DB") +
+		" password=" + os.Getenv("POSTGRES_PASSWORD") +
+		" port=" + os.Getenv("POSTGRES_PORT") +
+		" sslmode=" + os.Getenv("POSTGRES_SSLMODE")
+
+	return url
 }
