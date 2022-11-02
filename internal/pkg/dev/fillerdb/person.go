@@ -36,7 +36,7 @@ func (f *DBFiller) uploadPersons() (int, error) {
 
 	target := "persons"
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
 	if err != nil {
 		return 0, err
 	}
@@ -90,7 +90,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "person professions", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "person professions", values)
 	if err != nil {
 		return 0, err
 	}
@@ -131,7 +131,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "person genres", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "person genres", values)
 	if err != nil {
 		return 0, err
 	}

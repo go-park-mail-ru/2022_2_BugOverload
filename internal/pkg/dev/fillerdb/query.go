@@ -1,13 +1,5 @@
 package fillerdb
 
-import (
-	"context"
-	"database/sql"
-	"time"
-
-	"github.com/sirupsen/logrus"
-)
-
 const (
 	insertFilms = `INSERT INTO 
     	films(name, prod_year, poster_ver, poster_hor, description, 
@@ -43,21 +35,3 @@ const (
 
 	insertFilmsPersons = `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
 )
-
-func (f *DBFiller) SendQuery(insertStatement string, target string, values []interface{}) (*sql.Stmt, *sql.Rows, context.CancelFunc, error) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return nil, nil, cancelFunc, err
-	}
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return stmt, nil, cancelFunc, err
-	}
-
-	return stmt, rows, cancelFunc, nil
-}

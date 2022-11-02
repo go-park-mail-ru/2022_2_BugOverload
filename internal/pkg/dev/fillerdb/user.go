@@ -28,7 +28,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 
 	target := "users"
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
 	if err != nil {
 		return 0, err
 	}
@@ -63,7 +63,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 		values[idx] = value.ID
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profiles", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profiles", values)
 	if err != nil {
 		return 0, err
 	}
@@ -102,7 +102,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profile views", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profile views", values)
 	if err != nil {
 		return 0, err
 	}
@@ -143,7 +143,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profile ratings", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profile ratings", values)
 	if err != nil {
 		return 0, err
 	}

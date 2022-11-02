@@ -24,8 +24,7 @@ type Volume struct {
 }
 
 type Database struct {
-	URL     string `toml:"URL"`
-	Timeout int    `toml:"timeout"`
+	Timeout int `toml:"timeout"`
 }
 
 type Config struct {

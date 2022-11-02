@@ -19,5 +19,3 @@ urls = ["http://localhost:3000", "http://movie-gate.online"]
 headers = ["Content-Type", "Content-Length"]
 credentials = true
 debug = true
-
-URL = "postgresql://mguser:mgpass@localhost:5432/mgdb?sslmode=disable"

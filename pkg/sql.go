@@ -1,9 +1,13 @@
 package pkg
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func NewSQLNullString(s string) sql.NullString {
@@ -63,4 +67,22 @@ func CreateStatement(query string, countInserts int) (string, int) {
 	insertStatement := fmt.Sprintf("%s %s", query, placeholders)
 
 	return insertStatement, countAttributes
+}
+
+func SendQuery(db *sql.DB, timeout int, insertStatement string, target string, values []interface{}) (*sql.Stmt, *sql.Rows, context.CancelFunc, error) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
+
+	stmt, err := db.PrepareContext(ctx, insertStatement)
+	if err != nil {
+		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
+		return nil, nil, cancelFunc, err
+	}
+
+	rows, err := stmt.QueryContext(ctx, values...)
+	if err != nil {
+		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+		return stmt, nil, cancelFunc, err
+	}
+
+	return stmt, rows, cancelFunc, nil
 }

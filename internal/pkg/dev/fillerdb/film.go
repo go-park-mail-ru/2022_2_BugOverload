@@ -55,7 +55,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 
 	target := "films"
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
 	if err != nil {
 		return 0, err
 	}
@@ -111,7 +111,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 		appended += countPartBatch
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film reviews", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film reviews", values)
 	if err != nil {
 		return 0, err
 	}
@@ -152,7 +152,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film genres", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film genres", values)
 	if err != nil {
 		return 0, err
 	}
@@ -197,7 +197,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film countries", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film countries", values)
 	if err != nil {
 		return 0, err
 	}
@@ -238,7 +238,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film companies", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film companies", values)
 	if err != nil {
 		return 0, err
 	}
@@ -284,7 +284,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 
 	insertStatement, _ := pkg.CreateStatement(insertFilmsPersons, countInserts)
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film persons", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film persons", values)
 	if err != nil {
 		return 0, err
 	}
@@ -314,7 +314,7 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 
 	insertStatement, _ := pkg.CreateStatement(insertFilmsTags, countInserts)
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film tags", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film tags", values)
 	if err != nil {
 		return 0, err
 	}

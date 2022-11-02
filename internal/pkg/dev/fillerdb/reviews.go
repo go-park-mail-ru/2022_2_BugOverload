@@ -30,7 +30,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 
 	target := "reviews"
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
 	if err != nil {
 		return 0, err
 	}
@@ -82,7 +82,7 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "reviews likes", values)
+	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "reviews likes", values)
 	if err != nil {
 		return 0, err
 	}

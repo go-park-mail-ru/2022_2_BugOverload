@@ -88,16 +88,16 @@ main-prod-restart:
 
 # Migrations
 MIGRATIONS_DIR = scripts/migrations
-DB_URL:=$(shell cat ./cmd/debug/configs/config.toml | grep -w URL | awk '{ print $$3 }')
+DB_URL = postgresql://mguser:mgpass@localhost:5432/mgdb?sslmode=disable
 
 migrate-debug-up:
-	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
 
 migrate-debug-down:
-	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down ${COUNT}
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} down ${COUNT}
 
 migrate-debug-force:
-	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} force ${COUNT}
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} force ${COUNT}
 
 reboot-db:
 	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
