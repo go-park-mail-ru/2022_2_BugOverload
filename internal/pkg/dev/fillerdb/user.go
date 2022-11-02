@@ -91,7 +91,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 
 		faker.Word()
 
-		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
@@ -132,7 +132,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
@@ -140,6 +140,8 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			values[pos] = sequence[j]
 			pos++
 			values[pos] = pkg.RandMaxFloat64(f.Config.Volume.MaxRatings, 1)
+			pos++
+			values[pos] = faker.Timestamp()
 			pos++
 		}
 

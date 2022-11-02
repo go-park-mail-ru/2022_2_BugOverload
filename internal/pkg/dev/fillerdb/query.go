@@ -24,12 +24,12 @@ const (
 
 	insertUsersProfiles  = `INSERT INTO profiles(profile_id) VALUES`
 	insertProfileViews   = `INSERT INTO profile_views_films(fk_profile_id, fk_film_id, create_date) VALUES`
-	insertProfileRatings = `INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score) VALUES`
+	insertProfileRatings = `INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score, create_date) VALUES`
 
 	insertReviews    = `INSERT INTO reviews(name, type, create_time, body) VALUES`
 	insertReviewsEnd = " RETURNING review_id;"
 
-	insertReviewsLikes = `INSERT INTO reviews_likes(fk_review_id, fk_profile_id) VALUES`
+	insertReviewsLikes = `INSERT INTO reviews_likes(fk_review_id, fk_profile_id, create_date) VALUES`
 
 	insertFilmsReviews = `INSERT INTO profile_reviews(fk_review_id, fk_profile_id, fk_film_id) VALUES`
 

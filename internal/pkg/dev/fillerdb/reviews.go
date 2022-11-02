@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -68,12 +69,14 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
+		sequence := pkg.CryptoRandSequence(len(f.faceUsers), 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
 			pos++
 			values[pos] = sequence[j]
+			pos++
+			values[pos] = faker.Timestamp()
 			pos++
 		}
 

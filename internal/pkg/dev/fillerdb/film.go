@@ -90,7 +90,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	pos := 0
 	appended := 0
 
-	sequenceReviews := pkg.CryptoRandSequence(f.faceReviews[len(f.faceReviews)-1].ID+1, f.faceReviews[0].ID)
+	sequenceReviews := pkg.CryptoRandSequence(len(f.faceReviews)+1, 1)
 
 	for _, value := range f.films {
 		countPartBatch := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
@@ -98,7 +98,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 			countPartBatch = countInserts - appended
 		}
 
-		sequenceUsers := pkg.CryptoRandSequence(f.faceUsers[len(f.faceUsers)-1].ID+1, f.faceUsers[0].ID)
+		sequenceUsers := pkg.CryptoRandSequence(len(f.faceUsers)+1, 1)
 
 		for j := 0; j < countPartBatch; j++ {
 			values[pos] = sequenceReviews[appended:][j]
@@ -259,7 +259,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		countActors := pkg.RandMaxInt(f.Config.Volume.MaxFilmActors) + 1
 		weightActors := countActors - 1
 
-		sequenceActors := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
+		sequenceActors := pkg.CryptoRandSequence(len(f.persons)+1, 1)
 
 		for i := 0; i < countActors; i++ {
 			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], pkgInner.NewSQLNullString(faker.Word()), weightActors)
@@ -270,7 +270,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 			countPersons := pkg.RandMaxInt(f.Config.Volume.MaxFilmPersons) + 1
 			weightPersons := countPersons - 1
 
-			sequencePersons := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
+			sequencePersons := pkg.CryptoRandSequence(len(f.persons)+1, 1)
 
 			for i := 0; i < countPersons; i++ {
 				values = append(values, sequencePersons[i], value.ID, profession, pkgInner.NewSQLNullString(""), weightPersons)
@@ -304,7 +304,7 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 	for _, value := range f.tags {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxFilmsInTag) + 1
 
-		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1)
 
 		for i := 0; i < count; i++ {
 			values = append(values, sequence[i], value)
