@@ -23,7 +23,10 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	filler := fillerdb.NewDBFiller(dataPath, config)
+	filler, err := fillerdb.NewDBFiller(dataPath, config)
+	if err != nil {
+		logrus.Fatalf("FAILED  [%s]", err)
+	}
 
 	err = filler.Action()
 	if err != nil {

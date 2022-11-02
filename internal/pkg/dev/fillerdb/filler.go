@@ -5,18 +5,18 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"log"
 	"os"
 
 	// justifying it
 	_ "github.com/jackc/pgx/stdlib"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
 )
 
@@ -61,7 +61,7 @@ type DBFiller struct {
 	faceReviews []generatordatadb.ReviewFace
 }
 
-func NewDBFiller(path string, config *Config) *DBFiller {
+func NewDBFiller(path string, config *Config) (*DBFiller, error) {
 	res := &DBFiller{
 		Config:      config,
 		genres:      make(map[string]int),
@@ -75,12 +75,19 @@ func NewDBFiller(path string, config *Config) *DBFiller {
 
 	res.DB = NewPostgreSQLRepository()
 
-	res.fillGuides(path)
-	res.fillStorages(path)
+	err := res.fillGuides(path)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewDBFiller")
+	}
+
+	err = res.fillStorages(path)
+	if err != nil {
+		return nil, errors.Wrap(err, "NewDBFiller")
+	}
 
 	res.convertStructs()
 
-	return res
+	return res, nil
 }
 
 func (f *DBFiller) fillStorage(path string, someStorage interface{}) error {
