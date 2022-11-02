@@ -74,30 +74,3 @@ func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interfa
 
 	return rows, nil
 }
-
-// OLD
-// func SendQuery(db *sql.DB, timeout int, insertStatement string, target string, values []interface{}) (*sql.Stmt, *sql.Rows, context.CancelFunc, error) {
-//	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-//
-//	stmt, err := db.PrepareContext(ctx, insertStatement)
-//	if err != nil {
-//		return nil, nil, cancelFunc, fmt.Errorf("can't prepare context on sendq: %w", err)
-//	}
-//
-//	rows, err := stmt.QueryContext(ctx, values...)
-//	if err != nil {
-//		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-//		return stmt, nil, cancelFunc, err
-//	}
-//
-//	return stmt, rows, cancelFunc, nil
-// }
-
-// func SendQuery(ctx context.Context, db *sql.DB, query string, values []interface{}) (*sql.Rows, error) {
-//	rows, err := db.QueryContext(ctx, query, values...)
-//	if err != nil {
-//		return nil, fmt.Errorf("SendQuery: [%w] when inserting row into [%s] table", err, query)
-//	}
-//
-//	return rows, nil
-// }
