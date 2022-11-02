@@ -1,11 +1,17 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
+
+	stdErrors "github.com/pkg/errors"
 
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 )
 
 // putSettingsHandler is the structure that handles the request for auth.
@@ -38,5 +44,25 @@ func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [PUT]
 func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	// in dev
+	getUserSettingsRequest := models.NewPutUserSettingsRequest()
+
+	err := getUserSettingsRequest.Bind(r)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
+		return
+	}
+
+	cookie := r.Cookies()[0]
+
+	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
+
+	user, err := h.authService.GetUserBySession(ctx)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	getUserSettingsResponse := models.NewGetUserSettingsResponse(&user)
+
+	httpwrapper.Response(w, http.StatusOK, getUserSettingsResponse)
 }

@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type userSQL struct {
@@ -29,22 +28,23 @@ func newUserSQL() userSQL {
 	}
 }
 
-func newUserSQLOnUser(user models.User) userSQL {
-	return userSQL{
-		ID:       user.ID,
-		Nickname: user.Nickname,
-		Email:    user.Email,
-		Password: user.Password,
-		Profile: profileSQL{
-			Avatar:           innerPKG.NewSQLNullString(user.Profile.Avatar),
-			JoinedDate:       user.Profile.JoinedDate,
-			CountViewsFilms:  innerPKG.NewSQLNullInt32(user.Profile.CountViewsFilms),
-			CountCollections: innerPKG.NewSQLNullInt32(user.Profile.CountCollections),
-			CountReviews:     innerPKG.NewSQLNullInt32(user.Profile.CountReviews),
-			CountRatings:     innerPKG.NewSQLNullInt32(user.Profile.CountRatings),
-		},
-	}
-}
+//  для линтера
+// func newUserSQLOnUser(user models.User) userSQL {
+//	return userSQL{
+//		ID:       user.ID,
+//		Nickname: user.Nickname,
+//		Email:    user.Email,
+//		Password: user.Password,
+//		Profile: profileSQL{
+//			Avatar:           innerPKG.NewSQLNullString(user.Profile.Avatar),
+//			JoinedDate:       user.Profile.JoinedDate,
+//			CountViewsFilms:  innerPKG.NewSQLNullInt32(user.Profile.CountViewsFilms),
+//			CountCollections: innerPKG.NewSQLNullInt32(user.Profile.CountCollections),
+//			CountReviews:     innerPKG.NewSQLNullInt32(user.Profile.CountReviews),
+//			CountRatings:     innerPKG.NewSQLNullInt32(user.Profile.CountRatings),
+//		},
+//	}
+// }
 
 func (u *userSQL) convert() models.User {
 	return models.User{

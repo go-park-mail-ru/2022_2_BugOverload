@@ -3,11 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/sirupsen/logrus"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -19,20 +20,20 @@ type UserRepository interface {
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
 type userPostgres struct {
-	Database *sqltools.Database
+	database *sqltools.Database
 }
 
 // NewUserPostgres is constructor for userPostgres.
-func NewUserPostgres(Database *sqltools.Database) UserRepository {
+func NewUserPostgres(database *sqltools.Database) UserRepository {
 	return &userPostgres{
-		Database,
+		database,
 	}
 }
 
 func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	response := newUserSQL()
 
-	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.Database.Connection, func(tx *sql.Tx) error {
+	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(tx *sql.Tx) error {
 		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
 		if rowUser.Err() != nil {
 			logrus.Error("user ", rowUser.Err())
