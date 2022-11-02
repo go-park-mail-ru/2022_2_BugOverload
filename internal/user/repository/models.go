@@ -47,6 +47,10 @@ func newUserSQL() userSQL {
 // }
 
 func (u *userSQL) convert() models.User {
+	if !u.Profile.Avatar.Valid {
+		u.Profile.Avatar.String = "avatar"
+	}
+
 	return models.User{
 		ID:       u.ID,
 		Nickname: u.Nickname,
