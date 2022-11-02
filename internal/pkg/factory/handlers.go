@@ -1,79 +1,93 @@
 package factory
 
 import (
-	handlers2 "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	handlers4 "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
-	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
+	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
+	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
-	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	handlersFilm "go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
+	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
-	handlers5 "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
-	S3Image "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
+	handlersImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
+	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
+	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res := make(map[string]pkg.Handler)
 
 	// Auth
-	userStorage := memoryUser.NewAuthCache()
-	sessionStorage := memoryCookie.NewSessionCache()
+	authStorage := repoAuth.NewAuthCache()
+	sessionStorage := repoSession.NewSessionCache()
 
-	userService := serviceUser.NewUserService(userStorage)
-	sessionService := serviceAuth.NewSessionService(sessionStorage)
+	authService := serviceAuth.NewAuthService(authStorage)
+	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	authHandler := handlers2.NewAuthHandler(userService, sessionService)
+	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
 	res[pkg.AuthRequest] = authHandler
 
-	logoutHandler := handlers2.NewLogoutHandler(userService, sessionService)
+	logoutHandler := handlersAuth.NewLogoutHandler(authService, sessionService)
 	res[pkg.LogoutRequest] = logoutHandler
 
-	loginHandler := handlers2.NewLoginHandler(userService, sessionService)
+	loginHandler := handlersAuth.NewLoginHandler(authService, sessionService)
 	res[pkg.LoginRequest] = loginHandler
 
-	singUpHandler := handlers2.NewSingUpHandler(userService, sessionService)
+	singUpHandler := handlersAuth.NewSingUpHandler(authService, sessionService)
 	res[pkg.SignupRequest] = singUpHandler
 
 	// Collections
 	pathInCinema := "test/data/incinema.json"
 	pathPopular := "test/data/popular.json"
 
-	colStorage := memoryCollection.NewCollectionCache(pathPopular, pathInCinema)
+	colStorage := repoCollection.NewCollectionCache(pathPopular, pathInCinema)
 
 	collectionService := serviceCollection.NewCollectionService(colStorage)
 
-	inCinemaHandler := handlers4.NewInCinemaHandler(collectionService)
+	inCinemaHandler := handlersCollection.NewInCinemaHandler(collectionService)
 	res[pkg.InCinemaRequest] = inCinemaHandler
 
-	popularHandler := handlers4.NewPopularFilmsHandler(collectionService)
+	popularHandler := handlersCollection.NewPopularFilmsHandler(collectionService)
 	res[pkg.PopularRequest] = popularHandler
 
 	// Films
 	pathPreview := "test/data/preview.json"
 
-	filmsStorage := memoryFilms.NewFilmCache(pathPreview)
+	filmsStorage := repoFilms.NewFilmCache(pathPreview)
 
 	filmsService := serviceFilms.NewFilmService(filmsStorage)
 
-	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService, sessionService)
+	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService, sessionService)
 	res[pkg.RecommendationRequest] = recommendationHandler
 
 	// Images
-	is := S3Image.NewImageS3(config)
+	is := repoImage.NewImageS3(config)
 
 	imageService := serviceImage.NewImageService(is)
 
-	downloadImageHandler := handlers5.NewGetImageHandler(imageService)
+	downloadImageHandler := handlersImage.NewGetImageHandler(imageService)
 	res[pkg.DownloadImageRequest] = downloadImageHandler
 
-	uploadImageHandler := handlers5.NewPutImageHandler(imageService)
+	uploadImageHandler := handlersImage.NewPutImageHandler(imageService)
 	res[pkg.UploadImageRequest] = uploadImageHandler
+
+	// Users
+	postgres := sqltools.NewPostgresRepository()
+
+	userRepo := repoUser.NewUserPostgres(postgres)
+
+	userService := serviceUser.NewUserProfileService(userRepo)
+
+	profileHandler := handlersUser.NewUserProfileHandler(userService)
+	res[pkg.GetUserProfile] = profileHandler
 
 	return res
 }

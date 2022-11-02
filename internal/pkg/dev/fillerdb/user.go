@@ -2,19 +2,19 @@ package fillerdb
 
 import (
 	"context"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadUsers() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertUsers, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertUsers, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -52,7 +52,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkUsersProfiles() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertUsersProfiles, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertUsersProfiles, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -74,7 +74,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertProfileViews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertProfileViews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -117,7 +117,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertProfileRatings, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertProfileRatings, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

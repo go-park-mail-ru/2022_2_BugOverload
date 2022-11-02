@@ -2,28 +2,42 @@ package models
 
 import (
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type UserProfileRequest struct{}
+type UserProfileRequest struct {
+	ID int
+}
 
 func NewUserProfileRequest() *UserProfileRequest {
 	return &UserProfileRequest{}
 }
 
 func (u *UserProfileRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
+	vars := mux.Vars(r)
+
+	var err error
+	u.ID, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertStrToInt)
 	}
 
 	return nil
 }
 
+func (u *UserProfileRequest) GetUser() *models.User {
+	return &models.User{
+		ID: u.ID,
+	}
+}
+
 type UserProfileResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"Калыван"`
-	Email    string `json:"email,omitempty" example:"iamturckishbaby@gmail.com"`
 	Avatar   string `json:"avatar,omitempty" example:"23"`
 
 	CountViewsFilms  int    `json:"count_views_films,omitempty" example:"23"`
@@ -36,7 +50,6 @@ type UserProfileResponse struct {
 func NewUserProfileResponse(user *models.User) *UserProfileResponse {
 	return &UserProfileResponse{
 		Nickname:         user.Nickname,
-		Email:            user.Email,
 		Avatar:           user.Profile.Avatar,
 		JoinedDate:       user.Profile.JoinedDate,
 		CountViewsFilms:  user.Profile.CountViewsFilms,

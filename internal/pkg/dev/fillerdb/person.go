@@ -2,17 +2,16 @@ package fillerdb
 
 import (
 	"context"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
 	"github.com/pkg/errors"
-
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersons, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersons, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -62,7 +61,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersonsProfessions, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsProfessions, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -103,7 +102,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersonsGenres, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

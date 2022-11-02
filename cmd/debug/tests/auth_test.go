@@ -64,7 +64,7 @@ func TestAuthHandler(t *testing.T) {
 
 	cases[0].Cookie = "session_id=" + session.ID + ";"
 
-	userService := serviceAuth.NewUserService(us)
+	userService := serviceAuth.NewAuthService(us)
 	authService := serviceSession.NewSessionService(cs)
 	authHandler := handlers.NewAuthHandler(userService, authService)
 

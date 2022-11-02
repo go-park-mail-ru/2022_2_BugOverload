@@ -2,20 +2,20 @@ package fillerdb
 
 import (
 	"context"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadFilms() (int, error) {
 	countInserts := len(f.filmsSQL)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilms, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilms, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -81,7 +81,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 func (f *DBFiller) linkFilmsReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsReviews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsReviews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -128,7 +128,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsGenres, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -169,7 +169,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		countInserts += len(value.ProdCountries)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsCountries, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsCountries, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -214,7 +214,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		countInserts += len(value.ProdCompanies)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsCompanies, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsCompanies, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -281,7 +281,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		countInserts += countActors
 	}
 
-	insertStatement, _ := pkgInner.CreateStatement(insertFilmsPersons, countInserts)
+	insertStatement, _ := pkgInner.CreateFullQuery(insertFilmsPersons, countInserts)
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
@@ -311,7 +311,7 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 		countInserts += count
 	}
 
-	insertStatement, _ := pkgInner.CreateStatement(insertFilmsTags, countInserts)
+	insertStatement, _ := pkgInner.CreateFullQuery(insertFilmsTags, countInserts)
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()

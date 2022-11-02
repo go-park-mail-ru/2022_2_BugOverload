@@ -119,7 +119,7 @@ func TestLoginHandler(t *testing.T) {
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	userService := serviceAuth.NewUserService(us)
+	userService := serviceAuth.NewAuthService(us)
 	authService := serviceSession.NewSessionService(cs)
 	loginHandler := handlers.NewLoginHandler(userService, authService)
 

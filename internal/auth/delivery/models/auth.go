@@ -1,11 +1,9 @@
 package models
 
 import (
-	"context"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -15,16 +13,12 @@ func NewUserAuthRequest() *UserAuthRequest {
 	return &UserAuthRequest{}
 }
 
-func (u *UserAuthRequest) Bind(r *http.Request) (context.Context, error) {
+func (u *UserAuthRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return nil, errors.NewErrAuth(errors.ErrNoCookie)
+		return errors.NewErrAuth(errors.ErrNoCookie)
 	}
 
-	cookie := r.Cookies()[0]
-
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
-
-	return ctx, nil
+	return nil
 }
 
 type UserAuthResponse struct {

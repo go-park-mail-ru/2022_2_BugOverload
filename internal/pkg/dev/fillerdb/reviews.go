@@ -2,19 +2,19 @@ package fillerdb
 
 import (
 	"context"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertReviews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertReviews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -54,7 +54,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := pkgInner.CreateStatement(insertReviewsLikes, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertReviewsLikes, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

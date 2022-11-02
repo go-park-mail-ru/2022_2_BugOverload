@@ -71,7 +71,7 @@ func TestLogoutHandler(t *testing.T) {
 	cases[0].Cookie = "session_id=" + session.ID + ";"
 	cases[1].Cookie = "session_id=" + session.ID + ";"
 
-	userService := serviceAuth.NewUserService(us)
+	userService := serviceAuth.NewAuthService(us)
 	authService := serviceSession.NewSessionService(cs)
 	logoutHandler := handlers.NewLogoutHandler(userService, authService)
 

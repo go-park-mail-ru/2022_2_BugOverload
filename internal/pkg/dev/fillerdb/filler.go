@@ -2,46 +2,24 @@ package fillerdb
 
 import (
 	"bufio"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
+	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"os"
 
-	// justifying it
-	_ "github.com/jackc/pgx/stdlib"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
 )
-
-type DBSQL struct {
-	Connection *sql.DB
-}
-
-func NewPostgreSQLRepository() *DBSQL {
-	connection, err := sql.Open("pgx", pkg.NewPostgresSQLURL())
-	if err != nil {
-		log.Fatalln("Can't parse config", err)
-	}
-
-	err = connection.Ping()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return &DBSQL{Connection: connection}
-}
 
 type DBFiller struct {
 	Config *Config
 
-	DB *DBSQL
+	DB *sqltools.Database
 
 	films    []models.Film
 	filmsSQL []modelsFilmRepo.FilmSQL
@@ -73,7 +51,7 @@ func NewDBFiller(path string, config *Config) (*DBFiller, error) {
 		generator: generatordatadb.NewDBGenerator(),
 	}
 
-	res.DB = NewPostgreSQLRepository()
+	res.DB = sqltools.NewPostgresRepository()
 
 	err := res.fillGuides(path)
 	if err != nil {

@@ -21,8 +21,8 @@ type authService struct {
 	authRepo repository.AuthRepository
 }
 
-// NewUserService is constructor for authService. Accepts AuthRepository interfaces.
-func NewUserService(ur repository.AuthRepository) AuthService {
+// NewAuthService is constructor for authService. Accepts AuthRepository interfaces.
+func NewAuthService(ur repository.AuthRepository) AuthService {
 	return &authService{
 		authRepo: ur,
 	}

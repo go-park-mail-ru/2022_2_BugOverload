@@ -1,6 +1,9 @@
 package pkg
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 const (
 	// Validation HTTP
@@ -35,6 +38,9 @@ const (
 
 	// GetReviewsParams
 	GetReviewsParams = "GetReviewsRequestParams"
+
+	// User
+	GetUserProfile = "GetUserProfile"
 )
 
 type ContextType string
@@ -43,3 +49,9 @@ var SessionKey ContextType = "cookie"
 var LoggerKey ContextType = "logger"
 
 var GetReviewsParamsKey ContextType = GetReviewsParams
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}

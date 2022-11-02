@@ -35,6 +35,9 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 		Methods(http.MethodPost).
 		Queries("object", "{object}", "key", "{key}")
 
+	// User
+	router.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", handlers[pkg.GetUserProfile].Action).Methods(http.MethodGet)
+
 	http.Handle("/", router)
 
 	return router

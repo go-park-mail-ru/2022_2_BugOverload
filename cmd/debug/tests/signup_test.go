@@ -109,7 +109,7 @@ func TestSignupHandler(t *testing.T) {
 	us := memoryAuth.NewAuthCache()
 	cs := memorySession.NewSessionCache()
 
-	authService := serviceAuth.NewUserService(us)
+	authService := serviceAuth.NewAuthService(us)
 	sessionService := serviceSession.NewSessionService(cs)
 	signupHandler := handlers.NewSingUpHandler(authService, sessionService)
 

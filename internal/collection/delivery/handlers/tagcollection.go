@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 // tagCollectionHandler is the structure that handles the request for movies in cinemas.
@@ -22,10 +22,12 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary In cinema movies
-// @Description Films from the "in cinema" category
+// @Description Films by tag "популярное" or "сейчас в кино"
 // @tags collection
 // @Produce json
-// @Success 200 {object} models.FilmCollectionInCinemaResponse "returns an array of movies"
+// @Param tag  path string true "tag name"
+// @Success 200 {object} models.TagCollectionResponse "returns an array of movies"
+// @Failure 400 {object} httpmodels.ErrResponseFilmNoSuchFilm "return error"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"

@@ -3,22 +3,24 @@ package handlers
 import (
 	"net/http"
 
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	stdErrors "github.com/pkg/errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
+	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 // userProfileHandler is the structure that handles the request for auth.
 type userProfileHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	userProfileService serviceUserProfile.UserService
 }
 
 // NewUserProfileHandler is constructor for userProfileHandler in this pkg - settings.
-func NewUserProfileHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+func NewUserProfileHandler(us serviceUserProfile.UserService) pkg.Handler {
 	return &userProfileHandler{
 		us,
-		as,
 	}
 }
 
@@ -34,7 +36,23 @@ func NewUserProfileHandler(us serviceUser.AuthService, as serviceAuth.SessionSer
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "no such user"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/user/{id} [GET]
+// @Router /api/v1/user/profile/{id} [GET]
 func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
-	// in dev
+	userProfileRequest := models.NewUserProfileRequest()
+
+	err := userProfileRequest.Bind(r)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
+		return
+	}
+
+	user, err := h.userProfileService.GetUserProfileByID(r.Context(), userProfileRequest.GetUser())
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	userProfileResponse := models.NewUserProfileResponse(&user)
+
+	httpwrapper.Response(w, http.StatusOK, userProfileResponse)
 }
