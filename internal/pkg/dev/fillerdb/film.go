@@ -17,8 +17,6 @@ func (f *DBFiller) uploadFilms() (int, error) {
 
 	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilms, countInserts)
 
-	insertStatement += insertFilmsEnd
-
 	values := make([]interface{}, countAttributes*countInserts)
 
 	for idx, value := range f.filmsSQL {
