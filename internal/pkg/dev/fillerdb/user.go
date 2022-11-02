@@ -9,7 +9,7 @@ import (
 func (f *DBFiller) uploadUsers() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := createStatement(insertUsers, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertUsers, countInserts)
 
 	insertStatement += insertUsersEnd
 
@@ -55,7 +55,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkUsersProfiles() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := createStatement(insertUsersProfiles, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertUsersProfiles, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -77,7 +77,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := createStatement(insertProfileViews, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertProfileViews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -116,7 +116,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := createStatement(insertProfileRatings, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertProfileRatings, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

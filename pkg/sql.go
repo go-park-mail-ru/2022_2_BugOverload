@@ -1,6 +1,10 @@
 package pkg
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+	"strings"
+)
 
 func NewSQLNullString(s string) sql.NullString {
 	if len(s) == 0 {
@@ -33,4 +37,30 @@ func NewSQLNullFloat64(f float32) sql.NullFloat64 {
 		Float64: float64(f),
 		Valid:   true,
 	}
+}
+
+func CreatePlaceholders(countAttributes int, countValues int) string {
+	values := make([]string, countAttributes*countValues)
+
+	for i := 0; i < countAttributes*countValues; i++ {
+		values[i] = fmt.Sprintf("$%d", i+1)
+	}
+
+	valuesRow := make([]string, countValues)
+
+	for i := 0; i < countValues; i++ {
+		valuesRow[i] = "(" + strings.Join(values[i*countAttributes:countAttributes*(i+1)], ",") + ")"
+	}
+
+	return strings.Join(valuesRow, ",\n")
+}
+
+func CreateStatement(query string, countInserts int) (string, int) {
+	countAttributes := strings.Count(query, ",") + 1
+
+	placeholders := CreatePlaceholders(countAttributes, countInserts)
+
+	insertStatement := fmt.Sprintf("%s %s", query, placeholders)
+
+	return insertStatement, countAttributes
 }

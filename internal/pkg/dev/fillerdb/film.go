@@ -10,7 +10,7 @@ import (
 func (f *DBFiller) uploadFilms() (int, error) {
 	countInserts := len(f.filmsSQL)
 
-	insertStatement, countAttributes := createStatement(insertFilms, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertFilms, countInserts)
 
 	insertStatement += insertFilmsEnd
 
@@ -82,7 +82,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 func (f *DBFiller) linkFilmsReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := createStatement(insertFilmsReviews, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsReviews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -129,7 +129,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := createStatement(insertFilmsGenres, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -170,7 +170,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		countInserts += len(value.ProdCountries)
 	}
 
-	insertStatement, countAttributes := createStatement(insertFilmsCountries, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsCountries, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -215,7 +215,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		countInserts += len(value.ProdCompanies)
 	}
 
-	insertStatement, countAttributes := createStatement(insertFilmsCompanies, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsCompanies, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -282,7 +282,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		countInserts += countActors
 	}
 
-	insertStatement, _ := createStatement(insertFilmsPersons, countInserts)
+	insertStatement, _ := pkg.CreateStatement(insertFilmsPersons, countInserts)
 
 	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film persons", values)
 	if err != nil {
@@ -312,7 +312,7 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 		countInserts += count
 	}
 
-	insertStatement, _ := createStatement(insertFilmsTags, countInserts)
+	insertStatement, _ := pkg.CreateStatement(insertFilmsTags, countInserts)
 
 	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "film tags", values)
 	if err != nil {

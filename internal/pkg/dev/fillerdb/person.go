@@ -2,12 +2,14 @@ package fillerdb
 
 import (
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := createStatement(insertPersons, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertPersons, countInserts)
 
 	insertStatement += insertPersonsEnd
 
@@ -65,7 +67,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := createStatement(insertPersonsProfessions, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertPersonsProfessions, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -106,7 +108,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := createStatement(insertPersonsGenres, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertPersonsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

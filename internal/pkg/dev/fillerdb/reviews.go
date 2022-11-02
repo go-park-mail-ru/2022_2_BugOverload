@@ -9,7 +9,7 @@ import (
 func (f *DBFiller) uploadReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := createStatement(insertReviews, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertReviews, countInserts)
 
 	insertStatement += insertReviewsEnd
 
@@ -57,7 +57,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := createStatement(insertReviewsLikes, countInserts)
+	insertStatement, countAttributes := pkg.CreateStatement(insertReviewsLikes, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
