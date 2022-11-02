@@ -61,16 +61,20 @@ func (f *DBFiller) uploadFilms() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadFilms")
 	}
-	defer rows.Close()
 
-	count := 1
-	for idx := range f.films {
-		f.films[idx].ID = count
-		count++
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadFilms")
+	}
+
+	logrus.Info(affected)
+
+	for i := 0; i < int(affected); i++ {
+		f.films[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -111,11 +115,10 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmsReviews")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -153,11 +156,10 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmGenres")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -199,11 +201,10 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmCountries")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -241,11 +242,10 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmCompanies")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -288,11 +288,10 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmPersons")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -319,11 +318,10 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmTags")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }

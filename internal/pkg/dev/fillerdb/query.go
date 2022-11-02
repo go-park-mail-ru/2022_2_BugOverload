@@ -23,7 +23,7 @@ const (
 	insertUsersEnd = " RETURNING user_id;"
 
 	insertUsersProfiles  = `INSERT INTO profiles(profile_id) VALUES`
-	insertProfileViews   = `INSERT INTO profile_views_films(fk_profile_id, fk_film_id) VALUES`
+	insertProfileViews   = `INSERT INTO profile_views_films(fk_profile_id, fk_film_id, create_date) VALUES`
 	insertProfileRatings = `INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score) VALUES`
 
 	insertReviews    = `INSERT INTO reviews(name, type, create_time, body) VALUES`

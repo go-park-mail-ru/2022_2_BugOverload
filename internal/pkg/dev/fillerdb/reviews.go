@@ -35,16 +35,18 @@ func (f *DBFiller) uploadReviews() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadReviews")
 	}
-	defer rows.Close()
 
-	count := 1
-	for idx := range f.faceReviews {
-		f.faceReviews[idx].ID = count
-		count++
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadUsers")
+	}
+
+	for i := 0; i < int(affected); i++ {
+		f.faceReviews[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -81,11 +83,10 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkReviewsLikes")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }

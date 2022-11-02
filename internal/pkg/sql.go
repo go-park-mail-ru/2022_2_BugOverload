@@ -66,10 +66,10 @@ func CreateStatement(query string, countInserts int) (string, int) {
 	return insertStatement, countAttributes
 }
 
-func SendQuery(ctx context.Context, db *sql.DB, query string, values []interface{}) (*sql.Rows, error) {
-	rows, err := db.QueryContext(ctx, query, values...)
+func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interface{}) (sql.Result, error) {
+	rows, err := db.ExecContext(ctx, query, values...)
 	if err != nil {
-		return nil, fmt.Errorf("SendQuery: [%w] when inserting row into [%s] table", err, query)
+		return nil, fmt.Errorf("InsertBatch: [%w] when inserting row into [%s] table", err, query)
 	}
 
 	return rows, nil
@@ -91,4 +91,13 @@ func SendQuery(ctx context.Context, db *sql.DB, query string, values []interface
 //	}
 //
 //	return stmt, rows, cancelFunc, nil
+// }
+
+// func SendQuery(ctx context.Context, db *sql.DB, query string, values []interface{}) (*sql.Rows, error) {
+//	rows, err := db.QueryContext(ctx, query, values...)
+//	if err != nil {
+//		return nil, fmt.Errorf("SendQuery: [%w] when inserting row into [%s] table", err, query)
+//	}
+//
+//	return rows, nil
 // }

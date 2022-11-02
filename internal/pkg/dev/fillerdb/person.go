@@ -40,16 +40,18 @@ func (f *DBFiller) uploadPersons() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadPersons")
 	}
-	defer rows.Close()
 
-	count := 1
-	for idx := range f.persons {
-		f.persons[idx].ID = count
-		count++
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadPersons")
+	}
+
+	for i := 0; i < int(affected); i++ {
+		f.persons[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -88,11 +90,10 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonProfession")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -130,11 +131,10 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonGenres")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }

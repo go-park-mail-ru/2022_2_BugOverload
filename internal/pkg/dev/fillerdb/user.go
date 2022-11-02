@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -33,16 +34,18 @@ func (f *DBFiller) uploadUsers() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadUsers")
 	}
-	defer rows.Close()
 
-	count := 1
-	for idx := range f.faceUsers {
-		f.faceUsers[idx].ID = count
-		count++
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadUsers")
+	}
+
+	for i := 0; i < int(affected); i++ {
+		f.faceUsers[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -62,11 +65,10 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkUsersProfiles")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -87,12 +89,16 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 			count = countInserts - appended
 		}
 
+		faker.Word()
+
 		sequence := pkg.CryptoRandSequence(f.films[len(f.films)-1].ID+1, f.films[0].ID)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
 			pos++
 			values[pos] = sequence[j]
+			pos++
+			values[pos] = faker.Timestamp()
 			pos++
 		}
 
@@ -102,11 +108,10 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkProfileViews")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
@@ -144,11 +149,10 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkProfileRatings")
 	}
-	defer rows.Close()
 
 	return countInserts, nil
 }
