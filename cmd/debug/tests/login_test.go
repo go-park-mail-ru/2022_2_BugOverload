@@ -4,6 +4,7 @@ import (
 	"context"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -115,6 +116,8 @@ func TestLoginHandler(t *testing.T) {
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 	}
+
+	testUser.Password, _ = security.HashPassword(testUser.Password)
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
