@@ -1,16 +1,21 @@
 package fillerdb
 
 import (
+	"context"
+	"time"
+
 	"github.com/go-faker/faker/v4"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadFilms() (int, error) {
 	countInserts := len(f.filmsSQL)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertFilms, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilms, countInserts)
 
 	insertStatement += insertFilmsEnd
 
@@ -53,27 +58,19 @@ func (f *DBFiller) uploadFilms() (int, error) {
 		values[posValue+posAttr] = value.EndYear
 	}
 
-	target := "films"
-
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadFilms")
+	}
 	defer rows.Close()
 
-	counter := 0
-	var insertID int64
-	for rows.Next() {
-		err = rows.Scan(&insertID)
-		if err != nil {
-			logrus.Errorf("Error [%s] when getting insertID [%s]", err, target)
-			return 0, err
-		}
-
-		f.films[counter].ID = int(insertID)
-		counter++
+	count := 1
+	for idx := range f.films {
+		f.films[idx].ID = count
+		count++
 	}
 
 	return countInserts, nil
@@ -82,7 +79,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 func (f *DBFiller) linkFilmsReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsReviews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsReviews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -111,12 +108,13 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 		appended += countPartBatch
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film reviews", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmsReviews")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -129,7 +127,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsGenres, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -152,12 +150,13 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film genres", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmGenres")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -170,7 +169,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		countInserts += len(value.ProdCountries)
 	}
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsCountries, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsCountries, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -197,12 +196,13 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film countries", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmCountries")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -215,7 +215,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		countInserts += len(value.ProdCompanies)
 	}
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertFilmsCompanies, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertFilmsCompanies, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -238,12 +238,13 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film companies", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmCompanies")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -261,7 +262,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		sequenceActors := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
 
 		for i := 0; i < countActors; i++ {
-			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], pkg.NewSQLNullString(faker.Word()), weightActors)
+			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], pkgInner.NewSQLNullString(faker.Word()), weightActors)
 			weightActors--
 		}
 
@@ -272,7 +273,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 			sequencePersons := pkg.CryptoRandSequence(f.persons[len(f.persons)-1].ID+1, f.persons[0].ID)
 
 			for i := 0; i < countPersons; i++ {
-				values = append(values, sequencePersons[i], value.ID, profession, pkg.NewSQLNullString(""), weightPersons)
+				values = append(values, sequencePersons[i], value.ID, profession, pkgInner.NewSQLNullString(""), weightPersons)
 				weightPersons--
 			}
 
@@ -282,14 +283,15 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		countInserts += countActors
 	}
 
-	insertStatement, _ := pkg.CreateStatement(insertFilmsPersons, countInserts)
+	insertStatement, _ := pkgInner.CreateStatement(insertFilmsPersons, countInserts)
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film persons", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmPersons")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -312,14 +314,15 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 		countInserts += count
 	}
 
-	insertStatement, _ := pkg.CreateStatement(insertFilmsTags, countInserts)
+	insertStatement, _ := pkgInner.CreateStatement(insertFilmsTags, countInserts)
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "film tags", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmTags")
+	}
 	defer rows.Close()
 
 	return countInserts, nil

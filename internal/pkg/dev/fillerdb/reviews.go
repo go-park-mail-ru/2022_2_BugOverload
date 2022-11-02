@@ -1,15 +1,19 @@
 package fillerdb
 
 import (
-	"github.com/sirupsen/logrus"
+	"context"
+	"time"
 
+	"github.com/pkg/errors"
+
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertReviews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertReviews, countInserts)
 
 	insertStatement += insertReviewsEnd
 
@@ -28,27 +32,19 @@ func (f *DBFiller) uploadReviews() (int, error) {
 		values[posValue+posAttr] = value.Body
 	}
 
-	target := "reviews"
-
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadReviews")
+	}
 	defer rows.Close()
 
-	counter := 0
-	var insertID int64
-	for rows.Next() {
-		err = rows.Scan(&insertID)
-		if err != nil {
-			logrus.Errorf("Error [%s] when getting insertID [%s]", err, target)
-			return 0, err
-		}
-
-		f.faceReviews[counter].ID = int(insertID)
-		counter++
+	count := 1
+	for idx := range f.faceReviews {
+		f.faceReviews[idx].ID = count
+		count++
 	}
 
 	return countInserts, nil
@@ -57,7 +53,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertReviewsLikes, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertReviewsLikes, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -82,12 +78,13 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "reviews likes", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkReviewsLikes")
+	}
 	defer rows.Close()
 
 	return countInserts, nil

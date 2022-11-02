@@ -1,15 +1,19 @@
 package fillerdb
 
 import (
-	"github.com/sirupsen/logrus"
+	"context"
+	"time"
 
+	"github.com/pkg/errors"
+
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadUsers() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertUsers, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertUsers, countInserts)
 
 	insertStatement += insertUsersEnd
 
@@ -26,27 +30,19 @@ func (f *DBFiller) uploadUsers() (int, error) {
 		values[posValue+posAttr] = value.Password
 	}
 
-	target := "users"
-
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadUsers")
+	}
 	defer rows.Close()
 
-	counter := 0
-	for rows.Next() {
-		var insertID int64
-		err = rows.Scan(&insertID)
-		if err != nil {
-			logrus.Errorf("Error [%s] when getting insertID [%s]", err, target)
-			return 0, err
-		}
-
-		f.faceUsers[counter].ID = int(insertID)
-		counter++
+	count := 1
+	for idx := range f.faceUsers {
+		f.faceUsers[idx].ID = count
+		count++
 	}
 
 	return countInserts, nil
@@ -55,7 +51,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkUsersProfiles() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertUsersProfiles, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertUsersProfiles, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -63,12 +59,13 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 		values[idx] = value.ID
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profiles", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkUsersProfiles")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -77,7 +74,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertProfileViews, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertProfileViews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -102,12 +99,13 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profile views", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkProfileViews")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -116,7 +114,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertProfileRatings, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertProfileRatings, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -143,12 +141,13 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 		appended += count
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "profile ratings", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkProfileRatings")
+	}
 	defer rows.Close()
 
 	return countInserts, nil

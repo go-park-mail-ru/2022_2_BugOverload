@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	sql2 "go-park-mail-ru/2022_2_BugOverload/pkg"
+	sql2 "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type FilmSQL struct {

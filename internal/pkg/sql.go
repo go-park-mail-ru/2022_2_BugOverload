@@ -5,9 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-	"time"
-
-	"github.com/sirupsen/logrus"
 )
 
 func NewSQLNullString(s string) sql.NullString {
@@ -69,20 +66,29 @@ func CreateStatement(query string, countInserts int) (string, int) {
 	return insertStatement, countAttributes
 }
 
-func SendQuery(db *sql.DB, timeout int, insertStatement string, target string, values []interface{}) (*sql.Stmt, *sql.Rows, context.CancelFunc, error) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-
-	stmt, err := db.PrepareContext(ctx, insertStatement)
+func SendQuery(ctx context.Context, db *sql.DB, query string, values []interface{}) (*sql.Rows, error) {
+	rows, err := db.QueryContext(ctx, query, values...)
 	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return nil, nil, cancelFunc, err
+		return nil, fmt.Errorf("SendQuery: [%w] when inserting row into [%s] table", err, query)
 	}
 
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return stmt, nil, cancelFunc, err
-	}
-
-	return stmt, rows, cancelFunc, nil
+	return rows, nil
 }
+
+// OLD
+// func SendQuery(db *sql.DB, timeout int, insertStatement string, target string, values []interface{}) (*sql.Stmt, *sql.Rows, context.CancelFunc, error) {
+//	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
+//
+//	stmt, err := db.PrepareContext(ctx, insertStatement)
+//	if err != nil {
+//		return nil, nil, cancelFunc, fmt.Errorf("can't prepare context on sendq: %w", err)
+//	}
+//
+//	rows, err := stmt.QueryContext(ctx, values...)
+//	if err != nil {
+//		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
+//		return stmt, nil, cancelFunc, err
+//	}
+//
+//	return stmt, rows, cancelFunc, nil
+// }

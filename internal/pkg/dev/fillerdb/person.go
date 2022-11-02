@@ -1,15 +1,18 @@
 package fillerdb
 
 import (
-	"github.com/sirupsen/logrus"
+	"context"
+	"time"
 
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
+	"github.com/pkg/errors"
+
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertPersons, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersons, countInserts)
 
 	insertStatement += insertPersonsEnd
 
@@ -34,27 +37,19 @@ func (f *DBFiller) uploadPersons() (int, error) {
 		values[posValue+posAttr] = value.Death
 	}
 
-	target := "persons"
-
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, target, values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadPersons")
+	}
 	defer rows.Close()
 
-	counter := 0
-	var insertID int64
-	for rows.Next() {
-		err = rows.Scan(&insertID)
-		if err != nil {
-			logrus.Errorf("Error [%s] when getting insertID [%s]", err, target)
-			return 0, err
-		}
-
-		f.persons[counter].ID = int(insertID)
-		counter++
+	count := 1
+	for idx := range f.persons {
+		f.persons[idx].ID = count
+		count++
 	}
 
 	return countInserts, nil
@@ -67,7 +62,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertPersonsProfessions, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersonsProfessions, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -90,12 +85,13 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "person professions", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkPersonProfession")
+	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -108,7 +104,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkg.CreateStatement(insertPersonsGenres, countInserts)
+	insertStatement, countAttributes := pkgInner.CreateStatement(insertPersonsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -131,12 +127,14 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		}
 	}
 
-	stmt, rows, cancelFunc, err := pkg.SendQuery(f.DB.Connection, f.Config.Database.Timeout, insertStatement, "person genres", values)
-	if err != nil {
-		return 0, err
-	}
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
-	defer stmt.Close()
+
+	rows, err := pkgInner.SendQuery(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkPersonGenres")
+	}
 	defer rows.Close()
+
 	return countInserts, nil
 }

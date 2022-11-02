@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type PersonSQL struct {
