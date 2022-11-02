@@ -114,7 +114,3 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		Composers:     fillPersons(film.Composers),
 	}
 }
-
-func (rfr *FilmResponse) ToPublic() *FilmResponse {
-	return rfr
-}

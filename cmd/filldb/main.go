@@ -2,10 +2,11 @@ package main
 
 import (
 	"flag"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/fillerdb"
 
 	"github.com/BurntSushi/toml"
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/fillerdb"
 )
 
 func main() {

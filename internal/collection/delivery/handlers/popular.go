@@ -44,5 +44,5 @@ func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	collectionPopular := models.NewFilmInCollectionPopularResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, collectionPopular.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, collectionPopular)
 }

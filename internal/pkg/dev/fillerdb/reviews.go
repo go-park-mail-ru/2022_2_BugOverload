@@ -1,19 +1,17 @@
 package fillerdb
 
 import (
-	"context"
-	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
-	"time"
-
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := getBatchInsertReviews(countInserts)
+	insertStatement, countAttributes := createStatement(insertReviews, countInserts)
+
+	insertStatement += insertReviewsEnd
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -32,25 +30,12 @@ func (f *DBFiller) uploadReviews() (int, error) {
 
 	target := "reviews"
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	counter := 0
@@ -72,7 +57,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := getBatchInsertReviewsLikes(countInserts)
+	insertStatement, countAttributes := createStatement(insertReviewsLikes, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -97,23 +82,12 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 		appended += count
 	}
 
-	target := "reviews likes"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "reviews likes", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	return countInserts, nil

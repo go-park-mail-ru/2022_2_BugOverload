@@ -74,5 +74,5 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	signupResponse := models.NewUserSignUpResponse(&user)
 
-	httpwrapper.Response(w, http.StatusCreated, signupResponse.ToPublic())
+	httpwrapper.Response(w, http.StatusCreated, signupResponse)
 }

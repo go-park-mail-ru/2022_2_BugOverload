@@ -33,7 +33,3 @@ func NewPersonResponse(person *models.Person) *PersonResponse {
 		Avatar:      person.Avatar,
 	}
 }
-
-func (p *PersonResponse) ToPublic() *PersonResponse {
-	return p
-}

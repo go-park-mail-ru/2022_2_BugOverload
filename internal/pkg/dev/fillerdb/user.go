@@ -1,19 +1,17 @@
 package fillerdb
 
 import (
-	"context"
-	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/pkg"
-	"time"
-
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadUsers() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := getBatchInsertUsers(countInserts)
+	insertStatement, countAttributes := createStatement(insertUsers, countInserts)
+
+	insertStatement += insertUsersEnd
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -30,25 +28,12 @@ func (f *DBFiller) uploadUsers() (int, error) {
 
 	target := "users"
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	counter := 0
@@ -70,7 +55,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkUsersProfiles() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := getBatchInsertProfiles(countInserts)
+	insertStatement, countAttributes := createStatement(insertUsersProfiles, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -78,23 +63,12 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 		values[idx] = value.ID
 	}
 
-	target := "profiles"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profiles", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -103,7 +77,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := getBatchInsertProfileViews(countInserts)
+	insertStatement, countAttributes := createStatement(insertProfileViews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -128,23 +102,12 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 		appended += count
 	}
 
-	target := "profile views"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profile views", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -153,7 +116,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := getBatchInsertProfileRatings(countInserts)
+	insertStatement, countAttributes := createStatement(insertProfileRatings, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -180,23 +143,12 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 		appended += count
 	}
 
-	target := "profile ratings"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "profile ratings", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	return countInserts, nil

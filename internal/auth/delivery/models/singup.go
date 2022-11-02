@@ -79,7 +79,3 @@ func NewUserSignUpResponse(user *models.User) *UserSignupResponse {
 		Avatar:   user.Profile.Avatar,
 	}
 }
-
-func (u *UserSignupResponse) ToPublic() *UserSignupResponse {
-	return u
-}

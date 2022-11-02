@@ -44,5 +44,5 @@ func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	collectionInCinema := models.NewFilmInCollectionInCinemaResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, collectionInCinema)
 }

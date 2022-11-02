@@ -57,5 +57,5 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	authResponse := models.NewUserAuthResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, authResponse.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, authResponse)
 }

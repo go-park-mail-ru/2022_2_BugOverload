@@ -30,7 +30,3 @@ func NewRecommendFilmResponse(film *models.Film) *RecommendFilmResponse {
 		Rating:           film.Rating,
 	}
 }
-
-func (rfr *RecommendFilmResponse) ToPublic() *RecommendFilmResponse {
-	return rfr
-}

@@ -77,5 +77,5 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	loginResponse := models.NewUserLoginResponse(&userLogged)
 
-	httpwrapper.Response(w, http.StatusOK, loginResponse.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, loginResponse)
 }

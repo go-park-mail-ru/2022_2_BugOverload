@@ -1,18 +1,15 @@
 package fillerdb
 
 import (
-	"context"
-	"database/sql"
-	"time"
-
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := getBatchInsertPersons(countInserts)
+	insertStatement, countAttributes := createStatement(insertPersons, countInserts)
+
+	insertStatement += insertPersonsEnd
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -37,25 +34,12 @@ func (f *DBFiller) uploadPersons() (int, error) {
 
 	target := "persons"
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, target, values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if errors.Is(err, sql.ErrNoRows) {
-		logrus.Infof("Info [%s] [%s]", err, target)
-	}
-
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	counter := 0
@@ -81,7 +65,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := getBatchInsertPersonProfessions(countInserts)
+	insertStatement, countAttributes := createStatement(insertPersonsProfessions, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -104,23 +88,12 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		}
 	}
 
-	target := "persons professions"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "person professions", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
 
 	return countInserts, nil
@@ -133,7 +106,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := getBatchInsertPersonGenres(countInserts)
+	insertStatement, countAttributes := createStatement(insertPersonsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -156,24 +129,12 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		}
 	}
 
-	target := "persons genres"
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	stmt, rows, cancelFunc, err := f.SendQuery(insertStatement, "person genres", values)
+	if err != nil {
+		return 0, err
+	}
 	defer cancelFunc()
-
-	stmt, err := f.DB.Connection.PrepareContext(ctx, insertStatement)
-	if err != nil {
-		logrus.Errorf("Error [%s] when preparing SQL statement in [%s]", err, target)
-		return 0, err
-	}
 	defer stmt.Close()
-
-	rows, err := stmt.QueryContext(ctx, values...)
-	if err != nil {
-		logrus.Errorf("Error [%s] when inserting row into [%s] table", err, target)
-		return 0, err
-	}
 	defer rows.Close()
-
 	return countInserts, nil
 }

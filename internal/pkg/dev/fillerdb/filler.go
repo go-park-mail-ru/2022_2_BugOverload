@@ -21,7 +21,13 @@ type DBSQL struct {
 	Connection *sql.DB
 }
 
-func NewPostgreSQLRepository(url string) *DBSQL {
+func NewPostgreSQLRepository() *DBSQL {
+	url := "user=" + os.Getenv("POSTGRES_USER") +
+		" dbname=" + os.Getenv("POSTGRES_DB") +
+		" password=" + os.Getenv("POSTGRES_PASSWORD") +
+		" port=" + os.Getenv("POSTGRES_PORT") +
+		" sslmode=" + os.Getenv("POSTGRES_SSLMODE")
+
 	connection, err := sql.Open("pgx", url)
 	if err != nil {
 		log.Fatalln("Can't parse config", err)
@@ -70,7 +76,7 @@ func NewDBFiller(path string, config *Config) *DBFiller {
 		generator: generatordatadb.NewDBGenerator(),
 	}
 
-	res.DB = NewPostgreSQLRepository(res.Config.Database.URL)
+	res.DB = NewPostgreSQLRepository()
 
 	res.fillGuides(path)
 	res.fillStorages(path)

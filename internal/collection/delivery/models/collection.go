@@ -48,7 +48,3 @@ func NewFilmCollectionResponse(collection *models.Collection) *FilmCollectionRes
 
 	return res
 }
-
-func (fcr *FilmCollectionResponse) ToPublic() *FilmCollectionResponse {
-	return fcr
-}

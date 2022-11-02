@@ -1,10 +1,8 @@
 package models
 
-import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-)
+import "go-park-mail-ru/2022_2_BugOverload/internal/models"
 
-type filmInCollectionPopularResponse struct {
+type FilmTagCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
 	ProdYear  int      `json:"prod_year,omitempty" example:"2014"`
@@ -14,20 +12,20 @@ type filmInCollectionPopularResponse struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
-type FilmCollectionPopularResponse struct {
-	Name  string                            `json:"name,omitempty" example:"Популярное"`
-	Films []filmInCollectionPopularResponse `json:"film,omitempty"`
+type TagCollectionResponse struct {
+	Name  string                      `json:"name,omitempty" example:"Сейчас в кино"`
+	Films []FilmTagCollectionResponse `json:"film,omitempty"`
 }
 
-func NewFilmInCollectionPopularResponse(collection *models.Collection) *FilmCollectionPopularResponse {
-	res := &FilmCollectionPopularResponse{
+func NewTagCollectionResponse(collection *models.Collection) *TagCollectionResponse {
+	res := &TagCollectionResponse{
 		Name: collection.Name,
 	}
 
-	res.Films = make([]filmInCollectionPopularResponse, len(collection.Films))
+	res.Films = make([]FilmTagCollectionResponse, len(collection.Films))
 
 	for idx, value := range collection.Films {
-		res.Films[idx] = filmInCollectionPopularResponse{
+		res.Films[idx] = FilmTagCollectionResponse{
 			ID:        value.ID,
 			Name:      value.Name,
 			ProdYear:  value.ProdYear,

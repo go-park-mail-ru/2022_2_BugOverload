@@ -1,6 +1,4 @@
 [database]
-URL = "user=mguser dbname=mgdb password=mgpass host=localhost port=5432 sslmode=disable"
-#seconds
 timeout = 1
 
 [volume]

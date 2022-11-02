@@ -44,7 +44,3 @@ func NewGetUserSettingsResponse(user *models.User) *GetUserSettingsResponse {
 		CountRatings:     user.Profile.CountRatings,
 	}
 }
-
-func (u *GetUserSettingsResponse) ToPublic() *GetUserSettingsResponse {
-	return u
-}

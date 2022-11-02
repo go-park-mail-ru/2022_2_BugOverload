@@ -40,7 +40,3 @@ func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 		Avatar:   user.Profile.Avatar,
 	}
 }
-
-func (u *UserAuthResponse) ToPublic() *UserAuthResponse {
-	return u
-}
