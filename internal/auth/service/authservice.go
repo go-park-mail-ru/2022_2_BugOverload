@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -52,8 +51,6 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
 	user.Password = hashedPassword
-
-	logrus.Info(user.Password)
 
 	newUser, err := u.authRepo.CreateUser(ctx, user)
 	if err != nil {

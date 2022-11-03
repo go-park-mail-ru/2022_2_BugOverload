@@ -22,7 +22,7 @@ func genSalt() ([]byte, error) {
 
 // getHash return salt + hash using Argon2
 func getHash(salt, plainPassword []byte) []byte {
-	hashedPassword := argon2.IDKey(plainPassword, salt, 1, 32*1024, 4, 32)
+	hashedPassword := argon2.IDKey(plainPassword, salt, pkg.ArgonTime, pkg.ArgonMemory, pkg.ArgonThreads, pkg.ArgonKeyLength)
 
 	return append(salt, hashedPassword...)
 }
@@ -42,7 +42,7 @@ func HashPassword(plainPassword string) (string, error) {
 
 // IsPasswordsEqual return true if passwords equal, false otherwise
 func IsPasswordsEqual(hashedPassword, plainPassword string) bool {
-	if len(hashedPassword) < pkg.HashLength+pkg.SaltLength {
+	if len(hashedPassword) < pkg.ArgonKeyLength+pkg.SaltLength {
 		return false
 	}
 
