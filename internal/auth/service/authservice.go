@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -37,7 +38,7 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
-	if err = security.ComparePassword(userRepo.Password, user.Password); err != nil {
+	if !security.IsPasswordsEqual(userRepo.Password, user.Password) {
 		return models.User{}, errors.ErrLoginCombinationNotFound
 	}
 
@@ -51,6 +52,8 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
 	user.Password = hashedPassword
+
+	logrus.Info(user.Password)
 
 	newUser, err := u.authRepo.CreateUser(ctx, user)
 	if err != nil {

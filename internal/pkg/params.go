@@ -41,6 +41,10 @@ const (
 
 	// User
 	GetUserProfile = "GetUserProfile"
+
+	// Crypt
+	SaltLength = 16
+	HashLength = 32
 )
 
 type ContextType string
