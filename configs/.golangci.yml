@@ -130,7 +130,7 @@ linters-settings:
     require-specific: true
 
   rowserrcheck:
-    # database/sql is always checked
+    # database/sqltools is always checked
     # Default: []
     packages:
       - github.com/jmoiron/sqlx
@@ -160,7 +160,7 @@ linters:
     - bodyclose # checks whether HTTP response body is closed successfully
     #- contextcheck # checks the function whether use a non-inherited context # TODO: enable after golangci-lint uses https://github.com/sylvia7788/contextcheck/releases/tag/v1.0.7
     - cyclop # checks function and package cyclomatic complexity
-    - dupl # tool for code clone detection
+    #- dupl # tool for code clone detection
     - durationcheck # checks for two durations multiplied together
     - errname # checks that sentinel errors are prefixed with the Err and error types are suffixed with the Error
     - errorlint # finds code that will cause problems with the error wrapping scheme introduced in Go 1.13
@@ -168,7 +168,7 @@ linters:
     - exhaustive # checks exhaustiveness of enum switch statements
     - exportloopref # checks for pointers to enclosing loop variables
     - forbidigo # forbids identifiers
-    - funlen # tool for detection of long functions
+    #- funlen # tool for detection of long functions
    #TODO - gochecknoglobals # checks that no global variables exist
     - gochecknoinits # checks that no init functions are present in Go code
     - gocognit # computes and checks the cognitive complexity of functions
@@ -181,7 +181,7 @@ linters:
     - gomodguard # allow and block lists linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations
     - goprintffuncname # checks that printf-like functions are named with f at the end
     - gosec # inspects source code for security problems
-    - lll # reports long lines
+    #- lll # reports long lines
     - makezero # finds slice declarations with non-zero initial length
     - nakedret # finds naked returns in functions greater than a specified function length
     - nestif # reports deeply nested if statements
@@ -196,7 +196,7 @@ linters:
     - reassign # checks that package variables are not reassigned
     - revive # fast, configurable, extensible, flexible, and beautiful linter for Go, drop-in replacement of golint
     - rowserrcheck # checks whether Err of rows is checked successfully
-    - sqlclosecheck # checks that sql.Rows and sql.Stmt are closed
+    - sqlclosecheck # checks that sqltools.Rows and sqltools.Stmt are closed
     - stylecheck # is a replacement for golint
     - tenv # detects using os.Setenv instead of t.Setenv since Go1.17
     - testpackage # makes you use a separate _test package

@@ -6,48 +6,53 @@ import (
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 )
 
 // UserService provides universal service for work with users.
 type UserService interface {
-	Login(ctx context.Context, user *models.User) (models.User, error)
-	Signup(ctx context.Context, user *models.User) (models.User, error)
+	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
+	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
+	ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
 type userService struct {
-	userRepo repository.UserRepository
+	userProfileRepo repository.UserRepository
 }
 
-// NewUserService is constructor for userService. Accepts UserRepository interfaces.
-func NewUserService(ur repository.UserRepository) UserService {
+// NewUserProfileService is constructor for userService. Accepts UserService interfaces.
+func NewUserProfileService(ur repository.UserRepository) UserService {
 	return &userService{
-		userRepo: ur,
+		userProfileRepo: ur,
 	}
 }
 
-// Login is the service that accesses the interface UserRepository.
-// Validation: request password and password user from repository equal.
-func (u *userService) Login(ctx context.Context, user *models.User) (models.User, error) {
-	userRepo, err := u.userRepo.GetUser(ctx, user)
+// GetUserProfileByID is the service that accesses the interface UserService.
+func (u *userService) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
+	userRepo, err := u.userProfileRepo.GetUserProfileByID(ctx, user)
 	if err != nil {
-		return models.User{}, stdErrors.Wrap(err, "Login")
-	}
-
-	if userRepo.Password != user.Password {
-		return models.User{}, errors.ErrLoginCombinationNotFound
+		return models.User{}, stdErrors.Wrap(err, "GetUserProfileByID")
 	}
 
 	return userRepo, nil
 }
 
-// Signup is the service that accesses the interface UserRepository
-func (u *userService) Signup(ctx context.Context, user *models.User) (models.User, error) {
-	newUser, err := u.userRepo.CreateUser(ctx, user)
+// GetUserProfileSettings is the service that accesses the interface UserService
+func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
+	newUser, err := u.userProfileRepo.GetUserProfileSettings(ctx, user)
 	if err != nil {
-		return models.User{}, stdErrors.Wrap(err, "Signup")
+		return models.User{}, stdErrors.Wrap(err, "GetUserProfileSettings")
+	}
+
+	return newUser, nil
+}
+
+// ChangeUserProfileSettings is the service that accesses the interface UserService
+func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
+	newUser, err := u.userProfileRepo.GetUserProfileSettings(ctx, user)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "ChangeUserProfileSettings")
 	}
 
 	return newUser, nil

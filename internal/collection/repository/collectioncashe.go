@@ -14,24 +14,22 @@ import (
 
 // CollectionRepository provides the versatility of collection repositories.
 type CollectionRepository interface {
-	GetPopular(ctx context.Context) ([]models.Film, error)
-	GetInCinema(ctx context.Context) ([]models.Film, error)
+	GetPopular(ctx context.Context) (models.Collection, error)
+	GetInCinema(ctx context.Context) (models.Collection, error)
 }
 
 // collectionCache is implementation repository of collection
 // in memory corresponding to the CollectionService interface.
 type collectionCache struct {
-	storagePopular  []models.Film
-	storageInCinema []models.Film
-	mu              *sync.RWMutex
+	Popular  models.Collection
+	InCinema models.Collection
+	mu       *sync.RWMutex
 }
 
 // NewCollectionCache is constructor for collectionCache. Accepts paths to data collection.
 func NewCollectionCache(pathPopular string, pathInCinema string) CollectionRepository {
 	res := &collectionCache{
-		make([]models.Film, 0),
-		make([]models.Film, 0),
-		&sync.RWMutex{},
+		mu: &sync.RWMutex{},
 	}
 
 	res.FillRepo(pathPopular, "popular")
@@ -41,52 +39,50 @@ func NewCollectionCache(pathPopular string, pathInCinema string) CollectionRepos
 }
 
 // GetPopular it gives away popular movies from the repository.
-func (c *collectionCache) GetPopular(ctx context.Context) ([]models.Film, error) {
+func (c *collectionCache) GetPopular(ctx context.Context) (models.Collection, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
-	if len(c.storagePopular) == 0 {
-		return []models.Film{}, errors.ErrFilmNotFound
+	if len(c.Popular.Films) == 0 {
+		return models.Collection{}, errors.ErrFilmNotFound
 	}
 
-	return c.storagePopular, nil
+	return c.Popular, nil
 }
 
 // GetInCinema it gives away movies in cinema from the repository.
-func (c *collectionCache) GetInCinema(ctx context.Context) ([]models.Film, error) {
+func (c *collectionCache) GetInCinema(ctx context.Context) (models.Collection, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
-	if len(c.storageInCinema) == 0 {
-		return []models.Film{}, errors.ErrFilmsNotFound
+	if len(c.InCinema.Films) == 0 {
+		return models.Collection{}, errors.ErrFilmNotFound
 	}
 
-	return c.storageInCinema, nil
+	return c.InCinema, nil
 }
 
 // FillRepo for filling repository from file by path.
 func (c *collectionCache) FillRepo(path string, storage string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
-		logrus.Error("FillRepoCollection: can't get data from file")
+		logrus.Error("FillRepoCollection: can't get data from file", err)
 	}
 
-	var films []models.Film
+	var collection models.Collection
 
-	err = json.Unmarshal(file, &films)
+	err = json.Unmarshal(file, &collection)
 	if err != nil {
-		logrus.Error("FillRepoCollection: can't Unmarshal data from file")
+		logrus.Error("FillRepoCollection: can't Unmarshal data from file", err)
 	}
 
 	if storage == "popular" {
-		c.storagePopular = films
-
+		c.Popular = collection
 		return
 	}
 
 	if storage == "in_cinema" {
-		c.storageInCinema = films
-
+		c.InCinema = collection
 		return
 	}
 }

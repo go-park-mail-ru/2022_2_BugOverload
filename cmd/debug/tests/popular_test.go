@@ -12,9 +12,9 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
-	memoryCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
+	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
 	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
-	models2 "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -31,12 +31,12 @@ func TestPopularHandler(t *testing.T) {
 	pathPopular := "../../../test/data/popular.json"
 
 	//  init
-	cs := memoryCollection.NewCollectionCache(pathPopular, pathInCinema)
+	cs := repoCollection.NewCollectionCache(pathPopular, pathInCinema)
 
 	collectionService := serviceCollection.NewCollectionService(cs)
 	popularHandler := handlers.NewPopularFilmsHandler(collectionService)
 
-	url := "http://localhost:8088/v1/popular_films"
+	url := "http://localhost:8088/api/v1/collections/popular"
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)
@@ -55,9 +55,9 @@ func TestPopularHandler(t *testing.T) {
 			err = resp.Body.Close()
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Body.Close must be success"))
 
-			collectionResponse := models2.NewFilmCollection("", []models2.Film{})
+			var collectionResponse models.Collection
 
-			err = json.Unmarshal(body, collectionResponse)
+			err = json.Unmarshal(body, &collectionResponse)
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Marshal must be success"))
 
 			collection, err := cs.GetInCinema(context.TODO())

@@ -1,0 +1,176 @@
+[
+  {
+    "name": "Тильда Суинтон",
+    "avatar": "1",
+    "original_name": "Тильда Суинтон",
+    "birthday": "1960.11.5",
+    "gender": "female",
+    "growth": 1.79,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист",
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Шон Коннери",
+    "avatar": "2",
+    "original_name": "Sean Connery",
+    "birthday": "1930.08.25",
+    "death": "2020.10.31",
+    "growth": 1.9,
+    "genres": [
+      "драма",
+      "боевик",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Ума Турман",
+    "avatar": "3",
+    "original_name": "Uma Thurman",
+    "birthday": "1970.04.29",
+    "gender": "female",
+    "growth": 1.81,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Питер Динклэйдж",
+    "avatar": "4",
+    "original_name": "Peter Dinklage",
+    "birthday": "1969.06.11",
+    "growth": 1.31,
+    "genres": [
+      "комедия",
+      "драма",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Энтони Хопкинс",
+    "avatar": "5",
+    "original_name": "Anthony Hopkins",
+    "birthday": "1937.12.31",
+    "growth": 1.75,
+    "genres": [
+      "драма",
+      "триллер",
+      "биография"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "композитор",
+      "режиссер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Аль Пачино",
+    "avatar": "6",
+    "original_name": "Al Pacino",
+    "birthday": "1940.04.25",
+    "growth": 1.68,
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Кристиан Бэйл",
+    "avatar": "7",
+    "original_name": "Christian Bale",
+    "birthday": "1974.01.30",
+    "growth": 1.83,
+    "genres": [
+      "драма",
+      "боевик",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Брэд Питт",
+    "avatar": "8",
+    "original_name": "Brad Pitt",
+    "birthday": "1963.12.18",
+    "growth": 1.8,
+    "genres": [
+      "драма",
+      "комедия",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Том Холланд",
+    "avatar": "9",
+    "original_name": "Tom Holland",
+    "birthday": "1996.06.01",
+    "growth": 1.68,
+    "genres": [
+      "боевик",
+      "приключения",
+      "фантастика"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Райан Рейнольдс",
+    "avatar": "10",
+    "original_name": "Ryan Reynolds",
+    "birthday": "1976.11.23",
+    "growth": 1.88,
+    "genres": [
+      "комедия",
+      "короткометражка",
+      "драма"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ]
+  }
+]

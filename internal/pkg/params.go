@@ -1,11 +1,14 @@
 package pkg
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 const (
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
-	ContentTypeJPEG = "image/jpeg"
+	ContentTypeJPEG = "image/webp"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5
@@ -27,14 +30,28 @@ const (
 	UploadImageRequest    = "UploadImageRequest"
 	ChangeImageRequest    = "ChangeImageRequest"
 
-	// S3 params request
+	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
 	ImageObjectFilmPosterVer = "film_poster_ver"
 	ImageObjectDefault       = "default"
 	ImageObjectAvatar        = "user_avatar"
+
+	// GetReviewsParams
+	GetReviewsParams = "GetReviewsRequestParams"
+
+	// User
+	GetUserProfile = "GetUserProfile"
 )
 
 type ContextType string
 
-var CookieKey ContextType = "cookie"
+var SessionKey ContextType = "cookie"
 var LoggerKey ContextType = "logger"
+
+var GetReviewsParamsKey ContextType = GetReviewsParams
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}

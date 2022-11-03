@@ -20,7 +20,7 @@ type imageService struct {
 	imageRepo repository.ImageRepository
 }
 
-// NewImageService is constructor for imageService. Accepts UserRepository interfaces.
+// NewImageService is constructor for imageService. Accepts AuthRepository interfaces.
 func NewImageService(ur repository.ImageRepository) ImageService {
 	return &imageService{
 		imageRepo: ur,

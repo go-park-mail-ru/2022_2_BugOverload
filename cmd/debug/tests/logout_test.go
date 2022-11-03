@@ -5,18 +5,17 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -33,14 +32,14 @@ func TestLogoutHandler(t *testing.T) {
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "1=YasaPupkinEzji@top.world",
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSessionNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
-		// Wrong cookie
+		// Wrong session
 		tests.TestCase{
 			Method:       http.MethodGet,
 			Cookie:       "2=YasaPupkinEzji@top.world",
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrCookieNotExist)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrSessionNotExist)),
 			StatusCode:   http.StatusNotFound,
 		},
 		// Cookie is missing
@@ -53,28 +52,27 @@ func TestLogoutHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/logput"
 
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	us := repoAuth.NewAuthCache()
+	cs := repoSession.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var cookie string
-	cookie, err = cs.CreateSession(context.TODO(), testUser)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
+	var session models.Session
+	session, err = cs.CreateSession(context.TODO(), testUser)
+	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-session for test"))
 
-	cases[0].Cookie = strings.Split(cookie, ";")[0]
-	cases[1].Cookie = strings.Split(cookie, ";")[0]
+	cases[0].Cookie = "session_id=" + session.ID + ";"
+	cases[1].Cookie = "session_id=" + session.ID + ";"
 
-	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewAuthService(cs)
+	userService := serviceAuth.NewAuthService(us)
+	authService := serviceSession.NewSessionService(cs)
 	logoutHandler := handlers.NewLogoutHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -92,12 +90,10 @@ func TestLogoutHandler(t *testing.T) {
 		if item.ResponseCookie != "" {
 			resp := w.Result()
 
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookieResp := resp.Cookies()[0]
 
-			nameCookieDel := strings.Split(respCookie, ";")[0]
-
-			require.Equal(t, item.Cookie, nameCookieDel,
-				pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Contains(t, cookieResp.Name, "session_id",
+				pkg.TestErrorMessage(caseNum, "Created and received session not equal"))
 		}
 	}
 }

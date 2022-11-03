@@ -5,19 +5,18 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/films/delivery/handlers"
-	memoryFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/repository"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/films/service"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
+	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -36,31 +35,30 @@ func TestRecommendationHandler(t *testing.T) {
 	url := "http://localhost:8088/v1/auth"
 
 	// Base
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	us := repoAuth.NewAuthCache()
+	cs := repoSession.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	var cookie string
-	cookie, err = cs.CreateSession(context.TODO(), testUser)
+	var session models.Session
+	session, err = cs.CreateSession(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
 
-	cases[0].Cookie = strings.Split(cookie, ";")[0]
+	cases[0].Cookie = "session_id=" + session.ID + ";"
 
-	authService := serviceAuth.NewAuthService(cs)
+	authService := serviceSession.NewSessionService(cs)
 
 	// Films
 	pathPreview := "../../../test/data/preview.json"
 
-	fs := memoryFilms.NewFilmCache(pathPreview)
+	fs := repoFilms.NewFilmCache(pathPreview)
 
 	filmsService := serviceFilms.NewFilmService(fs)
 

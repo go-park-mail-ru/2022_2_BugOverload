@@ -13,12 +13,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -31,7 +31,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget Adapter"}`,
 
 			ResponseCookie: "GeneratedData",
-			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"default"}`,
+			ResponseBody:   `{"nickname":"Andeo","email":"YasaPupkinEzji@top.world","avatar":"avatar"}`,
 			StatusCode:     http.StatusOK,
 		},
 		// No such user
@@ -50,7 +50,7 @@ func TestLoginHandler(t *testing.T) {
 			RequestBody: `{"email":"YasaPupkinEzji@top.world","password":"Widget 123123123Adapter"}`,
 
 			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrAuth(errors.ErrLoginCombinationNotFound)),
-			StatusCode:   http.StatusUnauthorized,
+			StatusCode:   http.StatusForbidden,
 		},
 		// Broken JSON
 		tests.TestCase{
@@ -107,21 +107,20 @@ func TestLoginHandler(t *testing.T) {
 	}
 
 	url := "http://localhost:8088/v1/auth/signup"
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	us := repoAuth.NewAuthCache()
+	cs := repoSession.NewSessionCache()
 
 	testUser := &models.User{
 		Nickname: "Andeo",
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
-		Avatar:   "URL",
 	}
 
 	_, err := us.CreateUser(context.TODO(), testUser)
 	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
 
-	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewAuthService(cs)
+	userService := serviceAuth.NewAuthService(us)
+	authService := serviceSession.NewSessionService(cs)
 	loginHandler := handlers.NewLoginHandler(userService, authService)
 
 	for caseNum, item := range cases {
@@ -141,17 +140,9 @@ func TestLoginHandler(t *testing.T) {
 		resp := w.Result()
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookie := resp.Cookies()[0]
 
-			cookieName := strings.Split(respCookie, ";")[0]
-
-			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
-
-			var nameSession string
-			nameSession, err = authService.GetSession(ctx)
-			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
-
-			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Equal(t, "session_id", cookie.Name, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		if item.ResponseBody != "" {

@@ -26,15 +26,6 @@ func NewInCinemaHandler(uc service.CollectionService) pkg.Handler {
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary In cinema movies
-// @Description Films from the "in cinema" category
-// @tags collection
-// @Produce json
-// @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
-// @Failure 400 "return error"
-// @Failure 405 "method not allowed"
-// @Failure 500 "something unusual has happened"
-// @Router /v1/in_cinema [GET]
 func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetInCinema(r.Context())
 	if err != nil {
@@ -42,7 +33,7 @@ func (h *inCinemaHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionInCinema := models.NewFilmCollectionResponse("Сейчас в кино", collection)
+	collectionInCinema := models.NewFilmInCollectionInCinemaResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, collectionInCinema.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, collectionInCinema)
 }

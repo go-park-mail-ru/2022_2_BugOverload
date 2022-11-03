@@ -3,16 +3,33 @@ package pkg
 import (
 	cryptoRand "crypto/rand"
 	"encoding/base64"
+	"math"
 	"math/big"
 )
 
-func Rand(max int) int {
+func RandMaxInt(max int) int {
 	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max)))
 	if err != nil {
 		return 0
 	}
 
 	return int(number.Int64())
+}
+
+func bigInt(max int64) int64 {
+	nBig, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(max))
+	if err != nil {
+		panic(err)
+	}
+	return nBig.Int64()
+}
+
+const step = 53
+
+func RandMaxFloat64(max float64, precision int) float64 {
+	randFloat64 := (float64(bigInt(1<<step)) / (1 << step)) * max
+
+	return math.Round(randFloat64*10*float64(precision)) / 10 * float64(precision)
 }
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -40,4 +57,47 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 func CryptoRandString(n int) (string, error) {
 	b, err := GenerateRandomBytes(n)
 	return base64.URLEncoding.EncodeToString(b), err
+}
+
+func CryptoRandInInterval(max int, min int) int {
+	if max == 0 {
+		return 0
+	}
+
+	if min == 0 {
+		return RandMaxInt(max)
+	}
+
+	return RandMaxInt(max-min) + min
+}
+
+func CryptoRandSequence(max int, min int) []int {
+	length := max - min
+
+	res := make([]int, length)
+
+	inserted := make(map[int]bool)
+
+	for i := 0; ; {
+		try := CryptoRandInInterval(max, min)
+
+		_, ok := inserted[try]
+		if !ok {
+			inserted[try] = true
+			res[i] = try
+			i++
+
+			if try == max {
+				max--
+			}
+
+			if try == min {
+				min++
+			}
+		}
+
+		if i == length {
+			return res
+		}
+	}
 }

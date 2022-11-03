@@ -1,7 +1,6 @@
 package tests_test
 
 import (
-	"context"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
@@ -12,12 +11,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	memoryCookie "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
+	memoryAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	memoryUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	memorySession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -30,7 +29,7 @@ func TestSignupHandler(t *testing.T) {
 			RequestBody: `{"email":"testmail@yandex.ru","nickname":"testnickname","password": "testpassword"}`,
 
 			ResponseCookie: "1=testmail@yandex.ru",
-			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"default"}`,
+			ResponseBody:   `{"nickname":"testnickname","email":"testmail@yandex.ru","avatar":"avatar"}`,
 			StatusCode:     http.StatusCreated,
 		},
 		// Such user exists
@@ -107,12 +106,12 @@ func TestSignupHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth/signup"
 
-	us := memoryUser.NewUserCache()
-	cs := memoryCookie.NewCookieCache()
+	us := memoryAuth.NewAuthCache()
+	cs := memorySession.NewSessionCache()
 
-	userService := serviceUser.NewUserService(us)
-	authService := serviceAuth.NewAuthService(cs)
-	signupHandler := handlers.NewSingUpHandler(userService, authService)
+	authService := serviceAuth.NewAuthService(us)
+	sessionService := serviceSession.NewSessionService(cs)
+	signupHandler := handlers.NewSingUpHandler(authService, sessionService)
 
 	for caseNum, item := range cases {
 		var reader = strings.NewReader(item.RequestBody)
@@ -131,15 +130,9 @@ func TestSignupHandler(t *testing.T) {
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
 		if item.ResponseCookie != "" {
-			respCookie := resp.Header.Get("Set-Cookie")
+			cookie := resp.Cookies()[0]
 
-			cookieName := strings.Split(respCookie, ";")[0]
-
-			ctx := context.WithValue(context.TODO(), innerPKG.CookieKey, cookieName)
-			nameSession, err := authService.GetSession(ctx)
-			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "Result GetSession not error"))
-
-			require.Equal(t, respCookie, nameSession, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
+			require.Equal(t, "session_id", cookie.Name, pkg.TestErrorMessage(caseNum, "Created and received cookie not equal"))
 		}
 
 		body, err := io.ReadAll(resp.Body)

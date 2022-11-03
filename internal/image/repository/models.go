@@ -6,7 +6,7 @@ import (
 )
 
 type ImageS3 struct {
-	Bucket string `json:"bucket" example:"films/"`
+	Bucket string `json:"bucket" example:"film/"`
 	Key    string `json:"key" example:"posters/hor/1.jpeg"`
 	Bytes  []byte `json:"-"`
 }
@@ -16,10 +16,10 @@ func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
 
 	switch imageParams.Object {
 	case pkg.ImageObjectFilmPosterVer:
-		image.Bucket = "films/"
+		image.Bucket = "film/"
 		image.Key = "posters/ver/"
 	case pkg.ImageObjectFilmPosterHor:
-		image.Bucket = "films/"
+		image.Bucket = "film/"
 		image.Key = "posters/hor/"
 	case pkg.ImageObjectAvatar:
 		image.Bucket = "users/"

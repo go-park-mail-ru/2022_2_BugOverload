@@ -26,15 +26,6 @@ func NewPopularFilmsHandler(uc service.CollectionService) pkg.Handler {
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Popular movies
-// @Description Films from the "popular" category
-// @tags collection
-// @Produce json
-// @Success 200 {object} models.FilmCollectionResponse "returns an array of movies"
-// @Failure 400 "return error"
-// @Failure 405 "method not allowed"
-// @Failure 500 "something unusual has happened"
-// @Router /v1/popular_films [GET]
 func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetPopular(r.Context())
 	if err != nil {
@@ -42,7 +33,7 @@ func (h *PopularFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionPopular := models.NewFilmCollectionResponse("Популярное", collection)
+	collectionPopular := models.NewFilmInCollectionPopularResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, collectionPopular.ToPublic())
+	httpwrapper.Response(w, http.StatusOK, collectionPopular)
 }

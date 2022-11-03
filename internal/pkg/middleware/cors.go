@@ -9,7 +9,7 @@ import (
 )
 
 type CORSMiddleware struct {
-	cors *cors.Cors
+	Cors *cors.Cors
 }
 
 func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
@@ -22,10 +22,10 @@ func NewCORSMiddleware(config *pkg.Cors) *CORSMiddleware {
 	})
 
 	return &CORSMiddleware{
-		cors: cors,
+		Cors: cors,
 	}
 }
 
 func (cmd *CORSMiddleware) SetCORSMiddleware(h http.Handler) http.Handler {
-	return cmd.cors.Handler(h)
+	return cmd.Cors.Handler(h)
 }
