@@ -8,6 +8,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
 // AuthService provides universal service for work with users.
@@ -36,7 +37,7 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
-	if userRepo.Password != user.Password {
+	if err = security.ComparePassword(userRepo.Password, user.Password); err != nil {
 		return models.User{}, errors.ErrLoginCombinationNotFound
 	}
 
@@ -45,6 +46,12 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 
 // Signup is the service that accesses the interface AuthRepository
 func (u *authService) Signup(ctx context.Context, user *models.User) (models.User, error) {
+	hashedPassword, err := security.HashPassword(user.Password)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
+	user.Password = hashedPassword
+
 	newUser, err := u.authRepo.CreateUser(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
