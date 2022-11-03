@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
 
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -52,11 +52,11 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := r.Cookies()[0]
+	requestSession := mainModels.Session{
+		ID: r.Cookies()[0].Value,
+	}
 
-	ctx := context.WithValue(r.Context(), pkg.SessionKey, cookie.Value)
-
-	user, err := h.authService.GetUserBySession(ctx)
+	user, err := h.authService.GetUserBySession(r.Context(), requestSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return

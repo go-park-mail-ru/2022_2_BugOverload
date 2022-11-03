@@ -13,9 +13,9 @@ import (
 // SessionRepository provides the versatility of session-related repositories.
 // Needed to work with stateful session pattern.
 type SessionRepository interface {
-	GetUserBySession(ctx context.Context) (models.User, error)
+	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
-	DeleteSession(ctx context.Context) (models.Session, error)
+	DeleteSession(ctx context.Context, session models.Session) (models.Session, error)
 }
 
 // sessionCache is implementation repository of sessions in memory corresponding to the SessionRepository interface.
@@ -42,19 +42,17 @@ func (cs *sessionCache) CheckExist(sessionID string) bool {
 }
 
 // GetUserBySession is returns all user attributes by name session.
-func (cs *sessionCache) GetUserBySession(ctx context.Context) (models.User, error) {
-	sessionID, _ := ctx.Value(pkgInner.SessionKey).(string)
-
-	if !cs.CheckExist(sessionID) {
+func (cs *sessionCache) GetUserBySession(ctx context.Context, session models.Session) (models.User, error) {
+	if !cs.CheckExist(session.ID) {
 		return models.User{}, errors.ErrSessionNotExist
 	}
 
 	cs.mu.RLock()
 	defer cs.mu.RUnlock()
 
-	session := cs.storageUserSession[sessionID]
+	sessionUser := cs.storageUserSession[session.ID]
 
-	return *session.User, nil
+	return *sessionUser.User, nil
 }
 
 // CreateSession is creates a new cookie and its link to the user.
@@ -77,17 +75,15 @@ func (cs *sessionCache) CreateSession(ctx context.Context, user *models.User) (m
 // DeleteSession is takes the cookie by name, rolls back the time in it so that it becomes
 // irrelevant (it is necessary that the browser deletes the cookie on its side) returns
 // the cookie with the new date, and the repository deletes the cookie itself and the connection with the user.
-func (cs *sessionCache) DeleteSession(ctx context.Context) (models.Session, error) {
-	sessionID, _ := ctx.Value(pkgInner.SessionKey).(string)
-
-	if !cs.CheckExist(sessionID) {
+func (cs *sessionCache) DeleteSession(ctx context.Context, session models.Session) (models.Session, error) {
+	if !cs.CheckExist(session.ID) {
 		return models.Session{}, errors.ErrSessionNotExist
 	}
 
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	defer delete(cs.storageUserSession, sessionID)
+	defer delete(cs.storageUserSession, session.ID)
 
-	return cs.storageUserSession[sessionID], nil
+	return cs.storageUserSession[session.ID], nil
 }
