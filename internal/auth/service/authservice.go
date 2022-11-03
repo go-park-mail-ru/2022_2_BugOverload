@@ -37,7 +37,7 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
-	if err = security.ComparePassword(userRepo.Password, user.Password); err != nil {
+	if !security.IsPasswordsEqual(userRepo.Password, user.Password) {
 		return models.User{}, errors.ErrLoginCombinationNotFound
 	}
 

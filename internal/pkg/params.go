@@ -41,6 +41,13 @@ const (
 
 	// User
 	GetUserProfile = "GetUserProfile"
+
+	// Crypt
+	SaltLength     = 16
+	ArgonTime      = 1
+	ArgonMemory    = 32 * 1024
+	ArgonThreads   = 4
+	ArgonKeyLength = 32
 )
 
 type ContextType string
