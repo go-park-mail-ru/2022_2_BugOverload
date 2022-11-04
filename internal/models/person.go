@@ -12,5 +12,7 @@ type Person struct {
 	CountFilms   int      `json:"count_films,omitempty"`
 	Professions  []string `json:"professions,omitempty"`
 	Genres       []string `json:"genres,omitempty"`
-	Images       []string `json:"images,omitempty"`
+	BestFilms    []Film   `json:"best_films,omitempty"`
+
+	Images []string `json:"images,omitempty"`
 }

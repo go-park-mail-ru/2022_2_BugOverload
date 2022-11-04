@@ -32,7 +32,7 @@ func NewUserProfileService(ur repository.UserRepository) UserService {
 func (u *userService) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	userRepo, err := u.userProfileRepo.GetUserProfileByID(ctx, user)
 	if err != nil {
-		return models.User{}, stdErrors.Wrap(err, "GetUserProfileByID")
+		return models.User{}, stdErrors.Wrap(err, "GetPersonByID")
 	}
 
 	return userRepo, nil

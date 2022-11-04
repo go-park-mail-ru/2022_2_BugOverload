@@ -30,9 +30,8 @@ func NewFilmCollectionResponse(collection *models.Collection) *FilmCollectionRes
 		Poster:      collection.Poster,
 		Time:        collection.Time,
 		CountLikes:  collection.CountLikes,
+		Films:       make([]filmInCollectionResponse, len(collection.Films)),
 	}
-
-	res.Films = make([]filmInCollectionResponse, len(collection.Films))
 
 	for idx, value := range collection.Films {
 		res.Films[idx] = filmInCollectionResponse{

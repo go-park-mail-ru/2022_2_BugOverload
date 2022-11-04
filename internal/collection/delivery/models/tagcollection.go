@@ -19,10 +19,9 @@ type TagCollectionResponse struct {
 
 func NewTagCollectionResponse(collection *models.Collection) *TagCollectionResponse {
 	res := &TagCollectionResponse{
-		Name: collection.Name,
+		Name:  collection.Name,
+		Films: make([]filmTagCollectionResponse, len(collection.Films)),
 	}
-
-	res.Films = make([]filmTagCollectionResponse, len(collection.Films))
 
 	for idx, value := range collection.Films {
 		res.Films[idx] = filmTagCollectionResponse{

@@ -23,12 +23,13 @@ const (
 	LoginRequest          = "LoginRequest"
 	AuthRequest           = "AuthRequest"
 	LogoutRequest         = "LogoutRequest"
-	InCinemaRequest       = "InCinemaRequest"
-	PopularRequest        = "PopularRequest"
 	RecommendationRequest = "RecommendationRequest"
 	DownloadImageRequest  = "DownloadImageRequest"
 	UploadImageRequest    = "UploadImageRequest"
 	ChangeImageRequest    = "ChangeImageRequest"
+	GetUserProfile        = "GetUserProfile"
+	TagCollectionRequest  = "TagCollectionRequest"
+	GetPerson             = "GetPerson"
 
 	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
@@ -36,11 +37,9 @@ const (
 	ImageObjectDefault       = "default"
 	ImageObjectAvatar        = "user_avatar"
 
-	// GetReviewsParams
+	// ParamsContextKeys
 	GetReviewsParams = "GetReviewsRequestParams"
-
-	// User
-	GetUserProfile = "GetUserProfile"
+	GetPersonParams  = "GetPersonParams"
 
 	// Crypt
 	SaltLength     = 16
@@ -50,15 +49,22 @@ const (
 	ArgonKeyLength = 32
 )
 
-type ContextType string
+type ContextKeyType string
 
-var SessionKey ContextType = "cookie"
-var LoggerKey ContextType = "logger"
+// Cookie
+var SessionKey ContextKeyType = "cookie"
+var LoggerKey ContextKeyType = "logger"
 
-var GetReviewsParamsKey ContextType = GetReviewsParams
+// RequestParams
+var GetReviewsParamsKey ContextKeyType = GetReviewsParams
 
 // TxDefaultOptions for Postgres
 var TxDefaultOptions = &sql.TxOptions{
 	Isolation: sql.LevelDefault,
 	ReadOnly:  true,
+}
+
+// GetPersonParamsCtx in struct for GetPersonParams in personHandler
+type GetPersonParamsCtx struct {
+	CountFilms int
 }

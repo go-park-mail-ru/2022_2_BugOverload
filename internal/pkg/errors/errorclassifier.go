@@ -34,10 +34,13 @@ var (
 	ErrBigRequest           = stdErrors.New("big request")
 	ErrConvertLength        = stdErrors.New("getting content-length failed")
 	ErrBigImage             = stdErrors.New("big image")
-	ErrConvertStrToInt      = stdErrors.New("bad input")
+	ErrConvertQuery         = stdErrors.New("bad input query")
+	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
+	ErrQueryBad             = stdErrors.New("bad query params")
 
 	// DB
 	ErrPostgresRequest = stdErrors.New("error sql")
+	ErrNotFoundInDB    = stdErrors.New("not fount")
 )
 
 type ErrClassifier struct {
@@ -73,10 +76,12 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrEmptyBody] = http.StatusBadRequest
 	res[ErrBigRequest] = http.StatusBadRequest
 	res[ErrConvertLength] = http.StatusBadRequest
-	res[ErrConvertStrToInt] = http.StatusBadRequest
+	res[ErrConvertQuery] = http.StatusBadRequest
+	res[ErrQueryBad] = http.StatusBadRequest
 
 	// DB
 	res[ErrPostgresRequest] = http.StatusInternalServerError
+	res[ErrNotFoundInDB] = http.StatusNotFound
 
 	return ErrClassifier{
 		table: res,

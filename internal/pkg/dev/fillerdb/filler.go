@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"os"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
 )
 
@@ -162,13 +162,13 @@ func (f *DBFiller) convertStructs() {
 	f.filmsSQL = make([]modelsFilmRepo.FilmSQL, len(f.films))
 
 	for idx, value := range f.films {
-		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQL(value)
+		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQLOnFilm(value)
 	}
 
 	f.personsSQL = make([]modelsPersonRepo.PersonSQL, len(f.persons))
 
 	for idx, value := range f.persons {
-		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQL(value)
+		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQLOnPerson(value)
 	}
 }
 

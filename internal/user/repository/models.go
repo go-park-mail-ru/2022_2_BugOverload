@@ -5,15 +5,15 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
-type userSQL struct {
+type UserSQL struct {
 	ID       int
 	Nickname string
 	Email    string
 	Password string
-	Profile  profileSQL
+	Profile  ProfileSQL
 }
 
-type profileSQL struct {
+type ProfileSQL struct {
 	Avatar           sql.NullString
 	JoinedDate       string
 	CountViewsFilms  sql.NullInt32
@@ -22,20 +22,20 @@ type profileSQL struct {
 	CountRatings     sql.NullInt32
 }
 
-func newUserSQL() userSQL {
-	return userSQL{
-		Profile: profileSQL{},
+func NewUserSQL() UserSQL {
+	return UserSQL{
+		Profile: ProfileSQL{},
 	}
 }
 
 //  для линтера
-// func newUserSQLOnUser(user models.User) userSQL {
-//	return userSQL{
+// func newUserSQLOnUser(user models.User) UserSQL {
+//	return UserSQL{
 //		ID:       user.ID,
 //		Nickname: user.Nickname,
 //		Email:    user.Email,
 //		Password: user.Password,
-//		Profile: profileSQL{
+//		Profile: ProfileSQL{
 //			Avatar:           innerPKG.NewSQLNullString(user.Profile.Avatar),
 //			JoinedDate:       user.Profile.JoinedDate,
 //			CountViewsFilms:  innerPKG.NewSQLNullInt32(user.Profile.CountViewsFilms),
@@ -46,7 +46,7 @@ func newUserSQL() userSQL {
 //	}
 // }
 
-func (u *userSQL) convert() models.User {
+func (u *UserSQL) Convert() models.User {
 	if !u.Profile.Avatar.Valid {
 		u.Profile.Avatar.String = "avatar"
 	}

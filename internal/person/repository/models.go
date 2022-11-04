@@ -1,7 +1,8 @@
-package models
+package repository
 
 import (
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -17,9 +18,17 @@ type PersonSQL struct {
 	CountFilms   sql.NullInt32
 	OriginalName sql.NullString
 	Death        sql.NullString
+
+	BestFilms []repository.FilmSQL
+
+	Images []string
 }
 
-func NewPersonSQL(person models.Person) PersonSQL {
+func NewPersonSQL() PersonSQL {
+	return PersonSQL{}
+}
+
+func NewPersonSQLOnPerson(person models.Person) PersonSQL {
 	return PersonSQL{
 		ID:       person.ID,
 		Name:     person.Name,
@@ -32,4 +41,28 @@ func NewPersonSQL(person models.Person) PersonSQL {
 		Death:        sqltools.NewSQLNullString(person.Death),
 		CountFilms:   sqltools.NewSQLNullInt32(person.CountFilms),
 	}
+}
+
+func (p *PersonSQL) Convert() models.Person {
+	res := models.Person{
+		ID:       p.ID,
+		Name:     p.Name,
+		Birthday: p.Birthday,
+		Growth:   p.Growth,
+
+		Avatar:       p.Avatar.String,
+		Gender:       p.Gender.String,
+		CountFilms:   int(p.CountFilms.Int32),
+		OriginalName: p.OriginalName.String,
+		Death:        p.Death.String,
+		BestFilms:    make([]models.Film, len(p.BestFilms)),
+
+		Images: p.Images,
+	}
+
+	for idx := range res.BestFilms {
+		res.BestFilms[idx] = p.BestFilms[idx].Convert()
+	}
+
+	return res
 }

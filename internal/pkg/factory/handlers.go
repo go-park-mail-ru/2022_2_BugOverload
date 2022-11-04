@@ -4,15 +4,15 @@ import (
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
 	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
-	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
-	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	handlersFilm "go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
 	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	handlersImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
 	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
+	handlersPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/handlers"
+	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
+	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
@@ -24,6 +24,9 @@ import (
 
 func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res := make(map[string]pkg.Handler)
+
+	// DB
+	postgres := sqltools.NewPostgresRepository()
 
 	// Auth
 	authStorage := repoAuth.NewAuthCache()
@@ -45,18 +48,6 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res[pkg.SignupRequest] = singUpHandler
 
 	// Collections
-	pathInCinema := "test/data/incinema.json"
-	pathPopular := "test/data/popular.json"
-
-	colStorage := repoCollection.NewCollectionCache(pathPopular, pathInCinema)
-
-	collectionService := serviceCollection.NewCollectionService(colStorage)
-
-	inCinemaHandler := handlersCollection.NewInCinemaHandler(collectionService)
-	res[pkg.InCinemaRequest] = inCinemaHandler
-
-	popularHandler := handlersCollection.NewPopularFilmsHandler(collectionService)
-	res[pkg.PopularRequest] = popularHandler
 
 	// Films
 	pathPreview := "test/data/preview.json"
@@ -76,18 +67,27 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	downloadImageHandler := handlersImage.NewGetImageHandler(imageService)
 	res[pkg.DownloadImageRequest] = downloadImageHandler
 
-	uploadImageHandler := handlersImage.NewPutImageHandler(imageService)
+	changeImageHandler := handlersImage.NewPutImageHandler(imageService)
+	res[pkg.ChangeImageRequest] = changeImageHandler
+
+	uploadImageHandler := handlersImage.NewPostImageHandler(imageService)
 	res[pkg.UploadImageRequest] = uploadImageHandler
 
 	// Users
-	postgres := sqltools.NewPostgresRepository()
-
 	userRepo := repoUser.NewUserPostgres(postgres)
 
 	userService := serviceUser.NewUserProfileService(userRepo)
 
 	profileHandler := handlersUser.NewUserProfileHandler(userService)
 	res[pkg.GetUserProfile] = profileHandler
+
+	// Persons
+	personRepo := repoPerson.NewPersonPostgres(postgres)
+
+	personService := servicePerson.NewPersonService(personRepo)
+
+	personHandler := handlersPerson.NewPersonHandler(personService)
+	res[pkg.GetPerson] = personHandler
 
 	return res
 }

@@ -3,8 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-
-	"github.com/sirupsen/logrus"
+	"sync"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -31,46 +30,64 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 }
 
 func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
-	response := newUserSQL()
+	response := NewUserSQL()
 
 	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
-		if rowUser.Err() != nil {
-			logrus.Error("user ", rowUser.Err())
-			return rowUser.Err()
-		}
+		wg := &sync.WaitGroup{}
 
-		err := rowUser.Scan(&response.Nickname)
-		if err != nil {
-			logrus.Error("user ", err)
-			return err
-		}
+		var err error
 
-		rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
-		if rowProfile.Err() != nil {
-			logrus.Error("profile ", rowProfile.Err())
-			return rowProfile.Err()
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		err = rowProfile.Scan(
-			&response.Profile.JoinedDate,
-			&response.Profile.CountViewsFilms,
-			&response.Profile.CountCollections,
-			&response.Profile.CountReviews,
-			&response.Profile.CountRatings)
-		if err != nil {
-			logrus.Error("profile ", err)
-			return err
-		}
+			rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
+			if rowUser.Err() != nil {
+				err = rowUser.Err()
+				return
+			}
+
+			err = rowUser.Scan(&response.Nickname)
+			if err != nil {
+				return
+			}
+		}()
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
+			if rowProfile.Err() != nil {
+				err = rowProfile.Err()
+				return
+			}
+
+			err = rowProfile.Scan(
+				&response.Profile.JoinedDate,
+				&response.Profile.CountViewsFilms,
+				&response.Profile.CountCollections,
+				&response.Profile.CountReviews,
+				&response.Profile.CountRatings)
+			if err != nil {
+				return
+			}
+		}()
+
+		wg.Wait()
 
 		return nil
 	})
+
+	if err == sql.ErrNoRows {
+		return models.User{}, errors.ErrNotFoundInDB
+	}
 
 	if err != nil {
 		return models.User{}, errors.ErrPostgresRequest
 	}
 
-	return response.convert(), nil
+	return response.Convert(), nil
 }
 
 func (u userPostgres) GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
