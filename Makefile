@@ -80,6 +80,9 @@ stop:
 logs:
 	docker-compose logs -f
 
+infro-reboot-db:
+	docker-compose exec $(SERVICE_MAIN) make -C project  reboot-db
+
 main-debug-restart:
 	docker-compose restart $(SERVICE_MAIN)
 
@@ -88,7 +91,7 @@ main-prod-restart:
 
 # Migrations
 MIGRATIONS_DIR = scripts/migrations
-DB_URL = postgresql://mguser:mgpass@localhost:5432/mgdb?sslmode=disable
+DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
 
 migrate-debug-up:
 	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
