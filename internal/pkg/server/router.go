@@ -34,10 +34,10 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 		Queries("object", "{object}", "key", "{key}")
 
 	// User
-	router.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", handlers[pkg.GetUserProfile].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", handlers[pkg.GetUserProfileRequest].Action).Methods(http.MethodGet)
 
 	// Person
-	router.HandleFunc("/api/v1/person/{id:[0-9]+}", handlers[pkg.GetPerson].Action).
+	router.HandleFunc("/api/v1/person/{id:[0-9]+}", handlers[pkg.GetPersonRequest].Action).
 		Methods(http.MethodGet).
 		Queries("count_films", "{count_films}")
 

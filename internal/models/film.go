@@ -51,4 +51,6 @@ type Film struct {
 	Operators     []FilmPerson `json:"operators,omitempty"`
 	Montage       []FilmPerson `json:"montage,omitempty"`
 	Composers     []FilmPerson `json:"composers,omitempty"`
+
+	Images []string `json:"images,omitempty"`
 }

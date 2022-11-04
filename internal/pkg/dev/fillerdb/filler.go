@@ -203,6 +203,12 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d film tags link end", count)
 
+	count, err = f.linkFilmImages()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d films images link end", count)
+
 	count, err = f.uploadPersons()
 	if err != nil {
 		return errors.Wrap(err, "Action")
@@ -214,6 +220,12 @@ func (f *DBFiller) Action() error {
 		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d persons professions link end", count)
+
+	count, err = f.linkPersonImages()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d persons images link end", count)
 
 	count, err = f.linkPersonGenres()
 	if err != nil {

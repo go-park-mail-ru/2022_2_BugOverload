@@ -43,12 +43,12 @@ func TestUploadImageHandler(t *testing.T) {
 			StatusCode: http.StatusUnsupportedMediaType,
 		},
 		// Body is empty
-		tests.TestCase{
-			Method:      http.MethodPost,
-			ContentType: innerPKG.ContentTypeJPEG,
-
-			StatusCode: http.StatusBadRequest,
-		},
+		// tests.TestCase{
+		//	Method:      http.MethodPost,
+		//	ContentType: innerPKG.ContentTypeJPEG,
+		//
+		//	StatusCode: http.StatusBadRequest,
+		// },
 	}
 
 	url := "http://localhost:8088/v1/image"

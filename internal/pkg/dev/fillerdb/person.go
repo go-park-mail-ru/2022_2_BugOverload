@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -131,6 +132,34 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonGenres")
+	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) linkPersonImages() (int, error) {
+	countInserts := len(f.persons)
+
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsImages, countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+	for _, value := range f.persons {
+		values[pos] = value.ID
+		pos++
+
+		imagesList := strings.Join(value.Images, "_")
+		values[pos] = imagesList
+		pos++
+	}
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkPersonImages")
 	}
 
 	return countInserts, nil

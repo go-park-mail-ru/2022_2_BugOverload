@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
@@ -319,6 +320,34 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmTags")
+	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) linkFilmImages() (int, error) {
+	countInserts := len(f.films)
+
+	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsImages, countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+	for _, value := range f.films {
+		values[pos] = value.ID
+		pos++
+
+		imagesList := strings.Join(value.Images, "_")
+		values[pos] = imagesList
+		pos++
+	}
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkPersonImages")
 	}
 
 	return countInserts, nil

@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"sync"
 
+	stdErrors "github.com/pkg/errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -79,7 +81,7 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 		return nil
 	})
 
-	if err == sql.ErrNoRows {
+	if stdErrors.Is(err, sql.ErrNoRows) {
 		return models.User{}, errors.ErrNotFoundInDB
 	}
 

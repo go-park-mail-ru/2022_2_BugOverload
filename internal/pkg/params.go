@@ -27,9 +27,9 @@ const (
 	DownloadImageRequest  = "DownloadImageRequest"
 	UploadImageRequest    = "UploadImageRequest"
 	ChangeImageRequest    = "ChangeImageRequest"
-	GetUserProfile        = "GetUserProfile"
+	GetUserProfileRequest = "GetUserProfileRequest"
 	TagCollectionRequest  = "TagCollectionRequest"
-	GetPerson             = "GetPerson"
+	GetPersonRequest      = "GetPersonRequest"
 
 	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
@@ -51,11 +51,11 @@ const (
 
 type ContextKeyType string
 
-// Cookie
+// SessionKey LoggerKey for ctx
 var SessionKey ContextKeyType = "cookie"
 var LoggerKey ContextKeyType = "logger"
 
-// RequestParams
+// GetReviewsParamsKey for RequestParams
 var GetReviewsParamsKey ContextKeyType = GetReviewsParams
 
 // TxDefaultOptions for Postgres

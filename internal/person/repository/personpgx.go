@@ -3,14 +3,17 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strconv"
+	"strings"
+
+	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	"strconv"
-	"strings"
 )
 
 type PersonRepository interface {
@@ -35,7 +38,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(tx *sql.Tx) error {
 		// Person
 		rowPerson := tx.QueryRowContext(ctx, getPerson, person.ID)
-		if rowPerson.Err() == sql.ErrNoRows {
+		if stdErrors.Is(rowPerson.Err(), sql.ErrNoRows) {
 			return errors.ErrNotFoundInDB
 		}
 		if rowPerson.Err() != nil {
@@ -103,18 +106,18 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		counter := 0
 
 		for rowsFilmsGenres.Next() {
-			var filmId int
+			var filmID int
 			var genre sql.NullString
 
 			err = rowsFilmsGenres.Scan(
-				&filmId,
+				&filmID,
 				&genre)
 			if err != nil {
 				logrus.Error(err)
 				return err
 			}
 
-			if filmId != response.BestFilms[counter].ID {
+			if filmID != response.BestFilms[counter].ID {
 				counter++
 			}
 
@@ -123,7 +126,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 		//  Images
 		rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
-		if rowPerson.Err() == sql.ErrNoRows {
+		if stdErrors.Is(rowPerson.Err(), sql.ErrNoRows) {
 			return nil
 		}
 
@@ -143,7 +146,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
-	if err == sql.ErrNoRows {
+	if stdErrors.Is(err, sql.ErrNoRows) {
 		return models.Person{}, errors.ErrNotFoundInDB
 	}
 

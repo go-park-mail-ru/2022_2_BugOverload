@@ -79,7 +79,7 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	userService := serviceUser.NewUserProfileService(userRepo)
 
 	profileHandler := handlersUser.NewUserProfileHandler(userService)
-	res[pkg.GetUserProfile] = profileHandler
+	res[pkg.GetUserProfileRequest] = profileHandler
 
 	// Persons
 	personRepo := repoPerson.NewPersonPostgres(postgres)
@@ -87,7 +87,7 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	personService := servicePerson.NewPersonService(personRepo)
 
 	personHandler := handlersPerson.NewPersonHandler(personService)
-	res[pkg.GetPerson] = personHandler
+	res[pkg.GetPersonRequest] = personHandler
 
 	return res
 }

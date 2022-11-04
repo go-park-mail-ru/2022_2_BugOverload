@@ -11,11 +11,13 @@ const (
 	insertFilmsCountries = `INSERT INTO film_countries(fk_film_id, fk_country_id, weight) VALUES`
 	insertFilmsCompanies = `INSERT INTO film_companies(fk_film_id, fk_company_id, weight) VALUES`
 	insertFilmsTags      = `INSERT INTO film_tags(fk_film_id, fk_tag_id) VALUES`
+	insertFilmsImages    = `INSERT INTO film_images(film_id, images_list) VALUES`
 
 	insertPersons = `INSERT INTO persons(name, original_name, birthday, growth, avatar,  gender, death) VALUES`
 
 	insertPersonsProfessions = `INSERT INTO person_professions(fk_person_id, fk_profession_id, weight) VALUES`
 	insertPersonsGenres      = `INSERT INTO person_genres(fk_person_id, fk_genre_id, weight) VALUES`
+	insertPersonsImages      = `INSERT INTO person_images(person_id, images_list) VALUES`
 
 	insertUsers = `INSERT INTO users(nickname, email, password) VALUES`
 
