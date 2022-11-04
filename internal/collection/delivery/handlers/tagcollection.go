@@ -38,7 +38,7 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection/{tag} [GET]
 func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
-	collection, err := h.collectionService.GetInCinema(r.Context())
+	collection, err := h.collectionService.GetCollectionByTag(r.Context())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return

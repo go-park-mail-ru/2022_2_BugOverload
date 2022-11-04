@@ -30,7 +30,7 @@ func NewPersonHandler(fs service.PersonService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Person full info
 // @Description Getting person info by id
-// @tags in_dev
+// @tags Completed
 // @Produce json
 // @Param id  path int true "person id"
 // @Success 200 {object} models.PersonResponse "return person"

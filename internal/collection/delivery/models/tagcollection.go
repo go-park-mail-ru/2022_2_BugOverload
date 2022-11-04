@@ -14,7 +14,7 @@ type filmTagCollectionResponse struct {
 
 type TagCollectionResponse struct {
 	Name  string                      `json:"name,omitempty" example:"Сейчас в кино"`
-	Films []filmTagCollectionResponse `json:"film,omitempty"`
+	Films []filmTagCollectionResponse `json:"films,omitempty"`
 }
 
 func NewTagCollectionResponse(collection *models.Collection) *TagCollectionResponse {

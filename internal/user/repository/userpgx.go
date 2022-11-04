@@ -44,6 +44,11 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 			defer wg.Done()
 
 			rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
+			if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
+				err = errors.ErrNotFoundInDB
+				return
+			}
+
 			if rowUser.Err() != nil {
 				err = rowUser.Err()
 				return
@@ -60,6 +65,11 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 			defer wg.Done()
 
 			rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
+			if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
+				err = errors.ErrNotFoundInDB
+				return
+			}
+
 			if rowProfile.Err() != nil {
 				err = rowProfile.Err()
 				return
@@ -78,13 +88,19 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 
 		wg.Wait()
 
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
-	if stdErrors.Is(err, sql.ErrNoRows) {
+	// the main entity is not found
+	if stdErrors.Is(err, errors.ErrNotFoundInDB) {
 		return models.User{}, errors.ErrNotFoundInDB
 	}
 
+	// execution error
 	if err != nil {
 		return models.User{}, errors.ErrPostgresRequest
 	}

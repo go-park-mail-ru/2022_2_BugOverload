@@ -19,7 +19,7 @@ type FilmCollectionResponse struct {
 	Description string                     `json:"description,omitempty"  example:"Лучшие фильмы на данный момент"`
 	Poster      string                     `json:"poster,omitempty" example:"42"`
 	Time        string                     `json:"time,omitempty" example:"2023.01.04 15:12:23'"`
-	CountLikes  float32                    `json:"count_likes,omitempty" example:"502"`
+	CountLikes  int                        `json:"count_likes,omitempty" example:"502"`
 	Films       []filmInCollectionResponse `json:"film,omitempty"`
 }
 

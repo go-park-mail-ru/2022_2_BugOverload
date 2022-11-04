@@ -5,10 +5,9 @@ import (
 	"database/sql"
 	"strconv"
 	"strings"
+	"sync"
 
 	stdErrors "github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -41,6 +40,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		if stdErrors.Is(rowPerson.Err(), sql.ErrNoRows) {
 			return errors.ErrNotFoundInDB
 		}
+
 		if rowPerson.Err() != nil {
 			return rowPerson.Err()
 		}
@@ -96,60 +96,83 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 		IDSetResult := strings.Join(IDSet, ",")
 
+		wg := &sync.WaitGroup{}
+
 		// GenresFilms
-		rowsFilmsGenres, err := tx.QueryContext(ctx, getGenresFilmBatchBegin+IDSetResult+getGenresFilmBatchEnd)
-		if err != nil {
-			return err
-		}
-		defer rowsFilmsGenres.Close()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		counter := 0
+			var rowsFilmsGenres *sql.Rows
 
-		for rowsFilmsGenres.Next() {
-			var filmID int
-			var genre sql.NullString
-
-			err = rowsFilmsGenres.Scan(
-				&filmID,
-				&genre)
+			rowsFilmsGenres, err = tx.QueryContext(ctx, getGenresFilmBatchBegin+IDSetResult+getGenresFilmBatchEnd)
 			if err != nil {
-				logrus.Error(err)
-				return err
+				return
 			}
 
-			if filmID != response.BestFilms[counter].ID {
-				counter++
-			}
+			defer rowsFilmsGenres.Close()
 
-			response.BestFilms[counter].Genres = append(response.BestFilms[counter].Genres, genre.String)
-		}
+			counter := 0
+
+			for rowsFilmsGenres.Next() {
+				var filmID int
+				var genre sql.NullString
+
+				err = rowsFilmsGenres.Scan(
+					&filmID,
+					&genre)
+				if err != nil {
+					return
+				}
+
+				if filmID != response.BestFilms[counter].ID {
+					counter++
+				}
+
+				response.BestFilms[counter].Genres = append(response.BestFilms[counter].Genres, genre.String)
+			}
+		}()
 
 		//  Images
-		rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
-		if stdErrors.Is(rowPerson.Err(), sql.ErrNoRows) {
-			return nil
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
 
-		if rowPerson.Err() != nil {
-			return rowPerson.Err()
-		}
+			rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
+			if rowPerson.Err() != nil {
+				err = rowPerson.Err()
+			}
 
-		var images sql.NullString
+			var images sql.NullString
 
-		err = rowPersonImages.Scan(&images)
+			err = rowPersonImages.Scan(&images)
+			if err != nil {
+				return
+			}
+
+			response.Images = strings.Split(images.String, "_")
+		}()
+
+		wg.Wait()
+
 		if err != nil {
 			return err
 		}
-
-		response.Images = strings.Split(images.String, "_")
 
 		return nil
 	})
 
-	if stdErrors.Is(err, sql.ErrNoRows) {
+	// the main entity is not found
+	if stdErrors.Is(err, errors.ErrNotFoundInDB) {
 		return models.Person{}, errors.ErrNotFoundInDB
 	}
 
+	// the main entity is found, its components are not found
+	if stdErrors.Is(err, sql.ErrNoRows) {
+		return response.Convert(), nil
+	}
+
+	// execution error
 	if err != nil {
 		return models.Person{}, errors.ErrPostgresRequest
 	}
