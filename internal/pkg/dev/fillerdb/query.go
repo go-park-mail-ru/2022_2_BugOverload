@@ -75,4 +75,30 @@ SET count_films = (SELECT COUNT(*) as count
                    WHERE fp.fk_person_id = p.person_id
                    GROUP BY fp.fk_person_id, fp.fk_profession_id
                    HAVING fp.fk_profession_id = (SELECT profession_id FROM professions WHERE name = 'актер'));`
+
+	updateProfiles = `UPDATE profiles p
+SET count_views_films=
+        (SELECT COUNT(*)
+         FROM profile_views_films pvf
+         WHERE p.profile_id = pvf.fk_profile_id
+         GROUP BY pvf.fk_profile_id
+         HAVING COUNT(pvf.fk_profile_id) > 0),
+    count_reviews=
+        (SELECT COUNT(*)
+         FROM profile_reviews pr
+         WHERE p.profile_id = pr.fk_profile_id
+         GROUP BY pr.fk_profile_id
+         HAVING COUNT(pr.fk_profile_id) > 0),
+    count_ratings=
+        (SELECT COUNT(*)
+         FROM profile_ratings pr
+         WHERE p.profile_id = pr.fk_profile_id
+         GROUP BY pr.fk_profile_id
+         HAVING COUNT(pr.fk_profile_id) > 0),
+    count_collections=
+        (SELECT COUNT(*)
+         FROM profile_collections pc
+         WHERE p.profile_id = pc.fk_profile_id
+         GROUP BY pc.fk_profile_id
+         HAVING COUNT(pc.fk_profile_id) > 0)`
 )

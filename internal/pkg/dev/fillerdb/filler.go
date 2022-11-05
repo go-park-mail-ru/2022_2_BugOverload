@@ -295,5 +295,11 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d persons denormal fields updated", count)
 
+	count, err = f.UpdateProfiles()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d profiles denormal fields updated", count)
+
 	return nil
 }
