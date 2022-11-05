@@ -61,6 +61,10 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return models.Person{}, errors.ErrNotFoundInDB
 	}
 
+	if errTX != nil {
+		return models.Person{}, errors.ErrPostgresRequest
+	}
+
 	// Parts
 	// Films + GenresFilms
 	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
@@ -83,8 +87,8 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
-	if !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, nil
+	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, errors.ErrPostgresRequest
 	}
 
 	//  Images
@@ -106,8 +110,8 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
-	if !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, nil
+	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, errors.ErrPostgresRequest
 	}
 
 	//  Professions
@@ -124,8 +128,8 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
-	if !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, nil
+	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, errors.ErrPostgresRequest
 	}
 
 	//  Genres
@@ -143,8 +147,12 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 	})
 
 	// the main entity is found, its components are not found
-	if !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, nil
+	if stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, errors.ErrNotFoundInDB
+	}
+
+	if errTX != nil {
+		return models.Person{}, errors.ErrPostgresRequest
 	}
 
 	return response.Convert(), nil
