@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS persons
     "birthday"      date          NOT NULL,
     "growth"        numeric(3, 2) NOT NULL,
     "original_name" varchar(80) DEFAULT NULL,
-    "avatar"        varchar(80) DEFAULT NULL,
+    "avatar"        varchar(16) DEFAULT NULL,
     "death"         date        DEFAULT NULL,
     "gender"        varchar(16) DEFAULT NULL,
     "count_films"   integer     DEFAULT NULL

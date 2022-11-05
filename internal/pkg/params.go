@@ -49,6 +49,16 @@ const (
 	ArgonMemory    = 32 * 1024
 	ArgonThreads   = 4
 	ArgonKeyLength = 32
+
+	// PersonProfessions
+	Actor    = 1
+	Artist   = 7
+	Director = 2
+	Writer   = 3
+	Producer = 4
+	Operator = 5
+	Montage  = 8
+	Composer = 6
 )
 
 type ContextKeyType string

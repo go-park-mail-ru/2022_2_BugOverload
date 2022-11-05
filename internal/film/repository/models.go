@@ -13,6 +13,18 @@ import (
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
+type FilmActorSQL struct {
+	ID        int
+	Name      string
+	Avatar    sql.NullString
+	Character string
+}
+
+type FilmPersonSQL struct {
+	ID   int    `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
 type FilmSQL struct {
 	ID          int
 	Name        string
@@ -47,6 +59,15 @@ type FilmSQL struct {
 	ProdCompanies []string
 	ProdCountries []string
 	Images        []string
+
+	Actors    []FilmActorSQL
+	Artists   []FilmPersonSQL
+	Directors []FilmPersonSQL
+	Writers   []FilmPersonSQL
+	Producers []FilmPersonSQL
+	Operators []FilmPersonSQL
+	Montage   []FilmPersonSQL
+	Composers []FilmPersonSQL
 }
 
 func NewFilmSQL() FilmSQL {
@@ -120,6 +141,57 @@ func (f *FilmSQL) Convert() models.Film {
 		ProdCountries: f.ProdCountries,
 		ProdCompanies: f.ProdCompanies,
 		Images:        f.Images,
+
+		Actors:    make([]models.FilmActor, len(f.Actors)),
+		Artists:   make([]models.FilmPerson, len(f.Artists)),
+		Directors: make([]models.FilmPerson, len(f.Directors)),
+		Writers:   make([]models.FilmPerson, len(f.Writers)),
+		Producers: make([]models.FilmPerson, len(f.Producers)),
+		Operators: make([]models.FilmPerson, len(f.Operators)),
+		Montage:   make([]models.FilmPerson, len(f.Montage)),
+		Composers: make([]models.FilmPerson, len(f.Composers)),
+	}
+
+	for idx, value := range f.Actors {
+		res.Actors[idx].ID = value.ID
+		res.Actors[idx].Name = value.Name
+		res.Actors[idx].Character = value.Character
+		res.Actors[idx].Avatar = value.Avatar.String
+	}
+
+	for idx, value := range f.Artists {
+		res.Artists[idx].ID = value.ID
+		res.Artists[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Directors {
+		res.Directors[idx].ID = value.ID
+		res.Directors[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Writers {
+		res.Writers[idx].ID = value.ID
+		res.Writers[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Producers {
+		res.Producers[idx].ID = value.ID
+		res.Producers[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Operators {
+		res.Operators[idx].ID = value.ID
+		res.Operators[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Artists {
+		res.Artists[idx].ID = value.ID
+		res.Artists[idx].Name = value.Name
+	}
+
+	for idx, value := range f.Composers {
+		res.Composers[idx].ID = value.ID
+		res.Composers[idx].Name = value.Name
 	}
 
 	return res

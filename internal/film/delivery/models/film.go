@@ -99,7 +99,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	fillPersons := func(someStruct []models.FilmPerson) []FilmPersonResponse {
-		persons := make([]FilmPersonResponse, len(film.Actors))
+		persons := make([]FilmPersonResponse, len(someStruct))
 
 		for idx, val := range someStruct {
 			persons[idx].ID = val.ID

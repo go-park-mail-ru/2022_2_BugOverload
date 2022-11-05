@@ -57,4 +57,22 @@ ORDER BY t.name DESC`
 SELECT images_list
 FROM film_images
 WHERE film_id = $1`
+
+	getFilmActors = `
+SELECT fp.fk_person_id, p.name, p.avatar, fp.character
+FROM persons p
+         JOIN film_persons fp on p.person_id = fp.fk_person_id
+WHERE fp.fk_film_id = $1
+  AND fp.character IS NOT NULL
+GROUP BY fp.fk_film_id, fp.weight, fp.character, p.name, fp.fk_person_id, p.avatar
+ORDER BY fp.weight DESC`
+
+	getFilmPersons = `
+SELECT fp.fk_person_id, p.name, fp.fk_profession_id
+FROM persons p
+         JOIN film_persons fp on p.person_id = fp.fk_person_id
+WHERE fp.fk_film_id = $1
+  AND fp.character IS NULL
+GROUP BY fp.fk_film_id, fp.fk_profession_id, fp.weight, p.name, fp.fk_person_id
+ORDER BY fp.fk_profession_id, fp.weight DESC`
 )

@@ -180,6 +180,83 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 		})
 	}()
 
+	// Actors
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			rowsFilmActors, err := tx.QueryContext(ctx, getFilmActors, film.ID)
+			if err != nil {
+				return err
+			}
+			defer rowsFilmActors.Close()
+
+			for rowsFilmActors.Next() {
+				var actor FilmActorSQL
+
+				err = rowsFilmActors.Scan(
+					&actor.ID,
+					&actor.Name,
+					&actor.Avatar,
+					&actor.Character)
+				if err != nil {
+					return err
+				}
+
+				response.Actors = append(response.Actors, actor)
+			}
+
+			return nil
+		})
+	}()
+
+	// Persons
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			rowsFilmActors, err := tx.QueryContext(ctx, getFilmPersons, film.ID)
+			if err != nil {
+				return err
+			}
+			defer rowsFilmActors.Close()
+
+			for rowsFilmActors.Next() {
+				var person FilmPersonSQL
+				var professionID int
+
+				err = rowsFilmActors.Scan(
+					&person.ID,
+					&person.Name,
+					&professionID)
+				if err != nil {
+					return err
+				}
+
+				switch professionID {
+				case innerPKG.Artist:
+					response.Artists = append(response.Artists, person)
+				case innerPKG.Director:
+					response.Directors = append(response.Directors, person)
+				case innerPKG.Writer:
+					response.Writers = append(response.Writers, person)
+				case innerPKG.Producer:
+					response.Producers = append(response.Producers, person)
+				case innerPKG.Operator:
+					response.Operators = append(response.Operators, person)
+				case innerPKG.Montage:
+					response.Montage = append(response.Montage, person)
+				case innerPKG.Composer:
+					response.Composers = append(response.Composers, person)
+				}
+			}
+
+			return nil
+		})
+	}()
+
 	wg.Wait()
 
 	return response.Convert(), nil
