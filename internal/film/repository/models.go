@@ -126,15 +126,15 @@ WHERE f.film_id IN (`
 )
 
 func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQL, error) {
-	IDSet := make([]string, len(target))
+	setID := make([]string, len(target))
 
 	for idx := range target {
-		IDSet[idx] = strconv.Itoa(target[idx].ID)
+		setID[idx] = strconv.Itoa(target[idx].ID)
 	}
 
-	IDSetResult := strings.Join(IDSet, ",")
+	setIDRes := strings.Join(setID, ",")
 
-	rowsFilmsGenres, err := tx.QueryContext(ctx, getGenresFilmBatchBegin+IDSetResult+getGenresFilmBatchEnd)
+	rowsFilmsGenres, err := tx.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
 		return []FilmSQL{}, err
 	}

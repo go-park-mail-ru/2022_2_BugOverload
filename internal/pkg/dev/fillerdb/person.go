@@ -2,6 +2,7 @@ package fillerdb
 
 import (
 	"context"
+	"fmt"
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"strings"
 	"time"
@@ -163,4 +164,21 @@ func (f *DBFiller) linkPersonImages() (int, error) {
 	}
 
 	return countInserts, nil
+}
+
+func (f *DBFiller) UpdatePersons() (int, error) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	rows, err := f.DB.Connection.ExecContext(ctx, updatePersons)
+	if err != nil {
+		return 0, fmt.Errorf("UpdateFilms: [%w] when inserting row into [%s] table", err, updatePersons)
+	}
+
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "UpdatePersons")
+	}
+
+	return int(affected), nil
 }
