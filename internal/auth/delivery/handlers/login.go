@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 	"time"
 
@@ -65,6 +66,14 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
+
+	token, err := security.CreateCsrfToken(&newSession)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
