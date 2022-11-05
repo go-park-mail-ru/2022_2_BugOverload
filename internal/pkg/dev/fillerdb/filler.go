@@ -283,5 +283,11 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d film persons link end", count)
 
+	count, err = f.UpdateFilms()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d films denormal fields updated", count)
+
 	return nil
 }

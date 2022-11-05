@@ -38,8 +38,9 @@ const (
 	ImageObjectAvatar        = "user_avatar"
 
 	// ParamsContextKeys
-	GetReviewsParams = "GetReviewsRequestParams"
-	GetPersonParams  = "GetPersonParams"
+	GetReviewsParams       = "GetReviewsRequestParams"
+	GetPersonParams        = "GetPersonParams"
+	GetCollectionTagParams = "GetPersonParams"
 
 	// Crypt
 	SaltLength     = 16
@@ -56,7 +57,10 @@ var SessionKey ContextKeyType = "cookie"
 var LoggerKey ContextKeyType = "logger"
 
 // GetReviewsParamsKey for RequestParams
-var GetReviewsParamsKey ContextKeyType = GetReviewsParams
+var GetReviewsParamsKey ContextKeyType = GetPersonParams
+
+// GetCollectionTagParamsKey for RequestParams
+var GetCollectionTagParamsKey ContextKeyType = GetCollectionTagParams
 
 // TxDefaultOptions for Postgres
 var TxDefaultOptions = &sql.TxOptions{
@@ -67,4 +71,11 @@ var TxDefaultOptions = &sql.TxOptions{
 // GetPersonParamsCtx in struct for GetPersonParams in personHandler
 type GetPersonParamsCtx struct {
 	CountFilms int
+}
+
+// GetCollectionTagParamsCtx in struct for GetPersonParams in personHandler
+type GetCollectionTagParamsCtx struct {
+	Tag       string
+	Count     int
+	Delimiter string
 }

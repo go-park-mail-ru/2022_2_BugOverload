@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"strconv"
 	"strings"
 	"sync"
 
 	stdErrors "github.com/pkg/errors"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -72,8 +72,6 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		}
 		defer rowsBestFilms.Close()
 
-		IDSet := make([]string, 0)
-
 		for rowsBestFilms.Next() {
 			film := repository.NewFilmSQL()
 
@@ -89,12 +87,8 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 				return err
 			}
 
-			IDSet = append(IDSet, strconv.Itoa(film.ID))
-
 			response.BestFilms = append(response.BestFilms, film)
 		}
-
-		IDSetResult := strings.Join(IDSet, ",")
 
 		wg := &sync.WaitGroup{}
 
@@ -103,33 +97,9 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		go func() {
 			defer wg.Done()
 
-			var rowsFilmsGenres *sql.Rows
-
-			rowsFilmsGenres, err = tx.QueryContext(ctx, getGenresFilmBatchBegin+IDSetResult+getGenresFilmBatchEnd)
+			response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, tx)
 			if err != nil {
 				return
-			}
-
-			defer rowsFilmsGenres.Close()
-
-			counter := 0
-
-			for rowsFilmsGenres.Next() {
-				var filmID int
-				var genre sql.NullString
-
-				err = rowsFilmsGenres.Scan(
-					&filmID,
-					&genre)
-				if err != nil {
-					return
-				}
-
-				if filmID != response.BestFilms[counter].ID {
-					counter++
-				}
-
-				response.BestFilms[counter].Genres = append(response.BestFilms[counter].Genres, genre.String)
 			}
 		}()
 

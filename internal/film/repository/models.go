@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"strconv"
+	"strings"
 )
 
 type FilmSQL struct {
@@ -108,4 +111,55 @@ func (f *FilmSQL) Convert() models.Film {
 	}
 
 	return res
+}
+
+const (
+	getGenresFilmBatchBegin = `
+SELECT f.film_id,
+       g.name
+FROM genres g
+         JOIN film_genres fg ON g.genre_id = fg.fk_genre_id
+         JOIN films f ON fg.fk_film_id = f.film_id
+WHERE f.film_id IN (`
+
+	getGenresFilmBatchEnd = `) ORDER BY f.film_id, fg.weight DESC`
+)
+
+func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQL, error) {
+	IDSet := make([]string, len(target))
+
+	for idx := range target {
+		IDSet[idx] = strconv.Itoa(target[idx].ID)
+	}
+
+	IDSetResult := strings.Join(IDSet, ",")
+
+	rowsFilmsGenres, err := tx.QueryContext(ctx, getGenresFilmBatchBegin+IDSetResult+getGenresFilmBatchEnd)
+	if err != nil {
+		return []FilmSQL{}, err
+	}
+
+	defer rowsFilmsGenres.Close()
+
+	counter := 0
+
+	for rowsFilmsGenres.Next() {
+		var filmID int
+		var genre sql.NullString
+
+		err = rowsFilmsGenres.Scan(
+			&filmID,
+			&genre)
+		if err != nil {
+			return []FilmSQL{}, err
+		}
+
+		if filmID != target[counter].ID {
+			counter++
+		}
+
+		target[counter].Genres = append(target[counter].Genres, genre.String)
+	}
+
+	return target, nil
 }

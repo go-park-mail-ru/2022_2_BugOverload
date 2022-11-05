@@ -32,4 +32,47 @@ const (
 	insertFilmsReviews = `INSERT INTO profile_reviews(fk_review_id, fk_profile_id, fk_film_id) VALUES`
 
 	insertFilmsPersons = `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
+
+	updateFilms = `UPDATE films f
+SET (rating, count_scores) =
+        (SELECT SUM(pr.score) / COUNT(*) AS rating,
+                COUNT(*)
+         FROM profile_ratings pr
+         WHERE f.film_id = fk_film_id
+         GROUP BY pr.fk_film_id
+         ORDER BY rating DESC),
+    count_negative_reviews =
+        (SELECT COUNT(*)
+         FROM profile_reviews
+                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         WHERE f.film_id = fk_film_id
+           AND r.type = 'negative'
+         HAVING COUNT(profile_reviews.fk_film_id) > 0),
+    count_neutral_reviews  =
+        (SELECT COUNT(*)
+         FROM profile_reviews
+                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         WHERE f.film_id = fk_film_id
+           AND r.type = 'neutral'
+         HAVING COUNT(*) > 0),
+    count_positive_reviews =
+        (SELECT COUNT(*) as count
+         FROM profile_reviews
+                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         WHERE f.film_id = fk_film_id
+           AND r.type = 'positive'
+         HAVING COUNT(*) > 0),
+    count_actors           =
+        (SELECT COUNT(*) as count
+         FROM film_persons fp
+         WHERE f.film_id = fk_film_id
+           AND fp.fk_profession_id = (SELECT profession_id FROM professions p WHERE p.name = 'актер')
+         HAVING COUNT(fp.fk_film_id) > 0)`
+
+	updatePersons = `UPDATE persons p
+SET count_films = (SELECT COUNT(*) as count
+                   FROM film_persons fp
+                   WHERE fp.fk_person_id = p.person_id
+                   GROUP BY fp.fk_person_id, fp.fk_profession_id
+                   HAVING fp.fk_profession_id = (SELECT profession_id FROM professions WHERE name = 'актер'));`
 )

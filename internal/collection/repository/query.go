@@ -1,7 +1,8 @@
 package repository
 
 const (
-	getFilmByTag = `SELECT f.film_id,
+	getFilmsByTag = `
+SELECT f.film_id,
        f.name,
        f.original_name,
        f.prod_year,
@@ -11,8 +12,8 @@ const (
 FROM films f
          JOIN film_tags ft on f.film_id = ft.fk_film_id
          JOIN tags t on ft.fk_tag_id = t.tag_id
-WHERE t.name = 'популярное' AND f.film_id > 11
+WHERE t.name = $1 AND f.film_id > $2
 GROUP BY f.film_id, f.rating
 ORDER BY f.rating DESC
-LIMIT 5`
+LIMIT $3`
 )

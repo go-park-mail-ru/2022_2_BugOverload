@@ -39,8 +39,9 @@ var (
 	ErrQueryBad             = stdErrors.New("bad query params")
 
 	// DB
-	ErrPostgresRequest = stdErrors.New("error sql")
-	ErrNotFoundInDB    = stdErrors.New("not fount")
+	ErrPostgresRequest  = stdErrors.New("error sql")
+	ErrNotFoundInDB     = stdErrors.New("not fount")
+	ErrGetParamsConvert = stdErrors.New("err get sql params")
 )
 
 type ErrClassifier struct {
@@ -82,6 +83,7 @@ func NewErrClassifier() ErrClassifier {
 	// DB
 	res[ErrPostgresRequest] = http.StatusInternalServerError
 	res[ErrNotFoundInDB] = http.StatusNotFound
+	res[ErrGetParamsConvert] = http.StatusInternalServerError
 
 	return ErrClassifier{
 		table: res,
