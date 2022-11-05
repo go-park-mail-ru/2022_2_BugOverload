@@ -55,7 +55,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	person, err := h.personService.GePersonByID(ctx, personRequest.GetPerson())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrPerson(stdErrors.Cause(err)))
 		return
 	}
 

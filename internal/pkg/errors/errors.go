@@ -67,3 +67,51 @@ func NewErrValidation(err error) DefaultValidationError {
 		Code:   ErrCsf.GetCode(err),
 	}
 }
+
+type PersonError struct {
+	Reason string
+	Code   int
+}
+
+func (e PersonError) Error() string {
+	return fmt.Sprintf("Person: [%s]", e.Reason)
+}
+
+func NewErrPerson(err error) PersonError {
+	return PersonError{
+		Reason: err.Error(),
+		Code:   ErrCsf.GetCode(err),
+	}
+}
+
+type ProfileError struct {
+	Reason string
+	Code   int
+}
+
+func (e ProfileError) Error() string {
+	return fmt.Sprintf("Profile: [%s]", e.Reason)
+}
+
+func NewErrProfile(err error) ProfileError {
+	return ProfileError{
+		Reason: err.Error(),
+		Code:   ErrCsf.GetCode(err),
+	}
+}
+
+type CollectionError struct {
+	Reason string
+	Code   int
+}
+
+func (e CollectionError) Error() string {
+	return fmt.Sprintf("Collection: [%s]", e.Reason)
+}
+
+func NewErrCollection(err error) CollectionError {
+	return CollectionError{
+		Reason: err.Error(),
+		Code:   ErrCsf.GetCode(err),
+	}
+}

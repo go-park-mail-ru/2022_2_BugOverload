@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"strings"
+	"sync"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -65,95 +66,98 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return models.Person{}, errors.ErrPostgresRequest
 	}
 
+	wg := sync.WaitGroup{}
+
 	// Parts
 	// Films + GenresFilms
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 
-		valuesFilms := []interface{}{person.ID, params.CountFilms}
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
 
-		var err error
+			valuesFilms := []interface{}{person.ID, params.CountFilms}
 
-		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, valuesFilms)
-		if err != nil {
-			return err
-		}
+			var err error
 
-		response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, tx)
-		if err != nil {
-			return err
-		}
+			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, valuesFilms)
+			if err != nil {
+				return err
+			}
 
-		return nil
-	})
+			response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, tx)
+			if err != nil {
+				return err
+			}
 
-	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrPostgresRequest
-	}
+			return nil
+		})
+	}()
 
 	//  Images
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
-		if rowPersonImages.Err() != nil {
-			return rowPersonImages.Err()
-		}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 
-		var images sql.NullString
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
+			if rowPersonImages.Err() != nil {
+				return rowPersonImages.Err()
+			}
 
-		err := rowPersonImages.Scan(&images)
-		if err != nil {
-			return err
-		}
+			var images sql.NullString
 
-		response.Images = strings.Split(images.String, "_")
+			err := rowPersonImages.Scan(&images)
+			if err != nil {
+				return err
+			}
 
-		return nil
-	})
+			response.Images = strings.Split(images.String, "_")
 
-	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrPostgresRequest
-	}
+			return nil
+		})
+	}()
 
 	//  Professions
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		valuesProfessions := []interface{}{person.ID}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 
-		var err error
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			valuesProfessions := []interface{}{person.ID}
 
-		response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, valuesProfessions)
-		if err != nil {
-			return err
-		}
+			var err error
 
-		return nil
-	})
+			response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, valuesProfessions)
+			if err != nil {
+				return err
+			}
 
-	if errTX != nil && !stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrPostgresRequest
-	}
+			return nil
+		})
+	}()
 
 	//  Genres
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		valuesGenres := []interface{}{person.ID}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 
-		var err error
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			valuesGenres := []interface{}{person.ID}
 
-		response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, valuesGenres)
-		if err != nil {
-			return err
-		}
+			var err error
 
-		return nil
-	})
+			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, valuesGenres)
+			if err != nil {
+				return err
+			}
 
-	// the main entity is found, its components are not found
-	if stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrNotFoundInDB
-	}
+			return nil
+		})
+	}()
 
-	if errTX != nil {
-		return models.Person{}, errors.ErrPostgresRequest
-	}
+	wg.Wait()
 
 	return response.Convert(), nil
 }

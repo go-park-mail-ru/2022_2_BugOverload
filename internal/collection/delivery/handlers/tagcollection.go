@@ -35,8 +35,8 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // @Param count_films query int    true "count films"
 // @Param delimiter   query string true "last value"
 // @Success 200 {object} models.TagCollectionResponse "returns an array of movies"
-// @Failure 400 {object} httpmodels.ErrResponseFilmNoSuchFilm "return error"
 // @Failure 400 "return error"
+// @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection/{tag} [GET]
@@ -55,7 +55,7 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	collection, err := h.collectionService.GetCollectionByTag(ctx)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrCollection(stdErrors.Cause(err)))
 		return
 	}
 

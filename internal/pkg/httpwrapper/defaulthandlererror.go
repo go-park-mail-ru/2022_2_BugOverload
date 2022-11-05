@@ -37,4 +37,22 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		Response(w, errImages.Code, errResp)
 		return
 	}
+
+	var profileError errors.ProfileError
+	if ok := stdErrors.As(err, &profileError); ok {
+		Response(w, profileError.Code, errResp)
+		return
+	}
+
+	var errCollection errors.CollectionError
+	if ok := stdErrors.As(err, &errCollection); ok {
+		Response(w, errCollection.Code, errResp)
+		return
+	}
+
+	var errProfile errors.ProfileError
+	if ok := stdErrors.As(err, &errProfile); ok {
+		Response(w, errProfile.Code, errResp)
+		return
+	}
 }
