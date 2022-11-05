@@ -31,12 +31,12 @@ func NewPersonPostgres(database *sqltools.Database) PersonRepository {
 	}
 }
 
-func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person) (models.Person, error) {
+func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Person) (models.Person, error) {
 	response := NewPersonSQL()
 
 	// Person - Main
 	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowPerson := tx.QueryRowContext(ctx, getPerson, person.ID)
+		rowPerson := tx.QueryRowContext(ctx, getPersonByID, person.ID)
 		if rowPerson.Err() != nil {
 			return rowPerson.Err()
 		}
@@ -77,11 +77,11 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 			params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
 
-			valuesFilms := []interface{}{person.ID, params.CountFilms}
+			values := []interface{}{person.ID, params.CountFilms}
 
 			var err error
 
-			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, valuesFilms)
+			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, values)
 			if err != nil {
 				return err
 			}
@@ -125,11 +125,11 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		defer wg.Done()
 
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			valuesProfessions := []interface{}{person.ID}
+			values := []interface{}{person.ID}
 
 			var err error
 
-			response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, valuesProfessions)
+			response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, values)
 			if err != nil {
 				return err
 			}
@@ -144,11 +144,11 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		defer wg.Done()
 
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			valuesGenres := []interface{}{person.ID}
+			values := []interface{}{person.ID}
 
 			var err error
 
-			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, valuesGenres)
+			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, values)
 			if err != nil {
 				return err
 			}

@@ -29,7 +29,7 @@ func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Film full info
 // @Description Getting film info by id
-// @tags in_dev
+// @tags completed
 // @Produce json
 // @Param id  path int true "film id"
 // @Success 200 {object} models.FilmResponse "return film"
@@ -39,7 +39,15 @@ func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id} [GET]
 func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
-	film, err := h.filmService.GerRecommendation(r.Context())
+	filmRequest := models.NewFilmRequest()
+
+	err := filmRequest.Bind(r)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
+		return
+	}
+
+	film, err := h.filmService.GetFilmByID(r.Context(), filmRequest.GetPerson())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return

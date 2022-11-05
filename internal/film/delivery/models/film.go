@@ -1,8 +1,40 @@
 package models
 
 import (
+	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
+
+type FilmRequest struct {
+	ID int
+}
+
+func NewFilmRequest() FilmRequest {
+	return FilmRequest{}
+}
+
+func (f *FilmRequest) Bind(r *http.Request) error {
+	vars := mux.Vars(r)
+
+	var err error
+	f.ID, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	return nil
+}
+
+func (f *FilmRequest) GetPerson() *models.Film {
+	return &models.Film{
+		ID: f.ID,
+	}
+}
 
 type FilmActorResponse struct {
 	ID        int    `json:"id,omitempty" example:"2132"`
@@ -42,6 +74,7 @@ type FilmResponse struct {
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty" example:"63"`
 	CountPositiveReviews int     `json:"count_positive_reviews,omitempty" example:"65"`
 
+	Tags          []string             `json:"tags,omitempty" example:"популярное,сейчас в кино"`
 	Genres        []string             `json:"genres,omitempty" example:"фантастика,боевик"`
 	ProdCompanies []string             `json:"prod_companies,omitempty" example:"HBO"`
 	ProdCountries []string             `json:"prod_countries,omitempty" example:"США,Великобритания"`
@@ -101,6 +134,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,
 
+		Tags:          film.Tags,
 		Genres:        film.Genres,
 		ProdCompanies: film.ProdCompanies,
 		ProdCountries: film.ProdCountries,

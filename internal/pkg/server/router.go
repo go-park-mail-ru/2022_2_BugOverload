@@ -24,6 +24,7 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 
 	// Films
 	router.HandleFunc("/api/v1/film/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.FilmRequest].Action).Methods(http.MethodGet)
 
 	//  router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.UploadImageRequest].Action).Methods(http.MethodPost)
 

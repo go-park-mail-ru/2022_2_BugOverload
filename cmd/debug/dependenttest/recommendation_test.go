@@ -1,7 +1,6 @@
-package tests_test
+package dependenttest_test
 
 import (
-	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,13 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/cmd/debug/tests"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
 	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -34,35 +30,13 @@ func TestRecommendationHandler(t *testing.T) {
 
 	url := "http://localhost:8088/v1/auth"
 
-	// Base
-	us := repoAuth.NewAuthCache()
-	cs := repoSession.NewSessionCache()
-
-	testUser := &models.User{
-		Nickname: "Andeo",
-		Email:    "YasaPupkinEzji@top.world",
-		Password: "Widget Adapter",
-	}
-
-	_, err := us.CreateUser(context.TODO(), testUser)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create user for test"))
-
-	var session models.Session
-	session, err = cs.CreateSession(context.TODO(), testUser)
-	require.Nil(t, err, pkg.TestErrorMessage(-1, "Err create session-cookie for test"))
-
-	cases[0].Cookie = "session_id=" + session.ID + ";"
-
-	authService := serviceSession.NewSessionService(cs)
-
 	// Films
-	pathPreview := "../../../test/data/preview.json"
-
-	fs := repoFilms.NewFilmCache(pathPreview)
+	postgres := sqltools.NewPostgresRepository()
+	fs := repoFilms.NewFilmPostgres(postgres)
 
 	filmsService := serviceFilms.NewFilmService(fs)
 
-	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService, authService)
+	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService)
 
 	for caseNum, item := range cases {
 		req := httptest.NewRequest(item.Method, url, nil)
@@ -79,8 +53,7 @@ func TestRecommendationHandler(t *testing.T) {
 		require.Equal(t, item.StatusCode, w.Code, pkg.TestErrorMessage(caseNum, "Wrong StatusCode"))
 
 		if item.ResponseBody != "" {
-			var body []byte
-			body, err = io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
 			require.Nil(t, err, pkg.TestErrorMessage(caseNum, "io.ReadAll must be success"))
 
 			err = resp.Body.Close()

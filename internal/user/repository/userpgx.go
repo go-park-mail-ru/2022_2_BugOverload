@@ -30,10 +30,10 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 	}
 }
 
-func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
+func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	response := NewUserSQL()
 
-	err := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
@@ -67,22 +67,22 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 	})
 
 	// the main entity is not found
-	if stdErrors.Is(err, sql.ErrNoRows) {
+	if stdErrors.Is(errTX, sql.ErrNoRows) {
 		return models.User{}, errors.ErrNotFoundInDB
 	}
 
 	// execution error
-	if err != nil {
+	if errTX != nil {
 		return models.User{}, errors.ErrPostgresRequest
 	}
 
 	return response.Convert(), nil
 }
 
-func (u userPostgres) GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
+func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
 	return models.User{}, nil
 }
 
-func (u userPostgres) ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
+func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
 	return models.User{}, nil
 }

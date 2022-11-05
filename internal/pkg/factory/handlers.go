@@ -59,14 +59,15 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res[pkg.TagCollectionRequest] = tagCollectionHandler
 
 	// Films
-	pathPreview := "test/data/preview.json"
-
-	filmsStorage := repoFilms.NewFilmCache(pathPreview)
+	filmsStorage := repoFilms.NewFilmPostgres(postgres)
 
 	filmsService := serviceFilms.NewFilmService(filmsStorage)
 
-	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService, sessionService)
+	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService)
 	res[pkg.RecommendationRequest] = recommendationHandler
+
+	filmHandler := handlersFilm.NewFilmHandler(filmsService)
+	res[pkg.FilmRequest] = filmHandler
 
 	// Images
 	is := repoImage.NewImageS3(config)

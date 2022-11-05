@@ -42,7 +42,11 @@ type FilmSQL struct {
 	CountNeutralReviews  sql.NullInt32
 	CountPositiveReviews sql.NullInt32
 
-	Genres []string
+	Tags          []string
+	Genres        []string
+	ProdCompanies []string
+	ProdCountries []string
+	Images        []string
 }
 
 func NewFilmSQL() FilmSQL {
@@ -111,7 +115,11 @@ func (f *FilmSQL) Convert() models.Film {
 		CountNeutralReviews:  int(f.CountNeutralReviews.Int32),
 		CountPositiveReviews: int(f.CountPositiveReviews.Int32),
 
-		Genres: f.Genres,
+		Genres:        f.Genres,
+		Tags:          f.Tags,
+		ProdCountries: f.ProdCountries,
+		ProdCompanies: f.ProdCompanies,
+		Images:        f.Images,
 	}
 
 	return res

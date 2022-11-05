@@ -1,7 +1,7 @@
 package repository
 
 const (
-	getPerson = `SELECT 
+	getPersonByID = `SELECT 
     name, 
     birthday, 
     growth, 

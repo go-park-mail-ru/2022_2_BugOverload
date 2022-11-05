@@ -30,6 +30,7 @@ const (
 	GetUserProfileRequest = "GetUserProfileRequest"
 	TagCollectionRequest  = "TagCollectionRequest"
 	GetPersonRequest      = "GetPersonRequest"
+	FilmRequest           = "FilmRequest"
 
 	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
