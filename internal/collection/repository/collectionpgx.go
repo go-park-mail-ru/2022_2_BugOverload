@@ -36,27 +36,27 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Collection, error) {
 	response := NewCollectionSQL()
 
-	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(tx *sql.Tx) error {
-		params, _ := ctx.Value(innerPKG.GetCollectionTagParamsKey).(innerPKG.GetCollectionTagParamsCtx)
+	params, _ := ctx.Value(innerPKG.GetCollectionTagParamsKey).(innerPKG.GetCollectionTagParamsCtx)
 
-		delimiter, err := strconv.Atoi(params.Delimiter)
-		if err != nil {
-			return errors.ErrGetParamsConvert
-		}
+	delimiter, err := strconv.Atoi(params.Delimiter)
+	if err != nil {
+		return models.Collection{}, errors.ErrGetParamsConvert
+	}
 
-		//  Films
+	//  Films - Main
+	err = sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(tx *sql.Tx) (err error) {
 		values := make([]interface{}, 0)
 		values = append(values, params.Tag, delimiter, params.CountFilms)
 
 		response.Films, err = repository.GetShortFilmsBatch(ctx, tx, getFilmsByTag, values)
 		if err != nil {
-			return err
+			return
 		}
 
 		//  Genres
 		response.Films, err = repository.GetGenresBatch(ctx, response.Films, tx)
 		if err != nil {
-			return err
+			return
 		}
 
 		return nil

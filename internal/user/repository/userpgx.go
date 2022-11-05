@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"sync"
-
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -34,69 +32,41 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	response := NewUserSQL()
 
-	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(tx *sql.Tx) error {
-		wg := &sync.WaitGroup{}
+	err := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
+		if rowUser.Err() != nil {
+			return rowUser.Err()
+		}
 
-		var err error
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
-			if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
-				err = errors.ErrNotFoundInDB
-				return
-			}
-
-			if rowUser.Err() != nil {
-				err = rowUser.Err()
-				return
-			}
-
-			err = rowUser.Scan(&response.Nickname)
-			if err != nil {
-				return
-			}
-		}()
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
-			rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
-			if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
-				err = errors.ErrNotFoundInDB
-				return
-			}
-
-			if rowProfile.Err() != nil {
-				err = rowProfile.Err()
-				return
-			}
-
-			err = rowProfile.Scan(
-				&response.Profile.JoinedDate,
-				&response.Profile.CountViewsFilms,
-				&response.Profile.CountCollections,
-				&response.Profile.CountReviews,
-				&response.Profile.CountRatings)
-			if err != nil {
-				return
-			}
-		}()
-
-		wg.Wait()
-
+		err = rowUser.Scan(&response.Nickname)
 		if err != nil {
-			return err
+			return
+		}
+
+		rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
+		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
+
+		if rowProfile.Err() != nil {
+			return rowProfile.Err()
+		}
+
+		err = rowProfile.Scan(
+			&response.Profile.JoinedDate,
+			&response.Profile.CountViewsFilms,
+			&response.Profile.CountCollections,
+			&response.Profile.CountReviews,
+			&response.Profile.CountRatings)
+		if err != nil {
+			return
 		}
 
 		return nil
 	})
 
 	// the main entity is not found
-	if stdErrors.Is(err, errors.ErrNotFoundInDB) {
+	if stdErrors.Is(err, sql.ErrNoRows) {
 		return models.User{}, errors.ErrNotFoundInDB
 	}
 
