@@ -29,9 +29,11 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Films by tag
 // @Description Films by tag "популярное" or "сейчас в кино"
-// @tags in_dev
+// @tags completed
 // @Produce json
-// @Param tag  path string true "tag name"
+// @Param tag         path  string true "tag name"
+// @Param count_films query int    true "count films"
+// @Param delimiter   query string true "last value"
 // @Success 200 {object} models.TagCollectionResponse "returns an array of movies"
 // @Failure 400 {object} httpmodels.ErrResponseFilmNoSuchFilm "return error"
 // @Failure 400 "return error"

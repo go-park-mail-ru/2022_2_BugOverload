@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
+	stdErrors "github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"strings"
 	"sync"
-
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -34,6 +34,8 @@ func NewPersonPostgres(database *sqltools.Database) PersonRepository {
 func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person) (models.Person, error) {
 	response := NewPersonSQL()
 
+	u.database.Connection.Conn()
+
 	err := sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(tx *sql.Tx) error {
 		// Person
 		rowPerson := tx.QueryRowContext(ctx, getPerson, person.ID)
@@ -58,28 +60,29 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 			return err
 		}
 
-		//  Films
-		params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
-
-		values := make([]interface{}, 0)
-		values = append(values, person.ID, params.CountFilms)
-
-		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, values)
-		if err != nil {
-			return err
-		}
-
 		wg := &sync.WaitGroup{}
 
-		// GenresFilms
+		// Films + GenresFilms
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 
-			response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, tx)
+			params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
+
+			valuesFilms := []interface{}{person.ID, params.CountFilms}
+
+			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, valuesFilms)
 			if err != nil {
+				logrus.Info("Films + GenresFilms", err)
 				return
 			}
+
+			response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, tx)
+			if err != nil {
+				logrus.Info("Films + GenresFilms", err)
+				return
+			}
+			logrus.Info("Films + GenresFilms")
 		}()
 
 		//  Images
@@ -89,6 +92,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 			rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
 			if rowPerson.Err() != nil {
+				logrus.Info("Images")
 				err = rowPerson.Err()
 			}
 
@@ -96,13 +100,46 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 			err = rowPersonImages.Scan(&images)
 			if err != nil {
+				logrus.Info("Images", err)
 				return
 			}
 
 			response.Images = strings.Split(images.String, "_")
+			logrus.Info("Images")
+		}()
+
+		//  Professions
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			valuesProfessions := []interface{}{person.ID}
+
+			response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, valuesProfessions)
+			if err != nil {
+				logrus.Info("Professions", err)
+				return
+			}
+			logrus.Info("Professions")
+		}()
+
+		//  Genres
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			valuesGenres := []interface{}{person.ID}
+
+			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, valuesGenres)
+			if err != nil {
+				logrus.Info("Genres", err)
+				return
+			}
+			logrus.Info("Genres")
 		}()
 
 		wg.Wait()
+		logrus.Info("ALL")
 
 		if err != nil {
 			return err

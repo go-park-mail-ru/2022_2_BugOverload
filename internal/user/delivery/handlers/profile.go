@@ -28,7 +28,7 @@ func NewUserProfileHandler(us serviceUserProfile.UserService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user stat
 // @Description Getting user public info.
-// @tags in_dev
+// @tags completed
 // @Produce json
 // @Param   id        path   int true "user id"
 // @Success 200 {object} models.UserProfileResponse "successfully getting"

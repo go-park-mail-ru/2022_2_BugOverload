@@ -29,4 +29,18 @@ const (
 		LIMIT $2`
 
 	getPersonImages = `SELECT images_list  FROM person_images WHERE person_id = $1`
+
+	getPersonProfessions = `
+SELECT p.name
+FROM professions p
+         JOIN person_professions pp on p.profession_id = pp.fk_profession_id
+WHERE pp.fk_person_id = $1
+ORDER BY pp.weight DESC`
+
+	getPersonGenres = `
+SELECT g.name
+FROM genres g
+         JOIN person_genres pg on g.genre_id = pg.fk_genre_id
+WHERE pg.fk_person_id = $1
+ORDER BY pg.weight DESC`
 )

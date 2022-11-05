@@ -30,10 +30,11 @@ func NewPersonHandler(fs service.PersonService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Person full info
 // @Description Getting person info by id
-// @tags Completed
+// @tags completed
 // @Produce json
 // @Param id  path int true "person id"
-// @Success 200 {object} models.PersonResponse "return person"
+// @Param count_films  query int true "count best films"
+// @Success 200 {object} models.PersonResponse "return person info with best films"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponsePersonNoSuchPerson "no such person"
 // @Failure 405 "method not allowed"

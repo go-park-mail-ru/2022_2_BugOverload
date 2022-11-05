@@ -22,7 +22,9 @@ type PersonSQL struct {
 
 	BestFilms []repository.FilmSQL
 
-	Images []string
+	Images      []string
+	Professions []string
+	Genres      []string
 }
 
 func NewPersonSQL() PersonSQL {
@@ -73,7 +75,9 @@ func (p *PersonSQL) Convert() models.Person {
 		Death:        death,
 		BestFilms:    make([]models.Film, len(p.BestFilms)),
 
-		Images: p.Images,
+		Images:      p.Images,
+		Professions: p.Professions,
+		Genres:      p.Genres,
 	}
 
 	for idx := range res.BestFilms {
