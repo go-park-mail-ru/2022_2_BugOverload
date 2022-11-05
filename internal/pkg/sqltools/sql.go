@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	// justifying it
 	_ "github.com/jackc/pgx/stdlib"
@@ -41,11 +40,6 @@ func NewPostgresRepository() *Database {
 	if err != nil {
 		log.Fatalln("Can't parse config", err)
 	}
-
-	// See "Important settings" section.
-	connection.SetConnMaxLifetime(time.Second * 3)
-	connection.SetMaxOpenConns(40)
-	connection.SetMaxIdleConns(40)
 
 	err = connection.Ping()
 	if err != nil {

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -32,15 +33,15 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	response := NewUserSQL()
 
-	err := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	err := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
 
-		err = rowUser.Scan(&response.Nickname)
+		err := rowUser.Scan(&response.Nickname)
 		if err != nil {
-			return
+			return err
 		}
 
 		rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
@@ -59,7 +60,7 @@ func (u userPostgres) GetUserProfileByID(ctx context.Context, user *models.User)
 			&response.Profile.CountReviews,
 			&response.Profile.CountRatings)
 		if err != nil {
-			return
+			return err
 		}
 
 		return nil

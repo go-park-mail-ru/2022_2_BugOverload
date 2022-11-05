@@ -34,13 +34,13 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 	response := NewPersonSQL()
 
 	// Person - Main
-	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowPerson := tx.QueryRowContext(ctx, getPerson, person.ID)
 		if rowPerson.Err() != nil {
 			return rowPerson.Err()
 		}
 
-		err = rowPerson.Scan(
+		err := rowPerson.Scan(
 			&response.Name,
 			&response.Birthday,
 			&response.Growth,
@@ -63,10 +63,12 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 	// Parts
 	// Films + GenresFilms
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
 
 		valuesFilms := []interface{}{person.ID, params.CountFilms}
+
+		var err error
 
 		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, valuesFilms)
 		if err != nil {
@@ -81,8 +83,12 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
+	if !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, nil
+	}
+
 	//  Images
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowPersonImages := tx.QueryRowContext(ctx, getPersonImages, person.ID)
 		if rowPersonImages.Err() != nil {
 			return rowPersonImages.Err()
@@ -90,7 +96,7 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 
 		var images sql.NullString
 
-		err = rowPersonImages.Scan(&images)
+		err := rowPersonImages.Scan(&images)
 		if err != nil {
 			return err
 		}
@@ -100,9 +106,15 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
+	if !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, nil
+	}
+
 	//  Professions
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		valuesProfessions := []interface{}{person.ID}
+
+		var err error
 
 		response.Professions, err = sqltools.GetSimpleAttr(ctx, tx, getPersonProfessions, valuesProfessions)
 		if err != nil {
@@ -112,9 +124,15 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		return nil
 	})
 
+	if !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, nil
+	}
+
 	//  Genres
-	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) (err error) {
+	errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		valuesGenres := []interface{}{person.ID}
+
+		var err error
 
 		response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getPersonGenres, valuesGenres)
 		if err != nil {
@@ -125,13 +143,8 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 	})
 
 	// the main entity is found, its components are not found
-	if stdErrors.Is(errTX, sql.ErrNoRows) {
-		return response.Convert(), nil
-	}
-
-	// execution error
-	if errTX != nil {
-		return models.Person{}, errors.ErrPostgresRequest
+	if !stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Person{}, nil
 	}
 
 	return response.Convert(), nil

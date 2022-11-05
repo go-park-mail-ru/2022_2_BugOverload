@@ -44,19 +44,19 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 	}
 
 	//  Films - Main
-	err = sqltools.RunTx(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(tx *sql.Tx) (err error) {
+	err = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		values := make([]interface{}, 0)
 		values = append(values, params.Tag, delimiter, params.CountFilms)
 
 		response.Films, err = repository.GetShortFilmsBatch(ctx, tx, getFilmsByTag, values)
 		if err != nil {
-			return
+			return err
 		}
 
 		//  Genres
 		response.Films, err = repository.GetGenresBatch(ctx, response.Films, tx)
 		if err != nil {
-			return
+			return err
 		}
 
 		return nil
