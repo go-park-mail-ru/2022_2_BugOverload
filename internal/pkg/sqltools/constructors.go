@@ -1,6 +1,9 @@
 package sqltools
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 func NewSQLNullString(s string) sql.NullString {
 	if len(s) == 0 {
@@ -20,6 +23,18 @@ func NewSQLNullInt32(i int) sql.NullInt32 {
 
 	return sql.NullInt32{
 		Int32: int32(i),
+		Valid: true,
+	}
+}
+
+func NewSQLNNullDate(date string) sql.NullTime {
+	dateTime, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		dateTime = time.Time{}
+	}
+
+	return sql.NullTime{
+		Time:  dateTime,
 		Valid: true,
 	}
 }

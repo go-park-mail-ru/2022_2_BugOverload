@@ -59,35 +59,14 @@ func (u personPostgres) GetPersonByID(ctx context.Context, person *models.Person
 		}
 
 		//  Films
-		countFilms := 5
+		params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
 
-		params, ok := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
-		if !ok {
-			countFilms = params.CountFilms
-		}
+		values := make([]interface{}, 0)
+		values = append(values, person.ID, params.CountFilms)
 
-		rowsBestFilms, err := tx.QueryContext(ctx, getPersonBestFilms, person.ID, countFilms)
+		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, values)
 		if err != nil {
 			return err
-		}
-		defer rowsBestFilms.Close()
-
-		for rowsBestFilms.Next() {
-			film := repository.NewFilmSQL()
-
-			err = rowsBestFilms.Scan(
-				&film.ID,
-				&film.Name,
-				&film.OriginalName,
-				&film.ProdYear,
-				&film.PosterVer,
-				&film.EndYear,
-				&film.Rating)
-			if err != nil {
-				return err
-			}
-
-			response.BestFilms = append(response.BestFilms, film)
 		}
 
 		wg := &sync.WaitGroup{}

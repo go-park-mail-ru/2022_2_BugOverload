@@ -1,6 +1,59 @@
 package models
 
-import "go-park-mail-ru/2022_2_BugOverload/internal/models"
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+)
+
+type TagCollectionRequest struct {
+	Tag        string
+	CountFilms int
+	Delimiter  string
+}
+
+func NewTagCollectionRequest() *TagCollectionRequest {
+	return &TagCollectionRequest{}
+}
+
+func (p *TagCollectionRequest) Bind(r *http.Request) error {
+	vars := mux.Vars(r)
+
+	var err error
+	p.Tag = vars["tag"]
+
+	countFilms := r.FormValue("count_films")
+
+	p.Delimiter = r.FormValue("delimiter")
+
+	if countFilms == "" || p.Tag == "" || p.Delimiter == "" {
+		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
+	}
+
+	p.CountFilms, err = strconv.Atoi(countFilms)
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	if p.CountFilms <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
+	}
+
+	return nil
+}
+
+func (p *TagCollectionRequest) GetParams() innerPKG.GetCollectionTagParamsCtx {
+	return innerPKG.GetCollectionTagParamsCtx{
+		Tag:        p.Tag,
+		CountFilms: p.CountFilms,
+		Delimiter:  p.Delimiter,
+	}
+}
 
 type filmTagCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`

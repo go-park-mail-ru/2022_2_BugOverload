@@ -44,31 +44,13 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 			return errors.ErrGetParamsConvert
 		}
 
-		rowsFilms, err := tx.QueryContext(ctx, getFilmsByTag, params.Tag, delimiter, params.Count)
-		if stdErrors.Is(err, sql.ErrNoRows) {
-			return errors.ErrNotFoundInDB
-		}
+		//  Films
+		values := make([]interface{}, 0)
+		values = append(values, params.Tag, delimiter, params.CountFilms)
 
+		response.Films, err = repository.GetShortFilmsBatch(ctx, tx, getFilmsByTag, values)
 		if err != nil {
 			return err
-		}
-
-		for rowsFilms.Next() {
-			film := repository.NewFilmSQL()
-
-			err = rowsFilms.Scan(
-				&film.ID,
-				&film.Name,
-				&film.OriginalName,
-				&film.ProdYear,
-				&film.PosterVer,
-				&film.EndYear,
-				&film.Rating)
-			if err != nil {
-				return err
-			}
-
-			response.Films = append(response.Films, film)
 		}
 
 		//  Genres

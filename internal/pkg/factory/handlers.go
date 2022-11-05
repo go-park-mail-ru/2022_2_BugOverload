@@ -4,6 +4,9 @@ import (
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
 	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
+	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
+	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	handlersFilm "go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
 	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
@@ -48,6 +51,12 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res[pkg.SignupRequest] = singUpHandler
 
 	// Collections
+	collectionStorage := repoCollection.NewCollectionCache(postgres)
+
+	collectionService := serviceCollection.NewCollectionService(collectionStorage)
+
+	tagCollectionHandler := handlersCollection.NewTagCollectionHandler(collectionService)
+	res[pkg.TagCollectionRequest] = tagCollectionHandler
 
 	// Films
 	pathPreview := "test/data/preview.json"

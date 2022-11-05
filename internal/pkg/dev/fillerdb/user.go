@@ -57,8 +57,12 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	for idx, value := range f.faceUsers {
-		values[idx] = value.ID
+	pos := 0
+	for _, value := range f.faceUsers {
+		values[pos] = value.ID
+		pos++
+		values[pos] = faker.Timestamp()
+		pos++
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)

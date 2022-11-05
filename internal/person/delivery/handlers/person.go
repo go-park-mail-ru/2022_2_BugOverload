@@ -48,9 +48,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestParams := pkg.GetPersonParamsCtx{
-		CountFilms: personRequest.CountFilms,
-	}
+	requestParams := personRequest.GetParams()
 
 	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, requestParams)
 

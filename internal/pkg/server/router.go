@@ -18,6 +18,9 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	router.HandleFunc("/api/v1/auth/logout", handlers[pkg.LogoutRequest].Action).Methods(http.MethodGet)
 
 	// Collections
+	router.HandleFunc("/api/v1/collection/{tag}", handlers[pkg.TagCollectionRequest].Action).
+		Methods(http.MethodGet).
+		Queries("count_films", "{count_films}", "delimiter", "{delimiter}")
 
 	// Films
 	router.HandleFunc("/api/v1/film/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)

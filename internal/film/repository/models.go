@@ -3,10 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"strconv"
 	"strings"
+
+	stdErrors "github.com/pkg/errors"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type FilmSQL struct {
@@ -128,8 +132,12 @@ WHERE f.film_id IN (`
 func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQL, error) {
 	setID := make([]string, len(target))
 
+	mapFilms := make(map[int]int, len(target))
+
 	for idx := range target {
 		setID[idx] = strconv.Itoa(target[idx].ID)
+
+		mapFilms[target[idx].ID] = idx
 	}
 
 	setIDRes := strings.Join(setID, ",")
@@ -138,10 +146,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 	if err != nil {
 		return []FilmSQL{}, err
 	}
-
 	defer rowsFilmsGenres.Close()
-
-	counter := 0
 
 	for rowsFilmsGenres.Next() {
 		var filmID int
@@ -154,12 +159,41 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 			return []FilmSQL{}, err
 		}
 
-		if filmID != target[counter].ID {
-			counter++
-		}
-
-		target[counter].Genres = append(target[counter].Genres, genre.String)
+		target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)
 	}
 
 	return target, nil
+}
+
+func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []interface{}) ([]FilmSQL, error) {
+	res := make([]FilmSQL, 0)
+
+	rowsFilms, err := tx.QueryContext(ctx, query, values...)
+	if stdErrors.Is(err, sql.ErrNoRows) {
+		return []FilmSQL{}, errors.ErrNotFoundInDB
+	}
+
+	if err != nil {
+		return []FilmSQL{}, err
+	}
+
+	for rowsFilms.Next() {
+		film := NewFilmSQL()
+
+		err = rowsFilms.Scan(
+			&film.ID,
+			&film.Name,
+			&film.OriginalName,
+			&film.ProdYear,
+			&film.PosterVer,
+			&film.EndYear,
+			&film.Rating)
+		if err != nil {
+			return []FilmSQL{}, err
+		}
+
+		res = append(res, film)
+	}
+
+	return res, nil
 }

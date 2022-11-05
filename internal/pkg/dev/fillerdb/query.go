@@ -21,7 +21,7 @@ const (
 
 	insertUsers = `INSERT INTO users(nickname, email, password) VALUES`
 
-	insertUsersProfiles  = `INSERT INTO profiles(profile_id) VALUES`
+	insertUsersProfiles  = `INSERT INTO profiles(profile_id, joined_date) VALUES`
 	insertProfileViews   = `INSERT INTO profile_views_films(fk_profile_id, fk_film_id, create_date) VALUES`
 	insertProfileRatings = `INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score, create_date) VALUES`
 

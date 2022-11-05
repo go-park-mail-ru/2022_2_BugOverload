@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -38,7 +39,19 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection/{tag} [GET]
 func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
-	collection, err := h.collectionService.GetCollectionByTag(r.Context())
+	tagCollectionRequest := models.NewTagCollectionRequest()
+
+	err := tagCollectionRequest.Bind(r)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, err)
+		return
+	}
+
+	requestParams := tagCollectionRequest.GetParams()
+
+	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, requestParams)
+
+	collection, err := h.collectionService.GetCollectionByTag(ctx)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return

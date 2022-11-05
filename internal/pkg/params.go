@@ -75,7 +75,7 @@ type GetPersonParamsCtx struct {
 
 // GetCollectionTagParamsCtx in struct for GetPersonParams in personHandler
 type GetCollectionTagParamsCtx struct {
-	Tag       string
-	Count     int
-	Delimiter string
+	Tag        string
+	CountFilms int
+	Delimiter  string
 }
