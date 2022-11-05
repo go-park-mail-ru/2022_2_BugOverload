@@ -75,7 +75,7 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		defer wg.Done()
 
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetPersonParamsCtx)
+			params, _ := ctx.Value(innerPKG.GetPersonParamsKey).(innerPKG.GetPersonParamsCtx)
 
 			values := []interface{}{person.ID, params.CountFilms}
 

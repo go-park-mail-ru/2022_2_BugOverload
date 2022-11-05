@@ -28,12 +28,12 @@ func NewFilmService(cr repository.FilmRepository) FilmsService {
 }
 
 func (c *filmService) GetRecommendation(ctx context.Context) (models.Film, error) {
-	// film, err := c.filmsRepo.GetRecommendation(ctx)
-	// if err != nil {
-	//	return models.Film{}, stdErrors.Wrap(err, "GetRecommendation")
-	// }
+	film, err := c.filmsRepo.GetRecommendation(ctx)
+	if err != nil {
+		return models.Film{}, stdErrors.Wrap(err, "GetRecommendation")
+	}
 
-	return models.Film{}, nil
+	return film, nil
 }
 
 func (c *filmService) GetFilmByID(ctx context.Context, film *models.Film) (models.Film, error) {

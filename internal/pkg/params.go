@@ -29,8 +29,9 @@ const (
 	ChangeImageRequest    = "ChangeImageRequest"
 	GetUserProfileRequest = "GetUserProfileRequest"
 	TagCollectionRequest  = "TagCollectionRequest"
-	GetPersonRequest      = "GetPersonRequest"
+	PersonRequest         = "PersonRequest"
 	FilmRequest           = "FilmRequest"
+	ReviewsFilmRequest    = "ReviewsFilmRequest"
 
 	// Images params request
 	ImageObjectFilmPosterHor = "film_poster_hor"
@@ -39,7 +40,7 @@ const (
 	ImageObjectAvatar        = "user_avatar"
 
 	// ParamsContextKeys
-	GetReviewsParams       = "GetReviewsRequestParams"
+	GetReviewsParams       = "GetReviewsParamsKey"
 	GetPersonParams        = "GetPersonParams"
 	GetCollectionTagParams = "GetPersonParams"
 
@@ -67,11 +68,14 @@ type ContextKeyType string
 var SessionKey ContextKeyType = "cookie"
 var LoggerKey ContextKeyType = "logger"
 
-// GetReviewsParamsKey for RequestParams
-var GetReviewsParamsKey ContextKeyType = GetPersonParams
+// GetPersonParamsKey for RequestParams
+var GetPersonParamsKey ContextKeyType = GetPersonParams
 
 // GetCollectionTagParamsKey for RequestParams
 var GetCollectionTagParamsKey ContextKeyType = GetCollectionTagParams
+
+// GetReviewsParamsKey for RequestParams
+var GetReviewsParamsKey ContextKeyType = GetReviewsParams
 
 // TxDefaultOptions for Postgres
 var TxDefaultOptions = &sql.TxOptions{
@@ -84,9 +88,16 @@ type GetPersonParamsCtx struct {
 	CountFilms int
 }
 
-// GetCollectionTagParamsCtx in struct for GetPersonParams in personHandler
+// GetCollectionTagParamsCtx in struct for GetPersonParams in tagCollectionHandler
 type GetCollectionTagParamsCtx struct {
 	Tag        string
 	CountFilms int
 	Delimiter  string
+}
+
+// GetReviewsFilmParamsCtx in struct for GetReviewsParamsKey in reviewHandler
+type GetReviewsFilmParamsCtx struct {
+	FilmID int
+	Count  int
+	Offset int
 }

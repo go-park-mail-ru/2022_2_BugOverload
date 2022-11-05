@@ -101,4 +101,11 @@ SET count_views_films=
          WHERE p.profile_id = pc.fk_profile_id
          GROUP BY pc.fk_profile_id
          HAVING COUNT(pc.fk_profile_id) > 0)`
+
+	updateReviews = `
+UPDATE reviews r
+SET count_likes = (SELECT COUNT(*) as count
+                   FROM reviews_likes rl
+                   WHERE rl.fk_review_id = r.review_id
+                   GROUP BY rl.fk_review_id);`
 )

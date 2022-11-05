@@ -363,7 +363,7 @@ func (f *DBFiller) UpdateFilms() (int, error) {
 
 	affected, err := rows.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "uploadFilms")
+		return 0, errors.Wrap(err, "UpdateFilms")
 	}
 
 	return int(affected), nil

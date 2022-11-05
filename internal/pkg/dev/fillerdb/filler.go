@@ -301,5 +301,11 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d profiles denormal fields updated", count)
 
+	count, err = f.UpdateReviews()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d reviews denormal fields updated", count)
+
 	return nil
 }

@@ -20,17 +20,17 @@ func NewErrAuth(err error) AuthError {
 	}
 }
 
-type FilmsError struct {
+type FilmError struct {
 	Reason string
 	Code   int
 }
 
-func (e FilmsError) Error() string {
-	return fmt.Sprintf("Films: [%s]", e.Reason)
+func (e FilmError) Error() string {
+	return fmt.Sprintf("Film: [%s]", e.Reason)
 }
 
-func NewErrFilms(err error) FilmsError {
-	return FilmsError{
+func NewErrFilms(err error) FilmError {
+	return FilmError{
 		Reason: err.Error(),
 		Code:   ErrCsf.GetCode(err),
 	}
@@ -111,6 +111,22 @@ func (e CollectionError) Error() string {
 
 func NewErrCollection(err error) CollectionError {
 	return CollectionError{
+		Reason: err.Error(),
+		Code:   ErrCsf.GetCode(err),
+	}
+}
+
+type ReviewError struct {
+	Reason string
+	Code   int
+}
+
+func (e ReviewError) Error() string {
+	return fmt.Sprintf("Review: [%s]", e.Reason)
+}
+
+func NewErrReview(err error) ReviewError {
+	return ReviewError{
 		Reason: err.Error(),
 		Code:   ErrCsf.GetCode(err),
 	}

@@ -15,6 +15,7 @@ import (
 )
 
 type FilmRepository interface {
+	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film) (models.Film, error)
 }
 
@@ -35,20 +36,21 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 
 	// Film - Main
 	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowPerson := tx.QueryRowContext(ctx, getFilmByID, film.ID)
-		if rowPerson.Err() != nil {
-			return rowPerson.Err()
+		rowFilm := tx.QueryRowContext(ctx, getFilmByID, film.ID)
+		if rowFilm.Err() != nil {
+			return rowFilm.Err()
 		}
 
-		err := rowPerson.Scan(
+		err := rowFilm.Scan(
 			&response.Name,
 			&response.OriginalName,
 			&response.ProdYear,
 			&response.Slogan,
 			&response.Description,
+			&response.ShortDescription,
 			&response.AgeLimit,
 			&response.Duration,
-			&response.PosterVer,
+			&response.PosterHor,
 			&response.Budget,
 			&response.BoxOffice,
 			&response.CurrencyBudget,
@@ -251,6 +253,66 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 				case innerPKG.Composer:
 					response.Composers = append(response.Composers, person)
 				}
+			}
+
+			return nil
+		})
+	}()
+
+	wg.Wait()
+
+	return response.Convert(), nil
+}
+
+func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, error) {
+	response := NewFilmSQL()
+
+	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		rowFilm := tx.QueryRowContext(ctx, getFilmRecommendation)
+		if rowFilm.Err() != nil {
+			return rowFilm.Err()
+		}
+
+		err := rowFilm.Scan(
+			&response.ID,
+			&response.Name,
+			&response.ProdYear,
+			&response.EndYear,
+			&response.PosterHor,
+			&response.ShortDescription,
+			&response.Rating)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	// the main entity is not found
+	if stdErrors.Is(errTX, sql.ErrNoRows) {
+		return models.Film{}, errors.ErrNotFoundInDB
+	}
+
+	if errTX != nil {
+		return models.Film{}, errors.ErrPostgresRequest
+	}
+
+	wg := sync.WaitGroup{}
+
+	// Parts
+	// Genres
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+			values := []interface{}{response.ID}
+
+			var err error
+
+			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getFilmGenres, values)
+			if err != nil {
+				return err
 			}
 
 			return nil

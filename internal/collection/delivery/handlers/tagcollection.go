@@ -51,7 +51,7 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	requestParams := tagCollectionRequest.GetParams()
 
-	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, requestParams)
+	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, requestParams)
 
 	collection, err := h.collectionService.GetCollectionByTag(ctx)
 	if err != nil {

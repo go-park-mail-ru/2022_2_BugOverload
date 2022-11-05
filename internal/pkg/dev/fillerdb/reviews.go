@@ -2,6 +2,7 @@ package fillerdb
 
 import (
 	"context"
+	"fmt"
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
@@ -90,4 +91,21 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 	}
 
 	return countInserts, nil
+}
+
+func (f *DBFiller) UpdateReviews() (int, error) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	rows, err := f.DB.Connection.ExecContext(ctx, updateReviews)
+	if err != nil {
+		return 0, fmt.Errorf("UpdateReviews: [%w] when inserting row into [%s] table", err, updateReviews)
+	}
+
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "UpdateReviews")
+	}
+
+	return int(affected), nil
 }

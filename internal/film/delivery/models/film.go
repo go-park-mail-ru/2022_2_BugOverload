@@ -49,15 +49,16 @@ type FilmPersonResponse struct {
 }
 
 type FilmResponse struct {
-	ID           int    `json:"id,omitempty" example:"23"`
-	Name         string `json:"name,omitempty" example:"Игра престолов"`
-	OriginalName string `json:"original_name,omitempty" example:"Game of Thrones"`
-	ProdYear     int    `json:"prod_year,omitempty" example:"2011"`
-	Slogan       string `json:"slogan,omitempty" example:"Победа или смерть"`
-	Description  string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
-	AgeLimit     int    `json:"age_limit,omitempty" example:"18"`
-	Duration     int    `json:"duration,omitempty" example:"55"`
-	PosterVer    string `json:"poster_ver,omitempty" example:"23"`
+	ID               int    `json:"id,omitempty" example:"23"`
+	Name             string `json:"name,omitempty" example:"Игра престолов"`
+	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`
+	ProdYear         int    `json:"prod_year,omitempty" example:"2011"`
+	Slogan           string `json:"slogan,omitempty" example:"Победа или смерть"`
+	Description      string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
+	ShortDescription string `json:"short_description,omitempty" example:"Что вы знаете о джинах кроме желайний?"`
+	AgeLimit         int    `json:"age_limit,omitempty" example:"18"`
+	Duration         int    `json:"duration,omitempty" example:"55"`
+	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
 
 	Budget         int    `json:"budget,omitempty" example:"18323222"`
 	BoxOffice      int    `json:"box_office,omitempty" example:"60000000"`
@@ -110,18 +111,19 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	return &FilmResponse{
-		ID:             film.ID,
-		Name:           film.Name,
-		OriginalName:   film.OriginalName,
-		ProdYear:       film.ProdYear,
-		Slogan:         film.Slogan,
-		Description:    film.Description,
-		AgeLimit:       film.AgeLimit,
-		BoxOffice:      film.BoxOffice,
-		Budget:         film.Budget,
-		CurrencyBudget: film.CurrencyBudget,
-		Duration:       film.Duration,
-		PosterVer:      film.PosterVer,
+		ID:               film.ID,
+		Name:             film.Name,
+		OriginalName:     film.OriginalName,
+		ProdYear:         film.ProdYear,
+		Slogan:           film.Slogan,
+		Description:      film.Description,
+		ShortDescription: film.ShortDescription,
+		AgeLimit:         film.AgeLimit,
+		BoxOffice:        film.BoxOffice,
+		Budget:           film.Budget,
+		CurrencyBudget:   film.CurrencyBudget,
+		Duration:         film.Duration,
+		PosterHor:        film.PosterHor,
 
 		CountSeasons: film.CountSeasons,
 		EndYear:      film.EndYear,

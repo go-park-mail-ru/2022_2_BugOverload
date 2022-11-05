@@ -28,7 +28,7 @@ func NewReviewLikeHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @Produce json
 // @Param   id        path   int true "film id"
 // @Param   review_id query  int true "review id"
-// @Success 204 {array} models.ReviewResponse "success"
+// @Success 204 "success"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseFilmNoSuchFilm "no such film or no such cookie or no such review"

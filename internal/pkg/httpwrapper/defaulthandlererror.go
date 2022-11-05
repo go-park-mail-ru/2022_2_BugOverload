@@ -26,7 +26,7 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
-	var errFilms errors.FilmsError
+	var errFilms errors.FilmError
 	if ok := stdErrors.As(err, &errFilms); ok {
 		Response(w, errFilms.Code, errResp)
 		return
@@ -55,4 +55,12 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		Response(w, errProfile.Code, errResp)
 		return
 	}
+
+	var errReview errors.ReviewError
+	if ok := stdErrors.As(err, &errReview); ok {
+		Response(w, errReview.Code, errResp)
+		return
+	}
+
+	Response(w, http.StatusInternalServerError, errResp)
 }

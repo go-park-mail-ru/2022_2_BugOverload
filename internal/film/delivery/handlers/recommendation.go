@@ -29,7 +29,7 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // delivery of the data to the service at the business logic level.
 // @Summary Recommendation film
 // @Description Getting a recommended movie for the user
-// @tags film
+// @tags completed
 // @Produce json
 // @Success 200 {object} models.RecommendFilmResponse "returns recommendation film movies for auth user or not auth"
 // @Failure 400 "return error"

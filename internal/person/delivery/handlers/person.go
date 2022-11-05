@@ -51,7 +51,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	requestParams := personRequest.GetParams()
 
-	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, requestParams)
+	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, requestParams)
 
 	person, err := h.personService.GePersonByID(ctx, personRequest.GetPerson())
 	if err != nil {

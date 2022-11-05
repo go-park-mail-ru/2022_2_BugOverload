@@ -19,7 +19,7 @@ type personService struct {
 	personRepo repository.PersonRepository
 }
 
-// NewPersonService is constructor for personService. Accepts PersonService interfaces.
+// NewPersonService is constructor for personService.
 func NewPersonService(pr repository.PersonRepository) PersonService {
 	return &personService{
 		personRepo: pr,

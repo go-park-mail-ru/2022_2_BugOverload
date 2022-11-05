@@ -7,9 +7,10 @@ SELECT name,
        prod_year,
        slogan,
        description,
+	   short_description,
        age_limit,
        duration,
-       poster_ver,
+       poster_hor,
        budget,
        box_office,
        currency_budget,
@@ -75,4 +76,11 @@ WHERE fp.fk_film_id = $1
   AND fp.character IS NULL
 GROUP BY fp.fk_film_id, fp.fk_profession_id, fp.weight, p.name, fp.fk_person_id
 ORDER BY fp.fk_profession_id, fp.weight DESC`
+
+	getFilmRecommendation = `
+SELECT f.film_id, f.name, f.prod_year, f.end_year, f.poster_hor, f.short_description, f.rating
+FROM films f
+WHERE f.poster_hor IS NOT NULL
+ORDER BY f.rating DESC
+LIMIT 1`
 )
