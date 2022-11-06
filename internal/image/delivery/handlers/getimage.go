@@ -27,8 +27,9 @@ func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Download image
-// @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar"
-// @tags image
+// @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar", "film_image",
+// @Description "default", "user_avatar", "person_avatar", "person_image". Rule for film image: key = filmID/filmImageKey. Example 1/2
+// @tags completed
 // @produce json
 // @produce image/webp
 // @Param   object    query  string  true  "type object"
