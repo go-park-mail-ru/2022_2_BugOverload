@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/sirupsen/logrus"
 	"strconv"
 
 	stdErrors "github.com/pkg/errors"
@@ -62,8 +61,6 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 
 		return nil
 	})
-
-	logrus.Info(errTx)
 
 	// the main entity is not found
 	if stdErrors.Is(errTx, sql.ErrNoRows) {
