@@ -5,20 +5,34 @@ import (
 	"time"
 )
 
+// ImagesParams
 const (
-	// Validation HTTP
-	ContentTypeJSON = "application/json"
-	ContentTypeJPEG = "image/webp"
+	// Images params request
+	ImageObjectFilmPosterHor = "film_poster_hor" // key - 1 to 1 from prev request
+	ImageObjectFilmPosterVer = "film_poster_ver" // key - 1 to 1 from prev request
+	ImageObjectFilmImage     = "film_image"      // key - filmID/filmImageKey - Example 1/2
+	ImageObjectDefault       = "default"         // key - 1 to 1 from prev request
+	ImageObjectUserAvatar    = "user_avatar"     // key - 1 to 1 from prev request
+	ImageObjectPersonAvatar  = "person_avatar"   // key - 1 to 1 from prev request
+	ImageObjectPersonImage   = "person_image"    // key - personID/personImageKey - Example 5/12
 
-	// Validattion size Requests
-	BufSizeRequest = 1024 * 1024 * 2.5
-	BufSizeImage   = 1024 * 1024 * 2
+	// Image Def Images
+	DefFilmPosterHor = "hor"
+	DefFilmPosterVer = "ver"
+	DefUserAvatar    = "avatar"
+	DefPersonAvatar  = "avatar"
 
-	// Cookie
-	CookieValueLength = 40
-	TimeoutLiveCookie = 10 * time.Hour
+	ImageCountSignupLogin = 12
 
-	// Handler factory
+	// S3
+	FilmsBucket   = "films/"
+	DefBucket     = "default/"
+	PersonsBucket = "persons/"
+	UsersBucket   = "users/"
+)
+
+// Handler factory
+const (
 	SignupRequest         = "SignupRequest"
 	LoginRequest          = "LoginRequest"
 	AuthRequest           = "AuthRequest"
@@ -32,12 +46,40 @@ const (
 	PersonRequest         = "PersonRequest"
 	FilmRequest           = "FilmRequest"
 	ReviewsFilmRequest    = "ReviewsFilmRequest"
+)
 
-	// Images params request
-	ImageObjectFilmPosterHor = "film_poster_hor"
-	ImageObjectFilmPosterVer = "film_poster_ver"
-	ImageObjectDefault       = "default"
-	ImageObjectAvatar        = "user_avatar"
+// DB
+const (
+	// PersonProfessions
+	Actor    = 1
+	Artist   = 7
+	Director = 2
+	Writer   = 3
+	Producer = 4
+	Operator = 5
+	Montage  = 8
+	Composer = 6
+)
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}
+
+// Global
+const (
+	// Validation HTTP
+	ContentTypeJSON = "application/json"
+	ContentTypeWEBP = "image/webp"
+
+	// Validattion size Requests
+	BufSizeRequest = 1024 * 1024 * 2.5
+	BufSizeImage   = 1024 * 1024 * 2
+
+	// Cookie
+	CookieValueLength = 40
+	TimeoutLiveCookie = 10 * time.Hour
 
 	// ParamsContextKeys
 	GetReviewsParams       = "GetReviewsParamsKey"
@@ -51,16 +93,6 @@ const (
 	ArgonMemory    = 32 * 1024
 	ArgonThreads   = 4
 	ArgonKeyLength = 32
-
-	// PersonProfessions
-	Actor    = 1
-	Artist   = 7
-	Director = 2
-	Writer   = 3
-	Producer = 4
-	Operator = 5
-	Montage  = 8
-	Composer = 6
 )
 
 type ContextKeyType string
@@ -104,10 +136,4 @@ var GetFilmParamsKey ContextKeyType = GetFilmParams
 // GetFilmParamsCtx in struct for GetFilmParams in filmHandler
 type GetFilmParamsCtx struct {
 	CountImages int
-}
-
-// TxDefaultOptions for Postgres
-var TxDefaultOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  true,
 }

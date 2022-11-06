@@ -1,4 +1,4 @@
-package dependenttest_test
+package dependenttest
 
 import (
 	"io"

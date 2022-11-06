@@ -24,10 +24,6 @@ func (i *GetImageRequest) Bind(r *http.Request) error {
 	i.Key = r.FormValue("key")
 	i.Object = r.FormValue("object")
 
-	if i.Key == "" || i.Object == "" {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
-	}
-
 	return nil
 }
 

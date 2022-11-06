@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"strconv"
 	"strings"
 
@@ -270,6 +271,10 @@ func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []
 			&film.Rating)
 		if err != nil {
 			return []FilmSQL{}, err
+		}
+
+		if !film.PosterVer.Valid {
+			film.PosterVer.String = innerPKG.DefFilmPosterVer
 		}
 
 		res = append(res, film)

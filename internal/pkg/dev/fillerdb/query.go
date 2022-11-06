@@ -1,11 +1,11 @@
 package fillerdb
 
 const (
-	insertFilms = `INSERT INTO 
-    	films(name, prod_year, poster_ver, poster_hor, description, 
-    	      short_description, original_name, slogan, age_limit, 
-    	      box_office, budget, duration, currency_budget, type, count_seasons, end_year) 
-		VALUES `
+	insertFilms = `
+INSERT INTO films(name, prod_year, poster_ver, poster_hor, description,
+                  short_description, original_name, slogan, age_limit,
+                  box_office, budget, duration, currency_budget, type, count_seasons, end_year)
+VALUES`
 
 	insertFilmsGenres    = `INSERT INTO film_genres(fk_film_id, fk_genre_id, weight) VALUES`
 	insertFilmsCountries = `INSERT INTO film_countries(fk_film_id, fk_country_id, weight) VALUES`
@@ -33,7 +33,8 @@ const (
 
 	insertFilmsPersons = `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
 
-	updateFilms = `UPDATE films f
+	updateFilms = `
+UPDATE films f
 SET (rating, count_scores) =
         (SELECT SUM(pr.score) / COUNT(*) AS rating,
                 COUNT(*)
@@ -69,14 +70,16 @@ SET (rating, count_scores) =
            AND fp.fk_profession_id = (SELECT profession_id FROM professions p WHERE p.name = 'актер')
          HAVING COUNT(fp.fk_film_id) > 0)`
 
-	updatePersons = `UPDATE persons p
+	updatePersons = `
+UPDATE persons p
 SET count_films = (SELECT COUNT(*) as count
                    FROM film_persons fp
                    WHERE fp.fk_person_id = p.person_id
                    GROUP BY fp.fk_person_id, fp.fk_profession_id
                    HAVING fp.fk_profession_id = (SELECT profession_id FROM professions WHERE name = 'актер'));`
 
-	updateProfiles = `UPDATE profiles p
+	updateProfiles = `
+UPDATE profiles p
 SET count_views_films=
         (SELECT COUNT(*)
          FROM profile_views_films pvf

@@ -2,6 +2,7 @@ package dependenttest_test
 
 import (
 	_ "embed"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -27,9 +28,9 @@ func TestUploadImageHandler(t *testing.T) {
 		// Success
 		tests.TestCase{
 			Method:      http.MethodGet,
-			ContentType: innerPKG.ContentTypeJPEG,
+			ContentType: innerPKG.ContentTypeWEBP,
 			RequestBody: imageBin1,
-			Keys:        []string{"default", "testupload1"},
+			Keys:        []string{"default", "test"},
 			Values:      []string{"object", "key"},
 
 			StatusCode: http.StatusNoContent,
@@ -42,19 +43,22 @@ func TestUploadImageHandler(t *testing.T) {
 
 			StatusCode: http.StatusUnsupportedMediaType,
 		},
-		// Body is empty
-		// tests.TestCase{
-		//	Method:      http.MethodPost,
-		//	ContentType: innerPKG.ContentTypeJPEG,
-		//
-		//	StatusCode: http.StatusBadRequest,
-		// },
+		//  Body is empty
+		tests.TestCase{
+			Method:      http.MethodGet,
+			ContentType: innerPKG.ContentTypeWEBP,
+			Keys:        []string{"default", "test"},
+			Values:      []string{"object", "key"},
+
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrEmptyBody)),
+			StatusCode:   http.StatusBadRequest,
+		},
 	}
 
 	url := "http://localhost:8088/v1/image"
 	config := innerPKG.NewConfig()
 
-	config.S3.Endpoint = "http://localhost:4566"
+	config.S3.Endpoint = "http://localstack:4566"
 
 	is := S3Image.NewImageS3(config)
 

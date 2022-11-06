@@ -38,21 +38,21 @@ func NewUserProfileHandler(us serviceUserProfile.UserService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/profile/{id} [GET]
 func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
-	userProfileRequest := models.NewUserProfileRequest()
+	request := models.NewUserProfileRequest()
 
-	err := userProfileRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	user, err := h.userProfileService.GetUserProfileByID(r.Context(), userProfileRequest.GetUser())
+	user, err := h.userProfileService.GetUserProfileByID(r.Context(), request.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
 		return
 	}
 
-	userProfileResponse := models.NewUserProfileResponse(&user)
+	response := models.NewUserProfileResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, userProfileResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

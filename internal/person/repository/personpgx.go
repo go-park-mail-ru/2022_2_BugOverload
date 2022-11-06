@@ -54,6 +54,10 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 			return err
 		}
 
+		if !response.Avatar.Valid {
+			response.Avatar.String = innerPKG.DefPersonAvatar
+		}
+
 		return nil
 	})
 

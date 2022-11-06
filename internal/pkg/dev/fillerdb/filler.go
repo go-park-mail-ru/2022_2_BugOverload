@@ -299,6 +299,18 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d film persons link end", count)
 
+	count, err = f.uploadCollections()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d collections upload", count)
+
+	count, err = f.linkCollectionProfile()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d collections profiles link end", count)
+
 	count, err = f.UpdateFilms()
 	if err != nil {
 		return errors.Wrap(err, "Action")
@@ -322,18 +334,6 @@ func (f *DBFiller) Action() error {
 		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d reviews denormal fields updated", count)
-
-	count, err = f.uploadCollections()
-	if err != nil {
-		return errors.Wrap(err, "Action")
-	}
-	logrus.Infof("%d collections upload", count)
-
-	count, err = f.linkCollectionProfile()
-	if err != nil {
-		return errors.Wrap(err, "Action")
-	}
-	logrus.Infof("%d collections profiles link end", count)
 
 	return nil
 }

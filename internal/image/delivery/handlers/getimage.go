@@ -40,17 +40,15 @@ func NewGetImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/image [GET]
 func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getImageRequest := models.NewGetImageRequest()
+	request := models.NewGetImageRequest()
 
-	err := getImageRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	image := getImageRequest.GetImage()
-
-	getImage, err := h.imageService.DownloadImage(r.Context(), image)
+	getImage, err := h.imageService.DownloadImage(r.Context(), request.GetImage())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
 		return

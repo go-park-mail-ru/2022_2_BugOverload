@@ -41,25 +41,23 @@ func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id} [GET]
 func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
-	filmRequest := models.NewFilmRequest()
+	request := models.NewFilmRequest()
 
-	err := filmRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	requestParams := filmRequest.GetParams()
+	ctx := context.WithValue(r.Context(), pkg.GetFilmParamsKey, request.GetParams())
 
-	ctx := context.WithValue(r.Context(), pkg.GetFilmParamsKey, requestParams)
-
-	film, err := h.filmService.GetFilmByID(ctx, filmRequest.GetFilm())
+	film, err := h.filmService.GetFilmByID(ctx, request.GetFilm())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return
 	}
 
-	filmResponse := models.NewFilmResponse(&film)
+	response := models.NewFilmResponse(&film)
 
-	httpwrapper.Response(w, http.StatusOK, filmResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

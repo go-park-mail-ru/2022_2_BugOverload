@@ -38,17 +38,15 @@ func NewPostImageHandler(is serviceImage.ImageService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/image [POST]
 func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getImageRequest := models.NewPutImageRequest()
+	request := models.NewPutImageRequest()
 
-	err := getImageRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	image := getImageRequest.GetImage()
-
-	err = h.imageService.UploadImage(r.Context(), image)
+	err = h.imageService.UploadImage(r.Context(), request.GetImage())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
 		return

@@ -22,16 +22,12 @@ func NewPostImageRequest() *PostImageRequest {
 }
 
 func (i *PostImageRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Content-Type") != pkg.ContentTypeJPEG {
+	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP {
 		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
 	}
 
 	i.Key = r.FormValue("key")
 	i.Object = r.FormValue("object")
-
-	if i.Key == "" || i.Object == "" {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
-	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {

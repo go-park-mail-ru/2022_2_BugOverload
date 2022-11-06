@@ -25,6 +25,7 @@ var (
 	ErrImageNotFound   = stdErrors.New("no such image")
 	ErrGetImageStorage = stdErrors.New("err get data from storage")
 	ErrReadImage       = stdErrors.New("err read bin data")
+	ErrImage           = stdErrors.New("service picture not work")
 
 	// Def validation
 	ErrCJSONUnexpectedEnd   = stdErrors.New("unexpected end of JSON input")
@@ -60,6 +61,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrLoginCombinationNotFound] = http.StatusForbidden
 	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrSessionNotExist] = http.StatusNotFound
+	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
 
 	// Films
 	res[ErrFilmNotFound] = http.StatusNotFound
@@ -69,6 +71,8 @@ func NewErrClassifier() ErrClassifier {
 
 	res[ErrGetImageStorage] = http.StatusBadRequest
 	res[ErrReadImage] = http.StatusBadRequest
+
+	res[ErrImage] = http.StatusInternalServerError
 
 	// Def Validation
 	res[ErrCJSONUnexpectedEnd] = http.StatusBadRequest

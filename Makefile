@@ -1,6 +1,6 @@
 .PHONY: all clear generate-api-doc check launch build run-tests migrate-debug-up DB_URL
 
-all: check build run-all-tests
+all: check build run-tests
 
 LINTERS_CONFIG = ./configs/.golangci.yml
 
@@ -19,8 +19,10 @@ migrate-install:
 	sudo mv --backup=existing migrate /bin
 
 env:
-	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar && export POSTGRES_HOST=main_db &&
-	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass && export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable
+	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo &&
+	export AWS_SECRET_ACCESS_KEY=bar && export POSTGRES_HOST=main_db &&
+	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
+	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable
 
 # Development
 check:
@@ -65,12 +67,14 @@ prod-mode:
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+	sleep 0.5
 	make reboot-db-prod
 	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
 	docker-compose up -d
+	sleep 0.5
 	make reboot-db-debug
 	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
@@ -94,6 +98,10 @@ main-debug-restart:
 
 main-prod-restart:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
+
+# Example: make infro-command COMMAND=run-all-tests
+infro-command:
+	docker-compose exec $(SERVICE_MAIN) make -C project  ${COMMAND}
 
 # Migrations
 MIGRATIONS_DIR = scripts/migrations

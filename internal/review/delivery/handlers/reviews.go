@@ -42,17 +42,15 @@ func NewReviewsHandler(fs service.ReviewService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id}/reviews [GET]
 func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	reviewsRequest := models.NewReviewsRequest()
+	request := models.NewReviewsRequest()
 
-	err := reviewsRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	requestParams := reviewsRequest.GetParams()
-
-	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, requestParams)
+	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, request.GetParams())
 
 	reviews, err := h.reviewsService.GetReviewsByFilmID(ctx)
 	if err != nil {
@@ -60,7 +58,7 @@ func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reviewsResponse := models.NewReviewsResponse(&reviews)
+	response := models.NewReviewsResponse(&reviews)
 
-	httpwrapper.Response(w, http.StatusOK, reviewsResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

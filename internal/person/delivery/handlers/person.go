@@ -42,25 +42,23 @@ func NewPersonHandler(fs service.PersonService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/person/{id} [GET]
 func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
-	personRequest := models.NewPersonRequest()
+	request := models.NewPersonRequest()
 
-	err := personRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	requestParams := personRequest.GetParams()
+	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, request.GetParams())
 
-	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, requestParams)
-
-	person, err := h.personService.GePersonByID(ctx, personRequest.GetPerson())
+	person, err := h.personService.GePersonByID(ctx, request.GetPerson())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrPerson(stdErrors.Cause(err)))
 		return
 	}
 
-	personResponse := models.NewPersonResponse(&person)
+	response := models.NewPersonResponse(&person)
 
-	httpwrapper.Response(w, http.StatusOK, personResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

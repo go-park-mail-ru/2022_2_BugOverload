@@ -38,6 +38,10 @@ services:
     image: localstack/localstack:latest
     restart: unless-stopped
     environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
 
@@ -60,7 +64,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
       - ./data:/tmp/localstack
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      # - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
     ports:
       - "4566-4599:4566-4599"
@@ -122,7 +126,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "admin"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
-      - "5050:80"
+      - "5050:5050"
     restart: unless-stopped
     depends_on:
       - main_db

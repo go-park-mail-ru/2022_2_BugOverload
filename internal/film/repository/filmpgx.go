@@ -67,6 +67,10 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 			return err
 		}
 
+		if !response.PosterHor.Valid {
+			response.PosterHor.String = innerPKG.DefFilmPosterHor
+		}
+
 		return nil
 	})
 

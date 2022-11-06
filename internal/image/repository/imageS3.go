@@ -5,11 +5,12 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-
+	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -64,8 +65,18 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 
 	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
-		logrus.Error(err)
-		return models.Image{}, errors.ErrImageNotFound
+		var awsErr awserr.Error
+
+		if stdErrors.As(err, &awsErr) {
+			switch awsErr.Code() {
+			case s3.ErrCodeNoSuchBucket:
+				return models.Image{}, errors.ErrImageNotFound
+			case s3.ErrCodeNoSuchKey:
+				return models.Image{}, errors.ErrImageNotFound
+			default:
+				return models.Image{}, errors.ErrImage
+			}
+		}
 	}
 
 	return models.Image{Bytes: w.Bytes()[:realSize]}, nil
@@ -85,7 +96,7 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 
 	_, err := is.uploaderS3.UploadWithContext(ctx, getObjectInput)
 	if err != nil {
-		return errors.ErrImageNotFound
+		return errors.ErrImage
 	}
 
 	return nil

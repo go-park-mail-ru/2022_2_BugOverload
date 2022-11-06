@@ -29,7 +29,7 @@ func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 
 // ResponseImage is a function for giving any response with a body - image
 func ResponseImage(w http.ResponseWriter, statusCode int, image []byte) {
-	w.Header().Set("Content-Type", pkg.ContentTypeJPEG)
+	w.Header().Set("Content-Type", pkg.ContentTypeWEBP)
 
 	w.WriteHeader(statusCode)
 

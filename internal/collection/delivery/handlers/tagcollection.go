@@ -41,17 +41,15 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection/{tag} [GET]
 func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
-	tagCollectionRequest := models.NewTagCollectionRequest()
+	request := models.NewTagCollectionRequest()
 
-	err := tagCollectionRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
 	}
 
-	requestParams := tagCollectionRequest.GetParams()
-
-	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, requestParams)
+	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, request.GetParams())
 
 	collection, err := h.collectionService.GetCollectionByTag(ctx)
 	if err != nil {
@@ -59,7 +57,7 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collectionResponse := models.NewTagCollectionResponse(&collection)
+	response := models.NewTagCollectionResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, collectionResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }
