@@ -176,7 +176,15 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 				return err
 			}
 
-			response.Images = strings.Split(images.String, "_")
+			imagesSet := strings.Split(images.String, "_")
+
+			params, _ := ctx.Value(innerPKG.GetFilmParamsKey).(innerPKG.GetFilmParamsCtx)
+
+			if params.CountImages > len(imagesSet) {
+				params.CountImages = len(imagesSet)
+			}
+
+			response.Images = imagesSet[:params.CountImages]
 
 			return nil
 		})

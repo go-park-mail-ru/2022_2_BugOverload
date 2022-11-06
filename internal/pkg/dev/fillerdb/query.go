@@ -108,4 +108,7 @@ SET count_likes = (SELECT COUNT(*) as count
                    FROM reviews_likes rl
                    WHERE rl.fk_review_id = r.review_id
                    GROUP BY rl.fk_review_id);`
+
+	insertCollections        = `INSERT INTO collections(name, description, poster, create_time) VALUES`
+	insertProfileCollections = `INSERT INTO profile_collections(fk_collection_id, fk_profile_id) VALUES`
 )

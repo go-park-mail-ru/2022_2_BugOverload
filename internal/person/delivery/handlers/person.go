@@ -34,6 +34,7 @@ func NewPersonHandler(fs service.PersonService) pkg.Handler {
 // @Produce json
 // @Param id  path int true "person id"
 // @Param count_films  query int true "count best films"
+// @Param count_images  query int true "count images person"
 // @Success 200 {object} models.PersonResponse "return person info with best films"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponsePersonNoSuchPerson "no such person"

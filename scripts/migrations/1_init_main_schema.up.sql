@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS films
     "description"            TEXT         NOT NULL,
     "short_description"      varchar(180) NOT NULL,
     "duration"               integer      NOT NULL,
-    "type"                   varchar(64)  DEFAULT NULL,
+    "type"                   varchar(32)  DEFAULT NULL,
     "original_name"          varchar(80)  DEFAULT NULL,
     "slogan"                 varchar(128) DEFAULT NULL,
     "age_limit"              integer      DEFAULT NULL,
@@ -99,11 +99,12 @@ CREATE TABLE IF NOT EXISTS professions
     "name"          varchar(64) NOT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS collections
 (
     "collection_id" serial       NOT NULL PRIMARY KEY,
-    "name"          varchar(128) NOT NULL,
-    "description"   TEXT         NOT NULL,
+    "name"          varchar(64) NOT NULL,
+    "description"   TEXT                  DEFAULT NULL,
     "poster"        varchar(32)           DEFAULT NULL,
     "is_public"     boolean      NOT NULL DEFAULT false,
     "create_time"   timestamp    NOT NULL DEFAULT NOW(),
@@ -124,12 +125,14 @@ CREATE TABLE IF NOT EXISTS reviews
 
 
 -- 1:M
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_images
 (
     "film_id"     serial       NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
     "images_list" varchar(100) NOT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS person_images
 (
     "person_id"   serial       NOT NULL PRIMARY KEY REFERENCES persons (person_id) ON DELETE CASCADE,
@@ -211,6 +214,7 @@ CREATE TABLE IF NOT EXISTS profile_reviews
     PRIMARY KEY (fk_review_id, fk_profile_id, fk_film_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profile_collections
 (
     "fk_profile_id"    integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,

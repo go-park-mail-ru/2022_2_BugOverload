@@ -43,6 +43,7 @@ const (
 	GetReviewsParams       = "GetReviewsParamsKey"
 	GetPersonParams        = "GetPersonParams"
 	GetCollectionTagParams = "GetPersonParams"
+	GetFilmParams          = "GetFilmParams"
 
 	// Crypt
 	SaltLength     = 16
@@ -71,22 +72,14 @@ var LoggerKey ContextKeyType = "logger"
 // GetPersonParamsKey for RequestParams
 var GetPersonParamsKey ContextKeyType = GetPersonParams
 
-// GetCollectionTagParamsKey for RequestParams
-var GetCollectionTagParamsKey ContextKeyType = GetCollectionTagParams
-
-// GetReviewsParamsKey for RequestParams
-var GetReviewsParamsKey ContextKeyType = GetReviewsParams
-
-// TxDefaultOptions for Postgres
-var TxDefaultOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  true,
-}
-
 // GetPersonParamsCtx in struct for GetPersonParams in personHandler
 type GetPersonParamsCtx struct {
-	CountFilms int
+	CountFilms  int
+	CountImages int
 }
+
+// GetCollectionTagParamsKey for RequestParams
+var GetCollectionTagParamsKey ContextKeyType = GetCollectionTagParams
 
 // GetCollectionTagParamsCtx in struct for GetPersonParams in tagCollectionHandler
 type GetCollectionTagParamsCtx struct {
@@ -95,9 +88,26 @@ type GetCollectionTagParamsCtx struct {
 	Delimiter  string
 }
 
+// GetReviewsParamsKey for RequestParams
+var GetReviewsParamsKey ContextKeyType = GetReviewsParams
+
 // GetReviewsFilmParamsCtx in struct for GetReviewsParamsKey in reviewHandler
 type GetReviewsFilmParamsCtx struct {
 	FilmID int
 	Count  int
 	Offset int
+}
+
+// GetFilmParamsKey for RequestParams
+var GetFilmParamsKey ContextKeyType = GetFilmParams
+
+// GetFilmParamsCtx in struct for GetFilmParams in filmHandler
+type GetFilmParamsCtx struct {
+	CountImages int
+}
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
 }

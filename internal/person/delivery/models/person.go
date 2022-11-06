@@ -12,8 +12,9 @@ import (
 )
 
 type PersonRequest struct {
-	ID         int
-	CountFilms int
+	ID          int
+	CountFilms  int
+	CountImages int
 }
 
 func NewPersonRequest() *PersonRequest {
@@ -21,27 +22,31 @@ func NewPersonRequest() *PersonRequest {
 }
 
 func (p *PersonRequest) Bind(r *http.Request) error {
+	var err error
+
 	vars := mux.Vars(r)
 
-	var err error
 	p.ID, err = strconv.Atoi(vars["id"])
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
-	countFilms := r.FormValue("count_films")
-
-	if countFilms == "" {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
-	}
-
-	p.CountFilms, err = strconv.Atoi(countFilms)
+	p.CountFilms, err = strconv.Atoi(r.FormValue("count_films"))
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
 	if p.CountFilms <= 0 {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
+		return errors.NewErrValidation(errors.ErrQueryBad)
+	}
+
+	p.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	if p.CountImages <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryBad)
 	}
 
 	return nil
@@ -55,7 +60,8 @@ func (p *PersonRequest) GetPerson() *models.Person {
 
 func (p *PersonRequest) GetParams() innerPKG.GetPersonParamsCtx {
 	return innerPKG.GetPersonParamsCtx{
-		CountFilms: p.CountFilms,
+		CountFilms:  p.CountFilms,
+		CountImages: p.CountImages,
 	}
 }
 

@@ -3,37 +3,37 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadUsers() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertUsers, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertUsers, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	for idx, value := range f.faceUsers {
-		posAttr := 0
-		posValue := idx * countAttributes
+	pos := 0
 
-		values[posValue+posAttr] = value.Nickname
-		posAttr++
-		values[posValue+posAttr] = value.Email
-		posAttr++
-		values[posValue+posAttr] = value.Password
+	for _, value := range f.faceUsers {
+		values[pos] = value.Nickname
+		pos++
+		values[pos] = value.Email
+		pos++
+		values[pos] = value.Password
+		pos++
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadUsers")
 	}
@@ -53,7 +53,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkUsersProfiles() (int, error) {
 	countInserts := len(f.faceUsers)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertUsersProfiles, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertUsersProfiles, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -68,7 +68,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkUsersProfiles")
 	}
@@ -79,7 +79,7 @@ func (f *DBFiller) linkUsersProfiles() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertProfileViews, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertProfileViews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -111,7 +111,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkProfileViews")
 	}
@@ -122,7 +122,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertProfileRatings, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertProfileRatings, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -154,7 +154,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkProfileRatings")
 	}

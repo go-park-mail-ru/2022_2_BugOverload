@@ -1,6 +1,7 @@
 package models
 
 import (
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"strconv"
 
@@ -11,7 +12,8 @@ import (
 )
 
 type FilmRequest struct {
-	ID int
+	ID          int
+	CountImages int
 }
 
 func NewFilmRequest() FilmRequest {
@@ -19,18 +21,34 @@ func NewFilmRequest() FilmRequest {
 }
 
 func (f *FilmRequest) Bind(r *http.Request) error {
+	var err error
+
 	vars := mux.Vars(r)
 
-	var err error
 	f.ID, err = strconv.Atoi(vars["id"])
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
+	f.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	if f.CountImages <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryBad)
+	}
+
 	return nil
 }
 
-func (f *FilmRequest) GetPerson() *models.Film {
+func (f *FilmRequest) GetParams() innerPKG.GetFilmParamsCtx {
+	return innerPKG.GetFilmParamsCtx{
+		CountImages: f.CountImages,
+	}
+}
+
+func (f *FilmRequest) GetFilm() *models.Film {
 	return &models.Film{
 		ID: f.ID,
 	}
@@ -75,6 +93,7 @@ type FilmResponse struct {
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty" example:"63"`
 	CountPositiveReviews int     `json:"count_positive_reviews,omitempty" example:"65"`
 
+	Images        []string             `json:"images,omitempty" example:"1,2,3,4"`
 	Tags          []string             `json:"tags,omitempty" example:"популярное,сейчас в кино"`
 	Genres        []string             `json:"genres,omitempty" example:"фантастика,боевик"`
 	ProdCompanies []string             `json:"prod_companies,omitempty" example:"HBO"`
@@ -136,6 +155,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,
 
+		Images:        film.Images,
 		Tags:          film.Tags,
 		Genres:        film.Genres,
 		ProdCompanies: film.ProdCompanies,

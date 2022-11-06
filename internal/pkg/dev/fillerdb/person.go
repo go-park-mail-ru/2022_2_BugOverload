@@ -3,43 +3,44 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersons, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersons, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	for idx, value := range f.personsSQL {
-		posAttr := 0
-		posValue := idx * countAttributes
+	pos := 0
 
-		values[posValue+posAttr] = value.Name
-		posAttr++
-		values[posValue+posAttr] = value.OriginalName
-		posAttr++
-		values[posValue+posAttr] = value.Birthday
-		posAttr++
-		values[posValue+posAttr] = value.Growth
-		posAttr++
-		values[posValue+posAttr] = value.Avatar
-		posAttr++
-		values[posValue+posAttr] = value.Gender
-		posAttr++
-		values[posValue+posAttr] = value.Death
+	for _, value := range f.personsSQL {
+		values[pos] = value.Name
+		pos++
+		values[pos] = value.OriginalName
+		pos++
+		values[pos] = value.Birthday
+		pos++
+		values[pos] = value.Growth
+		pos++
+		values[pos] = value.Avatar
+		pos++
+		values[pos] = value.Gender
+		pos++
+		values[pos] = value.Death
+		pos++
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadPersons")
 	}
@@ -63,7 +64,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsProfessions, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsProfessions, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -89,7 +90,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonProfession")
 	}
@@ -104,7 +105,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsGenres, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -130,7 +131,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonGenres")
 	}
@@ -141,7 +142,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 func (f *DBFiller) linkPersonImages() (int, error) {
 	countInserts := len(f.persons)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertPersonsImages, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsImages, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -158,7 +159,7 @@ func (f *DBFiller) linkPersonImages() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkPersonImages")
 	}

@@ -12,9 +12,9 @@ import (
 )
 
 type ReviewsRequest struct {
-	FilmID int
-	Count  int
-	Offset int
+	FilmID       int
+	CountReviews int
+	Offset       int
 }
 
 func NewReviewsRequest() *ReviewsRequest {
@@ -30,27 +30,27 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	filmID := vars["id"]
-	count := r.FormValue("count_reviews")
-	offset := r.FormValue("offset")
-
-	if filmID == "" || count == "" || offset == "" {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
-	}
-
-	rr.FilmID, err = strconv.Atoi(filmID)
+	rr.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
-	rr.Count, err = strconv.Atoi(count)
+	rr.CountReviews, err = strconv.Atoi(r.FormValue("count_reviews"))
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
-	rr.Offset, err = strconv.Atoi(offset)
+	if rr.CountReviews <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryBad)
+	}
+
+	rr.Offset, err = strconv.Atoi(r.FormValue("offset"))
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	if rr.Offset <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryBad)
 	}
 
 	return nil
@@ -60,7 +60,7 @@ func (rr *ReviewsRequest) GetParams() innerPKG.GetReviewsFilmParamsCtx {
 	return innerPKG.GetReviewsFilmParamsCtx{
 		FilmID: rr.FilmID,
 		Offset: rr.Offset,
-		Count:  rr.Count,
+		Count:  rr.CountReviews,
 	}
 }
 

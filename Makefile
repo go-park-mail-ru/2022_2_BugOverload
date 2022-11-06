@@ -65,11 +65,13 @@ prod-mode:
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+	make reboot-db-prod
 	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
 	docker-compose up -d
+	make reboot-db-debug
 	sleep 30
 	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
 
@@ -80,8 +82,12 @@ stop:
 logs:
 	docker-compose logs -f
 
-infro-reboot-db:
-	docker-compose exec $(SERVICE_MAIN) make -C project  reboot-db
+reboot-db-debug:
+	docker-compose exec $(SERVICE_MAIN) make -C project  reboot-db COUNT=3
+
+reboot-db-prod:
+	make reboot-db-debug
+	docker-compose exec $(SERVICE_MAIN) make -C project  migrate-up COUNT=1
 
 main-debug-restart:
 	docker-compose restart $(SERVICE_MAIN)
@@ -93,18 +99,18 @@ main-prod-restart:
 MIGRATIONS_DIR = scripts/migrations
 DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
 
-migrate-debug-up:
+migrate-up:
 	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
 
-migrate-debug-down:
+migrate-down:
 	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} down ${COUNT}
 
-migrate-debug-force:
+migrate-force:
 	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} force ${COUNT}
 
 reboot-db:
 	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
-	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
 	make dev-fill-db
 
 # Utils

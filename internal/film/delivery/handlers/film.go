@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
 	stdErrors "github.com/pkg/errors"
@@ -32,6 +33,7 @@ func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
 // @tags completed
 // @Produce json
 // @Param id  path int true "film id"
+// @Param count_images  query int true "count images film"
 // @Success 200 {object} models.FilmResponse "return film"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponseFilmNoSuchFilm "no such film"
@@ -47,7 +49,11 @@ func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	film, err := h.filmService.GetFilmByID(r.Context(), filmRequest.GetPerson())
+	requestParams := filmRequest.GetParams()
+
+	ctx := context.WithValue(r.Context(), pkg.GetFilmParamsKey, requestParams)
+
+	film, err := h.filmService.GetFilmByID(ctx, filmRequest.GetFilm())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
 		return

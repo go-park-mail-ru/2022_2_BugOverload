@@ -10,7 +10,7 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type FilmActorSQL struct {
@@ -82,27 +82,27 @@ func NewFilmSQLOnFilm(film models.Film) FilmSQL {
 		Description: film.Description,
 		Duration:    film.Duration,
 
-		ShortDescription: innerPKG.NewSQLNullString(film.ShortDescription),
-		OriginalName:     innerPKG.NewSQLNullString(film.OriginalName),
-		Slogan:           innerPKG.NewSQLNullString(film.Slogan),
-		AgeLimit:         innerPKG.NewSQLNullInt32(film.AgeLimit),
-		PosterHor:        innerPKG.NewSQLNullString(film.PosterHor),
-		PosterVer:        innerPKG.NewSQLNullString(film.PosterVer),
+		ShortDescription: sqltools.NewSQLNullString(film.ShortDescription),
+		OriginalName:     sqltools.NewSQLNullString(film.OriginalName),
+		Slogan:           sqltools.NewSQLNullString(film.Slogan),
+		AgeLimit:         sqltools.NewSQLNullInt32(film.AgeLimit),
+		PosterHor:        sqltools.NewSQLNullString(film.PosterHor),
+		PosterVer:        sqltools.NewSQLNullString(film.PosterVer),
 
-		BoxOffice:      innerPKG.NewSQLNullInt32(film.BoxOffice),
-		Budget:         innerPKG.NewSQLNullInt32(film.Budget),
-		CurrencyBudget: innerPKG.NewSQLNullString(film.CurrencyBudget),
+		BoxOffice:      sqltools.NewSQLNullInt32(film.BoxOffice),
+		Budget:         sqltools.NewSQLNullInt32(film.Budget),
+		CurrencyBudget: sqltools.NewSQLNullString(film.CurrencyBudget),
 
-		CountSeasons: innerPKG.NewSQLNullInt32(film.CountSeasons),
-		EndYear:      innerPKG.NewSQLNullInt32(film.EndYear),
-		Type:         innerPKG.NewSQLNullString(film.Type),
+		CountSeasons: sqltools.NewSQLNullInt32(film.CountSeasons),
+		EndYear:      sqltools.NewSQLNullInt32(film.EndYear),
+		Type:         sqltools.NewSQLNullString(film.Type),
 
-		Rating:               innerPKG.NewSQLNullFloat64(film.Rating),
-		CountScores:          innerPKG.NewSQLNullInt32(film.CountScores),
-		CountActors:          innerPKG.NewSQLNullInt32(film.CountActors),
-		CountNegativeReviews: innerPKG.NewSQLNullInt32(film.CountNegativeReviews),
-		CountNeutralReviews:  innerPKG.NewSQLNullInt32(film.CountNeutralReviews),
-		CountPositiveReviews: innerPKG.NewSQLNullInt32(film.CountPositiveReviews),
+		Rating:               sqltools.NewSQLNullFloat64(film.Rating),
+		CountScores:          sqltools.NewSQLNullInt32(film.CountScores),
+		CountActors:          sqltools.NewSQLNullInt32(film.CountActors),
+		CountNegativeReviews: sqltools.NewSQLNullInt32(film.CountNegativeReviews),
+		CountNeutralReviews:  sqltools.NewSQLNullInt32(film.CountNeutralReviews),
+		CountPositiveReviews: sqltools.NewSQLNullInt32(film.CountPositiveReviews),
 	}
 }
 

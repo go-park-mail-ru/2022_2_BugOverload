@@ -68,6 +68,8 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 	wg := sync.WaitGroup{}
 
+	params, _ := ctx.Value(innerPKG.GetPersonParamsKey).(innerPKG.GetPersonParamsCtx)
+
 	// Parts
 	// Films + GenresFilms
 	wg.Add(1)
@@ -75,8 +77,6 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		defer wg.Done()
 
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			params, _ := ctx.Value(innerPKG.GetPersonParamsKey).(innerPKG.GetPersonParamsCtx)
-
 			values := []interface{}{person.ID, params.CountFilms}
 
 			var err error
@@ -114,6 +114,14 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 			}
 
 			response.Images = strings.Split(images.String, "_")
+
+			imagesSet := strings.Split(images.String, "_")
+
+			if params.CountImages > len(imagesSet) {
+				params.CountImages = len(imagesSet)
+			}
+
+			response.Images = imagesSet[:params.CountImages]
 
 			return nil
 		})

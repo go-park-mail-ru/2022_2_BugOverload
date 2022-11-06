@@ -24,7 +24,9 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 
 	// Films
 	router.HandleFunc("/api/v1/film/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)
-	router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.FilmRequest].Action).Methods(http.MethodGet)
+	router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.FilmRequest].Action).
+		Methods(http.MethodGet).
+		Queries("count_images", "{count_images}")
 
 	//  router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.UploadImageRequest].Action).Methods(http.MethodPost)
 
@@ -43,7 +45,7 @@ func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
 	// Person
 	router.HandleFunc("/api/v1/person/{id:[0-9]+}", handlers[pkg.PersonRequest].Action).
 		Methods(http.MethodGet).
-		Queries("count_films", "{count_films}")
+		Queries("count_films", "{count_films}", "count_images", "{count_images}")
 
 	// Reviews
 	router.HandleFunc("/api/v1/film/{id:[0-9]+}/reviews", handlers[pkg.ReviewsFilmRequest].Action).
