@@ -35,6 +35,13 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
 	}
 
+	switch p.Tag {
+	case innerPKG.TagFromPopular:
+		p.Tag = innerPKG.TagInPopular
+	case innerPKG.TagFromInCinema:
+		p.Tag = innerPKG.TagInInCinema
+	}
+
 	p.CountFilms, err = strconv.Atoi(countFilms)
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)

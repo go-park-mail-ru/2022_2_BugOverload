@@ -33,7 +33,7 @@ func NewTagCollectionHandler(uc service.CollectionService) pkg.Handler {
 // @Produce json
 // @Param tag         path  string true "tag name"
 // @Param count_films query int    true "count films"
-// @Param delimiter   query string true "last value"
+// @Param delimiter   query string true "last value while in is rating last returned film"
 // @Success 200 {object} models.TagCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"

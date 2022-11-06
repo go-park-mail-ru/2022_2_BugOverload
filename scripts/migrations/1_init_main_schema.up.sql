@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS reviews
 CREATE TABLE IF NOT EXISTS film_images
 (
     "film_id"     serial       NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
-    "images_list" varchar(100) NOT NULL
+    "images_list" varchar(100) DEFAULT NULL
 );
 
 -- Generator completed

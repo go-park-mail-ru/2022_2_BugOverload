@@ -337,7 +337,7 @@ func (f *DBFiller) linkFilmImages() (int, error) {
 		pos++
 
 		imagesList := strings.Join(value.Images, "_")
-		values[pos] = imagesList
+		values[pos] = sqltools.NewSQLNullString(imagesList)
 		pos++
 	}
 
@@ -346,7 +346,7 @@ func (f *DBFiller) linkFilmImages() (int, error) {
 
 	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
-		return 0, errors.Wrap(err, "linkPersonImages")
+		return 0, errors.Wrap(err, "linkFilmImages")
 	}
 
 	return countInserts, nil

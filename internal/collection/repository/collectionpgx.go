@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"github.com/sirupsen/logrus"
 	"strconv"
 
 	stdErrors "github.com/pkg/errors"
@@ -36,15 +37,15 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Collection, error) {
 	response := NewCollectionSQL()
 
-	params, _ := ctx.Value(innerPKG.GetCollectionTagParamsKey).(innerPKG.GetCollectionTagParamsCtx)
-
-	delimiter, err := strconv.Atoi(params.Delimiter)
-	if err != nil {
-		return models.Collection{}, errors.ErrGetParamsConvert
-	}
-
 	//  Films - Main
-	err = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errTx := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		params, _ := ctx.Value(innerPKG.GetCollectionTagParamsKey).(innerPKG.GetCollectionTagParamsCtx)
+
+		delimiter, err := strconv.Atoi(params.Delimiter)
+		if err != nil {
+			return errors.ErrGetParamsConvert
+		}
+
 		values := make([]interface{}, 0)
 		values = append(values, params.Tag, delimiter, params.CountFilms)
 
@@ -62,13 +63,15 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 		return nil
 	})
 
+	logrus.Info(errTx)
+
 	// the main entity is not found
-	if stdErrors.Is(err, errors.ErrNotFoundInDB) {
+	if stdErrors.Is(errTx, sql.ErrNoRows) {
 		return models.Collection{}, errors.ErrNotFoundInDB
 	}
 
 	// execution error
-	if err != nil {
+	if errTx != nil {
 		return models.Collection{}, errors.ErrPostgresRequest
 	}
 

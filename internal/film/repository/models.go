@@ -7,10 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	stdErrors "github.com/pkg/errors"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -250,13 +247,10 @@ func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []
 	res := make([]FilmSQL, 0)
 
 	rowsFilms, err := tx.QueryContext(ctx, query, values...)
-	if stdErrors.Is(err, sql.ErrNoRows) {
-		return []FilmSQL{}, errors.ErrNotFoundInDB
-	}
-
 	if err != nil {
 		return []FilmSQL{}, err
 	}
+	defer rowsFilms.Close()
 
 	for rowsFilms.Next() {
 		film := NewFilmSQL()
@@ -278,6 +272,11 @@ func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []
 		}
 
 		res = append(res, film)
+	}
+
+	//  Это какой то треш, запрос на 249 строке, не отдает sql.ErrNoRows
+	if len(res) == 0 {
+		return []FilmSQL{}, sql.ErrNoRows
 	}
 
 	return res, nil

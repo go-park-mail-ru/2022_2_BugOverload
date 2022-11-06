@@ -59,6 +59,11 @@ const (
 	Operator = 5
 	Montage  = 8
 	Composer = 6
+
+	TagFromPopular  = "popular"
+	TagInPopular    = "популярное"
+	TagFromInCinema = "in_cinema"
+	TagInInCinema   = "сейчас в кино"
 )
 
 // TxDefaultOptions for Postgres
