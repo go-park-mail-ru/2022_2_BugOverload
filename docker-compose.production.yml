@@ -1,10 +1,11 @@
 version: "3.7"
 
 services:
-  app:
-    container_name: "app"
+  main:
+    container_name: "main"
     networks:
       - localstack-net
+      - postgres-net
     image: andeo1812/golang_web:latest
     command: make -C project prod-mode
     environment:
