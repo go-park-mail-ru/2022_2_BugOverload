@@ -25,43 +25,43 @@ FILM_IMAGES='films_images/'
 
 for file in $(find "$1" -type f -name "*"); do
   if [[ "$file" == *"$HOR"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://films/posters/hor/ &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://films/posters/hor/
 
     continue
   fi
 
   if [[ "$file" == *"$VER"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://films/posters/ver/ &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://films/posters/ver/
 
     continue
   fi
 
   if [[ "$file" == *"$DEFAULT"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://default/ &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://default/
 
     continue
   fi
 
   if [[ "$file" == *"$USER_AVATAR"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://users/avatars/ &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://users/avatars/
 
     continue
   fi
 
   if [[ "$file" == *"$PERSON_AVATAR"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/avatars/ &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/avatars/
 
     continue
   fi
 
   if [[ "$file" == *"$PERSON_IMAGES"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$PERSON_IMAGES}" &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$PERSON_IMAGES}"
 
     continue
   fi
 
   if [[ "$file" == *"$FILM_IMAGES"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$FILM_IMAGES}" &
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$FILM_IMAGES}"
 
     continue
   fi
