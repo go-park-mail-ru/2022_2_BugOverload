@@ -14,8 +14,8 @@ log_path = "movie-gate"
 endpoint = "http://localstack:4566"
 
 [cors]
-methods = ["POST", "GET"]
-urls = ["http://movie-gate.online/", "http://movie-gate.online"]
+methods = ["POST", "GET", "PUT"]
+urls = ["http://localhost:3000", "http://movie-gate.online"]
 headers = ["Content-Type", "Content-Length"]
 credentials = true
 debug = false
