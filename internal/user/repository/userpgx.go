@@ -7,7 +7,6 @@ import (
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -33,8 +32,8 @@ func NewUserPostgres(database *sqltools.Database) UserRepository {
 func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
 	response := NewUserSQL()
 
-	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, getUser, user.ID)
+	errTX := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowUser := conn.QueryRowContext(ctx, getUser, user.ID)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
@@ -44,7 +43,7 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 			return err
 		}
 
-		rowProfile := tx.QueryRowContext(ctx, getUserProfile, user.ID)
+		rowProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
 		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
 			return errors.ErrNotFoundInDB
 		}

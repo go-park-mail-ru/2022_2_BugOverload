@@ -3,15 +3,15 @@ package repository
 import (
 	"context"
 	"database/sql"
-	stdErrors "github.com/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"strconv"
 	"strings"
 
+	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 

@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	stdErrors "github.com/pkg/errors"
 	"strings"
+
+	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -91,6 +92,9 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 
 		return nil
 	})
+	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
+		return models.Film{}, errors.ErrPostgresRequest
+	}
 
 	// Actors
 	errQuery = response.GetActors(ctx, f.database.Connection, getFilmActors, film.ID)
