@@ -59,7 +59,7 @@ func (u *UserSQL) Convert() models.User {
 		Password: u.Password,
 		Profile: models.Profile{
 			Avatar:           u.Profile.Avatar.String,
-			JoinedDate:       u.Profile.JoinedDate.Format("2006-01-02"),
+			JoinedDate:       u.Profile.JoinedDate.Format("2006.01.02"),
 			CountViewsFilms:  int(u.Profile.CountViewsFilms.Int32),
 			CountCollections: int(u.Profile.CountCollections.Int32),
 			CountReviews:     int(u.Profile.CountReviews.Int32),

@@ -3,6 +3,7 @@ package repository
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"strconv"
 )
@@ -13,7 +14,7 @@ type ImageS3 struct {
 	Bytes  []byte `json:"-"`
 }
 
-func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
+func NewImageS3Pattern(imageParams *models.Image) (*ImageS3, error) {
 	image := &ImageS3{}
 
 	switch imageParams.Object {
@@ -46,11 +47,13 @@ func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
 
 			imageParams.Key = strconv.Itoa(randID)
 		}
+	default:
+		return nil, errors.ErrImageNotFound
 	}
 
 	image.Key += imageParams.Key + ".webp"
 
 	image.Bytes = imageParams.Bytes
 
-	return image
+	return image, nil
 }

@@ -53,8 +53,11 @@ generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
-fill-S3:
+fill-S3-slow:
 	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT} &
+
+fill-S3-fast:
+	./scripts/fill_data_S3_fast.sh ${IMAGES} ${S3_ENDPOINT} &
 
 dev-fill-db:
 	go run ./cmd/filldb/main.go --config-path ./cmd/filldb/configs/config.toml --data-path ./test/newdata
@@ -70,14 +73,13 @@ prod-deploy:
 	sleep 2
 	make reboot-db-prod
 	sleep 30
-	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
+	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
 	docker-compose up -d
-	sleep 2
+	sleep 0.5
 	make reboot-db-debug
-	sleep 30
-	make fill-S3 ${IMAGES} ${S3_ENDPOINT}
+	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill

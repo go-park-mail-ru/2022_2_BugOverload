@@ -45,8 +45,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 			return errors.ErrGetParamsConvert
 		}
 
-		values := make([]interface{}, 0)
-		values = append(values, params.Tag, delimiter, params.CountFilms)
+		values := []interface{}{params.Tag, delimiter, params.CountFilms}
 
 		response.Films, err = repository.GetShortFilmsBatch(ctx, tx, getFilmsByTag, values)
 		if err != nil {

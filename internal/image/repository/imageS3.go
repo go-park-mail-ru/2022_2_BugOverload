@@ -52,7 +52,10 @@ func NewImageS3(config *innerPKG.Config) ImageRepository {
 
 // DownloadImage getting image by path
 func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
-	imageS3Pattern := NewImageS3Pattern(image)
+	imageS3Pattern, err := NewImageS3Pattern(image)
+	if err != nil {
+		return models.Image{}, err
+	}
 
 	res := make([]byte, innerPKG.BufSizeImage)
 
@@ -74,6 +77,8 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 			case s3.ErrCodeNoSuchKey:
 				return models.Image{}, errors.ErrImageNotFound
 			default:
+				logrus.Info(awsErr.Code(), awsErr.Error())
+
 				return models.Image{}, errors.ErrImage
 			}
 		}
@@ -84,7 +89,10 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 
 // UploadImage download image into storage
 func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
-	imageS3Pattern := NewImageS3Pattern(image)
+	imageS3Pattern, err := NewImageS3Pattern(image)
+	if err != nil {
+		return err
+	}
 
 	body := bytes.NewReader(image.Bytes)
 
@@ -94,7 +102,7 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 		Body:   body,
 	}
 
-	_, err := is.uploaderS3.UploadWithContext(ctx, getObjectInput)
+	_, err = is.uploaderS3.UploadWithContext(ctx, getObjectInput)
 	if err != nil {
 		return errors.ErrImage
 	}

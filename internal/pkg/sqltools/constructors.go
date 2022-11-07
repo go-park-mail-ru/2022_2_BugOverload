@@ -28,9 +28,9 @@ func NewSQLNullInt32(i int) sql.NullInt32 {
 }
 
 func NewSQLNNullDate(date string) sql.NullTime {
-	dateTime, err := time.Parse("2006-01-02", date)
+	dateTime, err := time.Parse("2006.01.02", date)
 	if err != nil {
-		dateTime = time.Time{}
+		return sql.NullTime{}
 	}
 
 	return sql.NullTime{

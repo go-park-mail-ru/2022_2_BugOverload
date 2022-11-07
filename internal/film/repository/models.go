@@ -246,10 +246,12 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []interface{}) ([]FilmSQL, error) {
 	res := make([]FilmSQL, 0)
 
+	//  Тут какой то жесткий баг. sql.ErrNoRows не возвращается
 	rowsFilms, err := tx.QueryContext(ctx, query, values...)
 	if err != nil {
 		return []FilmSQL{}, err
 	}
+
 	defer rowsFilms.Close()
 
 	for rowsFilms.Next() {
@@ -274,7 +276,7 @@ func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []
 		res = append(res, film)
 	}
 
-	//  Это какой то треш, запрос на 249 строке, не отдает sql.ErrNoRows
+	//  Это какой то треш, запрос на 250 строке, не отдает sql.ErrNoRows
 	if len(res) == 0 {
 		return []FilmSQL{}, sql.ErrNoRows
 	}
