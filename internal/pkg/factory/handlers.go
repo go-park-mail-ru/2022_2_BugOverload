@@ -2,7 +2,6 @@ package factory
 
 import (
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
 	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
@@ -17,29 +16,22 @@ import (
 	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	handlersReview "go-park-mail-ru/2022_2_BugOverload/internal/review/delivery/handlers"
 	repoReview "go-park-mail-ru/2022_2_BugOverload/internal/review/repository"
 	serviceReview "go-park-mail-ru/2022_2_BugOverload/internal/review/service"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
-	res := make(map[string]pkg.Handler)
+func NewHandlersMap(config *pkg.Config, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
+	res := make(map[string]handler.Handler)
 
 	// DB
 	postgres := sqltools.NewPostgresRepository()
-
-	// Auth
-	authStorage := repoAuth.NewAuthCache()
-	sessionStorage := repoSession.NewSessionCache()
-
-	authService := serviceAuth.NewAuthService(authStorage)
-	sessionService := serviceSession.NewSessionService(sessionStorage)
 
 	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
 	res[pkg.AuthRequest] = authHandler

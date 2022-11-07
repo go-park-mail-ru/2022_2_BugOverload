@@ -1,15 +1,17 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 // recommendationFilmHandler is the structure that handles the request for
@@ -19,10 +21,14 @@ type recommendationFilmHandler struct {
 }
 
 // NewRecommendationFilmHandler is constructor for recommendationFilmHandler in this pkg - recommendation film.
-func NewRecommendationFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
+func NewRecommendationFilmHandler(fs serviceFilms.FilmsService) handler.Handler {
 	return &recommendationFilmHandler{
 		fs,
 	}
+}
+
+func (h *recommendationFilmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/film/recommendation", h.Action).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and

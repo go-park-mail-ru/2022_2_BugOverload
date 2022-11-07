@@ -4,11 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/review/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/review/service"
 )
@@ -20,10 +23,16 @@ type reviewsHandler struct {
 }
 
 // NewReviewsHandler is constructor for reviewLikeHandler in this pkg - film.
-func NewReviewsHandler(fs service.ReviewService) pkg.Handler {
+func NewReviewsHandler(fs service.ReviewService) handler.Handler {
 	return &reviewsHandler{
 		fs,
 	}
+}
+
+func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/film/{id:[0-9]+}/reviews", h.Action).
+		Methods(http.MethodGet).
+		Queries("count_reviews", "{count_reviews}", "offset", "{offset}")
 }
 
 // Action is a method for initial validation of the request and data and

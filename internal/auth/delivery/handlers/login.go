@@ -1,16 +1,20 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -21,11 +25,15 @@ type loginHandler struct {
 }
 
 // NewLoginHandler is constructor for loginHandler in this pkg - auth.
-func NewLoginHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+func NewLoginHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
 	return &loginHandler{
 		us,
 		as,
 	}
+}
+
+func (h *loginHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/auth/login", h.Action).Methods(http.MethodPost)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -65,6 +73,14 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
+
+	token, err := security.CreateCsrfToken(&newSession)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",

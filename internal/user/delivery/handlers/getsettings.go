@@ -3,13 +3,15 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 )
@@ -21,11 +23,15 @@ type getSettingsHandler struct {
 }
 
 // NewGetSettingsHandler is constructor for getSettingsHandler in this pkg - settings.
-func NewGetSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+func NewGetSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
 	return &getSettingsHandler{
 		us,
 		as,
 	}
+}
+
+func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("", h.Action).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and

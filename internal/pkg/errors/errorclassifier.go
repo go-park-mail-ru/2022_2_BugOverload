@@ -43,6 +43,13 @@ var (
 	ErrPostgresRequest  = stdErrors.New("error sql")
 	ErrNotFoundInDB     = stdErrors.New("not fount")
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
+
+	// Security
+	ErrCsrfTokenCreate   = stdErrors.New("csrf token create error")
+	ErrCsrfTokenCheck    = stdErrors.New("csrf tokens check error")
+	ErrCsrfTokenExpired  = stdErrors.New("csrf token expired")
+	ErrCsrfTokenNotFound = stdErrors.New("csrf token not found")
+	ErrCsrfTokenInvalid  = stdErrors.New("csrf token is invalid")
 )
 
 type ErrClassifier struct {
@@ -88,6 +95,13 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrPostgresRequest] = http.StatusInternalServerError
 	res[ErrNotFoundInDB] = http.StatusNotFound
 	res[ErrGetParamsConvert] = http.StatusInternalServerError
+
+	// Security
+	res[ErrCsrfTokenCreate] = http.StatusInternalServerError
+	res[ErrCsrfTokenCheck] = http.StatusInternalServerError
+	res[ErrCsrfTokenExpired] = http.StatusForbidden
+	res[ErrCsrfTokenNotFound] = http.StatusForbidden
+	res[ErrCsrfTokenInvalid] = http.StatusForbidden
 
 	return ErrClassifier{
 		table: res,

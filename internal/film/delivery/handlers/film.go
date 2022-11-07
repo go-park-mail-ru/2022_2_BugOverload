@@ -4,13 +4,16 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 // filmHandler is the structure that handles the request for
@@ -20,10 +23,16 @@ type filmHandler struct {
 }
 
 // NewFilmHandler is constructor for filmHandler in this pkg - film.
-func NewFilmHandler(fs serviceFilms.FilmsService) pkg.Handler {
+func NewFilmHandler(fs serviceFilms.FilmsService) handler.Handler {
 	return &filmHandler{
 		fs,
 	}
+}
+
+func (h *filmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/film/{id:[0-9]+}", h.Action).
+		Methods(http.MethodGet).
+		Queries("count_images", "{count_images}")
 }
 
 // Action is a method for initial validation of the request and data and

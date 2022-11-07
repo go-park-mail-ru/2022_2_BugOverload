@@ -1,7 +1,12 @@
 package server
 
 import (
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"net/http"
 	"time"
 
@@ -9,7 +14,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 type Server struct {
@@ -25,21 +29,28 @@ func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
 }
 
 func (s *Server) Launch() error {
-	handlers := factory.NewHandlersMap(s.config)
+	// Initialize repos
+	authStorage := repoAuth.NewAuthCache()
+	sessionStorage := repoSession.NewSessionCache()
 
-	router := NewRouter(handlers)
-	corsMW := middleware.NewCORSMiddleware(&s.config.Cors)
-	loggerMW := middleware.NewLoggerMiddleware(s.logger)
-	requestParamsMW := middleware.NewRequestMiddleware()
+	// Initiaalize services
+	authService := serviceAuth.NewAuthService(authStorage)
+	sessionService := serviceSession.NewSessionService(sessionStorage)
+
+	handlers := factory.NewHandlersMap(s.config, sessionService, authService)
+
+	mw := middleware.NewMiddleware(s.logger, sessionService, &s.config.Cors)
+
+	router := NewRouter(handlers, mw)
 
 	router.Use(
-		loggerMW.SetDefaultLoggerMiddleware,
-		loggerMW.UpdateDefaultLoggerMiddleware,
-		requestParamsMW.SetSizeRequest,
+		mw.SetDefaultLoggerMiddleware,
+		mw.UpdateDefaultLoggerMiddleware,
+		mw.SetSizeRequest,
 		gziphandler.GzipHandler,
 	)
 
-	routerCORS := corsMW.SetCORSMiddleware(router)
+	routerCORS := mw.SetCORSMiddleware(router)
 
 	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
 

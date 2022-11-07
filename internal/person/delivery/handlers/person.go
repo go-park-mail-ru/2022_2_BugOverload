@@ -6,11 +6,14 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
+	"github.com/gorilla/mux"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 // personHandler is the structure that handles the request for
@@ -20,10 +23,16 @@ type personHandler struct {
 }
 
 // NewPersonHandler is constructor for personHandler in this pkg - film.
-func NewPersonHandler(fs service.PersonService) pkg.Handler {
+func NewPersonHandler(fs service.PersonService) handler.Handler {
 	return &personHandler{
 		fs,
 	}
+}
+
+func (h *personHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/person/{id:[0-9]+}", h.Action).
+		Methods(http.MethodGet).
+		Queries("count_films", "{count_films}", "count_images", "{count_images}")
 }
 
 // Action is a method for initial validation of the request and data and

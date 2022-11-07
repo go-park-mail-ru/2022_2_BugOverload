@@ -98,6 +98,10 @@ const (
 	ArgonMemory    = 32 * 1024
 	ArgonThreads   = 4
 	ArgonKeyLength = 32
+
+	// csrf
+	CsrfSecretDefault = "J25qeHRobmpkc2NyZmN0cmh0biEhIQ=="
+	CsrfSecretLength  = 32
 )
 
 type ContextKeyType string
