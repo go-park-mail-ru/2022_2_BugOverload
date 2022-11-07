@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"github.com/gorilla/mux"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"

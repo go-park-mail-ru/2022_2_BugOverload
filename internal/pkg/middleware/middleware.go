@@ -103,7 +103,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session_id")
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.ErrNoCookie)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
 			return
 		}
 
@@ -111,7 +111,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		_, err = m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.ErrUserNotExist)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 			return
 		}
 
@@ -124,13 +124,13 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 		token := r.Header.Get("X-Csrf-Token")
 
 		if token == "" {
-			httpwrapper.DefaultHandlerError(w, errors.ErrCsrfTokenNotFound)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenNotFound))
 			return
 		}
 
 		cookie, err := r.Cookie("session_id")
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.ErrNoCookie)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
 			return
 		}
 
@@ -138,7 +138,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.ErrUserNotExist)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 			return
 		}
 
@@ -146,11 +146,11 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		correctToken, err := security.CheckCsrfToken(&currentSession, token)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, err)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 			return
 		}
 		if !correctToken {
-			httpwrapper.DefaultHandlerError(w, errors.ErrCsrfTokenInvalid)
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenInvalid))
 			return
 		}
 

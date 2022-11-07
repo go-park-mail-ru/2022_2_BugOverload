@@ -77,8 +77,9 @@ prod-deploy:
 
 debug-deploy:
 	docker-compose up -d
-	sleep 0.5
+	sleep 1
 	make reboot-db-debug
+	sleep 1
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
