@@ -109,11 +109,14 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		currentSession := models.Session{ID: cookie.Value}
 
-		_, err = m.session.GetUserBySession(r.Context(), currentSession)
+		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 			return
 		}
+
+		ctx := context.WithValue(r.Context(), "current-user", user)
+		r = r.WithContext(ctx)
 
 		h.ServeHTTP(w, r)
 	})
