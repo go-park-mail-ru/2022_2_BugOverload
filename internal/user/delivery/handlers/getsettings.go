@@ -48,9 +48,9 @@ func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [GET]
 func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getUserSettingsRequest := models.NewGetUserSettingsRequest()
+	request := models.NewGetUserSettingsRequest()
 
-	err := getUserSettingsRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, err)
 		return
@@ -66,7 +66,7 @@ func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	getUserSettingsResponse := models.NewGetUserSettingsResponse(&user)
+	response := models.NewGetUserSettingsResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, getUserSettingsResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

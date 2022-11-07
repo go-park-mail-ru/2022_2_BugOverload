@@ -18,6 +18,8 @@ var (
 	ErrNoCookie        = stdErrors.New("request has no cookies")
 	ErrSessionNotExist = stdErrors.New("no such cookie")
 
+	ErrGetUserRequest = stdErrors.New("fatal getting user")
+
 	// Films
 	ErrFilmNotFound = stdErrors.New("no such film")
 

@@ -5,6 +5,16 @@ const (
 
 	getUserProfile = `
 SELECT joined_date,
+	   avatar,
+       count_views_films,
+       count_collections,
+       count_reviews,
+       count_ratings
+FROM profiles
+WHERE profile_id = $1`
+
+	getUserShort = `
+SELECT joined_date,
        count_views_films,
        count_collections,
        count_reviews,

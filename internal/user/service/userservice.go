@@ -13,7 +13,7 @@ import (
 type UserService interface {
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
-	ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
+	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
@@ -49,11 +49,11 @@ func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.U
 }
 
 // ChangeUserProfileSettings is the service that accesses the interface UserService
-func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
-	newUser, err := u.userProfileRepo.GetUserProfileSettings(ctx, user)
+func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User) error {
+	err := u.userProfileRepo.ChangeUserProfileSettings(ctx, user)
 	if err != nil {
-		return models.User{}, stdErrors.Wrap(err, "ChangeUserProfileSettings")
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
 	}
 
-	return newUser, nil
+	return nil
 }

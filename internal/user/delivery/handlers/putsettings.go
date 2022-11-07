@@ -4,29 +4,21 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
-
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
 // putSettingsHandler is the structure that handles the request for auth.
 type putSettingsHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	userService serviceUser.UserService
 }
 
 // NewPutSettingsHandler is constructor for putSettingsHandler in this pkg - settings.
-func NewPutSettingsHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
+func NewPutSettingsHandler(us serviceUser.UserService) handler.Handler {
 	return &putSettingsHandler{
 		us,
-		as,
 	}
 }
 
@@ -50,25 +42,18 @@ func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [PUT]
 func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	getUserSettingsRequest := models.NewPutUserSettingsRequest()
+	//request := models.NewPutUserSettingsRequest()
+	//
+	//err := request.Bind(r)
+	//if err != nil {
+	//	httpwrapper.DefaultHandlerError(w, err)
+	//	return
+	//}
+	//
+	//user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	//if !ok {
+	//	httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
+	//}
 
-	err := getUserSettingsRequest.Bind(r)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
-		return
-	}
-
-	requestSession := mainModels.Session{
-		ID: r.Cookies()[0].Value,
-	}
-
-	user, err := h.authService.GetUserBySession(r.Context(), requestSession)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		return
-	}
-
-	getUserSettingsResponse := models.NewGetUserSettingsResponse(&user)
-
-	httpwrapper.Response(w, http.StatusOK, getUserSettingsResponse)
+	httpwrapper.NoBody(w, http.StatusNoContent)
 }
