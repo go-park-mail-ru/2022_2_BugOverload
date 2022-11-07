@@ -6,12 +6,13 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"io"
+	"time"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	commonPkg "go-park-mail-ru/2022_2_BugOverload/pkg"
-	"io"
-	"time"
 )
 
 var secret []byte
@@ -44,7 +45,7 @@ func CreateCsrfToken(session *models.Session) (string, error) {
 	}
 
 	nonce := make([]byte, aesgcm.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
 		return "", errors.ErrCsrfTokenCreate
 	}
 

@@ -1,6 +1,8 @@
 package server
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -8,35 +10,30 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
-func NewRouter(handlers map[string]pkg.Handler) *mux.Router {
+func NewRouter(handlers map[string]handler.Handler, mw *middleware.Middleware) *mux.Router {
 	router := mux.NewRouter()
 
 	// Auth
-	router.HandleFunc("/api/v1/auth", handlers[pkg.AuthRequest].Action).Methods(http.MethodGet)
-	router.HandleFunc("/api/v1/auth/login", handlers[pkg.LoginRequest].Action).Methods(http.MethodPost)
-	router.HandleFunc("/api/v1/auth/signup", handlers[pkg.SignupRequest].Action).Methods(http.MethodPost)
-	router.HandleFunc("/api/v1/auth/logout", handlers[pkg.LogoutRequest].Action).Methods(http.MethodGet)
+	handlers[pkg.AuthRequest].Configure(router, mw)
+	handlers[pkg.LoginRequest].Configure(router, mw)
+	handlers[pkg.SignupRequest].Configure(router, mw)
+	handlers[pkg.LogoutRequest].Configure(router, mw)
 
 	// Collections
-	router.HandleFunc("/api/v1/collection/in_cinema", handlers[pkg.InCinemaRequest].Action).Methods(http.MethodGet)
-	router.HandleFunc("/api/v1/collection/popular", handlers[pkg.PopularRequest].Action).Methods(http.MethodGet)
+	handlers[pkg.InCinemaRequest].Configure(router, mw)
+	handlers[pkg.PopularRequest].Configure(router, mw)
 
 	// Films
-	router.HandleFunc("/api/v1/film/recommendation", handlers[pkg.RecommendationRequest].Action).Methods(http.MethodGet)
+	handlers[pkg.RecommendationRequest].Configure(router, mw)
 
 	//  router.HandleFunc("/api/v1/film/{id:[0-9]+}", handlers[pkg.UploadImageRequest].Action).Methods(http.MethodPost)
 
 	// Images
-	router.HandleFunc("/api/v1/image", handlers[pkg.DownloadImageRequest].Action).
-		Methods(http.MethodGet).
-		Queries("object", "{object}", "key", "{key}")
-
-	router.HandleFunc("/api/v1/image", handlers[pkg.UploadImageRequest].Action).
-		Methods(http.MethodPost).
-		Queries("object", "{object}", "key", "{key}")
+	handlers[pkg.DownloadImageRequest].Configure(router, mw)
+	handlers[pkg.UploadImageRequest].Configure(router, mw)
 
 	// User
-	router.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", handlers[pkg.GetUserProfile].Action).Methods(http.MethodGet)
+	handlers[pkg.GetUserProfile].Configure(router, mw)
 
 	http.Handle("/", router)
 

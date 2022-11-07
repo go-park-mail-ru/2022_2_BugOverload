@@ -1,10 +1,13 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 // reviewLikeHandler is the structure that handles the request for
@@ -14,10 +17,14 @@ type reviewsHandler struct {
 }
 
 // NewReviewsHandler is constructor for reviewLikeHandler in this pkg - film.
-func NewReviewsHandler(fs serviceFilms.FilmsService) pkg.Handler {
+func NewReviewsHandler(fs serviceFilms.FilmsService) handler.Handler {
 	return &reviewsHandler{
 		fs,
 	}
+}
+
+func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("", h.Action).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and

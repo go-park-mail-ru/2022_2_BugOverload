@@ -1,10 +1,13 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	servicePersons "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
 // personHandler is the structure that handles the request for
@@ -14,10 +17,14 @@ type personHandler struct {
 }
 
 // NewPersonHandler is constructor for personHandler in this pkg - film.
-func NewPersonHandler(fs servicePersons.FilmsService) pkg.Handler {
+func NewPersonHandler(fs servicePersons.FilmsService) handler.Handler {
 	return &personHandler{
 		fs,
 	}
+}
+
+func (h *personHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("", h.Action).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and

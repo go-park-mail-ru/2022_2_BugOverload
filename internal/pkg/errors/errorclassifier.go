@@ -44,6 +44,7 @@ var (
 	ErrCsrfTokenCheck    = stdErrors.New("csrf tokens check error")
 	ErrCsrfTokenExpired  = stdErrors.New("csrf token expired")
 	ErrCsrfTokenNotFound = stdErrors.New("csrf token not found")
+	ErrCsrfTokenInvalid  = stdErrors.New("csrf token is invalid")
 )
 
 type ErrClassifier struct {
@@ -89,6 +90,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrCsrfTokenCheck] = http.StatusInternalServerError
 	res[ErrCsrfTokenExpired] = http.StatusForbidden
 	res[ErrCsrfTokenNotFound] = http.StatusForbidden
+	res[ErrCsrfTokenInvalid] = http.StatusForbidden
 
 	return ErrClassifier{
 		table: res,

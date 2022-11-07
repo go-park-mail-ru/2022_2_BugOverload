@@ -2,7 +2,6 @@ package factory
 
 import (
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
 	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
@@ -14,23 +13,16 @@ import (
 	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
-	res := make(map[string]pkg.Handler)
-
-	// Auth
-	authStorage := repoAuth.NewAuthCache()
-	sessionStorage := repoSession.NewSessionCache()
-
-	authService := serviceAuth.NewAuthService(authStorage)
-	sessionService := serviceSession.NewSessionService(sessionStorage)
+func NewHandlersMap(config *pkg.Config, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
+	res := make(map[string]handler.Handler)
 
 	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
 	res[pkg.AuthRequest] = authHandler

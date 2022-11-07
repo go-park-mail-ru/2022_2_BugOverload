@@ -3,11 +3,13 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -18,10 +20,14 @@ type userProfileHandler struct {
 }
 
 // NewUserProfileHandler is constructor for userProfileHandler in this pkg - settings.
-func NewUserProfileHandler(us serviceUserProfile.UserService) pkg.Handler {
+func NewUserProfileHandler(us serviceUserProfile.UserService) handler.Handler {
 	return &userProfileHandler{
 		us,
 	}
+}
+
+func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
