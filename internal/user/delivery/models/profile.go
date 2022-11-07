@@ -24,7 +24,7 @@ func (u *UserProfileRequest) Bind(r *http.Request) error {
 	var err error
 	u.ID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
 	return nil

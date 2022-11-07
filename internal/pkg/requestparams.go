@@ -1,26 +1,31 @@
 package pkg
 
-// GetPersonParams in struct for GetPersonParams in personHandler
+// GetPersonParams in struct for personHandler
 type GetPersonParams struct {
 	CountFilms  int
 	CountImages int
 }
 
-// GetCollectionTagParams in struct for GetPersonParams in tagCollectionHandler
+// GetCollectionTagParams in struct for tagCollectionHandler
 type GetCollectionTagParams struct {
 	Tag        string
 	CountFilms int
 	Delimiter  string
 }
 
-// GetReviewsFilmParams in struct for GetReviewsParamsKey in reviewHandler
+// GetReviewsFilmParams in struct for reviewHandler
 type GetReviewsFilmParams struct {
 	FilmID int
 	Count  int
 	Offset int
 }
 
-// GetFilmParams in struct for GetFilmParams in filmHandler
+// GetFilmParams in struct for filmHandler
 type GetFilmParams struct {
 	CountImages int
+}
+
+// ChangeUserSettings in struct for changeUserSettings
+type ChangeUserSettings struct {
+	NewPassword string
 }

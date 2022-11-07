@@ -25,15 +25,10 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 	vars := mux.Vars(r)
 
 	var err error
+
 	p.Tag = vars["tag"]
-
 	countFilms := r.FormValue("count_films")
-
 	p.Delimiter = r.FormValue("delimiter")
-
-	if countFilms == "" || p.Tag == "" || p.Delimiter == "" {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
-	}
 
 	switch p.Tag {
 	case innerPKG.TagFromPopular:
@@ -44,11 +39,11 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 
 	p.CountFilms, err = strconv.Atoi(countFilms)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
 	if p.CountFilms <= 0 {
-		return errors.NewErrValidation(errors.ErrQueryRequiredEmpty)
+		return errors.ErrQueryRequiredEmpty
 	}
 
 	return nil

@@ -18,7 +18,7 @@ func NewGetImageRequest() *GetImageRequest {
 
 func (i *GetImageRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") != "" {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrUnsupportedMediaType
 	}
 
 	i.Key = r.FormValue("key")

@@ -10,6 +10,7 @@ var (
 	// Auth
 	ErrEmptyFieldAuth           = stdErrors.New("request has empty fields (nickname | email | password)")
 	ErrLoginCombinationNotFound = stdErrors.New("no such combination of login and password")
+	ErrBadBodyRequest           = stdErrors.New("bad body request")
 
 	ErrUserExist       = stdErrors.New("such user exist")
 	ErrUserNotExist    = stdErrors.New("no such user")
@@ -19,6 +20,10 @@ var (
 	ErrSessionNotExist = stdErrors.New("no such cookie")
 
 	ErrGetUserRequest = stdErrors.New("fatal getting user")
+	ErrWrongPassword  = stdErrors.New("bad pass")
+
+	// Access
+	ErrNoAccess = stdErrors.New("not enough rights")
 
 	// Films
 	ErrFilmNotFound = stdErrors.New("no such film")
@@ -30,7 +35,7 @@ var (
 	ErrImage           = stdErrors.New("service picture not work")
 
 	// Def validation
-	ErrCJSONUnexpectedEnd   = stdErrors.New("unexpected end of JSON input")
+	ErrJSONUnexpectedEnd    = stdErrors.New("unexpected end of JSON input")
 	ErrContentTypeUndefined = stdErrors.New("content-type undefined")
 	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
 	ErrEmptyBody            = stdErrors.New("empty body")
@@ -66,11 +71,17 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrUserExist] = http.StatusBadRequest
 	res[ErrUserNotExist] = http.StatusNotFound
 	res[ErrSignupUserExist] = http.StatusBadRequest
+	res[ErrBadBodyRequest] = http.StatusBadRequest
 
 	res[ErrLoginCombinationNotFound] = http.StatusForbidden
 	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrSessionNotExist] = http.StatusNotFound
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
+
+	res[ErrWrongPassword] = http.StatusForbidden
+
+	// Access
+	res[ErrNoAccess] = http.StatusForbidden
 
 	// Films
 	res[ErrFilmNotFound] = http.StatusNotFound
@@ -84,7 +95,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrImage] = http.StatusInternalServerError
 
 	// Def Validation
-	res[ErrCJSONUnexpectedEnd] = http.StatusBadRequest
+	res[ErrJSONUnexpectedEnd] = http.StatusBadRequest
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
 	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
 	res[ErrEmptyBody] = http.StatusBadRequest

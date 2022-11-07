@@ -59,7 +59,7 @@ func TestLoginHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email": 123, "password": "Widget Adapter"`,
 
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrJSONUnexpectedEnd)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty

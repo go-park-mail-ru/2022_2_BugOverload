@@ -81,7 +81,7 @@ ORDER BY fp.fk_profession_id, fp.weight DESC`
 	getFilmRecommendation = `
 SELECT f.film_id, f.name, f.prod_year, f.end_year, f.poster_hor, f.short_description, f.rating
 FROM films f
-WHERE f.poster_hor IS NOT NULL
-ORDER BY f.rating DESC
+WHERE f.poster_hor IS NOT NULL AND f.film_id BETWEEN 27 AND 29 or film_id = 15
+ORDER BY random()
 LIMIT 1`
 )

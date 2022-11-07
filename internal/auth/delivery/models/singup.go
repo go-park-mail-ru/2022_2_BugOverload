@@ -33,7 +33,7 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return err
+		return errors.ErrBadBodyRequest
 	}
 	defer func() {
 		err = r.Body.Close()
@@ -48,7 +48,7 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
+		return errors.NewErrValidation(errors.ErrJSONUnexpectedEnd)
 	}
 
 	if u.Nickname == "" || u.Email == "" || u.Password == "" {

@@ -20,6 +20,22 @@ func NewErrAuth(err error) AuthError {
 	}
 }
 
+type AccessError struct {
+	Reason string
+	Code   int
+}
+
+func (e AccessError) Error() string {
+	return fmt.Sprintf("Auth: [%s]", e.Reason)
+}
+
+func NewErrAccess(err error) AccessError {
+	return AccessError{
+		Reason: err.Error(),
+		Code:   ErrCsf.GetCode(err),
+	}
+}
+
 type FilmError struct {
 	Reason string
 	Code   int

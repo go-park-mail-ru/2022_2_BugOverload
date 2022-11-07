@@ -47,7 +47,7 @@ func TestSignupHandler(t *testing.T) {
 			ContentType: innerPKG.ContentTypeJSON,
 			RequestBody: `{"email":"testmail@yandex.ru","password":"testpassword"`,
 
-			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)),
+			ResponseBody: pkg.NewTestErrorResponse(errors.NewErrValidation(errors.ErrJSONUnexpectedEnd)),
 			StatusCode:   http.StatusBadRequest,
 		},
 		// Body is empty

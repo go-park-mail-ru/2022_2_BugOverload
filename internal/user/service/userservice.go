@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -13,24 +15,24 @@ import (
 type UserService interface {
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
-	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
+	ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
 type userService struct {
-	userProfileRepo repository.UserRepository
+	userRepo repository.UserRepository
 }
 
 // NewUserProfileService is constructor for userService. Accepts UserService interfaces.
 func NewUserProfileService(ur repository.UserRepository) UserService {
 	return &userService{
-		userProfileRepo: ur,
+		userRepo: ur,
 	}
 }
 
 // GetUserProfileByID is the service that accesses the interface UserService.
 func (u *userService) GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error) {
-	userRepo, err := u.userProfileRepo.GetUserProfileByID(ctx, user)
+	userRepo, err := u.userRepo.GetUserProfileByID(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "GetPersonByID")
 	}
@@ -40,7 +42,7 @@ func (u *userService) GetUserProfileByID(ctx context.Context, user *models.User)
 
 // GetUserProfileSettings is the service that accesses the interface UserService
 func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error) {
-	newUser, err := u.userProfileRepo.GetUserProfileSettings(ctx, user)
+	newUser, err := u.userRepo.GetUserProfileSettings(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "GetUserProfileSettings")
 	}
@@ -49,8 +51,22 @@ func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.U
 }
 
 // ChangeUserProfileSettings is the service that accesses the interface UserService
-func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User) error {
-	err := u.userProfileRepo.ChangeUserProfileSettings(ctx, user)
+func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error {
+	salt, err := u.userRepo.GetPasswordSalt(ctx, user)
+	if err != nil {
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+	}
+
+	user.Password = security.CreateHashPassword(salt, user.Password)
+
+	err = u.userRepo.CheckPassword(ctx, user)
+	if err != nil {
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+	}
+
+	user.Password = security.CreateHashPassword(salt, params.NewPassword)
+
+	err = u.userRepo.ChangeUserProfileSettings(ctx, user)
 	if err != nil {
 		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
 	}

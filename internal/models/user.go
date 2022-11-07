@@ -5,6 +5,7 @@ type User struct {
 	Nickname string  `json:"nickname,omitempty"`
 	Email    string  `json:"email,omitempty"`
 	Password string  `json:"password,omitempty"`
+	IsAdmin  bool    `json:"-"`
 	Profile  Profile `json:"profile,omitempty"`
 }
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	stdErrors "github.com/pkg/errors"
 
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -35,7 +36,7 @@ func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // delivery of the data to the service at the business logic level.
 // @Summary Change user auth data
 // @Description Request for change user settings and data. Needed auth
-// @tags in_dev
+// @tags completed_not_tested_waiting_integration_auth
 // @Produce json
 // @Param user body models.UserPutSettingsRequest true "Request body for change user data"
 // @Success 204 "successfully changes"
@@ -51,7 +52,7 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
 		return
 	}
 
@@ -61,7 +62,7 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userService.ChangeUserProfileSettings(r.Context(), user)
+	err = h.userService.ChangeUserProfileSettings(r.Context(), user, request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return

@@ -23,7 +23,7 @@ func NewPostImageRequest() *PostImageRequest {
 
 func (i *PostImageRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrUnsupportedMediaType
 	}
 
 	i.Key = r.FormValue("key")
@@ -31,7 +31,7 @@ func (i *PostImageRequest) Bind(r *http.Request) error {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return err
+		return errors.ErrBadBodyRequest
 	}
 	defer func() {
 		err = r.Body.Close()
@@ -41,11 +41,11 @@ func (i *PostImageRequest) Bind(r *http.Request) error {
 	}()
 
 	if len(body) == 0 {
-		return errors.NewErrValidation(errors.ErrEmptyBody)
+		return errors.ErrEmptyBody
 	}
 
 	if len(body) > pkg.BufSizeImage {
-		return errors.NewErrValidation(errors.ErrBigImage)
+		return errors.ErrBigImage
 	}
 
 	i.Bytes = body

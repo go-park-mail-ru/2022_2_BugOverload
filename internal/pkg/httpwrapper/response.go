@@ -12,7 +12,7 @@ import (
 func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
-		DefaultHandlerError(w, errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd))
+		DefaultHandlerError(w, errors.NewErrValidation(errors.ErrJSONUnexpectedEnd))
 		return
 	}
 

@@ -53,7 +53,7 @@ func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
 		return
 	}
 

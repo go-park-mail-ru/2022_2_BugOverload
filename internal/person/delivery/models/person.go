@@ -28,25 +28,25 @@ func (p *PersonRequest) Bind(r *http.Request) error {
 
 	p.ID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
 	p.CountFilms, err = strconv.Atoi(r.FormValue("count_films"))
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
-	if p.CountFilms <= 0 {
-		return errors.NewErrValidation(errors.ErrQueryBad)
+	if p.CountFilms < 0 {
+		return errors.ErrQueryBad
 	}
 
 	p.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
-	if p.CountImages <= 0 {
-		return errors.NewErrValidation(errors.ErrQueryBad)
+	if p.CountImages < 0 {
+		return errors.ErrQueryBad
 	}
 
 	return nil

@@ -19,6 +19,7 @@ type UserRepository interface {
 
 	// Support
 	GetPasswordSalt(ctx context.Context, user *models.User) (string, error)
+	CheckPassword(ctx context.Context, user *models.User) error
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -126,11 +127,6 @@ func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *mode
 		return nil
 	})
 
-	// the main entity is not found
-	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return errors.ErrNotFoundInDB
-	}
-
 	// execution error
 	if errMain != nil {
 		return errors.ErrPostgresRequest
@@ -156,15 +152,32 @@ func (u *userPostgres) GetPasswordSalt(ctx context.Context, user *models.User) (
 		return nil
 	})
 
-	// the main entity is not found
-	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return "", errors.ErrNotFoundInDB
-	}
-
-	// execution error
 	if errMain != nil {
 		return "", errors.ErrPostgresRequest
 	}
 
 	return res, nil
+}
+
+func (u *userPostgres) CheckPassword(ctx context.Context, user *models.User) error {
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowCheck := conn.QueryRowContext(ctx, checkPassword, user.Password, user.ID)
+		if rowCheck.Err() != nil {
+			return rowCheck.Err()
+		}
+
+		return nil
+	})
+
+	// the main entity is not found
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return errors.ErrWrongPassword
+	}
+
+	// execution error
+	if errMain != nil {
+		return errors.ErrPostgresRequest
+	}
+
+	return nil
 }
