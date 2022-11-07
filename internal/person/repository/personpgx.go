@@ -81,11 +81,9 @@ func (u *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		defer wg.Done()
 
 		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{person.ID, params.CountFilms}
-
 			var err error
 
-			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, values)
+			response.BestFilms, err = repository.GetShortFilmsBatch(ctx, tx, getPersonBestFilms, person.ID, params.CountFilms)
 			if err != nil {
 				return err
 			}

@@ -49,7 +49,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
 
-	if rr.Offset <= 0 {
+	if rr.Offset < 0 {
 		return errors.NewErrValidation(errors.ErrQueryBad)
 	}
 

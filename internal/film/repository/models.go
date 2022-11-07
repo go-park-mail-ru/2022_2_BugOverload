@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"database/sql"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"strconv"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -243,12 +245,13 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 	return target, nil
 }
 
-func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []interface{}) ([]FilmSQL, error) {
+func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, args ...any) ([]FilmSQL, error) {
 	res := make([]FilmSQL, 0)
 
 	//  Тут какой то жесткий баг. sql.ErrNoRows не возвращается
-	rowsFilms, err := tx.QueryContext(ctx, query, values...)
+	rowsFilms, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
+		logrus.Info("NeededCondition ", err)
 		return []FilmSQL{}, err
 	}
 
@@ -276,8 +279,9 @@ func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, values []
 		res = append(res, film)
 	}
 
-	//  Это какой то треш, запрос на 250 строке, не отдает sql.ErrNoRows
+	//  Это какой то треш, запрос на 251 строке, не отдает sql.ErrNoRows
 	if len(res) == 0 {
+		logrus.Info("BadCondition")
 		return []FilmSQL{}, sql.ErrNoRows
 	}
 
