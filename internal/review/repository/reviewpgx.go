@@ -13,7 +13,7 @@ import (
 )
 
 type ReviewRepository interface {
-	GetReviewsByFilmID(ctx context.Context) ([]models.Review, error)
+	GetReviewsByFilmID(ctx context.Context, params *innerPKG.GetReviewsFilmParams) ([]models.Review, error)
 }
 
 // reviewPostgres is implementation repository of Postgres corresponding to the ReviewRepository interface.
@@ -28,14 +28,12 @@ func NewReviewPostgres(database *sqltools.Database) ReviewRepository {
 	}
 }
 
-func (r *reviewPostgres) GetReviewsByFilmID(ctx context.Context) ([]models.Review, error) {
+func (r *reviewPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.GetReviewsFilmParams) ([]models.Review, error) {
 	response := make([]ReviewSQL, 0)
 
-	params, _ := ctx.Value(innerPKG.GetReviewsParamsKey).(innerPKG.GetReviewsFilmParamsCtx)
-
 	// Reviews - Main
-	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, r.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowsReviews, err := tx.QueryContext(ctx, getReviewsByFilmID, params.FilmID, params.Count, params.Offset)
+	errMain := sqltools.RunQuery(ctx, r.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowsReviews, err := conn.QueryContext(ctx, getReviewsByFilmID, params.FilmID, params.Count, params.Offset)
 		if err != nil {
 			return err
 		}
@@ -65,11 +63,11 @@ func (r *reviewPostgres) GetReviewsByFilmID(ctx context.Context) ([]models.Revie
 	})
 
 	// the main entity is not found
-	if stdErrors.Is(errTX, sql.ErrNoRows) || len(response) == 0 {
+	if stdErrors.Is(errMain, sql.ErrNoRows) || len(response) == 0 {
 		return []models.Review{}, errors.ErrNotFoundInDB
 	}
 
-	if errTX != nil {
+	if errMain != nil {
 		return []models.Review{}, errors.ErrPostgresRequest
 	}
 

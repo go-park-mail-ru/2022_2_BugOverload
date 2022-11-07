@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,7 +8,6 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -59,9 +57,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, request.GetParams())
-
-	person, err := h.personService.GePersonByID(ctx, request.GetPerson())
+	person, err := h.personService.GePersonByID(r.Context(), request.GetPerson(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrPerson(stdErrors.Cause(err)))
 		return

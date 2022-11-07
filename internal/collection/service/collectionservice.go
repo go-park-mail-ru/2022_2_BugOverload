@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	"github.com/pkg/errors"
 
@@ -11,7 +12,7 @@ import (
 
 // CollectionService provides universal service for work with collection.
 type CollectionService interface {
-	GetCollectionByTag(ctx context.Context) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionTagParams) (models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -28,8 +29,8 @@ func NewCollectionService(cr repository.CollectionRepository) CollectionService 
 }
 
 // GetCollectionByTag is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetCollectionByTag(ctx context.Context) (models.Collection, error) {
-	inCinemaCollection, err := c.collectionRepo.GetCollectionByTag(ctx)
+func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionTagParams) (models.Collection, error) {
+	inCinemaCollection, err := c.collectionRepo.GetCollectionByTag(ctx, params)
 	if err != nil {
 		return models.Collection{}, errors.Wrap(err, "GetCollectionByTag")
 	}

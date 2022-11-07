@@ -54,8 +54,8 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (p *TagCollectionRequest) GetParams() innerPKG.GetCollectionTagParamsCtx {
-	return innerPKG.GetCollectionTagParamsCtx{
+func (p *TagCollectionRequest) GetParams() *innerPKG.GetCollectionTagParams {
+	return &innerPKG.GetCollectionTagParams{
 		Tag:        p.Tag,
 		CountFilms: p.CountFilms,
 		Delimiter:  p.Delimiter,

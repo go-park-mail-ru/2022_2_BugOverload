@@ -56,8 +56,8 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (rr *ReviewsRequest) GetParams() innerPKG.GetReviewsFilmParamsCtx {
-	return innerPKG.GetReviewsFilmParamsCtx{
+func (rr *ReviewsRequest) GetParams() *innerPKG.GetReviewsFilmParams {
+	return &innerPKG.GetReviewsFilmParams{
 		FilmID: rr.FilmID,
 		Offset: rr.Offset,
 		Count:  rr.CountReviews,

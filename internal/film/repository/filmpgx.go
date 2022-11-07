@@ -3,10 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"strings"
-	"sync"
-
 	stdErrors "github.com/pkg/errors"
+	"strings"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -16,7 +14,7 @@ import (
 
 type FilmRepository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
-	GetFilmByID(ctx context.Context, film *models.Film) (models.Film, error)
+	GetFilmByID(ctx context.Context, film *models.Film, params *innerPKG.GetFilmParams) (models.Film, error)
 }
 
 // filmPostgres is implementation repository of Postgres corresponding to the FilmRepository interface.
@@ -31,247 +29,80 @@ func NewFilmPostgres(database *sqltools.Database) FilmRepository {
 	}
 }
 
-func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (models.Film, error) {
+func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, params *innerPKG.GetFilmParams) (models.Film, error) {
 	response := NewFilmSQL()
 
 	// Film - Main
-	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowFilm := tx.QueryRowContext(ctx, getFilmByID, film.ID)
-		if rowFilm.Err() != nil {
-			return rowFilm.Err()
+	errMain := response.GetMainInfo(ctx, f.database.Connection, getFilmByID, film.ID)
+	if errMain != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "GetMainInfo")
+	}
+
+	var errQuery error
+
+	// Parts
+	// Genres
+	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmGenres, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "Genres")
+	}
+
+	// Companies
+	response.ProdCompanies, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmCompanies, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "Companies")
+	}
+
+	// Countries
+	response.ProdCountries, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmCountries, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "Countries")
+	}
+
+	// Tags
+	response.Tags, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmTags, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "Tags")
+	}
+
+	//  Images
+	errQuery = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowPersonImages := conn.QueryRowContext(ctx, getFilmImages, film.ID)
+		if rowPersonImages.Err() != nil {
+			return rowPersonImages.Err()
 		}
 
-		err := rowFilm.Scan(
-			&response.Name,
-			&response.OriginalName,
-			&response.ProdYear,
-			&response.Slogan,
-			&response.Description,
-			&response.ShortDescription,
-			&response.AgeLimit,
-			&response.Duration,
-			&response.PosterHor,
-			&response.Budget,
-			&response.BoxOffice,
-			&response.CurrencyBudget,
-			&response.CountSeasons,
-			&response.EndYear,
-			&response.Type,
-			&response.Rating,
-			&response.CountActors,
-			&response.CountScores,
-			&response.CountNegativeReviews,
-			&response.CountNeutralReviews,
-			&response.CountPositiveReviews)
+		var images sql.NullString
+
+		err := rowPersonImages.Scan(&images)
 		if err != nil {
 			return err
 		}
 
-		if !response.PosterHor.Valid {
-			response.PosterHor.String = innerPKG.DefFilmPosterHor
+		response.Images = strings.Split(images.String, "_")
+
+		imagesSet := strings.Split(images.String, "_")
+
+		if params.CountImages > len(imagesSet) {
+			params.CountImages = len(imagesSet)
 		}
+
+		response.Images = imagesSet[:params.CountImages]
 
 		return nil
 	})
 
-	// the main entity is not found
-	if stdErrors.Is(errTX, sql.ErrNoRows) {
-		return models.Film{}, errors.ErrNotFoundInDB
-	}
-
-	if errTX != nil {
-		return models.Film{}, errors.ErrPostgresRequest
-	}
-
-	wg := sync.WaitGroup{}
-
-	// Parts
-	// Genres
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{film.ID}
-
-			var err error
-
-			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getFilmGenres, values)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-	}()
-
-	// Companies
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{film.ID}
-
-			var err error
-
-			response.ProdCompanies, err = sqltools.GetSimpleAttr(ctx, tx, getFilmCompanies, values)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-	}()
-
-	// Countries
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{film.ID}
-
-			var err error
-
-			response.ProdCountries, err = sqltools.GetSimpleAttr(ctx, tx, getFilmCountries, values)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-	}()
-
-	// Tags
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{film.ID}
-
-			var err error
-
-			response.Tags, err = sqltools.GetSimpleAttr(ctx, tx, getFilmTags, values)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-	}()
-
-	// Images
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			rowFilmImages := tx.QueryRowContext(ctx, getFilmImages, film.ID)
-			if rowFilmImages.Err() != nil {
-				return rowFilmImages.Err()
-			}
-
-			var images sql.NullString
-
-			err := rowFilmImages.Scan(&images)
-			if err != nil {
-				return err
-			}
-
-			imagesSet := strings.Split(images.String, "_")
-
-			params, _ := ctx.Value(innerPKG.GetFilmParamsKey).(innerPKG.GetFilmParamsCtx)
-
-			if params.CountImages > len(imagesSet) {
-				params.CountImages = len(imagesSet)
-			}
-
-			response.Images = imagesSet[:params.CountImages]
-
-			return nil
-		})
-	}()
-
 	// Actors
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			rowsFilmActors, err := tx.QueryContext(ctx, getFilmActors, film.ID)
-			if err != nil {
-				return err
-			}
-			defer rowsFilmActors.Close()
-
-			for rowsFilmActors.Next() {
-				var actor FilmActorSQL
-
-				err = rowsFilmActors.Scan(
-					&actor.ID,
-					&actor.Name,
-					&actor.Avatar,
-					&actor.Character)
-				if err != nil {
-					return err
-				}
-
-				response.Actors = append(response.Actors, actor)
-			}
-
-			return nil
-		})
-	}()
+	errQuery = response.GetActors(ctx, f.database.Connection, getFilmActors, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "GetActors")
+	}
 
 	// Persons
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			rowsFilmActors, err := tx.QueryContext(ctx, getFilmPersons, film.ID)
-			if err != nil {
-				return err
-			}
-			defer rowsFilmActors.Close()
-
-			for rowsFilmActors.Next() {
-				var person FilmPersonSQL
-				var professionID int
-
-				err = rowsFilmActors.Scan(
-					&person.ID,
-					&person.Name,
-					&professionID)
-				if err != nil {
-					return err
-				}
-
-				switch professionID {
-				case innerPKG.Artist:
-					response.Artists = append(response.Artists, person)
-				case innerPKG.Director:
-					response.Directors = append(response.Directors, person)
-				case innerPKG.Writer:
-					response.Writers = append(response.Writers, person)
-				case innerPKG.Producer:
-					response.Producers = append(response.Producers, person)
-				case innerPKG.Operator:
-					response.Operators = append(response.Operators, person)
-				case innerPKG.Montage:
-					response.Montage = append(response.Montage, person)
-				case innerPKG.Composer:
-					response.Composers = append(response.Composers, person)
-				}
-			}
-
-			return nil
-		})
-	}()
-
-	wg.Wait()
+	errQuery = response.GetPersons(ctx, f.database.Connection, getFilmPersons, film.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "GetPersons")
+	}
 
 	return response.Convert(), nil
 }
@@ -279,8 +110,8 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film) (mode
 func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, error) {
 	response := NewFilmSQL()
 
-	errTX := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowFilm := tx.QueryRowContext(ctx, getFilmRecommendation)
+	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowFilm := conn.QueryRowContext(ctx, getFilmRecommendation)
 		if rowFilm.Err() != nil {
 			return rowFilm.Err()
 		}
@@ -301,37 +132,22 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 	})
 
 	// the main entity is not found
-	if stdErrors.Is(errTX, sql.ErrNoRows) {
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.Film{}, errors.ErrNotFoundInDB
 	}
 
-	if errTX != nil {
+	if errMain != nil {
 		return models.Film{}, errors.ErrPostgresRequest
 	}
 
-	wg := sync.WaitGroup{}
+	var errQuery error
 
 	// Parts
 	// Genres
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		errTX = sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, f.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-			values := []interface{}{response.ID}
-
-			var err error
-
-			response.Genres, err = sqltools.GetSimpleAttr(ctx, tx, getFilmGenres, values)
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-	}()
-
-	wg.Wait()
+	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmGenres, response.ID)
+	if errQuery != nil {
+		return models.Film{}, stdErrors.Wrap(errMain, "Genres")
+	}
 
 	return response.Convert(), nil
 }

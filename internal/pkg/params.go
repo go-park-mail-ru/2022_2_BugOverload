@@ -86,12 +86,6 @@ const (
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour
 
-	// ParamsContextKeys
-	GetReviewsParams       = "GetReviewsParamsKey"
-	GetPersonParams        = "GetPersonParams"
-	GetCollectionTagParams = "GetPersonParams"
-	GetFilmParams          = "GetFilmParams"
-
 	// Crypt
 	SaltLength     = 16
 	ArgonTime      = 1
@@ -110,42 +104,5 @@ type ContextKeyType string
 var SessionKey ContextKeyType = "cookie"
 var LoggerKey ContextKeyType = "logger"
 
-// GetPersonParamsKey for RequestParams
-var GetPersonParamsKey ContextKeyType = GetPersonParams
-
 // CurrentUserKey is key for ctx in auth middleware
 var CurrentUserKey ContextKeyType = "current-user"
-
-// GetPersonParamsCtx in struct for GetPersonParams in personHandler
-type GetPersonParamsCtx struct {
-	CountFilms  int
-	CountImages int
-}
-
-// GetCollectionTagParamsKey for RequestParams
-var GetCollectionTagParamsKey ContextKeyType = GetCollectionTagParams
-
-// GetCollectionTagParamsCtx in struct for GetPersonParams in tagCollectionHandler
-type GetCollectionTagParamsCtx struct {
-	Tag        string
-	CountFilms int
-	Delimiter  string
-}
-
-// GetReviewsParamsKey for RequestParams
-var GetReviewsParamsKey ContextKeyType = GetReviewsParams
-
-// GetReviewsFilmParamsCtx in struct for GetReviewsParamsKey in reviewHandler
-type GetReviewsFilmParamsCtx struct {
-	FilmID int
-	Count  int
-	Offset int
-}
-
-// GetFilmParamsKey for RequestParams
-var GetFilmParamsKey ContextKeyType = GetFilmParams
-
-// GetFilmParamsCtx in struct for GetFilmParams in filmHandler
-type GetFilmParamsCtx struct {
-	CountImages int
-}

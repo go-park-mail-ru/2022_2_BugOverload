@@ -42,8 +42,8 @@ func (f *FilmRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (f *FilmRequest) GetParams() innerPKG.GetFilmParamsCtx {
-	return innerPKG.GetFilmParamsCtx{
+func (f *FilmRequest) GetParams() *innerPKG.GetFilmParams {
+	return &innerPKG.GetFilmParams{
 		CountImages: f.CountImages,
 	}
 }

@@ -58,8 +58,8 @@ func (p *PersonRequest) GetPerson() *models.Person {
 	}
 }
 
-func (p *PersonRequest) GetParams() innerPKG.GetPersonParamsCtx {
-	return innerPKG.GetPersonParamsCtx{
+func (p *PersonRequest) GetParams() *innerPKG.GetPersonParams {
+	return &innerPKG.GetPersonParams{
 		CountFilms:  p.CountFilms,
 		CountImages: p.CountImages,
 	}

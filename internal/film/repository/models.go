@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	stdErrors "github.com/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"strconv"
 	"strings"
 
@@ -197,6 +199,138 @@ func (f *FilmSQL) Convert() models.Film {
 	return res
 }
 
+func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowFilm := conn.QueryRowContext(ctx, query, args...)
+		if rowFilm.Err() != nil {
+			return rowFilm.Err()
+		}
+
+		err := rowFilm.Scan(
+			&f.Name,
+			&f.OriginalName,
+			&f.ProdYear,
+			&f.Slogan,
+			&f.Description,
+			&f.ShortDescription,
+			&f.AgeLimit,
+			&f.Duration,
+			&f.PosterHor,
+			&f.Budget,
+			&f.BoxOffice,
+			&f.CurrencyBudget,
+			&f.CountSeasons,
+			&f.EndYear,
+			&f.Type,
+			&f.Rating,
+			&f.CountActors,
+			&f.CountScores,
+			&f.CountNegativeReviews,
+			&f.CountNeutralReviews,
+			&f.CountPositiveReviews)
+		if err != nil {
+			return err
+		}
+
+		if !f.PosterHor.Valid {
+			f.PosterHor.String = innerPKG.DefFilmPosterHor
+		}
+
+		return nil
+	})
+
+	if stdErrors.Is(err, sql.ErrNoRows) {
+		return errors.ErrNotFoundInDB
+	}
+
+	if err != nil {
+		return errors.ErrPostgresRequest
+	}
+
+	return nil
+}
+
+func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmActors.Close()
+
+		for rowsFilmActors.Next() {
+			var person FilmPersonSQL
+			var professionID int
+
+			err = rowsFilmActors.Scan(
+				&person.ID,
+				&person.Name,
+				&professionID)
+			if err != nil {
+				return err
+			}
+
+			switch professionID {
+			case innerPKG.Artist:
+				f.Artists = append(f.Artists, person)
+			case innerPKG.Director:
+				f.Directors = append(f.Directors, person)
+			case innerPKG.Writer:
+				f.Writers = append(f.Writers, person)
+			case innerPKG.Producer:
+				f.Producers = append(f.Producers, person)
+			case innerPKG.Operator:
+				f.Operators = append(f.Operators, person)
+			case innerPKG.Montage:
+				f.Montage = append(f.Montage, person)
+			case innerPKG.Composer:
+				f.Composers = append(f.Composers, person)
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
+		return errors.ErrPostgresRequest
+	}
+
+	return nil
+}
+
+func (f *FilmSQL) GetActors(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmActors.Close()
+
+		for rowsFilmActors.Next() {
+			var actor FilmActorSQL
+
+			err = rowsFilmActors.Scan(
+				&actor.ID,
+				&actor.Name,
+				&actor.Avatar,
+				&actor.Character)
+			if err != nil {
+				return err
+			}
+
+			f.Actors = append(f.Actors, actor)
+		}
+
+		return nil
+	})
+
+	if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
+		return errors.ErrPostgresRequest
+	}
+
+	return nil
+}
+
 const (
 	getGenresFilmBatchBegin = `
 SELECT f.film_id,
@@ -209,7 +343,7 @@ WHERE f.film_id IN (`
 	getGenresFilmBatchEnd = `) ORDER BY f.film_id, fg.weight DESC`
 )
 
-func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQL, error) {
+func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
 	setID := make([]string, len(target))
 
 	mapFilms := make(map[int]int, len(target))
@@ -222,7 +356,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 
 	setIDRes := strings.Join(setID, ",")
 
-	rowsFilmsGenres, err := tx.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
+	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
 		return []FilmSQL{}, err
 	}
@@ -245,11 +379,11 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, tx *sql.Tx) ([]FilmSQ
 	return target, nil
 }
 
-func GetShortFilmsBatch(ctx context.Context, tx *sql.Tx, query string, args ...any) ([]FilmSQL, error) {
+func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]FilmSQL, error) {
 	res := make([]FilmSQL, 0)
 
 	//  Тут какой то жесткий баг. sql.ErrNoRows не возвращается
-	rowsFilms, err := tx.QueryContext(ctx, query, args...)
+	rowsFilms, err := conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		logrus.Info("NeededCondition ", err)
 		return []FilmSQL{}, err

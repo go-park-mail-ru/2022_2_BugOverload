@@ -57,7 +57,8 @@ ORDER BY t.name DESC`
 	getFilmImages = `
 SELECT images_list
 FROM film_images
-WHERE film_id = $1`
+WHERE film_id = $1
+LIMIT $2`
 
 	getFilmActors = `
 SELECT fp.fk_person_id, p.name, p.avatar, fp.character

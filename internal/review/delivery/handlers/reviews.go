@@ -1,13 +1,11 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -59,9 +57,7 @@ func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.WithValue(r.Context(), pkg.GetReviewsParamsKey, request.GetParams())
-
-	reviews, err := h.reviewsService.GetReviewsByFilmID(ctx)
+	reviews, err := h.reviewsService.GetReviewsByFilmID(r.Context(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrReview(stdErrors.Cause(err)))
 		return

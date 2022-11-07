@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	stdErrors "github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -17,7 +16,7 @@ import (
 
 // CollectionRepository provides the versatility of collection repositories.
 type CollectionRepository interface {
-	GetCollectionByTag(ctx context.Context) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionTagParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -34,19 +33,17 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 }
 
 // GetCollectionByTag it gives away movies by tag from the repository.
-func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionTagParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	//  Films - Main
-	errTx := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, c.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		params, _ := ctx.Value(innerPKG.GetCollectionTagParamsKey).(innerPKG.GetCollectionTagParamsCtx)
-
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		delimiter, err := strconv.ParseFloat(params.Delimiter, 32)
 		if err != nil {
 			return errors.ErrGetParamsConvert
 		}
 
-		response.Films, err = repository.GetShortFilmsBatch(ctx, tx, getFilmsByTag, params.Tag, delimiter, params.CountFilms)
+		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, getFilmsByTag, params.Tag, delimiter, params.CountFilms)
 		if err != nil {
 			return err
 		}
@@ -54,7 +51,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 		response.Name = params.Tag
 
 		//  Genres
-		response.Films, err = repository.GetGenresBatch(ctx, response.Films, tx)
+		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
@@ -62,15 +59,13 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context) (models.Col
 		return nil
 	})
 
-	logrus.Info(errTx)
-
 	// the main entity is not found
-	if stdErrors.Is(errTx, sql.ErrNoRows) {
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.Collection{}, errors.ErrNotFoundInDB
 	}
 
 	// execution error
-	if errTx != nil {
+	if errMain != nil {
 		return models.Collection{}, errors.ErrPostgresRequest
 	}
 

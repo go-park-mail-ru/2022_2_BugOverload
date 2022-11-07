@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -58,9 +56,7 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.WithValue(r.Context(), pkg.GetPersonParamsKey, request.GetParams())
-
-	collection, err := h.collectionService.GetCollectionByTag(ctx)
+	collection, err := h.collectionService.GetCollectionByTag(r.Context(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrCollection(stdErrors.Cause(err)))
 		return
