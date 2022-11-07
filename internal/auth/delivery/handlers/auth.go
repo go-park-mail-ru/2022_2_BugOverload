@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -52,12 +54,18 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		return
+	}
+
+	cookie, err := r.Cookie(pkg.SessionCookieName)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSessionNotExist))
 		return
 	}
 
 	requestSession := mainModels.Session{
-		ID: r.Cookies()[0].Value,
+		ID: cookie.Value,
 	}
 
 	user, err := h.authService.GetUserBySession(r.Context(), requestSession)
@@ -65,6 +73,16 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
+
+	requestSession.User = &user
+
+	token, err := security.CreateCsrfToken(&requestSession)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	w.Header().Set("X-CSRF-TOKEN", token)
 
 	authResponse := models.NewUserAuthResponse(&user)
 

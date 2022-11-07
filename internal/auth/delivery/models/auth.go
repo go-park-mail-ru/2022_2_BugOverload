@@ -15,7 +15,7 @@ func NewUserAuthRequest() *UserAuthRequest {
 
 func (u *UserAuthRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
+		return errors.ErrNoCookie
 	}
 
 	return nil

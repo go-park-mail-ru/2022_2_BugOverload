@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -57,8 +57,14 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookie, err := r.Cookie(pkg.SessionCookieName)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSessionNotExist))
+		return
+	}
+
 	requestSession := mainModels.Session{
-		ID: r.Cookies()[0].Value,
+		ID: cookie.Value,
 	}
 
 	badSession, err := h.authService.DeleteSession(r.Context(), requestSession)
@@ -68,7 +74,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	}
 
 	badCookie := &http.Cookie{
-		Name:     "session_id",
+		Name:     pkg.SessionCookieName,
 		Value:    badSession.ID,
 		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
 		HttpOnly: true,

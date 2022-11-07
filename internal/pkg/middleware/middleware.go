@@ -101,7 +101,7 @@ func (m *Middleware) SetSizeRequest(h http.Handler) http.Handler {
 
 func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("session_id")
+		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
 			return

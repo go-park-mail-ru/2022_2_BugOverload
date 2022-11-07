@@ -83,7 +83,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
-		Name:     "session_id",
+		Name:     pkg.SessionCookieName,
 		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
 		HttpOnly: true,

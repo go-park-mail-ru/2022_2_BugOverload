@@ -83,6 +83,7 @@ const (
 	BufSizeImage   = 1024 * 1024 * 2
 
 	// Cookie
+	SessionCookieName = "session_id"
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour
 
