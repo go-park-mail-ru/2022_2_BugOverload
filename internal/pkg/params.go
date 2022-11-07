@@ -113,6 +113,9 @@ var LoggerKey ContextKeyType = "logger"
 // GetPersonParamsKey for RequestParams
 var GetPersonParamsKey ContextKeyType = GetPersonParams
 
+// CurrentUserKey is key for ctx in auth middleware
+var CurrentUserKey ContextKeyType = "current-user"
+
 // GetPersonParamsCtx in struct for GetPersonParams in personHandler
 type GetPersonParamsCtx struct {
 	CountFilms  int

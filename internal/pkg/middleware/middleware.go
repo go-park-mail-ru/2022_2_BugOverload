@@ -115,7 +115,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "current-user", user)
+		ctx := context.WithValue(r.Context(), pkg.CurrentUserKey, user)
 		r = r.WithContext(ctx)
 
 		h.ServeHTTP(w, r)
