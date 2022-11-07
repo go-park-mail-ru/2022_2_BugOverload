@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -15,6 +16,9 @@ type UserRepository interface {
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
 	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
+
+	// Support
+	GetPasswordSalt(ctx context.Context, user *models.User) (string, error)
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -79,7 +83,7 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 	response := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
+		rowProfile := conn.QueryRowContext(ctx, getUserProfileShort, user.ID)
 		if rowProfile.Err() != nil {
 			return rowProfile.Err()
 		}
@@ -111,5 +115,56 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 }
 
 func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *models.User) error {
+	request := NewUserSQLOnUser(user)
+
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, updateUserSettings, request.Nickname, request.Password, request.ID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	// the main entity is not found
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return errors.ErrNotFoundInDB
+	}
+
+	// execution error
+	if errMain != nil {
+		return errors.ErrPostgresRequest
+	}
+
 	return nil
+}
+
+func (u *userPostgres) GetPasswordSalt(ctx context.Context, user *models.User) (string, error) {
+	var res string
+
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowSalt := conn.QueryRowContext(ctx, getSalt, innerPKG.SaltLength, user.ID)
+		if rowSalt.Err() != nil {
+			return rowSalt.Err()
+		}
+
+		err := rowSalt.Scan(&res)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	// the main entity is not found
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return "", errors.ErrNotFoundInDB
+	}
+
+	// execution error
+	if errMain != nil {
+		return "", errors.ErrPostgresRequest
+	}
+
+	return res, nil
 }

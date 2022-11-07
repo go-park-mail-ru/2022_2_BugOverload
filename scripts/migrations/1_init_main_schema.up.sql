@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     "nickname"     varchar(64) NOT NULL,
     "email"        varchar(64) NOT NULL,
     "password"     text        NOT NULL,
-    "is_superuser" boolean     NOT NULL DEFAULT false,
+--     "is_superuser" boolean     NOT NULL DEFAULT false,
     "last_update"  date        NOT NULL DEFAULT NOW()
 );
 
@@ -138,6 +138,11 @@ CREATE TABLE IF NOT EXISTS person_images
     "person_id"   serial       NOT NULL PRIMARY KEY REFERENCES persons (person_id) ON DELETE CASCADE,
     "images_list" varchar(100) NOT NULL
 );
+
+--     1 1
+--     1 2
+--     1 3
+--     1 4
 
 -- N:M
 -- Generator completed

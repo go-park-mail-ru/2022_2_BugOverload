@@ -21,10 +21,6 @@ func NewPutUserSettingsRequest() *UserPutSettingsRequest {
 }
 
 func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
-	}
-
 	if r.Header.Get("Content-Type") == "" {
 		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
 	}

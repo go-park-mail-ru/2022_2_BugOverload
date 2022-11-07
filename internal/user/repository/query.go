@@ -13,7 +13,7 @@ SELECT joined_date,
 FROM profiles
 WHERE profile_id = $1`
 
-	getUserShort = `
+	getUserProfileShort = `
 SELECT joined_date,
        count_views_films,
        count_collections,
@@ -21,4 +21,14 @@ SELECT joined_date,
        count_ratings
 FROM profiles
 WHERE profile_id = $1`
+
+	updateUserSettings = `
+UPDATE users
+SET nickname = $1, password = $2
+WHERE user_id = $3`
+
+	getSalt = `
+SELECT substring(password, 1, $1) FROM users WHERE user_id = $2`
+	checkPassword = `
+SELECT EXISTS(SELECT password FROM users WHERE password = $1 AND user_id = $2)`
 )

@@ -3,14 +3,15 @@ package repository
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 )
 
 type UserSQL struct {
 	ID       int
-	Nickname string
-	Email    string
-	Password string
+	Nickname sql.NullString
+	Email    sql.NullString
+	Password sql.NullString
 	Profile  ProfileSQL
 }
 
@@ -29,23 +30,24 @@ func NewUserSQL() UserSQL {
 	}
 }
 
-//  для линтера
-// func newUserSQLOnUser(user models.User) UserSQL {
-//	return UserSQL{
-//		ID:       user.ID,
-//		Nickname: user.Nickname,
-//		Email:    user.Email,
-//		Password: user.Password,
-//		Profile: ProfileSQL{
-//			Avatar:           innerPKG.NewSQLNullString(user.Profile.Avatar),
-//			JoinedDate:       user.Profile.JoinedDate,
-//			CountViewsFilms:  innerPKG.NewSQLNullInt32(user.Profile.CountViewsFilms),
-//			CountCollections: innerPKG.NewSQLNullInt32(user.Profile.CountCollections),
-//			CountReviews:     innerPKG.NewSQLNullInt32(user.Profile.CountReviews),
-//			CountRatings:     innerPKG.NewSQLNullInt32(user.Profile.CountRatings),
-//		},
-//	}
-// }
+func NewUserSQLOnUser(user *models.User) UserSQL {
+	joinedDate, _ := time.Parse("2006.01.02", user.Profile.JoinedDate)
+
+	return UserSQL{
+		ID:       user.ID,
+		Nickname: sqltools.NewSQLNullString(user.Nickname),
+		Email:    sqltools.NewSQLNullString(user.Email),
+		Password: sqltools.NewSQLNullString(user.Password),
+		Profile: ProfileSQL{
+			Avatar:           sqltools.NewSQLNullString(user.Profile.Avatar),
+			JoinedDate:       joinedDate,
+			CountViewsFilms:  sqltools.NewSQLNullInt32(user.Profile.CountViewsFilms),
+			CountCollections: sqltools.NewSQLNullInt32(user.Profile.CountCollections),
+			CountReviews:     sqltools.NewSQLNullInt32(user.Profile.CountReviews),
+			CountRatings:     sqltools.NewSQLNullInt32(user.Profile.CountRatings),
+		},
+	}
+}
 
 func (u *UserSQL) Convert() models.User {
 	if !u.Profile.Avatar.Valid {
@@ -54,9 +56,9 @@ func (u *UserSQL) Convert() models.User {
 
 	return models.User{
 		ID:       u.ID,
-		Nickname: u.Nickname,
-		Email:    u.Email,
-		Password: u.Password,
+		Nickname: u.Nickname.String,
+		Email:    u.Email.String,
+		Password: u.Password.String,
 		Profile: models.Profile{
 			Avatar:           u.Profile.Avatar.String,
 			JoinedDate:       u.Profile.JoinedDate.Format("2006.01.02"),
