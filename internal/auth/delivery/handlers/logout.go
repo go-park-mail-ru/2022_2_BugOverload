@@ -8,27 +8,27 @@ import (
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // logoutHandler is the structure that handles the request for auth.
 type logoutHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	authService    authService.AuthService
+	sessionService sessionService.SessionService
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
+func NewLogoutHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &logoutHandler{
-		us,
 		as,
+		ss,
 	}
 }
 
@@ -67,7 +67,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 		ID: cookie.Value,
 	}
 
-	badSession, err := h.authService.DeleteSession(r.Context(), requestSession)
+	badSession, err := h.sessionService.DeleteSession(r.Context(), requestSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
