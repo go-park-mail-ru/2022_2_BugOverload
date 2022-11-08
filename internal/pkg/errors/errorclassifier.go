@@ -18,6 +18,11 @@ var (
 	ErrNoCookie        = stdErrors.New("request has no cookies")
 	ErrSessionNotExist = stdErrors.New("no such cookie")
 
+	// Auth Validaton
+	ErrInvalidEmail    = stdErrors.New("invalid email, try another one")
+	ErrInvalidPassword = stdErrors.New("invalid password, try another one")
+	ErrInvalidNickname = stdErrors.New("invalid nickname, try another one")
+
 	// Films
 	ErrFilmNotFound = stdErrors.New("no such film")
 
@@ -69,6 +74,11 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrSessionNotExist] = http.StatusNotFound
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
+
+	// Auth Validation
+	res[ErrInvalidEmail] = http.StatusBadRequest
+	res[ErrInvalidPassword] = http.StatusBadRequest
+	res[ErrInvalidNickname] = http.StatusBadRequest
 
 	// Films
 	res[ErrFilmNotFound] = http.StatusNotFound
