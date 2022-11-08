@@ -1,12 +1,12 @@
 -- Generator completed
 CREATE TABLE IF NOT EXISTS users
 (
-    "user_id"      serial      NOT NULL PRIMARY KEY,
-    "nickname"     varchar(64) NOT NULL,
-    "email"        varchar(64) NOT NULL,
-    "password"     text        NOT NULL,
-    "is_admin" boolean     NOT NULL DEFAULT false,
-    "last_update"  date        NOT NULL DEFAULT NOW()
+    "user_id"     serial      NOT NULL PRIMARY KEY,
+    "nickname"    varchar(64) NOT NULL,
+    "email"       varchar(64) NOT NULL,
+    "password"    text        NOT NULL,
+    "is_admin"    boolean     NOT NULL DEFAULT false,
+    "last_update" date        NOT NULL DEFAULT NOW()
 );
 
 -- Generator completed
@@ -102,14 +102,14 @@ CREATE TABLE IF NOT EXISTS professions
 -- Generator completed
 CREATE TABLE IF NOT EXISTS collections
 (
-    "collection_id" serial       NOT NULL PRIMARY KEY,
+    "collection_id" serial      NOT NULL PRIMARY KEY,
     "name"          varchar(64) NOT NULL,
-    "description"   TEXT                  DEFAULT NULL,
-    "poster"        varchar(32)           DEFAULT NULL,
-    "is_public"     boolean      NOT NULL DEFAULT false,
-    "create_time"   timestamp    NOT NULL DEFAULT NOW(),
-    "count_likes"   integer               DEFAULT NULL,
-    "count_films"   integer               DEFAULT NULL
+    "description"   TEXT                 DEFAULT NULL,
+    "poster"        varchar(32)          DEFAULT NULL,
+    "is_public"     boolean     NOT NULL DEFAULT false,
+    "create_time"   timestamp   NOT NULL DEFAULT NOW(),
+    "count_likes"   integer              DEFAULT NULL,
+    "count_films"   integer              DEFAULT NULL
 );
 
 -- Generator completed
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS reviews
 -- Generator completed
 CREATE TABLE IF NOT EXISTS film_images
 (
-    "film_id"     serial       NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
+    "film_id"     serial NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
     "images_list" varchar(100) DEFAULT NULL
 );
 
