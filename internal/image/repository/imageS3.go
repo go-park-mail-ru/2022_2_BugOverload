@@ -55,7 +55,7 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return models.Image{}, stdErrors.WithMessagef(errors.ErrImage,
-			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
 	}
 
@@ -71,18 +71,21 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
 		var awsErr awserr.Error
+		var errOut error
 
 		if stdErrors.As(err, &awsErr) {
 			switch awsErr.Code() {
 			case s3.ErrCodeNoSuchBucket:
-				return models.Image{}, errors.ErrImageNotFound
+				errOut = errors.ErrImageNotFound
 			case s3.ErrCodeNoSuchKey:
-				return models.Image{}, errors.ErrImageNotFound
+				errOut = errors.ErrImageNotFound
 			default:
-				logrus.Info(awsErr.Code(), awsErr.Error())
-
-				return models.Image{}, errors.ErrImage
+				errOut = errors.ErrImage
 			}
+
+			return models.Image{}, stdErrors.WithMessagef(errOut,
+				"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
+				image.Key, image.Object, len(image.Bytes), err)
 		}
 	}
 
@@ -94,7 +97,7 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return stdErrors.WithMessagef(errors.ErrImage,
-			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
 	}
 
@@ -109,7 +112,7 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 	_, err = is.uploaderS3.UploadWithContext(ctx, getObjectInput)
 	if err != nil {
 		return stdErrors.WithMessagef(errors.ErrImage,
-			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
 	}
 

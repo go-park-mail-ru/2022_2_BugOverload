@@ -56,13 +56,14 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
-		//  CreateLog(ctx, err)
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 
@@ -71,6 +72,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	if !user.IsAdmin {
 		if image.Object != pkg.ImageObjectUserAvatar {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrAccess(errors.ErrNoAccess))
+			errors.CreateLog(r.Context(), err)
 			return
 		}
 
