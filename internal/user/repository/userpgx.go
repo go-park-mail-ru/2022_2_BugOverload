@@ -13,6 +13,7 @@ import (
 )
 
 type UserRepository interface {
+	// Profile + settings
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
 	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
@@ -20,6 +21,10 @@ type UserRepository interface {
 	// Support
 	GetPassword(ctx context.Context, user *models.User) (string, error)
 	CheckPassword(ctx context.Context, user *models.User) error
+
+	// Film
+	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
+	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -179,5 +184,13 @@ func (u *userPostgres) CheckPassword(ctx context.Context, user *models.User) err
 		return errors.ErrPostgresRequest
 	}
 
+	return nil
+}
+
+func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+	return nil
+}
+
+func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
 	return nil
 }

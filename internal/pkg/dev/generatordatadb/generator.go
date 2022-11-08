@@ -19,7 +19,7 @@ func (g *DBGenerator) GenerateUsers(count int) []UserFace {
 	res := make([]UserFace, count)
 
 	for idx := range res {
-		err := faker.FakeData(&res[idx], options.WithFieldsToIgnore("ID"))
+		err := faker.FakeData(&res[idx], options.WithFieldsToIgnore("FilmID"))
 		if err != nil {
 			log.Println(err)
 		}
@@ -38,7 +38,7 @@ func (g *DBGenerator) GenerateReviews(count int, maxLengthBody int) []ReviewFace
 	for idx := range res {
 		err := faker.FakeData(&res[idx],
 			options.WithRandomStringLength(uint(pkg.RandMaxInt(2*maxLengthBody/del)+1+maxLengthBody/del)),
-			options.WithFieldsToIgnore("ID", "Type"))
+			options.WithFieldsToIgnore("FilmID", "Type"))
 		if err != nil {
 			log.Println(err)
 		}

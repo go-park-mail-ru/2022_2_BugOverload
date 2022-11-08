@@ -12,7 +12,7 @@ import (
 )
 
 type FilmRequest struct {
-	ID          int
+	FilmID      int
 	CountImages int
 }
 
@@ -25,7 +25,7 @@ func (f *FilmRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	f.ID, err = strconv.Atoi(vars["id"])
+	f.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
 		return errors.NewErrValidation(errors.ErrConvertQuery)
 	}
@@ -50,7 +50,7 @@ func (f *FilmRequest) GetParams() *innerPKG.GetFilmParams {
 
 func (f *FilmRequest) GetFilm() *models.Film {
 	return &models.Film{
-		ID: f.ID,
+		ID: f.FilmID,
 	}
 }
 

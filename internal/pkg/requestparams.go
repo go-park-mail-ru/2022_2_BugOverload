@@ -30,3 +30,8 @@ type ChangeUserSettings struct {
 	CurPassword string
 	NewPassword string
 }
+
+// FilmRateParams in struct for filmHandler
+type FilmRateParams struct {
+	FilmID int
+}
