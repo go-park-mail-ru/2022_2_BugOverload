@@ -119,6 +119,8 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	return countInserts, nil
 }
 
+const offset = 4.8
+
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
@@ -142,7 +144,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			pos++
 			values[pos] = sequence[j]
 			pos++
-			values[pos] = pkg.RandMaxFloat64(f.Config.Volume.MaxRatings, 1)
+			values[pos] = pkg.RandMaxFloat64(f.Config.Volume.MaxRatings-offset, 1) + offset
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++
