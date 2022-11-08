@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -22,7 +23,7 @@ type AuthDatabase struct {
 	database *sqltools.Database
 }
 
-// NewAuthDatabase is constructor for AuthCache. Accepts only mutex.
+// NewAuthDatabase is constructor for AuthDatabase. Accepts only sqltools.Database.
 func NewAuthDatabase(database *sqltools.Database) AuthRepository {
 	return &AuthDatabase{
 		database,
