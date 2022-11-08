@@ -4,6 +4,7 @@ import (
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
@@ -29,7 +30,9 @@ func NewPutImageHandler(is serviceImage.ImageService) handler.Handler {
 }
 
 func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/image", mw.SetCsrfMiddleware(mw.CheckAuthMiddleware(h.Action))).Methods(http.MethodPut).Queries("object", "{object}", "key", "{key}")
+	r.HandleFunc("/api/v1/image", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+		Methods(http.MethodPut).
+		Queries("object", "{object}")
 }
 
 // Action is a method for initial validation of the request and data and
@@ -39,7 +42,7 @@ func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @tags completed_not_tested_waiting_integration_auth
 // @produce json
 // @Param   object    query  string  true  "type object"
-// @Param   key       query  string  true  "key for found id for sessions"
+// @Param   key       query  string  false  "key image"
 // @Success 204 "successfully upload"
 // @Failure 400 {object} httpmodels.ErrResponseImageDefault "return error"
 // @Failure 401 "no cookie"
@@ -53,10 +56,11 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
+		//  CreateLog(ctx, err)
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return
@@ -64,14 +68,20 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	image := request.GetImage()
 
-	if !user.IsAdmin && image.Object != pkg.ImageObjectUserAvatar {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAccess(errors.ErrNoAccess))
-		return
+	if !user.IsAdmin {
+		if image.Object != pkg.ImageObjectUserAvatar {
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAccess(errors.ErrNoAccess))
+			return
+		}
+
+		image.Key = strconv.Itoa(user.ID)
 	}
 
+	//  Надо менять картинку в базе тоже
 	err = h.imageService.UploadImage(r.Context(), image)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

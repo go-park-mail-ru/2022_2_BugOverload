@@ -29,9 +29,12 @@ func NewRouter(handlers map[string]handler.Handler, mw *middleware.Middleware) *
 	// Images
 	handlers[pkg.DownloadImageRequest].Configure(router, mw)
 	handlers[pkg.UploadImageRequest].Configure(router, mw)
+	handlers[pkg.ChangeImageRequest].Configure(router, mw)
 
 	// User
 	handlers[pkg.GetUserProfileRequest].Configure(router, mw)
+	handlers[pkg.GetUserSettingsRequest].Configure(router, mw)
+	handlers[pkg.PutUserSettingsRequest].Configure(router, mw)
 
 	// Person
 	handlers[pkg.PersonRequest].Configure(router, mw)

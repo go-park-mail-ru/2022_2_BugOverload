@@ -29,7 +29,7 @@ func NewPostImageHandler(is serviceImage.ImageService) handler.Handler {
 }
 
 func (h *postImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/image", mw.SetCsrfMiddleware(mw.CheckAuthMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/image", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodPost).
 		Queries("object", "{object}", "key", "{key}")
 }
@@ -58,7 +58,7 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return

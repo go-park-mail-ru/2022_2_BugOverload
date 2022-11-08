@@ -54,7 +54,9 @@ func NewImageS3(config *innerPKG.Config) ImageRepository {
 func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
-		return models.Image{}, err
+		return models.Image{}, stdErrors.WithMessagef(errors.ErrImage,
+			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			image.Key, image.Object, len(image.Bytes), err)
 	}
 
 	res := make([]byte, innerPKG.BufSizeImage)
@@ -91,7 +93,9 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
-		return err
+		return stdErrors.WithMessagef(errors.ErrImage,
+			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			image.Key, image.Object, len(image.Bytes), err)
 	}
 
 	body := bytes.NewReader(image.Bytes)
@@ -104,7 +108,9 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 
 	_, err = is.uploaderS3.UploadWithContext(ctx, getObjectInput)
 	if err != nil {
-		return errors.ErrImage
+		return stdErrors.WithMessagef(errors.ErrImage,
+			"Err: params input: image key - [%s], object - [%s], size image [%d], Special Error [%s] ",
+			image.Key, image.Object, len(image.Bytes), err)
 	}
 
 	return nil

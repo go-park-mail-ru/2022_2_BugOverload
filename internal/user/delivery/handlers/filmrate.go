@@ -29,7 +29,7 @@ func NewFilmRateHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/film/{id}/rate", mw.SetCsrfMiddleware(mw.CheckAuthMiddleware(h.Action))).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/film/{id}/rate", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -48,7 +48,7 @@ func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id}/rate [POST]
 func (h *filmRateHandler) Action(w http.ResponseWriter, r *http.Request) {
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return
@@ -62,7 +62,7 @@ func (h *filmRateHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userService.FilmRate(r.Context(), user, request.GetParams())
+	err = h.userService.FilmRate(r.Context(), &user, request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return

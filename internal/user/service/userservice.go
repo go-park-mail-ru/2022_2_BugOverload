@@ -57,17 +57,17 @@ func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.U
 func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error {
 	passwordDB, err := u.userRepo.GetPassword(ctx, user)
 	if err != nil {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings GetPassword")
 	}
 
 	ok := security.IsPasswordsEqual(passwordDB, params.CurPassword)
 	if !ok {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings IsPasswordsEqual")
 	}
 
 	user.Password, err = security.HashPassword(params.NewPassword)
 	if !ok {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings HashPassword")
 	}
 
 	err = u.userRepo.ChangeUserProfileSettings(ctx, user)

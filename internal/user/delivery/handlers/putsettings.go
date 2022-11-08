@@ -29,7 +29,7 @@ func NewPutSettingsHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/user/settings", mw.SetCsrfMiddleware(mw.CheckAuthMiddleware(h.Action))).Methods(http.MethodPut)
+	r.HandleFunc("/api/v1/user/settings", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodPut)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -56,13 +56,13 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return
 	}
 
-	err = h.userService.ChangeUserProfileSettings(r.Context(), user, request.GetParams())
+	err = h.userService.ChangeUserProfileSettings(r.Context(), &user, request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return

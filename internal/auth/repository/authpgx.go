@@ -70,6 +70,40 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 			return rowUser.Err()
 		}
 
+		err := rowUser.Scan(&user.ID)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.ExecContext(ctx, createUserProfile, user.ID)
+		if err != nil {
+			return err
+		}
+
+		rowsCollections, err := tx.QueryContext(ctx, createDefCollections)
+		if err != nil {
+			return err
+		}
+
+		ids := make([]int, 0)
+
+		for rowsCollections.Next() {
+			var colID int
+
+			err = rowsCollections.Scan(&colID)
+			if err != nil {
+				return err
+			}
+
+			ids = append(ids, colID)
+		}
+		rowsCollections.Close()
+
+		_, err = tx.ExecContext(ctx, linkUserProfileDefCollections, user.ID, ids[0], ids[1])
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
@@ -91,9 +125,9 @@ func (ad *AuthDatabase) GetUser(ctx context.Context, user *models.User) (models.
 	}
 
 	userDB := NewUserSQL()
-	avatar := ""
+	var avatar sql.NullString
 
-	err := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowUser := conn.QueryRowContext(ctx, getUserByEmail, user.Email)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
@@ -114,16 +148,20 @@ func (ad *AuthDatabase) GetUser(ctx context.Context, user *models.User) (models.
 		}
 
 		err = rowProfile.Scan(&avatar)
-		if err == sql.ErrNoRows {
-			avatar = innerPKG.DefUserAvatar
+		if err != nil {
+			return err
+		}
+
+		if !avatar.Valid {
+			avatar.String = innerPKG.DefPersonAvatar
 		}
 
 		return nil
 	})
 
-	if err != nil {
+	if errMain != nil {
 		return models.User{}, errors.ErrPostgresRequest
 	}
 
-	return NewUser(userDB, avatar), nil
+	return NewUser(userDB, avatar.String), nil
 }

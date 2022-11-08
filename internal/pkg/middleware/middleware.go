@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	stdErrors "github.com/pkg/errors"
 	"github.com/rs/cors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
@@ -61,7 +62,7 @@ func (m *Middleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler 
 
 		start := time.Now()
 		upgradeLogger := logger.WithFields(logrus.Fields{
-			"urls":        r.URL.Path,
+			"url":         r.URL.Path,
 			"method":      r.Method,
 			"remote_addr": r.RemoteAddr,
 			"req_id":      uuid.NewV4(),
@@ -111,7 +112,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 			return
 		}
 
@@ -131,7 +132,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		cookie, err := r.Cookie("session_id")
+		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
 			return

@@ -28,7 +28,7 @@ func NewGetSettingsHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/user/settings", mw.SetCsrfMiddleware(mw.CheckAuthMiddleware(h.Action))).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/user/settings", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -45,13 +45,13 @@ func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [GET]
 func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(*mainModels.User)
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return
 	}
 
-	userProfile, err := h.userService.GetUserProfileSettings(r.Context(), user)
+	userProfile, err := h.userService.GetUserProfileSettings(r.Context(), &user)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
 		return

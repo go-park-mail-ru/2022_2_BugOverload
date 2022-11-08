@@ -60,9 +60,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := loginRequest.GetUser()
-
-	userLogged, err := h.authService.Login(r.Context(), user)
+	userLogged, err := h.authService.Login(r.Context(), loginRequest.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
@@ -86,6 +84,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 		Name:     pkg.SessionCookieName,
 		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:     pkg.GlobalCookiePath,
 		HttpOnly: true,
 	}
 

@@ -33,19 +33,21 @@ const (
 
 // Handler factory
 const (
-	SignupRequest         = "SignupRequest"
-	LoginRequest          = "LoginRequest"
-	AuthRequest           = "AuthRequest"
-	LogoutRequest         = "LogoutRequest"
-	RecommendationRequest = "RecommendationRequest"
-	DownloadImageRequest  = "DownloadImageRequest"
-	UploadImageRequest    = "UploadImageRequest"
-	ChangeImageRequest    = "ChangeImageRequest"
-	GetUserProfileRequest = "GetUserProfileRequest"
-	TagCollectionRequest  = "TagCollectionRequest"
-	PersonRequest         = "PersonRequest"
-	FilmRequest           = "FilmRequest"
-	ReviewsFilmRequest    = "ReviewsFilmRequest"
+	SignupRequest          = "SignupRequest"
+	LoginRequest           = "LoginRequest"
+	AuthRequest            = "AuthRequest"
+	LogoutRequest          = "LogoutRequest"
+	RecommendationRequest  = "RecommendationRequest"
+	DownloadImageRequest   = "DownloadImageRequest"
+	UploadImageRequest     = "UploadImageRequest"
+	ChangeImageRequest     = "ChangeImageRequest"
+	GetUserProfileRequest  = "GetUserProfileRequest"
+	TagCollectionRequest   = "TagCollectionRequest"
+	PersonRequest          = "PersonRequest"
+	FilmRequest            = "FilmRequest"
+	ReviewsFilmRequest     = "ReviewsFilmRequest"
+	GetUserSettingsRequest = "GetUserSettingsRequest"
+	PutUserSettingsRequest = "PutUserSettingsRequest"
 )
 
 // DB
@@ -92,6 +94,7 @@ const (
 	SessionCookieName = "session_id"
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour
+	GlobalCookiePath  = "/api"
 
 	// Crypt
 	SaltLength     = 16

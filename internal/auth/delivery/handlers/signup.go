@@ -83,6 +83,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 		Name:     pkg.SessionCookieName,
 		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:     pkg.GlobalCookiePath,
 		HttpOnly: true,
 	}
 

@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	stdErrors "github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -123,12 +125,12 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *models.User) error {
 	request := NewUserSQLOnUser(user)
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxDefaultOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, updateUserSettings, request.Nickname, request.Password, request.ID)
+		logrus.Info(updateUserSettings, request, err)
 		if err != nil {
 			return err
 		}
-
 		return nil
 	})
 

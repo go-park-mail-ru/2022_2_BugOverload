@@ -71,7 +71,7 @@ prod-mode:
 prod-deploy:
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 	sleep 2
-	make reboot-db-prod
+	make reboot-db-debug
 	sleep 30
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
@@ -91,10 +91,6 @@ logs:
 
 reboot-db-debug:
 	docker-compose exec $(SERVICE_MAIN) make -C project  reboot-db COUNT=3
-
-reboot-db-prod:
-	make reboot-db-debug
-	docker-compose exec $(SERVICE_MAIN) make -C project  migrate-up COUNT=1
 
 main-debug-restart:
 	docker-compose restart $(SERVICE_MAIN)
