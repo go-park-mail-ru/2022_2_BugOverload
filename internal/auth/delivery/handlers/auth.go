@@ -1,32 +1,34 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // authHandler is the structure that handles the request for auth.
 type authHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	authService    authService.AuthService
+	sessionService sessionService.SessionService
 }
 
 // NewAuthHandler is constructor for authHandler in this pkg - auth.
-func NewAuthHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
+func NewAuthHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &authHandler{
-		us,
 		as,
+		ss,
 	}
 }
 
@@ -52,19 +54,35 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		return
+	}
+
+	cookie, err := r.Cookie(pkg.SessionCookieName)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSessionNotExist))
 		return
 	}
 
 	requestSession := mainModels.Session{
-		ID: r.Cookies()[0].Value,
+		ID: cookie.Value,
 	}
 
-	user, err := h.authService.GetUserBySession(r.Context(), requestSession)
+	user, err := h.sessionService.GetUserBySession(r.Context(), requestSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
+
+	requestSession.User = &user
+
+	token, err := security.CreateCsrfToken(&requestSession)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		return
+	}
+
+	w.Header().Set("X-CSRF-TOKEN", token)
 
 	authResponse := models.NewUserAuthResponse(&user)
 

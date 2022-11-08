@@ -5,6 +5,7 @@ import (
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factory"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"net/http"
@@ -29,15 +30,18 @@ func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
 }
 
 func (s *Server) Launch() error {
+	// DB
+	postgres := sqltools.NewPostgresRepository()
+
 	// Initialize repos
-	authStorage := repoAuth.NewAuthCache()
+	authStorage := repoAuth.NewAuthDatabase(postgres)
 	sessionStorage := repoSession.NewSessionCache()
 
 	// Initiaalize services
 	authService := serviceAuth.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	handlers := factory.NewHandlersMap(s.config, sessionService, authService)
+	handlers := factory.NewHandlersMap(s.config, postgres, sessionService, authService)
 
 	mw := middleware.NewMiddleware(s.logger, sessionService, &s.config.Cors)
 

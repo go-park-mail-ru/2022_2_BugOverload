@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	"fmt"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"time"
 
 	"github.com/go-faker/faker/v4"
@@ -24,9 +25,16 @@ func (f *DBFiller) uploadUsers() (int, error) {
 	for _, value := range f.faceUsers {
 		values[pos] = value.Nickname
 		pos++
+
 		values[pos] = value.Email
 		pos++
-		values[pos] = value.Password
+
+		hash, err := security.HashPassword(value.Password)
+		if err != nil {
+			return 0, errors.Wrap(err, "uploadUsers")
+		}
+
+		values[pos] = hash
 		pos++
 	}
 

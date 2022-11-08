@@ -27,11 +27,8 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap(config *pkg.Config, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
+func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
 	res := make(map[string]handler.Handler)
-
-	// DB
-	postgres := sqltools.NewPostgresRepository()
 
 	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
 	res[pkg.AuthRequest] = authHandler

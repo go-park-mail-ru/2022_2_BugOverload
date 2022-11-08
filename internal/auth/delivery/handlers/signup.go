@@ -8,27 +8,27 @@ import (
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // signupHandler is the structure that handles the request for auth.
 type signupHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	authService    authService.AuthService
+	sessionService sessionService.SessionService
 }
 
 // NewSingUpHandler is constructor for signupHandler in this pkg - auth.
-func NewSingUpHandler(us serviceUser.AuthService, as serviceAuth.SessionService) handler.Handler {
+func NewSingUpHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &signupHandler{
-		us,
 		as,
+		ss,
 	}
 }
 
@@ -59,13 +59,13 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userService.Signup(r.Context(), signupRequest.GetUser())
+	user, err := h.authService.Signup(r.Context(), signupRequest.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
-	newSession, err := h.authService.CreateSession(r.Context(), &user)
+	newSession, err := h.sessionService.CreateSession(r.Context(), &user)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
@@ -80,7 +80,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
-		Name:     "session_id",
+		Name:     pkg.SessionCookieName,
 		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
 		HttpOnly: true,

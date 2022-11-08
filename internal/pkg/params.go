@@ -72,6 +72,12 @@ var TxDefaultOptions = &sql.TxOptions{
 	ReadOnly:  true,
 }
 
+// TxInsertOptions for Postgres
+var TxInsertOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  false,
+}
+
 // Global
 const (
 	// Validation HTTP
@@ -83,6 +89,7 @@ const (
 	BufSizeImage   = 1024 * 1024 * 2
 
 	// Cookie
+	SessionCookieName = "session_id"
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour
 
