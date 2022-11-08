@@ -2,7 +2,7 @@ package security
 
 import (
 	"bytes"
-
+	"encoding/base64"
 	"golang.org/x/crypto/argon2"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -37,18 +37,16 @@ func HashPassword(plainPassword string) (string, error) {
 
 	hashedPassword := getHash(salt, []byte(plainPassword))
 
-	return string(hashedPassword), nil
+	return base64.StdEncoding.EncodeToString(hashedPassword), nil
 }
 
 // IsPasswordsEqual return true if passwords equal, false otherwise
 func IsPasswordsEqual(hashedPassword, plainPassword string) bool {
-	if len(hashedPassword) < pkg.ArgonKeyLength+pkg.SaltLength {
-		return false
-	}
+	hashDecoded, _ := base64.StdEncoding.DecodeString(hashedPassword)
 
-	salt := hashedPassword[0:pkg.SaltLength]
+	salt := hashDecoded[0:pkg.SaltLength]
 
-	userPasswordHash := getHash([]byte(salt), []byte(plainPassword))
+	userPasswordHash := getHash(salt, []byte(plainPassword))
 
-	return bytes.Equal([]byte(hashedPassword), userPasswordHash)
+	return bytes.Equal([]byte(hashDecoded), userPasswordHash)
 }

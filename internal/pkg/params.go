@@ -72,6 +72,12 @@ var TxDefaultOptions = &sql.TxOptions{
 	ReadOnly:  true,
 }
 
+// TxInsertOptions for Postgres
+var TxInsertOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  false,
+}
+
 // Global
 const (
 	// Validation HTTP
