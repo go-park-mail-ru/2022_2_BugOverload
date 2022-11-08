@@ -56,7 +56,6 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 		return nil
 	})
-
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Person{}, errors.ErrPostgresRequest
 	}

@@ -14,6 +14,7 @@ import (
 type UserPutSettingsRequest struct {
 	Nickname    string `json:"nickname,omitempty" example:"StepByyyy"`
 	NewPassword string `json:"new_password,omitempty" example:"Widget Adapter"`
+	CurPassword string `json:"cur_password,omitempty" example:"Widget Adapter123123123"`
 }
 
 func NewPutUserSettingsRequest() *UserPutSettingsRequest {
@@ -55,5 +56,6 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 func (u *UserPutSettingsRequest) GetParams() *pkg.ChangeUserSettings {
 	return &pkg.ChangeUserSettings{
 		NewPassword: u.NewPassword,
+		CurPassword: u.CurPassword,
 	}
 }

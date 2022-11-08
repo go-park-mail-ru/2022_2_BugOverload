@@ -52,9 +52,3 @@ func IsPasswordsEqual(hashedPassword, plainPassword string) bool {
 
 	return bytes.Equal([]byte(hashedPassword), userPasswordHash)
 }
-
-func CreateHashPassword(salt, plainPassword string) string {
-	hashedPassword := getHash([]byte(salt), []byte(plainPassword))
-
-	return string(hashedPassword)
-}

@@ -52,19 +52,20 @@ func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.U
 
 // ChangeUserProfileSettings is the service that accesses the interface UserService
 func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error {
-	salt, err := u.userRepo.GetPasswordSalt(ctx, user)
+	passwordDB, err := u.userRepo.GetPassword(ctx, user)
 	if err != nil {
 		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
 	}
 
-	user.Password = security.CreateHashPassword(salt, user.Password)
-
-	err = u.userRepo.CheckPassword(ctx, user)
-	if err != nil {
+	ok := security.IsPasswordsEqual(passwordDB, params.CurPassword)
+	if !ok {
 		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
 	}
 
-	user.Password = security.CreateHashPassword(salt, params.NewPassword)
+	user.Password, err = security.HashPassword(params.NewPassword)
+	if !ok {
+		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+	}
 
 	err = u.userRepo.ChangeUserProfileSettings(ctx, user)
 	if err != nil {

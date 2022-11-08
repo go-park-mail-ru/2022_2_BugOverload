@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     "nickname"     varchar(64) NOT NULL,
     "email"        varchar(64) NOT NULL,
     "password"     text        NOT NULL,
---     "is_superuser" boolean     NOT NULL DEFAULT false,
+    "is_admin" boolean     NOT NULL DEFAULT false,
     "last_update"  date        NOT NULL DEFAULT NOW()
 );
 

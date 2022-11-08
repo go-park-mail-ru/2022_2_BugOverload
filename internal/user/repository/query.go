@@ -27,8 +27,8 @@ UPDATE users
 SET nickname = $1, password = $2
 WHERE user_id = $3`
 
-	getSalt = `
-SELECT substring(password, 1, $1) FROM users WHERE user_id = $2`
+	getPass = `
+SELECT password FROM users WHERE user_id = $1`
 	checkPassword = `
 SELECT EXISTS(SELECT password FROM users WHERE password = $1 AND user_id = $2)`
 )

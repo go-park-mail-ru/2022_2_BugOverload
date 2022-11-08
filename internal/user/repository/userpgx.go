@@ -18,7 +18,7 @@ type UserRepository interface {
 	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
 
 	// Support
-	GetPasswordSalt(ctx context.Context, user *models.User) (string, error)
+	GetPassword(ctx context.Context, user *models.User) (string, error)
 	CheckPassword(ctx context.Context, user *models.User) error
 }
 
@@ -135,11 +135,11 @@ func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *mode
 	return nil
 }
 
-func (u *userPostgres) GetPasswordSalt(ctx context.Context, user *models.User) (string, error) {
+func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (string, error) {
 	var res string
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowSalt := conn.QueryRowContext(ctx, getSalt, innerPKG.SaltLength, user.ID)
+		rowSalt := conn.QueryRowContext(ctx, getPass, user.ID)
 		if rowSalt.Err() != nil {
 			return rowSalt.Err()
 		}
