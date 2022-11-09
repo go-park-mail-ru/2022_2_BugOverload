@@ -83,7 +83,7 @@ var TxInsertOptions = &sql.TxOptions{
 // Global
 const (
 	// HTTPMode
-	HTTPS = "HTTPS"
+	HTTPS = "https"
 
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
