@@ -37,7 +37,7 @@ func (h *personHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Person full info
 // @Description Getting person info by id
-// @tags completed
+// @tags person, completed
 // @Produce json
 // @Param id  path int true "person id"
 // @Param count_films  query int true "count best films"

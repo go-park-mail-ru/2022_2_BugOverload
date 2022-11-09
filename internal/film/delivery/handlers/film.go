@@ -37,7 +37,7 @@ func (h *filmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Film full info
 // @Description Getting film info by id
-// @tags completed
+// @tags film, completed
 // @Produce json
 // @Param id  path int true "film id"
 // @Param count_images  query int true "count images film"

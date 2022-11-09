@@ -37,7 +37,7 @@ func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Reviews for film
 // @Description Getting reviews by film id
-// @tags completed
+// @tags review, completed
 // @Produce json
 // @Param   id        path   int     true "film id"
 // @Param   count_reviews     query  int     true "count reviews needed"

@@ -31,7 +31,7 @@ func (h *reviewLikeHandler) Configure(r *mux.Router, mw *middleware.Middleware) 
 // delivery of the data to the service at the business logic level.
 // @Summary Review like
 // @Description Set like or unset for review by film id and review id. User id get from cookie
-// @tags not_actual
+// @tags review, not_actual
 // @Produce json
 // @Param   id        path   int true "film id"
 // @Param   review_id query  int true "review id"

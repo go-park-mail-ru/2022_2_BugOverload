@@ -36,7 +36,7 @@ func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // delivery of the data to the service at the business logic level.
 // @Summary Change user auth data
 // @Description Request for change user settings and data. Needed auth
-// @tags completed
+// @tags user, completed
 // @Produce json
 // @Param user body models.UserPutSettingsRequest true "Request body for change user data"
 // @Success 204 "successfully changes"

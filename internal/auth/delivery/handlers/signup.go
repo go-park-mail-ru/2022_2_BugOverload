@@ -40,7 +40,7 @@ func (h *signupHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary New user registration
 // @Description Sending login and password for registration
-// @tags completed
+// @tags auth, completed
 // @Accept json
 // @Produce json
 // @Param user body models.UserSignupRequest true "Request body for signup"

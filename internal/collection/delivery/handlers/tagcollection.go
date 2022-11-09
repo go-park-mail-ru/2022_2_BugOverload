@@ -36,7 +36,7 @@ func (h *tagCollectionHandler) Configure(r *mux.Router, mw *middleware.Middlewar
 // delivery of the data to the service at the business logic level.
 // @Summary Films by tag
 // @Description Films by tag "популярное" or "сейчас в кино"
-// @tags completed
+// @tags collection, completed
 // @Produce json
 // @Param tag         path  string true "tag name"
 // @Param count_films query int    true "count films"

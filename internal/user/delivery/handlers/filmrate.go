@@ -36,7 +36,7 @@ func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Set user rate on film
 // @Description  Set user rate on film by filmID
-// @tags completed
+// @tags user, completed
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param score body models.FilmRateRequest true "Request body for rate film"
