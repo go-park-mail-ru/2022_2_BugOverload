@@ -9,6 +9,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
 type ReviewsRequest struct {
@@ -85,14 +86,14 @@ func NewReviewsResponse(reviews *[]models.Review) []*ReviewResponse {
 
 	for idx, value := range *reviews {
 		res[idx] = &ReviewResponse{
-			Name:       value.Name,
+			Name:       security.Sanitize(value.Name),
 			Type:       value.Type,
 			CreateTime: value.CreateTime,
-			Body:       value.Body,
+			Body:       security.Sanitize(value.Body),
 			CountLikes: value.CountLikes,
 			Author: ReviewAuthorResponse{
 				ID:           value.Author.ID,
-				Nickname:     value.Author.Nickname,
+				Nickname:     security.Sanitize(value.Author.Nickname),
 				CountReviews: value.Author.Profile.CountReviews,
 				Avatar:       value.Author.Profile.Avatar,
 			},
