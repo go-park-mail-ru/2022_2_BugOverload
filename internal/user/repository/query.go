@@ -33,4 +33,10 @@ SELECT password FROM users WHERE user_id = $1`
 INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score)
 VALUES ($1, $2, $3)
 ON CONFLICT (fk_profile_id, fk_film_id) DO UPDATE SET score = $3`
+
+	dropRateFilm = `DELETE FROM profile_ratings WHERE fk_profile_id = $1 AND fk_film_id = $2`
+
+	insertNewReview = `INSERT INTO reviews (name, type, body) VALUES ($1, $2, $3) RETURNING review_id`
+
+	linkNewReviewAuthor = `INSERT INTO profile_reviews (fk_review_id, fk_profile_id, fk_film_id) VALUES ($1, $2, $3)`
 )

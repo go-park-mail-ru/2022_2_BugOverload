@@ -19,7 +19,9 @@ type UserService interface {
 	ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error
 
 	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
-	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
+	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error
+
+	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
@@ -101,10 +103,20 @@ func (u *userService) FilmRate(ctx context.Context, user *models.User, params *i
 }
 
 // FilmRateDrop is the service that accesses the interface UserService
-func (u *userService) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+func (u *userService) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error {
 	err := u.userRepo.FilmRateDrop(ctx, user, params)
 	if err != nil {
 		return stdErrors.Wrap(err, "FilmRateDrop")
+	}
+
+	return nil
+}
+
+// NewFilmReview is the service that accesses the interface UserService
+func (u *userService) NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error {
+	err := u.userRepo.NewFilmReview(ctx, user, review, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "NewFilmReview")
 	}
 
 	return nil

@@ -35,6 +35,9 @@ func NewRouter(handlers map[string]handler.Handler, mw *middleware.Middleware) *
 	handlers[pkg.GetUserProfileRequest].Configure(router, mw)
 	handlers[pkg.GetUserSettingsRequest].Configure(router, mw)
 	handlers[pkg.PutUserSettingsRequest].Configure(router, mw)
+	handlers[pkg.FilmRateRequest].Configure(router, mw)
+	handlers[pkg.FilmRateDropRequest].Configure(router, mw)
+	handlers[pkg.NewFilmReviewRequest].Configure(router, mw)
 
 	// Person
 	handlers[pkg.PersonRequest].Configure(router, mw)

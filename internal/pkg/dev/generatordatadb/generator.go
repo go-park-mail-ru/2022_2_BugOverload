@@ -38,7 +38,7 @@ func (g *DBGenerator) GenerateReviews(count int, maxLengthBody int) []ReviewFace
 	for idx := range res {
 		err := faker.FakeData(&res[idx],
 			options.WithRandomStringLength(uint(pkg.RandMaxInt(2*maxLengthBody/del)+1+maxLengthBody/del)),
-			options.WithFieldsToIgnore("FilmID", "Type"))
+			options.WithFieldsToIgnore("FilmID", "ReviewType"))
 		if err != nil {
 			log.Println(err)
 		}

@@ -89,6 +89,15 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	changeUserSettingsHandler := handlersUser.NewPutSettingsHandler(userService)
 	res[pkg.PutUserSettingsRequest] = changeUserSettingsHandler
 
+	filmRateHandler := handlersUser.NewFilmRateHandler(userService)
+	res[pkg.FilmRateRequest] = filmRateHandler
+
+	filmRateDropHandler := handlersUser.NewFilmRateDropHandler(userService)
+	res[pkg.FilmRateDropRequest] = filmRateDropHandler
+
+	newFilmReviewHandler := handlersUser.NewFilmRateDropHandler(userService)
+	res[pkg.NewFilmReviewRequest] = newFilmReviewHandler
+
 	// Persons
 	personRepo := repoPerson.NewPersonPostgres(postgres)
 

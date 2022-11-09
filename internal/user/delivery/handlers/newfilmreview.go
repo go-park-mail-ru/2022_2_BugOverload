@@ -16,20 +16,20 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-// filmRateHandler is the structure that handles the request for auth.
-type filmRateHandler struct {
+// newFilmReviewHandler is the structure that handles the request for auth.
+type newFilmReviewHandler struct {
 	userService serviceUser.UserService
 }
 
-// NewFilmRateHandler is constructor for filmRateHandler in this pkg - settings.
-func NewFilmRateHandler(us serviceUser.UserService) handler.Handler {
-	return &filmRateHandler{
+// NewFilmReviewHandler is constructor for filmRateHandler in this pkg - settings.
+func NewFilmReviewHandler(us serviceUser.UserService) handler.Handler {
+	return &newFilmReviewHandler{
 		us,
 	}
 }
 
-func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/film/{id}/rate", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
+func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/film/{id}/review/new", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -39,22 +39,22 @@ func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @tags in_dev
 // @Produce json
 // @Param   id    path  int    true "film id"
-// @Param score body models.NewFilmRateRequest true "Request body for rate film"
+// @Param score body models.NewFilmReviewRequest true "Request body for rate film"
 // @Success 201 "successfully rate"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/film/{id}/rate [POST]
-func (h *filmRateHandler) Action(w http.ResponseWriter, r *http.Request) {
+// @Router /api/v1/film/{id}/review/new [POST]
+func (h *newFilmReviewHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
 		return
 	}
 
-	request := models.NewFilmRateRequest()
+	request := models.NewNewFilmReviewRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -62,7 +62,7 @@ func (h *filmRateHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userService.FilmRate(r.Context(), &user, request.GetParams())
+	err = h.userService.NewFilmReview(r.Context(), &user, request.GetReview(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		errors.CreateLog(r.Context(), err)

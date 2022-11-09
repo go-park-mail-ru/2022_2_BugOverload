@@ -26,7 +26,10 @@ type UserRepository interface {
 
 	// Film
 	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
-	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
+	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error
+
+	// Review
+	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -192,9 +195,9 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		row := tx.QueryRowContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
-		if row.Err() != nil {
-			return row.Err()
+		_, err := tx.ExecContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
+		if err != nil {
+			return err
 		}
 
 		return nil
@@ -209,6 +212,52 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 	return nil
 }
 
-func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, dropRateFilm, user.ID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+			setRateFilm, user.ID, params.FilmID, errMain)
+	}
+
+	return nil
+}
+
+func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		row := tx.QueryRowContext(ctx, insertNewReview, review.Name, review.Type, review.Body)
+		if row.Err() != nil {
+			return row.Err()
+		}
+
+		var reviewID int
+
+		err := row.Scan(&reviewID)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.ExecContext(ctx, linkNewReviewAuthor, reviewID, user.ID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
+			insertNewReview, user.ID, review, errMain)
+	}
+
 	return nil
 }

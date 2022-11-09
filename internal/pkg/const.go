@@ -48,6 +48,9 @@ const (
 	ReviewsFilmRequest     = "ReviewsFilmRequest"
 	GetUserSettingsRequest = "GetUserSettingsRequest"
 	PutUserSettingsRequest = "PutUserSettingsRequest"
+	FilmRateRequest        = "FilmRateRequest"
+	FilmRateDropRequest    = "FilmRateDropRequest"
+	NewFilmReviewRequest   = "NewFilmReviewRequest"
 )
 
 // DB

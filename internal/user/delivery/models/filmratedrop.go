@@ -32,8 +32,8 @@ func (f *FilmRateDropRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (f *FilmRateDropRequest) GetParams() *innerPKG.FilmRateParams {
-	return &innerPKG.FilmRateParams{
+func (f *FilmRateDropRequest) GetParams() *innerPKG.FilmRateDropParams {
+	return &innerPKG.FilmRateDropParams{
 		FilmID: f.FilmID,
 	}
 }
