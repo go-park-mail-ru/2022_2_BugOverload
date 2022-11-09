@@ -1,6 +1,7 @@
 package models
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -29,8 +30,8 @@ type UserAuthResponse struct {
 
 func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 	return &UserAuthResponse{
-		Email:    user.Email,
-		Nickname: user.Nickname,
+		Email:    security.Sanitize(user.Email),
+		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Profile.Avatar,
 	}
 }

@@ -62,6 +62,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, err := h.authService.Signup(r.Context(), signupRequest.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

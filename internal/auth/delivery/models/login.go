@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"io"
 	"net/http"
 
@@ -74,8 +75,8 @@ type UserLoginResponse struct {
 
 func NewUserLoginResponse(user *models.User) *UserLoginResponse {
 	return &UserLoginResponse{
-		Email:    user.Email,
-		Nickname: user.Nickname,
+		Email:    security.Sanitize(user.Email),
+		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Profile.Avatar,
 	}
 }

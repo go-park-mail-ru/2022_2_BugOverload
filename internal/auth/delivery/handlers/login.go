@@ -63,6 +63,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 	userLogged, err := h.authService.Login(r.Context(), loginRequest.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

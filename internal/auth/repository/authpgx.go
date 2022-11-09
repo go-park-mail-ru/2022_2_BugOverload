@@ -32,7 +32,7 @@ func NewAuthDatabase(database *sqltools.Database) AuthRepository {
 }
 
 // CheckExist is a check for the existence of such a user by email.
-func (ad *AuthPostgres) CheckExist(ctx context.Context, email string) bool {
+func (ad *AuthPostgres) CheckExist(ctx context.Context, email string) (bool, error) {
 	response := false
 	err := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		row := conn.QueryRowContext(ctx, checkExist, email)
@@ -48,24 +48,26 @@ func (ad *AuthPostgres) CheckExist(ctx context.Context, email string) bool {
 		return nil
 	})
 
-	if stdErrors.Is(err, sql.ErrNoRows) {
-		return false
-	}
-
 	if err != nil {
-		return false
+		return false, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
+			checkExist, email, err)
 	}
 
-	return response
+	return response, nil
 }
 
 // CreateUser is creates a new user and set default avatar.
 func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
-	if ad.CheckExist(ctx, user.Email) {
+	exist, err := ad.CheckExist(ctx, user.Email)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "CreateUser falls on check exist")
+	}
+	if exist {
 		return models.User{}, errors.ErrSignupUserExist
 	}
 
-	err := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password))
 		if rowUser.Err() != nil {
 			return rowUser.Err()
@@ -110,8 +112,10 @@ func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (mode
 		return nil
 	})
 
-	if err != nil {
-		return models.User{}, errors.ErrPostgresRequest
+	if errMain != nil {
+		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: user - [%v]. Special error: [%s]",
+			user, err)
 	}
 
 	user.Profile = models.Profile{
@@ -123,7 +127,11 @@ func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (mode
 
 // GetUserByEmail is returns all user attributes by part user attributes.
 func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
-	if !ad.CheckExist(ctx, email) {
+	exist, err := ad.CheckExist(ctx, email)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "GetUserByEmail falls on check exist")
+	}
+	if !exist {
 		return models.User{}, errors.ErrUserNotExist
 	}
 
@@ -162,7 +170,9 @@ func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (model
 	})
 
 	if errMain != nil {
-		return models.User{}, errors.ErrPostgresRequest
+		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: email - [%s]. Special error - [%s]",
+			email, errMain)
 	}
 
 	return userDB.Convert(), nil
@@ -205,7 +215,9 @@ func (ad *AuthPostgres) GetUserByID(ctx context.Context, userID int) (models.Use
 	})
 
 	if errMain != nil {
-		return models.User{}, errors.ErrPostgresRequest
+		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: userID - [%d]. Special error - [%s]",
+			userID, errMain)
 	}
 
 	return userDB.Convert(), nil

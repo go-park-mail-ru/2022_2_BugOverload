@@ -3,6 +3,7 @@ package security
 import (
 	"bytes"
 
+	stdErrors "github.com/pkg/errors"
 	"golang.org/x/crypto/argon2"
 
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -32,7 +33,7 @@ func HashPassword(plainPassword string) (string, error) {
 	salt, err := genSalt()
 
 	if err != nil {
-		return "", err
+		return "", stdErrors.Wrap(err, "GenSalt falls")
 	}
 
 	hashedPassword := getHash(salt, []byte(plainPassword))

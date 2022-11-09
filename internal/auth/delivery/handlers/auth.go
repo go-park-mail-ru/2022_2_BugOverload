@@ -73,8 +73,15 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
-	requestSession.User = &user
 
+	userAuth, err := h.authService.Auth(r.Context(), &user)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
+		return
+	}
+
+	requestSession.User = &user
 	token, err := security.CreateCsrfToken(&requestSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
@@ -82,12 +89,6 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("X-CSRF-TOKEN", token)
-
-	userAuth, err := h.authService.Auth(r.Context(), &user)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		return
-	}
 
 	authResponse := models.NewUserAuthResponse(&userAuth)
 
