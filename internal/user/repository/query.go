@@ -22,10 +22,9 @@ SELECT joined_date,
 FROM profiles
 WHERE profile_id = $1`
 
-	updateUserSettings = `
-UPDATE users
-SET nickname = $1, password = $2
-WHERE user_id = $3`
+	updateUserSettingsNickname = `UPDATE users SET nickname = $1 WHERE user_id = $2`
+
+	updateUserSettingsPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
 
 	getPass = `
 SELECT password FROM users WHERE user_id = $1`

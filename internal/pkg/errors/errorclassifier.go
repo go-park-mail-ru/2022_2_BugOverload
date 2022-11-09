@@ -35,6 +35,7 @@ var (
 
 	// Images
 	ErrImageNotFound   = stdErrors.New("no such image")
+	ErrBadImageType    = stdErrors.New("bad image type")
 	ErrGetImageStorage = stdErrors.New("err get data from storage")
 	ErrReadImage       = stdErrors.New("err read bin data")
 	ErrImage           = stdErrors.New("service picture not work")
@@ -50,6 +51,7 @@ var (
 	ErrConvertQuery         = stdErrors.New("bad input query")
 	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
 	ErrQueryBad             = stdErrors.New("bad query params")
+	ErrEmptyRequiredFields  = stdErrors.New("bad params")
 
 	// DB
 	ErrPostgresRequest  = stdErrors.New("error sql")
@@ -102,6 +104,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrReadImage] = http.StatusBadRequest
 
 	res[ErrImage] = http.StatusInternalServerError
+	res[ErrBadImageType] = http.StatusBadRequest
 
 	// Def Validation
 	res[ErrJSONUnexpectedEnd] = http.StatusBadRequest
@@ -112,6 +115,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrConvertLength] = http.StatusBadRequest
 	res[ErrConvertQuery] = http.StatusBadRequest
 	res[ErrQueryBad] = http.StatusBadRequest
+	res[ErrEmptyRequiredFields] = http.StatusBadRequest
 
 	// DB
 	res[ErrPostgresRequest] = http.StatusInternalServerError

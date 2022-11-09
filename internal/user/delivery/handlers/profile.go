@@ -55,6 +55,7 @@ func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, err := h.userProfileService.GetUserProfileByID(r.Context(), request.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

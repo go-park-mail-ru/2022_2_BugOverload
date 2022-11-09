@@ -59,6 +59,7 @@ func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
 	film, err := h.filmService.GetFilmByID(r.Context(), request.GetFilm(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrFilms(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

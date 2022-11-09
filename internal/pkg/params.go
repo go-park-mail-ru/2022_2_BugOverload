@@ -85,6 +85,7 @@ const (
 	// Validation HTTP
 	ContentTypeJSON = "application/json"
 	ContentTypeWEBP = "image/webp"
+	ContentTypeJPEG = "image/jpeg"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5

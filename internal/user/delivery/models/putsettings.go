@@ -50,6 +50,10 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 		return errors.ErrJSONUnexpectedEnd
 	}
 
+	if u.Nickname == "" && (u.NewPassword == "" || u.CurPassword == "") {
+		return errors.ErrEmptyRequiredFields
+	}
+
 	return nil
 }
 
@@ -57,5 +61,6 @@ func (u *UserPutSettingsRequest) GetParams() *pkg.ChangeUserSettings {
 	return &pkg.ChangeUserSettings{
 		NewPassword: u.NewPassword,
 		CurPassword: u.CurPassword,
+		Nickname:    u.Nickname,
 	}
 }

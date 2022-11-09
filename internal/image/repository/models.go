@@ -48,7 +48,7 @@ func NewImageS3Pattern(imageParams *models.Image) (*ImageS3, error) {
 			imageParams.Key = strconv.Itoa(randID)
 		}
 	default:
-		return nil, errors.ErrImageNotFound
+		return nil, errors.ErrBadImageType
 	}
 
 	image.Key += imageParams.Key + ".webp"

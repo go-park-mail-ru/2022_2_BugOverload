@@ -29,6 +29,7 @@ type GetFilmParams struct {
 type ChangeUserSettings struct {
 	CurPassword string
 	NewPassword string
+	Nickname    string
 }
 
 // FilmRateParams in struct for filmHandler

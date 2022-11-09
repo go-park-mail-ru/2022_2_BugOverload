@@ -46,6 +46,7 @@ func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Reques
 	filmRecommendation, err := h.filmService.GetRecommendation(r.Context())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

@@ -68,7 +68,9 @@ func (r *reviewPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPK
 	}
 
 	if errMain != nil {
-		return []models.Review{}, errors.ErrPostgresRequest
+		return []models.Review{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], valies - [%d, %d, %d]. Special Error [%s]",
+			getReviewsByFilmID, params.FilmID, params.Count, params.Offset, errMain)
 	}
 
 	res := make([]models.Review, len(response))

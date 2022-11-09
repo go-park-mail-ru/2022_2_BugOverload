@@ -55,24 +55,35 @@ func (u *userService) GetUserProfileSettings(ctx context.Context, user *models.U
 
 // ChangeUserProfileSettings is the service that accesses the interface UserService
 func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error {
+	user.Nickname = params.Nickname
+
+	if params.NewPassword == "" {
+		err := u.userRepo.ChangeUserProfileNickname(ctx, user)
+		if err != nil {
+			return stdErrors.Wrap(err, "ChangeUserProfileNickname")
+		}
+
+		return nil
+	}
+
 	passwordDB, err := u.userRepo.GetPassword(ctx, user)
 	if err != nil {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings GetPassword")
+		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
 	}
 
 	ok := security.IsPasswordsEqual(passwordDB, params.CurPassword)
 	if !ok {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings IsPasswordsEqual")
+		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
 	}
 
 	user.Password, err = security.HashPassword(params.NewPassword)
 	if !ok {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings HashPassword")
+		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
 	}
 
-	err = u.userRepo.ChangeUserProfileSettings(ctx, user)
+	err = u.userRepo.ChangeUserProfilePassword(ctx, user)
 	if err != nil {
-		return stdErrors.Wrap(err, "ChangeUserProfileSettings")
+		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
 	}
 
 	return nil

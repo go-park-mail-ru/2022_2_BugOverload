@@ -3,10 +3,6 @@ package sqltools
 import (
 	"context"
 	"database/sql"
-
-	stdErrors "github.com/pkg/errors"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
 func GetSimpleAttr(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]string, error) {
@@ -46,8 +42,8 @@ func GetSimpleAttrOnConn(ctx context.Context, db *sql.DB, query string, args ...
 		return nil
 	})
 
-	if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-		return []string{}, errors.ErrPostgresRequest
+	if err != nil {
+		return []string{}, err
 	}
 
 	return res, nil

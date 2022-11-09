@@ -6,12 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -200,7 +198,7 @@ func (f *FilmSQL) Convert() models.Film {
 }
 
 func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
 		rowFilm := conn.QueryRowContext(ctx, query, args...)
 		if rowFilm.Err() != nil {
 			return rowFilm.Err()
@@ -238,20 +236,10 @@ func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, arg
 
 		return nil
 	})
-
-	if stdErrors.Is(err, sql.ErrNoRows) {
-		return errors.ErrNotFoundInDB
-	}
-
-	if err != nil {
-		return errors.ErrPostgresRequest
-	}
-
-	return nil
 }
 
 func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
 		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
 		if err != nil {
 			return err
@@ -290,16 +278,10 @@ func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args
 
 		return nil
 	})
-
-	if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-		return errors.ErrPostgresRequest
-	}
-
-	return nil
 }
 
 func (f *FilmSQL) GetActors(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
 		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
 		if err != nil {
 			return err
@@ -323,12 +305,6 @@ func (f *FilmSQL) GetActors(ctx context.Context, db *sql.DB, query string, args 
 
 		return nil
 	})
-
-	if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-		return errors.ErrPostgresRequest
-	}
-
-	return nil
 }
 
 const (
@@ -413,7 +389,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 		res = append(res, film)
 	}
 
-	//  Это какой то треш, запрос на 251 строке, не отдает sql.ErrNoRows
+	//  Это какой то треш, запрос не отдает sql.ErrNoRows
 	if len(res) == 0 {
 		logrus.Info("BadCondition")
 		return []FilmSQL{}, sql.ErrNoRows

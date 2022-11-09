@@ -22,7 +22,11 @@ func NewPutImageRequest() *PutImageRequest {
 }
 
 func (i *PutImageRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP {
+	if r.Header.Get("Content-Type") == "" {
+		return errors.ErrContentTypeUndefined
+	}
+
+	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP || r.Header.Get("Content-Type") != pkg.ContentTypeJPEG {
 		return errors.ErrUnsupportedMediaType
 	}
 

@@ -60,6 +60,7 @@ func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	reviews, err := h.reviewsService.GetReviewsByFilmID(r.Context(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrReview(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

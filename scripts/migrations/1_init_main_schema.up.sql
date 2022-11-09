@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS users
 (
     "user_id"     serial      NOT NULL PRIMARY KEY,
-    "nickname"    varchar(64) NOT NULL,
+    "nickname"    varchar(64) NOT NULL UNIQUE,
     "email"       varchar(64) NOT NULL UNIQUE,
     "password"    text        NOT NULL,
     "is_admin"    boolean     NOT NULL DEFAULT false,

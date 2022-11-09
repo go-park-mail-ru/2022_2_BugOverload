@@ -36,13 +36,13 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionTagParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
+	delimiter, err := strconv.ParseFloat(params.Delimiter, 32)
+	if err != nil {
+		return models.Collection{}, errors.ErrGetParamsConvert
+	}
+
 	//  Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		delimiter, err := strconv.ParseFloat(params.Delimiter, 32)
-		if err != nil {
-			return errors.ErrGetParamsConvert
-		}
-
 		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, getFilmsByTag, params.Tag, delimiter, params.CountFilms)
 		if err != nil {
 			return err
@@ -66,7 +66,9 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 
 	// execution error
 	if errMain != nil {
-		return models.Collection{}, errors.ErrPostgresRequest
+		return models.Collection{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
+			getFilmsByTag, params.Tag, delimiter, params.CountFilms, errMain)
 	}
 
 	return response.Convert(), nil

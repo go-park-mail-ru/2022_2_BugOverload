@@ -60,6 +60,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 	person, err := h.personService.GePersonByID(r.Context(), request.GetPerson(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrPerson(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

@@ -5,11 +5,9 @@ import (
 	"database/sql"
 
 	stdErrors "github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -18,7 +16,10 @@ type UserRepository interface {
 	// Profile + settings
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
-	ChangeUserProfileSettings(ctx context.Context, user *models.User) error
+
+	// ChangeInfo
+	ChangeUserProfileNickname(ctx context.Context, user *models.User) error
+	ChangeUserProfilePassword(ctx context.Context, user *models.User) error
 
 	// Support
 	GetPassword(ctx context.Context, user *models.User) (string, error)
@@ -81,7 +82,9 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 
 	// execution error
 	if errMain != nil {
-		return models.User{}, errors.ErrPostgresRequest
+		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getUser, user.ID, errMain)
 	}
 
 	return response.Convert(), nil
@@ -116,18 +119,17 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 
 	// execution error
 	if errMain != nil {
-		return models.User{}, errors.ErrPostgresRequest
+		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getUserProfileShort, user.ID, errMain)
 	}
 
 	return response.Convert(), nil
 }
 
-func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *models.User) error {
-	request := NewUserSQLOnUser(user)
-
+func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *models.User) error {
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, updateUserSettings, request.Nickname, request.Password, request.ID)
-		logrus.Info(updateUserSettings, request, err)
+		_, err := tx.ExecContext(ctx, updateUserSettingsNickname, user.Nickname, user.ID)
 		if err != nil {
 			return err
 		}
@@ -136,7 +138,28 @@ func (u *userPostgres) ChangeUserProfileSettings(ctx context.Context, user *mode
 
 	// execution error
 	if errMain != nil {
-		return errors.ErrPostgresRequest
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
+			updateUserSettingsNickname, user.Nickname, user.ID, errMain)
+	}
+
+	return nil
+}
+
+func (u *userPostgres) ChangeUserProfilePassword(ctx context.Context, user *models.User) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, updateUserSettingsPassword, user.Password, user.ID)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	// execution error
+	if errMain != nil {
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
+			updateUserSettingsPassword, user.Password, user.ID, errMain)
 	}
 
 	return nil
@@ -146,12 +169,12 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 	var res string
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowSalt := conn.QueryRowContext(ctx, getPass, user.ID)
-		if rowSalt.Err() != nil {
-			return rowSalt.Err()
+		row := conn.QueryRowContext(ctx, getPass, user.ID)
+		if row.Err() != nil {
+			return row.Err()
 		}
 
-		err := rowSalt.Scan(&res)
+		err := row.Scan(&res)
 		if err != nil {
 			return err
 		}
@@ -160,7 +183,9 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 	})
 
 	if errMain != nil {
-		return "", errors.ErrPostgresRequest
+		return "", stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPass, user.ID, errMain)
 	}
 
 	return res, nil
@@ -183,7 +208,9 @@ func (u *userPostgres) CheckPassword(ctx context.Context, user *models.User) err
 
 	// execution error
 	if errMain != nil {
-		return errors.ErrPostgresRequest
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
+			checkPassword, user.Password, user.ID, errMain)
 	}
 
 	return nil

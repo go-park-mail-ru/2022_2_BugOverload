@@ -51,7 +51,7 @@ func TestDownloadImageHandler(t *testing.T) {
 
 	config.S3.Endpoint = "http://localstack:4566"
 
-	is := S3Image.NewImageS3(config)
+	is := S3Image.NewImageS3(config, pos)
 
 	imageService := serviceImage.NewImageService(is)
 	getImageHandler := handlers.NewGetImageHandler(imageService)

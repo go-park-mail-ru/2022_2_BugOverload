@@ -59,6 +59,7 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 	collection, err := h.collectionService.GetCollectionByTag(r.Context(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrCollection(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

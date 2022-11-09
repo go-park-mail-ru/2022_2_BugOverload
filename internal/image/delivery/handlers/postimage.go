@@ -69,9 +69,10 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.imageService.UploadImage(r.Context(), request.GetImage())
+	err = h.imageService.UpdateImage(r.Context(), request.GetImage())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

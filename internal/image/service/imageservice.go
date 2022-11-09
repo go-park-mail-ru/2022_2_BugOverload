@@ -5,43 +5,43 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
+	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
 // ImageService provides universal service for work with images.
 type ImageService interface {
-	DownloadImage(ctx context.Context, image *models.Image) (models.Image, error)
-	UploadImage(ctx context.Context, image *models.Image) error
+	GetImage(ctx context.Context, image *models.Image) (models.Image, error)
+	UpdateImage(ctx context.Context, image *models.Image) error
 }
 
 // imageService is implementation for users service corresponding to the ImageService interface.
 type imageService struct {
-	imageRepo repository.ImageRepository
+	imageRepo repoImage.ImageRepository
 }
 
 // NewImageService is constructor for imageService. Accepts AuthRepository interfaces.
-func NewImageService(ur repository.ImageRepository) ImageService {
+func NewImageService(ur repoImage.ImageRepository) ImageService {
 	return &imageService{
 		imageRepo: ur,
 	}
 }
 
-// DownloadImage is the service that accesses the interface ImageRepository.
-func (i *imageService) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
-	binImage, err := i.imageRepo.DownloadImage(ctx, image)
+// GetImage is the service that accesses the interface ImageRepository.
+func (i *imageService) GetImage(ctx context.Context, image *models.Image) (models.Image, error) {
+	binImage, err := i.imageRepo.GetImage(ctx, image)
 	if err != nil {
-		return binImage, stdErrors.Wrap(err, "DownloadImage")
+		return binImage, stdErrors.Wrap(err, "GetImage")
 	}
 
 	return binImage, nil
 }
 
-// UploadImage is the service that accesses the interface ImageRepository
-func (i *imageService) UploadImage(ctx context.Context, image *models.Image) error {
-	err := i.imageRepo.UploadImage(ctx, image)
+// UpdateImage is the service that accesses the interface ImageRepository
+func (i *imageService) UpdateImage(ctx context.Context, image *models.Image) error {
+	err := i.imageRepo.UpdateImage(ctx, image)
 	if err != nil {
-		return stdErrors.Wrap(err, "UploadImage")
+		return stdErrors.Wrap(err, "UpdateImage")
 	}
 
 	return nil

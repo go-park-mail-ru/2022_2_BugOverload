@@ -64,7 +64,8 @@ func (h *putSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err = h.userService.ChangeUserProfileSettings(r.Context(), &user, request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

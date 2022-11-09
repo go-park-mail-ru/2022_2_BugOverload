@@ -57,7 +57,9 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		return nil
 	})
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrPostgresRequest
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+			getPersonBestFilms, person.ID, params.CountFilms, errQuery)
 	}
 
 	//  Images
@@ -87,19 +89,25 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		return nil
 	})
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, errors.ErrPostgresRequest
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPersonImages, person.ID, errQuery)
 	}
 
 	// Professions
 	response.Professions, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonProfessions, person.ID)
-	if errQuery != nil {
-		return models.Person{}, stdErrors.Wrap(errMain, "Professions")
+	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Professions Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPersonProfessions, person.ID, errQuery)
 	}
 
 	// Genres
 	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonGenres, person.ID)
-	if errQuery != nil {
-		return models.Person{}, stdErrors.Wrap(errMain, "Genres")
+	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Genres Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPersonGenres, person.ID, errQuery)
 	}
 
 	return response.Convert(), nil

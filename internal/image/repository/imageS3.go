@@ -3,6 +3,7 @@ package repository
 import (
 	"bytes"
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -20,18 +21,20 @@ import (
 
 // ImageRepository provides the versatility of images repositories.
 type ImageRepository interface {
-	DownloadImage(ctx context.Context, image *models.Image) (models.Image, error)
-	UploadImage(ctx context.Context, image *models.Image) error
+	GetImage(ctx context.Context, image *models.Image) (models.Image, error)
+	UpdateImage(ctx context.Context, image *models.Image) error
 }
 
-// imageS3 is implementation repository of users in S3 corresponding to the ImageRepository interface.
-type imageS3 struct {
+// imageS3WithPostgres is implementation repository of users in S3 corresponding to the ImageRepository interface.
+type imageS3WithPostgres struct {
 	downloaderS3 *s3manager.Downloader
 	uploaderS3   *s3manager.Uploader
+
+	database *sqltools.Database
 }
 
-// NewImageS3 is constructor for imageS3. Accepts only mutex.
-func NewImageS3(config *innerPKG.Config) ImageRepository {
+// NewImageS3 is constructor for imageS3WithPostgres. Accepts only mutex.
+func NewImageS3(config *innerPKG.Config, database *sqltools.Database) ImageRepository {
 	awsConfig := aws.NewConfig()
 	awsConfig.Endpoint = aws.String(config.S3.Endpoint)
 
@@ -39,19 +42,20 @@ func NewImageS3(config *innerPKG.Config) ImageRepository {
 
 	sess, err := session.NewSession(awsConfig)
 	if err != nil {
-		logrus.Fatalf("Init ImageS3Storage fatal error: NewSession: %s", err.Error())
+		logrus.Fatalf("Init ImageS3Storage fatal error: NewSession: %s", err)
 	}
 
-	res := &imageS3{
+	res := &imageS3WithPostgres{
 		s3manager.NewDownloader(sess),
 		s3manager.NewUploader(sess),
+		database,
 	}
 
 	return res
 }
 
-// DownloadImage getting image by path
-func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (models.Image, error) {
+// GetImage getting image by path
+func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image) (models.Image, error) {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return models.Image{}, stdErrors.WithMessagef(errors.ErrImage,
@@ -68,7 +72,7 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 		Key:    aws.String(imageS3Pattern.Key),
 	}
 
-	realSize, err := is.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
+	realSize, err := i.downloaderS3.DownloadWithContext(ctx, w, getObjectInput)
 	if err != nil {
 		var awsErr awserr.Error
 		var errOut error
@@ -92,8 +96,8 @@ func (is *imageS3) DownloadImage(ctx context.Context, image *models.Image) (mode
 	return models.Image{Bytes: w.Bytes()[:realSize]}, nil
 }
 
-// UploadImage download image into storage
-func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
+// UpdateImage download image into storage
+func (i *imageS3WithPostgres) UpdateImage(ctx context.Context, image *models.Image) error {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return stdErrors.WithMessagef(errors.ErrImage,
@@ -109,11 +113,16 @@ func (is *imageS3) UploadImage(ctx context.Context, image *models.Image) error {
 		Body:   body,
 	}
 
-	_, err = is.uploaderS3.UploadWithContext(ctx, getObjectInput)
+	_, err = i.uploaderS3.UploadWithContext(ctx, getObjectInput)
 	if err != nil {
 		return stdErrors.WithMessagef(errors.ErrImage,
 			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
+	}
+
+	err = i.UpdateImageInfo(ctx, image)
+	if err != nil {
+		return stdErrors.Wrap(err, "UpdateImageInfo")
 	}
 
 	return nil

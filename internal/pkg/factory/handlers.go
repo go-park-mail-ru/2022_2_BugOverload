@@ -62,7 +62,7 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	res[pkg.FilmRequest] = filmHandler
 
 	// Images
-	is := repoImage.NewImageS3(config)
+	is := repoImage.NewImageS3(config, postgres)
 
 	imageService := serviceImage.NewImageService(is)
 

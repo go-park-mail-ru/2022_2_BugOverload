@@ -58,9 +58,10 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	getImage, err := h.imageService.DownloadImage(r.Context(), request.GetImage())
+	getImage, err := h.imageService.GetImage(r.Context(), request.GetImage())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 

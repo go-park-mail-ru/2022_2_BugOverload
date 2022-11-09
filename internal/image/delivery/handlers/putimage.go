@@ -56,14 +56,12 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
 		return
 	}
 
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
-		errors.CreateLog(r.Context(), err)
 		return
 	}
 
@@ -72,15 +70,13 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	if !user.IsAdmin {
 		if image.Object != pkg.ImageObjectUserAvatar {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrAccess(errors.ErrNoAccess))
-			errors.CreateLog(r.Context(), err)
 			return
 		}
 
 		image.Key = strconv.Itoa(user.ID)
 	}
 
-	//  Надо менять картинку в базе тоже
-	err = h.imageService.UploadImage(r.Context(), image)
+	err = h.imageService.UpdateImage(r.Context(), image)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
 		errors.CreateLog(r.Context(), err)
