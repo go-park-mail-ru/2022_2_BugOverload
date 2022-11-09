@@ -87,6 +87,7 @@ func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (mode
 		if errCollections != nil {
 			return errCollections
 		}
+		defer rowsCollections.Close()
 
 		ids := make([]int, 0)
 

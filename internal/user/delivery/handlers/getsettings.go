@@ -16,12 +16,12 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-// getSettingsHandler is the structure that handles the request for auth.
+// getActivityOnFilmHandler is the structure that handles the request for auth.
 type getSettingsHandler struct {
 	userService serviceUser.UserService
 }
 
-// NewGetSettingsHandler is constructor for getSettingsHandler in this pkg - settings.
+// NewGetActivityOnFilmHandler is constructor for getActivityOnFilmHandler in this pkg - settings.
 func NewGetSettingsHandler(us serviceUser.UserService) handler.Handler {
 	return &getSettingsHandler{
 		us,
@@ -54,7 +54,7 @@ func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	userProfile, err := h.userService.GetUserProfileSettings(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
 		errors.CreateLog(r.Context(), err)
 		return
 	}

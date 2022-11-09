@@ -364,7 +364,6 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 		logrus.Info("NeededCondition ", err)
 		return []FilmSQL{}, err
 	}
-
 	defer rowsFilms.Close()
 
 	for rowsFilms.Next() {

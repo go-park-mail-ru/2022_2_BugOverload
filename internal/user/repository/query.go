@@ -22,12 +22,22 @@ SELECT joined_date,
 FROM profiles
 WHERE profile_id = $1`
 
+	getUserCollections = `
+SELECT c.name,
+       EXISTS(SELECT 1 FROM collections_films cf WHERE cf.fk_collection_id IN (c.collection_id) AND cf.fk_film_id = $2)
+FROM collections c
+         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
+WHERE pc.fk_profile_id = $1`
+
+	getUserCountReviews = `SELECT count_reviews FROM profiles WHERE profile_id = $1`
+
+	getUserRatingOnFilm = `SELECT score, create_date FROM profile_ratings WHERE fk_profile_id = $1 AND fk_film_id = $2`
+
 	updateUserSettingsNickname = `UPDATE users SET nickname = $1 WHERE user_id = $2`
 
 	updateUserSettingsPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
 
-	getPass = `
-SELECT password FROM users WHERE user_id = $1`
+	getPass = `SELECT password FROM users WHERE user_id = $1`
 
 	setRateFilm = `
 INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score)

@@ -47,3 +47,8 @@ type FilmRateDropParams struct {
 type NewFilmReviewParams struct {
 	FilmID int
 }
+
+// GetUserActivityOnFilmParams in struct for getUserActivityOnFilmHandler
+type GetUserActivityOnFilmParams struct {
+	FilmID int
+}

@@ -64,7 +64,7 @@ func (h *filmRateHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err = h.userService.FilmRate(r.Context(), &user, request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
 		errors.CreateLog(r.Context(), err)
 		return
 	}

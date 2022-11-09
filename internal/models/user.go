@@ -17,3 +17,15 @@ type Profile struct {
 	CountReviews     int    `json:"count_reviews,omitempty"`
 	CountRatings     int    `json:"count_ratings,omitempty"`
 }
+
+type NodeInUserCollection struct {
+	NameCollection string `json:"name_collection,omitempty"`
+	IsUsed         bool   `json:"is_used,omitempty"`
+}
+
+type UserActivity struct {
+	CountReviews int                    `json:"count_reviews,omitempty"`
+	Rating       float32                `json:"rating,omitempty"`
+	DateRating   string                 `json:"date_rating,omitempty"`
+	Collections  []NodeInUserCollection `json:"collections,omitempty"`
+}

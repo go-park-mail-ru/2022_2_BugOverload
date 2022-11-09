@@ -69,3 +69,40 @@ func (u *UserSQL) Convert() models.User {
 		},
 	}
 }
+
+type NodeInUserCollectionSQL struct {
+	NameCollection string
+	IsUsed         bool
+}
+
+type UserActivitySQL struct {
+	CountReviews    sql.NullInt32
+	Rating          sql.NullFloat64
+	DateRating      sql.NullTime
+	ListCollections []NodeInUserCollectionSQL
+}
+
+func NewUserActivitySQL() UserActivitySQL {
+	return UserActivitySQL{}
+}
+
+func (u *UserActivitySQL) Convert() models.UserActivity {
+	rateDate := ""
+	if u.DateRating.Valid {
+		rateDate = u.DateRating.Time.Format("2006.01.02")
+	}
+
+	res := models.UserActivity{
+		CountReviews: int(u.CountReviews.Int32),
+		Rating:       float32(u.Rating.Float64),
+		DateRating:   rateDate,
+		Collections:  make([]models.NodeInUserCollection, len(u.ListCollections)),
+	}
+
+	for idx, value := range u.ListCollections {
+		res.Collections[idx].NameCollection = value.NameCollection
+		res.Collections[idx].IsUsed = value.IsUsed
+	}
+
+	return res
+}

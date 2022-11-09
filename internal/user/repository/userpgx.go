@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	stdErrors "github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -16,6 +17,9 @@ type UserRepository interface {
 	// Profile + settings
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
+
+	// FilmActivity
+	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error)
 
 	// ChangeInfo
 	ChangeUserProfileNickname(ctx context.Context, user *models.User) error
@@ -260,4 +264,79 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 	}
 
 	return nil
+}
+
+func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error) {
+	response := NewUserActivitySQL()
+
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		// CountReviews
+		rowUser := conn.QueryRowContext(ctx, getUserCountReviews, user.ID)
+		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
+
+		if rowUser.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getUserCountReviews, user.ID, rowUser.Err())
+		}
+
+		err := rowUser.Scan(&response.CountReviews)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getUserCountReviews, user.ID, rowUser.Err())
+		}
+
+		// UserRateFilm
+		rowRating := conn.QueryRowContext(ctx, getUserRatingOnFilm, user.ID, params.FilmID)
+		if rowRating.Err() != nil && !stdErrors.Is(rowRating.Err(), sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				getUserRatingOnFilm, user.ID, params.FilmID, err)
+		}
+
+		logrus.Error("123123")
+
+		err = rowRating.Scan(&response.Rating, &response.DateRating)
+		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				getUserRatingOnFilm, user.ID, params.FilmID, err)
+		}
+
+		logrus.Error("123123")
+
+		// UserCollections
+		rows, err := conn.QueryContext(ctx, getUserCollections, user.ID, params.FilmID)
+		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				getUserCollections, user.ID, params.FilmID, err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var collectionInfo NodeInUserCollectionSQL
+
+			err = rows.Scan(&collectionInfo.NameCollection, &collectionInfo.IsUsed)
+			if err != nil {
+				return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+					"Err Scan: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+					getUserCollections, user.ID, params.FilmID, err)
+			}
+
+			response.ListCollections = append(response.ListCollections, collectionInfo)
+		}
+
+		return nil
+	})
+
+	// the main entity is not found
+	if errMain != nil {
+		return models.UserActivity{}, errMain
+	}
+
+	return response.Convert(), nil
 }
