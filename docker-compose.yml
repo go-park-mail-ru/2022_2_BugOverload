@@ -6,7 +6,7 @@ services:
     networks:
       - localstack-net
       - postgres-net
-    image: andeo1812/golang_web:latest
+    image: andeo1812/golang_web_light:latest
     command: make -C project debug-mode
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -28,7 +28,6 @@ services:
     depends_on:
       - localstack
       - main_db
-
 
   localstack:
     hostname: localstack

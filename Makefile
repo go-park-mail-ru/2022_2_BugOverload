@@ -16,7 +16,8 @@ create-env-lint:
 
 migrate-install:
 	curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
-	sudo mv --backup=existing migrate /bin
+	sudo mv migrate /bin
+	rm README.md LICENSE
 
 env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo &&
