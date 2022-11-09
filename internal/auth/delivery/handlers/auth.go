@@ -73,7 +73,6 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
-	
 	requestSession.User = &user
 
 	token, err := security.CreateCsrfToken(&requestSession)

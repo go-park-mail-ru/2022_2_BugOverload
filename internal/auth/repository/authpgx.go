@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -105,7 +104,6 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 
 		_, err = tx.ExecContext(ctx, linkUserProfileDefCollections, user.ID, ids[0], ids[1])
 		if err != nil {
-			fmt.Println(err)
 			return err
 		}
 
@@ -113,7 +111,6 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 	})
 
 	if err != nil {
-		fmt.Println(err)
 		return models.User{}, errors.ErrPostgresRequest
 	}
 
