@@ -22,7 +22,7 @@ env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo &&
 	export AWS_SECRET_ACCESS_KEY=bar && export POSTGRES_HOST=main_db &&
 	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
-	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable
+	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost
 
 # Development
 check:
@@ -104,7 +104,7 @@ infro-command:
 
 # Migrations
 MIGRATIONS_DIR = scripts/migrations
-DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
+DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
 
 migrate-up:
 	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
