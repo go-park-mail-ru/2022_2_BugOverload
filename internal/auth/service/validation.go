@@ -5,7 +5,7 @@ import (
 	"net/mail"
 )
 
-const minPasswordLength = 8
+const minPasswordLength = 6
 
 func ValidateEmail(email string) error {
 	if _, err := mail.ParseAddress(email); err != nil {
