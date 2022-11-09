@@ -39,7 +39,7 @@ func (h *signupHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary New user registration
-// @Description Sending login and password for registration
+// @Description Sending login and password for registration. Email, password, nickname - required.
 // @tags auth, completed
 // @Accept json
 // @Produce json

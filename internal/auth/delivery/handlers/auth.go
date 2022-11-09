@@ -39,7 +39,7 @@ func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Defining an authorized user
-// @Description Sending login and password
+// @Description Sending login and password. Email and password - required.
 // @tags auth, completed
 // @Produce json
 // @Success 200 {object} models.UserAuthResponse "successfully auth"

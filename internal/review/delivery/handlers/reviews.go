@@ -36,7 +36,7 @@ func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Reviews for film
-// @Description Getting reviews by film id
+// @Description Getting reviews by film id. Count_reviews required and >= 0.
 // @tags review, completed
 // @Produce json
 // @Param   id        path   int     true "film id"

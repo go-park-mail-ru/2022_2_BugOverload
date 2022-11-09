@@ -35,7 +35,7 @@ func (h *tagCollectionHandler) Configure(r *mux.Router, mw *middleware.Middlewar
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Films by tag
-// @Description Films by tag "популярное" or "сейчас в кино"
+// @Description Films by tag "популярное" or "сейчас в кино". Tag, count_films, delimiter - required.
 // @tags collection, completed
 // @Produce json
 // @Param tag         path  string true "tag name"

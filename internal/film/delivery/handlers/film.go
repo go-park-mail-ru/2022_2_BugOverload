@@ -36,7 +36,7 @@ func (h *filmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Film full info
-// @Description Getting film info by id
+// @Description Getting film info by id. ID, count_images - required.
 // @tags film, completed
 // @Produce json
 // @Param id  path int true "film id"
