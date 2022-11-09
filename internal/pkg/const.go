@@ -102,7 +102,7 @@ const (
 	SessionCookieName = "session_id"
 	CookieValueLength = 40
 	TimeoutLiveCookie = 10 * time.Hour
-	GlobalCookiePath  = "/api"
+	GlobalCookiePath  = "/"
 
 	// Crypt
 	SaltLength     = 16
