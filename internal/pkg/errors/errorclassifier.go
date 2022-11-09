@@ -17,7 +17,8 @@ var (
 	ErrSignupUserExist = stdErrors.New("such a login exists")
 
 	ErrNoCookie        = stdErrors.New("request has no cookies")
-	ErrSessionNotExist = stdErrors.New("no such cookie")
+	ErrCookieNotExist  = stdErrors.New("no such cookie")
+	ErrSessionNotExist = stdErrors.New("no such session")
 
 	ErrGetUserRequest = stdErrors.New("fatal getting user")
 	ErrWrongPassword  = stdErrors.New("bad pass")
@@ -28,7 +29,6 @@ var (
 	// Auth Validaton
 	ErrInvalidEmail    = stdErrors.New("invalid email, try another one")
 	ErrInvalidPassword = stdErrors.New("invalid password, try another one")
-	ErrInvalidNickname = stdErrors.New("invalid nickname, try another one")
 
 	// Films
 	ErrFilmNotFound = stdErrors.New("no such film")
@@ -83,6 +83,7 @@ func NewErrClassifier() ErrClassifier {
 
 	res[ErrLoginCombinationNotFound] = http.StatusForbidden
 	res[ErrNoCookie] = http.StatusUnauthorized
+	res[ErrCookieNotExist] = http.StatusNotFound
 	res[ErrSessionNotExist] = http.StatusNotFound
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
 	res[ErrWrongPassword] = http.StatusForbidden
@@ -93,7 +94,6 @@ func NewErrClassifier() ErrClassifier {
 	// Auth Validation
 	res[ErrInvalidEmail] = http.StatusBadRequest
 	res[ErrInvalidPassword] = http.StatusBadRequest
-	res[ErrInvalidNickname] = http.StatusBadRequest
 
 	// Films
 	res[ErrFilmNotFound] = http.StatusNotFound

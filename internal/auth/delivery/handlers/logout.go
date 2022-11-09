@@ -53,13 +53,13 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := logoutRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
 		return
 	}
 
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSessionNotExist))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCookieNotExist))
 		return
 	}
 

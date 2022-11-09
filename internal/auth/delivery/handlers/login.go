@@ -56,7 +56,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := loginRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
 		return
 	}
 

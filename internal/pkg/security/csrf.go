@@ -98,5 +98,5 @@ func CheckCsrfToken(session *models.Session, inputToken string) (bool, error) {
 		return false, errors.ErrCsrfTokenExpired
 	}
 
-	return (session.ID == td.SessionID && *session.User == td.User), nil
+	return session.ID == td.SessionID && *session.User == td.User, nil
 }

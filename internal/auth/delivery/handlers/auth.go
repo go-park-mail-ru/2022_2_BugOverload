@@ -60,7 +60,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrSessionNotExist))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCookieNotExist))
 		return
 	}
 
