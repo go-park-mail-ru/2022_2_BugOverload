@@ -28,6 +28,9 @@ WHERE profile_id = $1`
 
 	getPass = `
 SELECT password FROM users WHERE user_id = $1`
-	checkPassword = `
-SELECT EXISTS(SELECT password FROM users WHERE password = $1 AND user_id = $2)`
+
+	setRateFilm = `
+INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score)
+VALUES ($1, $2, $3)
+ON CONFLICT (fk_profile_id, fk_film_id) DO UPDATE SET score = $3`
 )

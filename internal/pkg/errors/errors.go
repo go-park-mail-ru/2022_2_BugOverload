@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+type ProjectError interface {
+	Error() string
+	GetCode() int
+}
+
 type AuthError struct {
 	Reason string
 	Code   int
@@ -12,6 +17,10 @@ type AuthError struct {
 func (e AuthError) Error() string {
 	return fmt.Sprintf("Auth: [%s]", e.Reason)
 }
+
+// func (e *AuthError) GetCode() string {
+//	return fmt.Sprintf("Auth: [%s]", e.Reason)
+// }
 
 func NewErrAuth(err error) AuthError {
 	return AuthError{
@@ -26,7 +35,7 @@ type AccessError struct {
 }
 
 func (e AccessError) Error() string {
-	return fmt.Sprintf("Auth: [%s]", e.Reason)
+	return fmt.Sprintf("Access: [%s]", e.Reason)
 }
 
 func NewErrAccess(err error) AccessError {

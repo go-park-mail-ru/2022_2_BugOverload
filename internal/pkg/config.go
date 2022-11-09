@@ -1,9 +1,12 @@
 package pkg
 
 type Server struct {
-	BindHTTPAddr string `toml:"bind_addr_http"`
-	ReadTimeout  int    `toml:"read_timeout"`
-	WriteTimeout int    `toml:"write_timeout"`
+	BindHTTPAddr       string `toml:"bind_addr_http"`
+	ReadTimeout        int    `toml:"read_timeout"`
+	WriteTimeout       int    `toml:"write_timeout"`
+	Protocol           string `toml:"protocol"`
+	FileTLSCertificate string `toml:"tls_certificate_file"`
+	FileTLSKey         string `toml:"tls_key_file"`
 }
 
 type Cors struct {

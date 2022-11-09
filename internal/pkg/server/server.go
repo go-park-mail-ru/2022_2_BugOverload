@@ -1,28 +1,28 @@
 package server
 
 import (
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	"net/http"
 	"time"
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/sirupsen/logrus"
 
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factory"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 type Server struct {
-	config *pkgInner.Config
+	config *innerPKG.Config
 	logger *logrus.Logger
 }
 
-func New(config *pkgInner.Config, logger *logrus.Logger) *Server {
+func New(config *innerPKG.Config, logger *logrus.Logger) *Server {
 	return &Server{
 		config: config,
 		logger: logger,
@@ -63,6 +63,16 @@ func (s *Server) Launch() error {
 		Handler:      routerCORS,
 		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
+	}
+
+	if s.config.Server.Protocol == innerPKG.HTTPS {
+		err := server.ListenAndServeTLS(s.config.Server.FileTLSCertificate, s.config.Server.FileTLSKey)
+		if err != nil {
+			logrus.Error(err)
+			return err
+		}
+
+		return nil
 	}
 
 	err := server.ListenAndServe()

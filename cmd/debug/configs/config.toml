@@ -2,6 +2,7 @@
 bind_addr_http = ":8088"
 read_timeout = 10
 write_timeout = 10
+protocol = "http"
 
 [context]
 timeout = 10

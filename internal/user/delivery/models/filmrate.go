@@ -6,7 +6,6 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
@@ -36,11 +35,6 @@ func (f *FilmRateRequest) Bind(r *http.Request) error {
 func (f *FilmRateRequest) GetParams() *innerPKG.FilmRateParams {
 	return &innerPKG.FilmRateParams{
 		FilmID: f.FilmID,
-	}
-}
-
-func (f *FilmRateRequest) GetFilm() *models.Film {
-	return &models.Film{
-		ID: f.FilmID,
+		Score:  f.Score,
 	}
 }

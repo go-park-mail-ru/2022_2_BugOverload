@@ -191,6 +191,21 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 }
 
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		row := tx.QueryRowContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
+		if row.Err() != nil {
+			return row.Err()
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s], values - [%d, %d, %2.1f]. Special Error [%s]",
+			setRateFilm, user.ID, params.FilmID, params.Score, errMain)
+	}
+
 	return nil
 }
 

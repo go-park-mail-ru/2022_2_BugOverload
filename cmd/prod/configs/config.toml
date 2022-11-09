@@ -2,6 +2,9 @@
 bind_addr_http = ":8088"
 read_timeout = 4
 write_timeout = 4
+protocol = "https"
+tls_certificate_file = "cert1.pem"
+tls_key_file = "privkey1.pem"
 
 [context]
 timeout = 4

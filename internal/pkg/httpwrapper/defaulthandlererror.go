@@ -62,5 +62,11 @@ func DefaultHandlerError(w http.ResponseWriter, err error) {
 		return
 	}
 
+	var errAccess errors.AccessError
+	if ok := stdErrors.As(err, &errAccess); ok {
+		Response(w, errAccess.Code, errResp)
+		return
+	}
+
 	Response(w, http.StatusInternalServerError, errResp)
 }

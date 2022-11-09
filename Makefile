@@ -69,7 +69,12 @@ prod-mode:
 
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
+prod-create-env:
+	sudo cp /etc/letsencrypt/archive/movie-gate.online/cert1.pem .
+	sudo cp /etc/letsencrypt/archive/movie-gate.online/privkey1.pem .
+
 prod-deploy:
+	make prod-create-env
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 	sleep 2
 	make reboot-db-debug
