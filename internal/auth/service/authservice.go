@@ -55,10 +55,6 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 
 // Signup is the service that accesses the interface AuthRepository
 func (u *authService) Signup(ctx context.Context, user *models.User) (models.User, error) {
-	if err := ValidateNickname(user.Nickname); err != nil {
-		return models.User{}, stdErrors.Wrap(err, "Signup")
-	}
-
 	if err := ValidateEmail(user.Email); err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
