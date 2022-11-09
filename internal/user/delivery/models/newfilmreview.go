@@ -2,14 +2,14 @@ package models
 
 import (
 	"encoding/json"
-	"github.com/sirupsen/logrus"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
