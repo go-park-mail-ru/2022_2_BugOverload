@@ -25,11 +25,11 @@ func NewUserSignupRequest() *UserSignupRequest {
 
 func (u *UserSignupRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
+		return errors.ErrContentTypeUndefined
 	}
 
 	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrUnsupportedMediaType
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -44,16 +44,16 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 	}()
 
 	if len(body) == 0 {
-		return errors.NewErrValidation(errors.ErrEmptyBody)
+		return errors.ErrEmptyBody
 	}
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrJSONUnexpectedEnd)
+		return errors.ErrJSONUnexpectedEnd
 	}
 
 	if u.Nickname == "" || u.Email == "" || u.Password == "" {
-		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
+		return errors.ErrEmptyFieldAuth
 	}
 
 	return nil

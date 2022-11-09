@@ -55,7 +55,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
 		return
 	}
 
