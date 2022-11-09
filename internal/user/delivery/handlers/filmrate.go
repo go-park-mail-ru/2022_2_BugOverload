@@ -35,7 +35,7 @@ func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Set user rate on film
-// @Description  Set user rate on film by filmID
+// @Description  Set user rate on film by filmID. Score is required and 10 >= score >= 0.
 // @tags user, completed
 // @Produce json
 // @Param   id    path  int    true "film id"

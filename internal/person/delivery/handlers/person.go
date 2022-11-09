@@ -36,7 +36,7 @@ func (h *personHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Person full info
-// @Description Getting person info by id
+// @Description Getting person info by id. ID, count_films, count_images required. Counters >= 0.
 // @tags person, completed
 // @Produce json
 // @Param id  path int true "person id"

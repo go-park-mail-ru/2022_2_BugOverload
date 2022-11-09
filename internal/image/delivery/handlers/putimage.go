@@ -38,7 +38,8 @@ func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Change image
-// @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar"
+// @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar".
+// @Description Object, key - required. For user_avatar key not required.
 // @tags image, completed
 // @produce json
 // @Param   object    query  string  true  "type object"

@@ -35,7 +35,8 @@ func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Change user auth data
-// @Description Request for change user settings and data. Needed auth
+// @Description Request for change user settings and data. Needed auth.
+// @Description Nickname required other not or new_password and cur_password required other not.
 // @tags user, completed
 // @Produce json
 // @Param user body models.UserPutSettingsRequest true "Request body for change user data"
