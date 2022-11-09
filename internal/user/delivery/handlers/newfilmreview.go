@@ -29,18 +29,18 @@ func NewFilmReviewHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/film/{id}/review/new", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/film/{id}/review/new", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodPost)
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Set user rate on film
-// @Description  Set user rate on film by filmID
-// @tags in_dev
+// @Summary New film review
+// @Description  New film review with body, name, type
+// @tags completed
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param score body models.NewFilmReviewRequest true "Request body for rate film"
-// @Success 201 "successfully rate"
+// @Success 201 "successfully added new review"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"

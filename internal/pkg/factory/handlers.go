@@ -95,7 +95,7 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	filmRateDropHandler := handlersUser.NewFilmRateDropHandler(userService)
 	res[pkg.FilmRateDropRequest] = filmRateDropHandler
 
-	newFilmReviewHandler := handlersUser.NewFilmRateDropHandler(userService)
+	newFilmReviewHandler := handlersUser.NewFilmReviewHandler(userService)
 	res[pkg.NewFilmReviewRequest] = newFilmReviewHandler
 
 	// Persons

@@ -29,14 +29,14 @@ func NewFilmRateDropHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/film/{id}/rate/drop", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/film/{id}/rate/drop", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodDelete)
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Drop user rate on film
 // @Description  Drop user rate on film by filmID
-// @tags in_dev
+// @tags completed
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Success 204 "successfully drop rate"
@@ -45,7 +45,7 @@ func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/film/{id}/rate/drop [POST]
+// @Router /api/v1/film/{id}/rate/drop [DELETE]
 func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
@@ -68,5 +68,5 @@ func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpwrapper.NoBody(w, http.StatusCreated)
+	httpwrapper.NoBody(w, http.StatusNoContent)
 }

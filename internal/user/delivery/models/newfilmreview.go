@@ -60,11 +60,11 @@ func (f *NewFilmReviewRequest) Bind(r *http.Request) error {
 
 	err = json.Unmarshal(body, f)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrJSONUnexpectedEnd)
+		return errors.ErrJSONUnexpectedEnd
 	}
 
 	if f.ReviewName == "" || f.ReviewType == "" || f.ReviewBody == "" {
-		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
+		return errors.ErrEmptyFieldAuth
 	}
 
 	return nil

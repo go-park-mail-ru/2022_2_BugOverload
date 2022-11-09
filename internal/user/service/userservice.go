@@ -94,6 +94,10 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 
 // FilmRate is the service that accesses the interface UserService
 func (u *userService) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+	if params.Score < 0 || 10.0 < params.Score {
+		return stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRate")
+	}
+
 	err := u.userRepo.FilmRate(ctx, user, params)
 	if err != nil {
 		return stdErrors.Wrap(err, "FilmRate")

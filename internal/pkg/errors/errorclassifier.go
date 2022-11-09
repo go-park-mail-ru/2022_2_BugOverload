@@ -51,7 +51,8 @@ var (
 	ErrConvertQuery         = stdErrors.New("bad input query")
 	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
 	ErrQueryBad             = stdErrors.New("bad query params")
-	ErrEmptyRequiredFields  = stdErrors.New("bad params")
+	ErrEmptyRequiredFields  = stdErrors.New("bad params, empty")
+	ErrBadRequestParams     = stdErrors.New("bad params, impossible value")
 
 	// DB
 	ErrPostgresRequest  = stdErrors.New("error sql")
@@ -116,6 +117,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrConvertQuery] = http.StatusBadRequest
 	res[ErrQueryBad] = http.StatusBadRequest
 	res[ErrEmptyRequiredFields] = http.StatusBadRequest
+	res[ErrBadRequestParams] = http.StatusBadRequest
 
 	// DB
 	res[ErrPostgresRequest] = http.StatusInternalServerError
