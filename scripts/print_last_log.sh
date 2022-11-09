@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-RESULT=$(ls -t | grep -w log | head -1)
+RESULT=$({ ls -t logs/prod/*; ls -t logs/debug/*; } | grep -w log | head -1)
 cat "$RESULT"

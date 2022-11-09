@@ -6,7 +6,9 @@ c.out
 docs/docs.go
 docs/swagger*
 
+logs/
 *.log
+
 data
 pgdata
 pgadmin

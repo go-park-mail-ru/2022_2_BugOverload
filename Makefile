@@ -128,7 +128,7 @@ reboot-db:
 
 # Utils
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log
+	sudo rm -rf main coverage.html coverage.out c.out *.log logs/
 
 open-last-log:
 	./scripts/print_last_log.sh
