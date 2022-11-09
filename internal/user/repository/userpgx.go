@@ -23,7 +23,6 @@ type UserRepository interface {
 
 	// Support
 	GetPassword(ctx context.Context, user *models.User) (string, error)
-	CheckPassword(ctx context.Context, user *models.User) error
 
 	// Film
 	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
@@ -148,7 +147,7 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 
 func (u *userPostgres) ChangeUserProfilePassword(ctx context.Context, user *models.User) error {
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, updateUserSettingsPassword, user.Password, user.ID)
+		_, err := tx.ExecContext(ctx, updateUserSettingsPassword, []byte(user.Password), user.ID)
 		if err != nil {
 			return err
 		}
@@ -166,7 +165,7 @@ func (u *userPostgres) ChangeUserProfilePassword(ctx context.Context, user *mode
 }
 
 func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (string, error) {
-	var res string
+	var res []byte
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		row := conn.QueryRowContext(ctx, getPass, user.ID)
@@ -188,32 +187,7 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 			getPass, user.ID, errMain)
 	}
 
-	return res, nil
-}
-
-func (u *userPostgres) CheckPassword(ctx context.Context, user *models.User) error {
-	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowCheck := conn.QueryRowContext(ctx, checkPassword, user.Password, user.ID)
-		if rowCheck.Err() != nil {
-			return rowCheck.Err()
-		}
-
-		return nil
-	})
-
-	// the main entity is not found
-	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return errors.ErrWrongPassword
-	}
-
-	// execution error
-	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
-			checkPassword, user.Password, user.ID, errMain)
-	}
-
-	return nil
+	return string(res), nil
 }
 
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {

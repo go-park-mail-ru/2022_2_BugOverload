@@ -22,8 +22,8 @@ VALUES ($1, $2), ($1, $3)`
 	getUserByEmail = `
 SELECT 
 	user_id,
-	nickname,
 	email,
+	nickname,
 	password
 FROM users
 WHERE email = $1`
@@ -31,8 +31,8 @@ WHERE email = $1`
 	getUserByID = `
 SELECT 
 	user_id,
-	nickname,
 	email,
+	nickname,
 	password
 FROM users
 WHERE user_id = $1`

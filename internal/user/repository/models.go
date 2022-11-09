@@ -11,7 +11,7 @@ type UserSQL struct {
 	ID       int
 	Nickname sql.NullString
 	Email    sql.NullString
-	Password sql.NullString
+	Password []byte
 	Profile  ProfileSQL
 }
 
@@ -37,7 +37,7 @@ func NewUserSQLOnUser(user *models.User) UserSQL {
 		ID:       user.ID,
 		Nickname: sqltools.NewSQLNullString(user.Nickname),
 		Email:    sqltools.NewSQLNullString(user.Email),
-		Password: sqltools.NewSQLNullString(user.Password),
+		Password: []byte(user.Password),
 		Profile: ProfileSQL{
 			Avatar:           sqltools.NewSQLNullString(user.Profile.Avatar),
 			JoinedDate:       joinedDate,
@@ -58,7 +58,7 @@ func (u *UserSQL) Convert() models.User {
 		ID:       u.ID,
 		Nickname: u.Nickname.String,
 		Email:    u.Email.String,
-		Password: u.Password.String,
+		Password: string(u.Password),
 		Profile: models.Profile{
 			Avatar:           u.Profile.Avatar.String,
 			JoinedDate:       u.Profile.JoinedDate.Format("2006.01.02"),

@@ -34,7 +34,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 			return 0, errors.Wrap(err, "uploadUsers")
 		}
 
-		values[pos] = hash
+		values[pos] = []byte(hash)
 		pos++
 	}
 

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 
 	stdErrors "github.com/pkg/errors"
@@ -73,7 +74,7 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 
 	ok := security.IsPasswordsEqual(passwordDB, params.CurPassword)
 	if !ok {
-		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
+		return stdErrors.Wrap(errors.ErrWrongPassword, "ChangeUserProfileNickname")
 	}
 
 	user.Password, err = security.HashPassword(params.NewPassword)

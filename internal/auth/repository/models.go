@@ -9,7 +9,7 @@ type UserSQL struct {
 	ID       int
 	nickname sql.NullString
 	email    sql.NullString
-	password sql.NullString
+	password []byte
 	avatar   sql.NullString
 }
 
@@ -22,7 +22,7 @@ func (u *UserSQL) Convert() models.User {
 		ID:       u.ID,
 		Nickname: u.nickname.String,
 		Email:    u.email.String,
-		Password: u.password.String,
+		Password: string(u.password),
 		Profile: models.Profile{
 			Avatar: u.avatar.String,
 		},

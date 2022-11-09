@@ -2,17 +2,16 @@ package security
 
 import (
 	"bytes"
-	"encoding/base64"
 
 	"golang.org/x/crypto/argon2"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	commonPkg "go-park-mail-ru/2022_2_BugOverload/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 // genSalt generate slice of random bytes with SaltLength(Params.go) length
 func genSalt() ([]byte, error) {
-	salt, err := commonPkg.GenerateRandomBytes(pkg.SaltLength)
+	salt, err := pkg.GenerateRandomBytes(innerPKG.SaltLength)
 
 	if err != nil {
 		return []byte{}, err
@@ -23,7 +22,7 @@ func genSalt() ([]byte, error) {
 
 // getHash return salt + hash using Argon2
 func getHash(salt, plainPassword []byte) []byte {
-	hashedPassword := argon2.IDKey(plainPassword, salt, pkg.ArgonTime, pkg.ArgonMemory, pkg.ArgonThreads, pkg.ArgonKeyLength)
+	hashedPassword := argon2.IDKey(plainPassword, salt, innerPKG.ArgonTime, innerPKG.ArgonMemory, innerPKG.ArgonThreads, innerPKG.ArgonKeyLength)
 
 	return append(salt, hashedPassword...)
 }
@@ -38,16 +37,14 @@ func HashPassword(plainPassword string) (string, error) {
 
 	hashedPassword := getHash(salt, []byte(plainPassword))
 
-	return base64.StdEncoding.EncodeToString(hashedPassword), nil
+	return string(hashedPassword), nil
 }
 
 // IsPasswordsEqual return true if passwords equal, false otherwise
 func IsPasswordsEqual(hashedPassword, plainPassword string) bool {
-	hashDecoded, _ := base64.StdEncoding.DecodeString(hashedPassword)
+	salt := hashedPassword[0:innerPKG.SaltLength]
 
-	salt := hashDecoded[0:pkg.SaltLength]
+	userPasswordHash := getHash([]byte(salt), []byte(plainPassword))
 
-	userPasswordHash := getHash(salt, []byte(plainPassword))
-
-	return bytes.Equal(hashDecoded, userPasswordHash)
+	return bytes.Equal([]byte(hashedPassword), userPasswordHash)
 }
