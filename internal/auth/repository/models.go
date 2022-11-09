@@ -1,26 +1,30 @@
 package repository
 
-import "go-park-mail-ru/2022_2_BugOverload/internal/models"
+import (
+	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+)
 
 type UserSQL struct {
-	userID   int
-	nickname string
-	email    string
-	password string
+	ID       int
+	nickname sql.NullString
+	email    sql.NullString
+	password sql.NullString
+	avatar   sql.NullString
 }
 
 func NewUserSQL() UserSQL {
 	return UserSQL{}
 }
 
-func NewUser(user UserSQL, avatar string) models.User {
+func (u *UserSQL) Convert() models.User {
 	return models.User{
-		ID:       user.userID,
-		Nickname: user.nickname,
-		Email:    user.email,
-		Password: user.password,
+		ID:       u.ID,
+		Nickname: u.nickname.String,
+		Email:    u.email.String,
+		Password: u.password.String,
 		Profile: models.Profile{
-			Avatar: avatar,
+			Avatar: u.avatar.String,
 		},
 	}
 }

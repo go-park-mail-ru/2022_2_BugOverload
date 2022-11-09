@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	customErrors "go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 )
 
@@ -40,7 +41,11 @@ func (a *sessionService) GetUserBySession(ctx context.Context, session models.Se
 
 // CreateSession is the service that accesses the interface SessionRepository
 func (a *sessionService) CreateSession(ctx context.Context, user *models.User) (models.Session, error) {
-	newSession, err := a.sessionRepo.CreateSession(ctx, user)
+	// user.ID should be >= 1
+	if user.ID == 0 {
+		return models.Session{}, errors.Wrap(customErrors.ErrUserNotExist, "CreateSession")
+	}
+	newSession, err := a.sessionRepo.CreateSession(ctx, &models.User{ID: user.ID})
 	if err != nil {
 		return models.Session{}, errors.Wrap(err, "CreateSession")
 	}

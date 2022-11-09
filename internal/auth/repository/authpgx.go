@@ -14,7 +14,8 @@ import (
 
 // AuthRepository provides the versatility of users repositories.
 type AuthRepository interface {
-	GetUser(ctx context.Context, user *models.User) (models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (models.User, error)
+	GetUserByID(ctx context.Context, userID int) (models.User, error)
 	CreateUser(ctx context.Context, user *models.User) (models.User, error)
 }
 
@@ -89,7 +90,6 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 
 		for rowsCollections.Next() {
 			var colID int
-
 			err = rowsCollections.Scan(&colID)
 			if err != nil {
 				return err
@@ -97,7 +97,10 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 
 			ids = append(ids, colID)
 		}
-		rowsCollections.Close()
+		err = rowsCollections.Close()
+		if err != nil {
+			return err
+		}
 
 		_, err = tx.ExecContext(ctx, linkUserProfileDefCollections, user.ID, ids[0], ids[1])
 		if err != nil {
@@ -118,23 +121,22 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 	return *user, nil
 }
 
-// GetUser is returns all user attributes by part user attributes.
-func (ad *AuthDatabase) GetUser(ctx context.Context, user *models.User) (models.User, error) {
-	if !ad.CheckExist(ctx, user.Email) {
+// GetUserByEmail is returns all user attributes by part user attributes.
+func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
+	if !ad.CheckExist(ctx, email) {
 		return models.User{}, errors.ErrUserNotExist
 	}
 
 	userDB := NewUserSQL()
-	var avatar sql.NullString
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowUser := conn.QueryRowContext(ctx, getUserByEmail, user.Email)
+		rowUser := conn.QueryRowContext(ctx, getUserByEmail, email)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
 
 		err := rowUser.Scan(
-			&userDB.userID,
+			&userDB.ID,
 			&userDB.email,
 			&userDB.nickname,
 			&userDB.password)
@@ -142,18 +144,18 @@ func (ad *AuthDatabase) GetUser(ctx context.Context, user *models.User) (models.
 			return err
 		}
 
-		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.userID)
+		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
 		if rowProfile.Err() != nil {
 			return rowProfile.Err()
 		}
 
-		err = rowProfile.Scan(&avatar)
+		err = rowProfile.Scan(&userDB.avatar)
 		if err != nil {
 			return err
 		}
 
-		if !avatar.Valid {
-			avatar.String = innerPKG.DefPersonAvatar
+		if !userDB.avatar.Valid {
+			userDB.avatar.String = innerPKG.DefPersonAvatar
 		}
 
 		return nil
@@ -163,5 +165,48 @@ func (ad *AuthDatabase) GetUser(ctx context.Context, user *models.User) (models.
 		return models.User{}, errors.ErrPostgresRequest
 	}
 
-	return NewUser(userDB, avatar.String), nil
+	return userDB.Convert(), nil
+}
+
+// GetUserByID is returns all user attributes by part user attributes.
+func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.User, error) {
+	userDB := NewUserSQL()
+
+	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowUser := conn.QueryRowContext(ctx, getUserByID, userID)
+		if rowUser.Err() != nil {
+			return rowUser.Err()
+		}
+
+		err := rowUser.Scan(
+			&userDB.ID,
+			&userDB.email,
+			&userDB.nickname,
+			&userDB.password)
+		if err != nil {
+			return err
+		}
+
+		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
+		if rowProfile.Err() != nil {
+			return rowProfile.Err()
+		}
+
+		err = rowProfile.Scan(&userDB.avatar)
+		if err != nil {
+			return err
+		}
+
+		if !userDB.avatar.Valid {
+			userDB.avatar.String = innerPKG.DefPersonAvatar
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.User{}, errors.ErrPostgresRequest
+	}
+
+	return userDB.Convert(), nil
 }

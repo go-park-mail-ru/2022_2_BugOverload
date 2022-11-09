@@ -28,6 +28,15 @@ SELECT
 FROM users
 WHERE email = $1`
 
+	getUserByID = `
+SELECT 
+	user_id,
+	nickname,
+	email,
+	password
+FROM users
+WHERE user_id = $1`
+
 	getProfileAvatar = `SELECT avatar FROM profiles WHERE profile_id = $1`
 
 	checkExist = `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)`
