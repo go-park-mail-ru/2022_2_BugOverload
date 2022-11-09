@@ -73,7 +73,7 @@ func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (mode
 			return rowUser.Err()
 		}
 
-		err := rowUser.Scan(&user.ID)
+		err = rowUser.Scan(&user.ID)
 		if err != nil {
 			return err
 		}
@@ -83,9 +83,9 @@ func (ad *AuthPostgres) CreateUser(ctx context.Context, user *models.User) (mode
 			return err
 		}
 
-		rowsCollections, err := tx.QueryContext(ctx, createDefCollections)
-		if err != nil {
-			return err
+		rowsCollections, errCollections := tx.QueryContext(ctx, createDefCollections)
+		if errCollections != nil {
+			return errCollections
 		}
 
 		ids := make([]int, 0)
@@ -143,7 +143,7 @@ func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (model
 			return rowUser.Err()
 		}
 
-		err := rowUser.Scan(
+		err = rowUser.Scan(
 			&userDB.ID,
 			&userDB.email,
 			&userDB.nickname,
