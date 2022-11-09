@@ -39,7 +39,7 @@ func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Change image
 // @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar"
-// @tags completed_not_tested_waiting_integration_auth
+// @tags completed
 // @produce json
 // @Param   object    query  string  true  "type object"
 // @Param   key       query  string  false  "key image"

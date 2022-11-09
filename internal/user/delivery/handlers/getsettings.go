@@ -36,7 +36,7 @@ func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user stat and info
 // @Description Getting user info and info for changes. Needed auth
-// @tags completed_not_tested_waiting_integration_auth
+// @tags completed
 // @Produce json
 // @Success 200 {object} models.GetUserSettingsResponse "successfully getting"
 // @Failure 400 "return error"

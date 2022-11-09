@@ -40,7 +40,7 @@ func (h *loginHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary User authentication
 // @Description Sending login and password
-// @tags auth
+// @tags completed
 // @Accept json
 // @Produce json
 // @Param user body models.UserLoginRequest true "Request body for login"

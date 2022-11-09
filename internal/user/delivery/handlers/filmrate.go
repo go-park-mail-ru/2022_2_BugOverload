@@ -39,7 +39,7 @@ func (h *filmRateHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @tags in_dev
 // @Produce json
 // @Param   id    path  int    true "film id"
-// @Param score body models.NewFilmRateRequest true "Request body for rate film"
+// @Param score body models.FilmRateRequest true "Request body for rate film"
 // @Success 201 "successfully rate"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
