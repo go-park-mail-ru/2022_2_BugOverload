@@ -26,7 +26,7 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP || r.Header.Get("Content-Type") != pkg.ContentTypeJPEG {
+	if !(r.Header.Get("Content-Type") != pkg.ContentTypeWEBP || r.Header.Get("Content-Type") != pkg.ContentTypeJPEG) {
 		return errors.ErrUnsupportedMediaType
 	}
 

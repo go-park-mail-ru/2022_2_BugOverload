@@ -40,7 +40,7 @@ func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @tags completed
 // @Produce json
 // @Param   id        path   int     true "film id"
-// @Param   count     query  int     true "count reviews needed"
+// @Param   count_reviews     query  int     true "count reviews needed"
 // @Param   offset    query  int     true "offset count"
 // @Success 200 {array} models.ReviewResponse "return reviews"
 // @Failure 400 "return error"

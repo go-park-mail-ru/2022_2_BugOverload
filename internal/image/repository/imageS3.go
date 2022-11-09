@@ -100,7 +100,7 @@ func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image)
 func (i *imageS3WithPostgres) UpdateImage(ctx context.Context, image *models.Image) error {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
-		return stdErrors.WithMessagef(errors.ErrImage,
+		return stdErrors.WithMessagef(err,
 			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
 	}
@@ -117,7 +117,7 @@ func (i *imageS3WithPostgres) UpdateImage(ctx context.Context, image *models.Ima
 	if err != nil {
 		return stdErrors.WithMessagef(errors.ErrImage,
 			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
-			image.Key, image.Object, len(image.Bytes), err)
+			imageS3Pattern.Key, imageS3Pattern.Bucket, len(image.Bytes), err)
 	}
 
 	err = i.UpdateImageInfo(ctx, image)
