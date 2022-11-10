@@ -17,7 +17,7 @@ log_path = "logs/prod/"
 endpoint = "http://localstack:4566"
 
 [cors]
-methods = ["POST", "GET", "PUT"]
+methods = ["POST", "GET", "PUT", "DELETE"]
 urls = ["http://movie-gate.online", "https://movie-gate.online", "https://www.movie-gate.online", "https://movie-gate.online:443", "https://localhost:443"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
