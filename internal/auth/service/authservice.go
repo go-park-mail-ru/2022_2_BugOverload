@@ -12,6 +12,8 @@ import (
 )
 
 // AuthService provides universal service for work with users.
+//
+//go:generate mockgen -destination=../mocks/mock_auth_service.go -package=mock go-park-mail-ru/2022_2_BugOverload/internal/auth/service AuthService
 type AuthService interface {
 	Auth(ctx context.Context, user *models.User) (models.User, error)
 	Login(ctx context.Context, user *models.User) (models.User, error)

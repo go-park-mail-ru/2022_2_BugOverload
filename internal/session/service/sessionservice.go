@@ -11,6 +11,8 @@ import (
 )
 
 // SessionService provides universal service for authorization. Needed for stateful session pattern.
+//
+//go:generate mockgen -destination=../mocks/mock_session_service.go -package=mock go-park-mail-ru/2022_2_BugOverload/internal/session/service SessionService
 type SessionService interface {
 	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)

@@ -5,10 +5,10 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
 type UserProfileRequest struct {
