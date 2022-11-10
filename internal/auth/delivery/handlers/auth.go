@@ -4,6 +4,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
@@ -89,6 +90,16 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("X-CSRF-TOKEN", token)
+
+	cookieCSRF := &http.Cookie{
+		Name:     "CSRF-TOKEN",
+		Value:    token,
+		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:     pkg.GlobalCookiePath,
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, cookieCSRF)
 
 	authResponse := models.NewUserAuthResponse(&userAuth)
 
