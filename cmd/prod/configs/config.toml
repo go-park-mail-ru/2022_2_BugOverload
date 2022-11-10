@@ -10,7 +10,7 @@ tls_key_file = "privkey1.pem"
 timeout = 4
 
 [logger]
-log_level = "info"
+log_level = "debug"
 log_path = "logs/prod/"
 
 [S3]
