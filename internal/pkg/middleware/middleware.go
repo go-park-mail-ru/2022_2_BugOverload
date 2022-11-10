@@ -125,14 +125,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		csrfCookie, err := r.Cookie("CSRF-TOKEN")
-
-		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenNotFound))
-			return
-		}
-
-		token := csrfCookie.Value
+		token := r.Header.Get("X-Csrf-Token")
 
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
