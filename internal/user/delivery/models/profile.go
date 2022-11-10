@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -24,7 +25,7 @@ func (u *UserProfileRequest) Bind(r *http.Request) error {
 	var err error
 	u.ID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertStrToInt)
+		return errors.ErrConvertQuery
 	}
 
 	return nil
@@ -49,7 +50,7 @@ type UserProfileResponse struct {
 
 func NewUserProfileResponse(user *models.User) *UserProfileResponse {
 	return &UserProfileResponse{
-		Nickname:         user.Nickname,
+		Nickname:         security.Sanitize(user.Nickname),
 		Avatar:           user.Profile.Avatar,
 		JoinedDate:       user.Profile.JoinedDate,
 		CountViewsFilms:  user.Profile.CountViewsFilms,

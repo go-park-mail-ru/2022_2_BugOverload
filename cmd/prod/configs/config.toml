@@ -2,20 +2,23 @@
 bind_addr_http = ":8088"
 read_timeout = 4
 write_timeout = 4
+protocol = "https"
+tls_certificate_file = "cert1.pem"
+tls_key_file = "privkey1.pem"
 
 [context]
 timeout = 4
 
 [logger]
 log_level = "info"
-log_path = "movie-gate"
+log_path = "logs/prod/"
 
 [S3]
 endpoint = "http://localstack:4566"
 
 [cors]
-methods = ["POST", "GET"]
-urls = ["http://movie-gate.online/", "http://movie-gate.online"]
-headers = ["Content-Type", "Content-Length"]
+methods = ["POST", "GET", "PUT"]
+urls = ["http://movie-gate.online", "https://movie-gate.online", "https://www.movie-gate.online", "https://movie-gate.online:443", "https://localhost:443"]
+headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = false

@@ -1,25 +1,8 @@
 package models
 
 import (
-	"net/http"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
-
-type UserGetSettingsRequest struct{}
-
-func NewGetUserSettingsRequest() *UserGetSettingsRequest {
-	return &UserGetSettingsRequest{}
-}
-
-func (u *UserGetSettingsRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Cookie") == "" {
-		return errors.NewErrAuth(errors.ErrNoCookie)
-	}
-
-	return nil
-}
 
 type GetUserSettingsResponse struct {
 	CountViewsFilms  int    `json:"count_views_films,omitempty" example:"23"`

@@ -1,39 +1,46 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // logoutHandler is the structure that handles the request for auth.
 type logoutHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	authService    authService.AuthService
+	sessionService sessionService.SessionService
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+func NewLogoutHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &logoutHandler{
-		us,
 		as,
+		ss,
 	}
+}
+
+func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary User logout
 // @Description Session delete. Needed auth
-// @tags auth
+// @tags auth, completed
 // @Success 204 "successfully logout"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
@@ -46,22 +53,28 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := logoutRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
+		return
+	}
+
+	cookie, err := r.Cookie(pkg.SessionCookieName)
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCookieNotExist))
 		return
 	}
 
 	requestSession := mainModels.Session{
-		ID: r.Cookies()[0].Value,
+		ID: cookie.Value,
 	}
 
-	badSession, err := h.authService.DeleteSession(r.Context(), requestSession)
+	badSession, err := h.sessionService.DeleteSession(r.Context(), requestSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
 	badCookie := &http.Cookie{
-		Name:     "session_id",
+		Name:     pkg.SessionCookieName,
 		Value:    badSession.ID,
 		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
 		HttpOnly: true,

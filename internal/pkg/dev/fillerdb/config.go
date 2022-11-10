@@ -10,11 +10,11 @@ type Volume struct {
 	CountViews    int `toml:"count_views"`
 	MaxViewOnFilm int `toml:"max_views_on_film"`
 
-	CountReviews         int  `toml:"count_reviews"`
-	MaxLengthReviewsBody uint `toml:"max_length_review_body"`
-	CountReviewsLikes    int  `toml:"count_reviews_likes"`
-	MaxLikesOnReview     int  `toml:"max_likes_on_review"`
-	MaxReviewsOnFilm     int  `toml:"max_reviews_on_film"`
+	CountReviews         int `toml:"count_reviews"`
+	MaxLengthReviewsBody int `toml:"max_length_review_body"`
+	CountReviewsLikes    int `toml:"count_reviews_likes"`
+	MaxLikesOnReview     int `toml:"max_likes_on_review"`
+	MaxReviewsOnFilm     int `toml:"max_reviews_on_film"`
 
 	MaxFilmActors  int `toml:"max_film_actors"`
 	MaxFilmPersons int `toml:"max_film_persons"`

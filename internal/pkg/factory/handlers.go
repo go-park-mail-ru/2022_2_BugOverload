@@ -2,7 +2,6 @@ package factory
 
 import (
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
 	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
@@ -13,24 +12,23 @@ import (
 	handlersImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
 	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
+	handlersPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/handlers"
+	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
+	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
+	handlersReview "go-park-mail-ru/2022_2_BugOverload/internal/review/delivery/handlers"
+	repoReview "go-park-mail-ru/2022_2_BugOverload/internal/review/repository"
+	serviceReview "go-park-mail-ru/2022_2_BugOverload/internal/review/service"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
-	res := make(map[string]pkg.Handler)
-
-	// Auth
-	authStorage := repoAuth.NewAuthCache()
-	sessionStorage := repoSession.NewSessionCache()
-
-	authService := serviceAuth.NewAuthService(authStorage)
-	sessionService := serviceSession.NewSessionService(sessionStorage)
+func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
+	res := make(map[string]handler.Handler)
 
 	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
 	res[pkg.AuthRequest] = authHandler
@@ -45,49 +43,79 @@ func NewHandlersMap(config *pkg.Config) map[string]pkg.Handler {
 	res[pkg.SignupRequest] = singUpHandler
 
 	// Collections
-	pathInCinema := "test/data/incinema.json"
-	pathPopular := "test/data/popular.json"
+	collectionStorage := repoCollection.NewCollectionCache(postgres)
 
-	colStorage := repoCollection.NewCollectionCache(pathPopular, pathInCinema)
+	collectionService := serviceCollection.NewCollectionService(collectionStorage)
 
-	collectionService := serviceCollection.NewCollectionService(colStorage)
-
-	inCinemaHandler := handlersCollection.NewInCinemaHandler(collectionService)
-	res[pkg.InCinemaRequest] = inCinemaHandler
-
-	popularHandler := handlersCollection.NewPopularFilmsHandler(collectionService)
-	res[pkg.PopularRequest] = popularHandler
+	tagCollectionHandler := handlersCollection.NewTagCollectionHandler(collectionService)
+	res[pkg.TagCollectionRequest] = tagCollectionHandler
 
 	// Films
-	pathPreview := "test/data/preview.json"
-
-	filmsStorage := repoFilms.NewFilmCache(pathPreview)
+	filmsStorage := repoFilms.NewFilmPostgres(postgres)
 
 	filmsService := serviceFilms.NewFilmService(filmsStorage)
 
-	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService, sessionService)
+	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService)
 	res[pkg.RecommendationRequest] = recommendationHandler
 
+	filmHandler := handlersFilm.NewFilmHandler(filmsService)
+	res[pkg.FilmRequest] = filmHandler
+
 	// Images
-	is := repoImage.NewImageS3(config)
+	is := repoImage.NewImageS3(config, postgres)
 
 	imageService := serviceImage.NewImageService(is)
 
 	downloadImageHandler := handlersImage.NewGetImageHandler(imageService)
 	res[pkg.DownloadImageRequest] = downloadImageHandler
 
-	uploadImageHandler := handlersImage.NewPutImageHandler(imageService)
+	changeImageHandler := handlersImage.NewPutImageHandler(imageService)
+	res[pkg.ChangeImageRequest] = changeImageHandler
+
+	uploadImageHandler := handlersImage.NewPostImageHandler(imageService)
 	res[pkg.UploadImageRequest] = uploadImageHandler
 
 	// Users
-	postgres := sqltools.NewPostgresRepository()
-
 	userRepo := repoUser.NewUserPostgres(postgres)
 
 	userService := serviceUser.NewUserProfileService(userRepo)
 
 	profileHandler := handlersUser.NewUserProfileHandler(userService)
-	res[pkg.GetUserProfile] = profileHandler
+	res[pkg.GetUserProfileRequest] = profileHandler
+
+	userSettingsHandler := handlersUser.NewGetSettingsHandler(userService)
+	res[pkg.GetUserSettingsRequest] = userSettingsHandler
+
+	changeUserSettingsHandler := handlersUser.NewPutSettingsHandler(userService)
+	res[pkg.PutUserSettingsRequest] = changeUserSettingsHandler
+
+	filmRateHandler := handlersUser.NewFilmRateHandler(userService)
+	res[pkg.FilmRateRequest] = filmRateHandler
+
+	filmRateDropHandler := handlersUser.NewFilmRateDropHandler(userService)
+	res[pkg.FilmRateDropRequest] = filmRateDropHandler
+
+	newFilmReviewHandler := handlersUser.NewFilmReviewHandler(userService)
+	res[pkg.NewFilmReviewRequest] = newFilmReviewHandler
+
+	getUserActivityOnFilmHandler := handlersUser.NewGetActivityOnFilmHandler(userService)
+	res[pkg.GetUserActivityOnFilmRequest] = getUserActivityOnFilmHandler
+
+	// Persons
+	personRepo := repoPerson.NewPersonPostgres(postgres)
+
+	personService := servicePerson.NewPersonService(personRepo)
+
+	personHandler := handlersPerson.NewPersonHandler(personService)
+	res[pkg.PersonRequest] = personHandler
+
+	// Reviews
+	reviewRepo := repoReview.NewReviewPostgres(postgres)
+
+	reviewService := serviceReview.NewReviewService(reviewRepo)
+
+	reviewsHandler := handlersReview.NewReviewsHandler(reviewService)
+	res[pkg.ReviewsFilmRequest] = reviewsHandler
 
 	return res
 }

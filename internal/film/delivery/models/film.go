@@ -1,8 +1,58 @@
 package models
 
 import (
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
+
+type FilmRequest struct {
+	FilmID      int
+	CountImages int
+}
+
+func NewFilmRequest() FilmRequest {
+	return FilmRequest{}
+}
+
+func (f *FilmRequest) Bind(r *http.Request) error {
+	var err error
+
+	vars := mux.Vars(r)
+
+	f.FilmID, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	f.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
+	if err != nil {
+		return errors.NewErrValidation(errors.ErrConvertQuery)
+	}
+
+	if f.CountImages <= 0 {
+		return errors.NewErrValidation(errors.ErrQueryBad)
+	}
+
+	return nil
+}
+
+func (f *FilmRequest) GetParams() *innerPKG.GetFilmParams {
+	return &innerPKG.GetFilmParams{
+		CountImages: f.CountImages,
+	}
+}
+
+func (f *FilmRequest) GetFilm() *models.Film {
+	return &models.Film{
+		ID: f.FilmID,
+	}
+}
 
 type FilmActorResponse struct {
 	ID        int    `json:"id,omitempty" example:"2132"`
@@ -17,15 +67,16 @@ type FilmPersonResponse struct {
 }
 
 type FilmResponse struct {
-	ID           int    `json:"id,omitempty" example:"23"`
-	Name         string `json:"name,omitempty" example:"Игра престолов"`
-	OriginalName string `json:"original_name,omitempty" example:"Game of Thrones"`
-	ProdYear     int    `json:"prod_year,omitempty" example:"2011"`
-	Slogan       string `json:"slogan,omitempty" example:"Победа или смерть"`
-	Description  string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
-	AgeLimit     int    `json:"age_limit,omitempty" example:"18"`
-	Duration     int    `json:"duration,omitempty" example:"55"`
-	PosterVer    string `json:"poster_ver,omitempty" example:"23"`
+	ID               int    `json:"id,omitempty" example:"23"`
+	Name             string `json:"name,omitempty" example:"Игра престолов"`
+	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`
+	ProdYear         int    `json:"prod_year,omitempty" example:"2011"`
+	Slogan           string `json:"slogan,omitempty" example:"Победа или смерть"`
+	Description      string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
+	ShortDescription string `json:"short_description,omitempty" example:"Что вы знаете о джинах кроме желайний?"`
+	AgeLimit         int    `json:"age_limit,omitempty" example:"18"`
+	Duration         int    `json:"duration,omitempty" example:"55"`
+	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
 
 	Budget         int    `json:"budget,omitempty" example:"18323222"`
 	BoxOffice      int    `json:"box_office,omitempty" example:"60000000"`
@@ -42,6 +93,8 @@ type FilmResponse struct {
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty" example:"63"`
 	CountPositiveReviews int     `json:"count_positive_reviews,omitempty" example:"65"`
 
+	Images        []string             `json:"images,omitempty" example:"1,2,3,4"`
+	Tags          []string             `json:"tags,omitempty" example:"популярное,сейчас в кино"`
 	Genres        []string             `json:"genres,omitempty" example:"фантастика,боевик"`
 	ProdCompanies []string             `json:"prod_companies,omitempty" example:"HBO"`
 	ProdCountries []string             `json:"prod_countries,omitempty" example:"США,Великобритания"`
@@ -66,7 +119,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	fillPersons := func(someStruct []models.FilmPerson) []FilmPersonResponse {
-		persons := make([]FilmPersonResponse, len(film.Actors))
+		persons := make([]FilmPersonResponse, len(someStruct))
 
 		for idx, val := range someStruct {
 			persons[idx].ID = val.ID
@@ -77,18 +130,19 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	return &FilmResponse{
-		ID:             film.ID,
-		Name:           film.Name,
-		OriginalName:   film.OriginalName,
-		ProdYear:       film.ProdYear,
-		Slogan:         film.Slogan,
-		Description:    film.Description,
-		AgeLimit:       film.AgeLimit,
-		BoxOffice:      film.BoxOffice,
-		Budget:         film.Budget,
-		CurrencyBudget: film.CurrencyBudget,
-		Duration:       film.Duration,
-		PosterVer:      film.PosterVer,
+		ID:               film.ID,
+		Name:             film.Name,
+		OriginalName:     film.OriginalName,
+		ProdYear:         film.ProdYear,
+		Slogan:           film.Slogan,
+		Description:      film.Description,
+		ShortDescription: film.ShortDescription,
+		AgeLimit:         film.AgeLimit,
+		BoxOffice:        film.BoxOffice,
+		Budget:           film.Budget,
+		CurrencyBudget:   film.CurrencyBudget,
+		Duration:         film.Duration,
+		PosterHor:        film.PosterHor,
 
 		CountSeasons: film.CountSeasons,
 		EndYear:      film.EndYear,
@@ -101,6 +155,8 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,
 
+		Images:        film.Images,
+		Tags:          film.Tags,
 		Genres:        film.Genres,
 		ProdCompanies: film.ProdCompanies,
 		ProdCountries: film.ProdCountries,

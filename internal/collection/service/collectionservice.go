@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	"github.com/pkg/errors"
 
@@ -11,8 +12,7 @@ import (
 
 // CollectionService provides universal service for work with collection.
 type CollectionService interface {
-	GetPopular(ctx context.Context) (models.Collection, error)
-	GetInCinema(ctx context.Context) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionTagParams) (models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -28,22 +28,12 @@ func NewCollectionService(cr repository.CollectionRepository) CollectionService 
 	}
 }
 
-// GetPopular is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetPopular(ctx context.Context) (models.Collection, error) {
-	inCinemaCollection, err := c.collectionRepo.GetPopular(ctx)
+// GetCollectionByTag is the service that accesses the interface CollectionRepository
+func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionTagParams) (models.Collection, error) {
+	inCinemaCollection, err := c.collectionRepo.GetCollectionByTag(ctx, params)
 	if err != nil {
-		return models.Collection{}, errors.Wrap(err, "GetPopular")
+		return models.Collection{}, errors.Wrap(err, "GetCollectionByTag")
 	}
 
 	return inCinemaCollection, nil
-}
-
-// GetInCinema is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetInCinema(ctx context.Context) (models.Collection, error) {
-	popularCollection, err := c.collectionRepo.GetInCinema(ctx)
-	if err != nil {
-		return models.Collection{}, errors.Wrap(err, "GetInCinema")
-	}
-
-	return popularCollection, nil
 }

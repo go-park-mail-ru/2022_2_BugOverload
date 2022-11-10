@@ -1,12 +1,12 @@
 -- Generator completed
 CREATE TABLE IF NOT EXISTS users
 (
-    "user_id"      serial      NOT NULL PRIMARY KEY,
-    "nickname"     varchar(64) NOT NULL,
-    "email"        varchar(64) NOT NULL,
-    "password"     text        NOT NULL,
-    "is_superuser" boolean     NOT NULL DEFAULT false,
-    "last_update"  date        NOT NULL DEFAULT NOW()
+    "user_id"     serial      NOT NULL PRIMARY KEY,
+    "nickname"    varchar(64) NOT NULL,
+    "email"       varchar(64) NOT NULL UNIQUE,
+    "password"    bytea       NOT NULL,
+    "is_admin"    boolean     NOT NULL DEFAULT false,
+    "last_update" date        NOT NULL DEFAULT NOW()
 );
 
 -- Generator completed
@@ -30,24 +30,24 @@ CREATE TABLE IF NOT EXISTS films
     "description"            TEXT         NOT NULL,
     "short_description"      varchar(180) NOT NULL,
     "duration"               integer      NOT NULL,
-    "type"                   varchar(64)   DEFAULT NULL,
-    "original_name"          varchar(80)   DEFAULT NULL,
-    "slogan"                 varchar(128)  DEFAULT NULL,
-    "age_limit"              integer       DEFAULT NULL,
-    "budget"                 integer       DEFAULT NULL,
-    "box_office"             integer       DEFAULT NULL,
-    "currency_budget"        varchar(8)    DEFAULT NULL,
-    "poster_hor"             varchar(32)   DEFAULT NULL,
-    "poster_ver"             varchar(32)   DEFAULT NULL,
-    "end_year"               integer       DEFAULT NULL,
-    "count_seasons"          integer       DEFAULT NULL,
-    "rating"                 numeric(3, 1) DEFAULT NULL,
-    "count_actors"           integer       DEFAULT NULL,
-    "count_scores"           integer       DEFAULT NULL,
-    "count_negative_reviews" integer       DEFAULT NULL,
-    "count_neutral_reviews"  integer       DEFAULT NULL,
-    "count_positive_reviews" integer       DEFAULT NULL,
-    "update_time"            timestamp     DEFAULT NOW()
+    "type"                   varchar(32)  DEFAULT NULL,
+    "original_name"          varchar(80)  DEFAULT NULL,
+    "slogan"                 varchar(128) DEFAULT NULL,
+    "age_limit"              integer      DEFAULT NULL,
+    "budget"                 integer      DEFAULT NULL,
+    "box_office"             integer      DEFAULT NULL,
+    "currency_budget"        varchar(8)   DEFAULT NULL,
+    "poster_hor"             varchar(32)  DEFAULT NULL,
+    "poster_ver"             varchar(32)  DEFAULT NULL,
+    "end_year"               integer      DEFAULT NULL,
+    "count_seasons"          integer      DEFAULT NULL,
+    "rating"                 real         DEFAULT NULL,
+    "count_actors"           integer      DEFAULT NULL,
+    "count_scores"           integer      DEFAULT NULL,
+    "count_negative_reviews" integer      DEFAULT NULL,
+    "count_neutral_reviews"  integer      DEFAULT NULL,
+    "count_positive_reviews" integer      DEFAULT NULL,
+    "update_time"            timestamp    DEFAULT NOW()
 );
 
 -- Generator completed
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS persons
     "birthday"      date          NOT NULL,
     "growth"        numeric(3, 2) NOT NULL,
     "original_name" varchar(80) DEFAULT NULL,
-    "avatar"        varchar(80) DEFAULT NULL,
+    "avatar"        varchar(16) DEFAULT NULL,
     "death"         date        DEFAULT NULL,
     "gender"        varchar(16) DEFAULT NULL,
     "count_films"   integer     DEFAULT NULL
@@ -99,16 +99,17 @@ CREATE TABLE IF NOT EXISTS professions
     "name"          varchar(64) NOT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS collections
 (
-    "collection_id" serial       NOT NULL PRIMARY KEY,
-    "name"          varchar(128) NOT NULL,
-    "description"   TEXT         NOT NULL,
-    "poster"        varchar(32)           DEFAULT NULL,
-    "is_public"     boolean      NOT NULL DEFAULT false,
-    "create_time"   timestamp    NOT NULL DEFAULT NOW(),
-    "count_likes"   integer               DEFAULT NULL,
-    "count_films"   integer               DEFAULT NULL
+    "collection_id" serial      NOT NULL PRIMARY KEY,
+    "name"          varchar(64) NOT NULL,
+    "description"   TEXT                 DEFAULT NULL,
+    "poster"        varchar(32)          DEFAULT NULL,
+    "is_public"     boolean     NOT NULL DEFAULT false,
+    "create_time"   timestamp   NOT NULL DEFAULT NOW(),
+    "count_likes"   integer              DEFAULT NULL,
+    "count_films"   integer              DEFAULT NULL
 );
 
 -- Generator completed
@@ -124,17 +125,24 @@ CREATE TABLE IF NOT EXISTS reviews
 
 
 -- 1:M
+-- Generator completed
 CREATE TABLE IF NOT EXISTS film_images
 (
-    "film_id"     serial       NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
-    "images_list" varchar(100) NOT NULL
+    "film_id"     serial NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
+    "images_list" varchar(100) DEFAULT NULL
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS person_images
 (
     "person_id"   serial       NOT NULL PRIMARY KEY REFERENCES persons (person_id) ON DELETE CASCADE,
     "images_list" varchar(100) NOT NULL
 );
+
+--     1 1
+--     1 2
+--     1 3
+--     1 4
 
 -- N:M
 -- Generator completed
@@ -211,6 +219,7 @@ CREATE TABLE IF NOT EXISTS profile_reviews
     PRIMARY KEY (fk_review_id, fk_profile_id, fk_film_id)
 );
 
+-- Generator completed
 CREATE TABLE IF NOT EXISTS profile_collections
 (
     "fk_profile_id"    integer NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,

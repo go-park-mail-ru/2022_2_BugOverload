@@ -4,16 +4,17 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"os"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	modelsCollectionRepo "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
+	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository/models"
+	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type DBFiller struct {
@@ -26,6 +27,9 @@ type DBFiller struct {
 
 	persons    []models.Person
 	personsSQL []modelsPersonRepo.PersonSQL
+
+	collections    []models.Collection
+	collectionsSQL []modelsCollectionRepo.CollectionSQL
 
 	genres      map[string]int
 	countries   map[string]int
@@ -144,6 +148,7 @@ func (f *DBFiller) fillGuides(path string) error {
 func (f *DBFiller) fillStorages(path string) error {
 	films := path + "/films.json"
 	persons := path + "/persons.json"
+	collections := path + "/collections.json"
 
 	err := f.fillStorage(films, &f.films)
 	if err != nil {
@@ -155,6 +160,11 @@ func (f *DBFiller) fillStorages(path string) error {
 		return errors.Wrap(err, "fillStorages")
 	}
 
+	err = f.fillStorage(collections, &f.collections)
+	if err != nil {
+		return errors.Wrap(err, "fillStorages")
+	}
+
 	return nil
 }
 
@@ -162,13 +172,19 @@ func (f *DBFiller) convertStructs() {
 	f.filmsSQL = make([]modelsFilmRepo.FilmSQL, len(f.films))
 
 	for idx, value := range f.films {
-		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQL(value)
+		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQLOnFilm(value)
 	}
 
 	f.personsSQL = make([]modelsPersonRepo.PersonSQL, len(f.persons))
 
 	for idx, value := range f.persons {
-		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQL(value)
+		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQLOnPerson(value)
+	}
+
+	f.collectionsSQL = make([]modelsCollectionRepo.CollectionSQL, len(f.collections))
+
+	for idx, value := range f.collections {
+		f.collectionsSQL[idx] = modelsCollectionRepo.NewCollectionSQLOnCollection(value)
 	}
 }
 
@@ -203,6 +219,12 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d film tags link end", count)
 
+	count, err = f.linkFilmImages()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d films images link end", count)
+
 	count, err = f.uploadPersons()
 	if err != nil {
 		return errors.Wrap(err, "Action")
@@ -214,6 +236,12 @@ func (f *DBFiller) Action() error {
 		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d persons professions link end", count)
+
+	count, err = f.linkPersonImages()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d persons images link end", count)
 
 	count, err = f.linkPersonGenres()
 	if err != nil {
@@ -270,6 +298,42 @@ func (f *DBFiller) Action() error {
 		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d film persons link end", count)
+
+	count, err = f.uploadCollections()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d collections upload", count)
+
+	count, err = f.linkCollectionProfile()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d collections profiles link end", count)
+
+	count, err = f.UpdateFilms()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d films denormal fields updated", count)
+
+	count, err = f.UpdatePersons()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d persons denormal fields updated", count)
+
+	count, err = f.UpdateProfiles()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d profiles denormal fields updated", count)
+
+	count, err = f.UpdateReviews()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d reviews denormal fields updated", count)
 
 	return nil
 }

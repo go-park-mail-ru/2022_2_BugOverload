@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"net/http"
 	"strconv"
 
@@ -10,16 +9,13 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
-type GetReviewsParams struct {
-	Count     int
-	Delimiter string
-}
-
 type ReviewsRequest struct {
-	FilmID int
-	Params GetReviewsParams
+	FilmID       int
+	CountReviews int
+	Offset       int
 }
 
 func NewReviewsRequest() *ReviewsRequest {
@@ -34,29 +30,39 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 	var err error
 
 	vars := mux.Vars(r)
+
 	rr.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrConvertQuery
 	}
 
-	rr.Params.Count, err = strconv.Atoi(r.FormValue("count"))
+	rr.CountReviews, err = strconv.Atoi(r.FormValue("count_reviews"))
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrConvertQuery
 	}
 
-	rr.Params.Delimiter = r.FormValue("delimiter")
+	if rr.CountReviews <= 0 {
+		return errors.ErrQueryBad
+	}
+
+	rr.Offset, err = strconv.Atoi(r.FormValue("offset"))
+	if err != nil {
+		return errors.ErrConvertQuery
+	}
+
+	if rr.Offset < 0 {
+		return errors.ErrQueryBad
+	}
 
 	return nil
 }
 
-func (rr *ReviewsRequest) GetParams(ctx context.Context) (*models.Film, context.Context) {
-	ctx = context.WithValue(ctx, innerPKG.GetReviewsParamsKey, rr.Params)
-
-	filmParams := &models.Film{
-		ID: rr.FilmID,
+func (rr *ReviewsRequest) GetParams() *innerPKG.GetReviewsFilmParams {
+	return &innerPKG.GetReviewsFilmParams{
+		FilmID: rr.FilmID,
+		Offset: rr.Offset,
+		Count:  rr.CountReviews,
 	}
-
-	return filmParams, ctx
 }
 
 type ReviewAuthorResponse struct {
@@ -69,25 +75,25 @@ type ReviewAuthorResponse struct {
 type ReviewResponse struct {
 	Name       string               `json:"name,omitempty" example:"Почему Игра престолов всего лишь одно насилие?"`
 	Type       string               `json:"type,omitempty" example:"negative"`
-	Time       string               `json:"time,omitempty" example:"2022-10-30 14:48:48.712860"`
+	CreateTime string               `json:"create_time,omitempty" example:"2022-10-30 14:48:48.712860"`
 	Body       string               `json:"body,omitempty" example:"Столько крови и убийств нет ни в одном из сериалов, из 730 персонажей больше половины полегло"`
 	CountLikes int                  `json:"count_likes,omitempty" example:"142"`
 	Author     ReviewAuthorResponse `json:"author,omitempty"`
 }
 
-func NewReviewsResponse(reviews []*models.Review) []*ReviewResponse {
-	res := make([]*ReviewResponse, len(reviews))
+func NewReviewsResponse(reviews *[]models.Review) []*ReviewResponse {
+	res := make([]*ReviewResponse, len(*reviews))
 
-	for idx, value := range reviews {
+	for idx, value := range *reviews {
 		res[idx] = &ReviewResponse{
-			Name:       value.Name,
+			Name:       security.Sanitize(value.Name),
 			Type:       value.Type,
-			Time:       value.Time,
-			Body:       value.Body,
+			CreateTime: value.CreateTime,
+			Body:       security.Sanitize(value.Body),
 			CountLikes: value.CountLikes,
 			Author: ReviewAuthorResponse{
 				ID:           value.Author.ID,
-				Nickname:     value.Author.Nickname,
+				Nickname:     security.Sanitize(value.Author.Nickname),
 				CountReviews: value.Author.Profile.CountReviews,
 				Avatar:       value.Author.Profile.Avatar,
 			},

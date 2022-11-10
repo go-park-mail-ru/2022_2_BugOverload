@@ -7,8 +7,9 @@ sleep 5
 
 set -x
 
-aws configure set aws_access_key_id foo
-aws configure set aws_secret_access_key bar
+echo "INFO"
+echo "$AWS_PROFILEee"
+
 echo "[default]" > ~/.aws/config
 echo "region = us-east-1" >> ~/.aws/config
 echo "output = json" >> ~/.aws/config

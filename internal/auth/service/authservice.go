@@ -13,6 +13,7 @@ import (
 
 // AuthService provides universal service for work with users.
 type AuthService interface {
+	Auth(ctx context.Context, user *models.User) (models.User, error)
 	Login(ctx context.Context, user *models.User) (models.User, error)
 	Signup(ctx context.Context, user *models.User) (models.User, error)
 }
@@ -29,16 +30,24 @@ func NewAuthService(ur repository.AuthRepository) AuthService {
 	}
 }
 
+func (u *authService) Auth(ctx context.Context, user *models.User) (models.User, error) {
+	userRepo, err := u.authRepo.GetUserByID(ctx, user.ID)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Auth")
+	}
+	return userRepo, nil
+}
+
 // Login is the service that accesses the interface AuthRepository.
 // Validation: request password and password user from repository equal.
 func (u *authService) Login(ctx context.Context, user *models.User) (models.User, error) {
-	userRepo, err := u.authRepo.GetUser(ctx, user)
+	userRepo, err := u.authRepo.GetUserByEmail(ctx, user.Email)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
 	if !security.IsPasswordsEqual(userRepo.Password, user.Password) {
-		return models.User{}, errors.ErrLoginCombinationNotFound
+		return models.User{}, stdErrors.Wrap(errors.ErrLoginCombinationNotFound, "Login")
 	}
 
 	return userRepo, nil
@@ -46,6 +55,14 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 
 // Signup is the service that accesses the interface AuthRepository
 func (u *authService) Signup(ctx context.Context, user *models.User) (models.User, error) {
+	if err := ValidateEmail(user.Email); err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
+
+	if err := ValidatePassword(user.Password); err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
+
 	hashedPassword, err := security.HashPassword(user.Password)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")

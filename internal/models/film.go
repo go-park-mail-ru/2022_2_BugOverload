@@ -40,6 +40,7 @@ type Film struct {
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty"`
 	CountPositiveReviews int     `json:"count_positive_reviews,omitempty"`
 
+	Tags          []string     `json:"tags,omitempty"`
 	Genres        []string     `json:"genres,omitempty"`
 	ProdCompanies []string     `json:"prod_companies,omitempty"`
 	ProdCountries []string     `json:"prod_countries,omitempty"`
@@ -51,4 +52,6 @@ type Film struct {
 	Operators     []FilmPerson `json:"operators,omitempty"`
 	Montage       []FilmPerson `json:"montage,omitempty"`
 	Composers     []FilmPerson `json:"composers,omitempty"`
+
+	Images []string `json:"images,omitempty"`
 }

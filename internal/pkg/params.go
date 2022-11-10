@@ -1,64 +1,54 @@
 package pkg
 
-import (
-	"database/sql"
-	"time"
-)
+// GetPersonParams in struct for personHandler
+type GetPersonParams struct {
+	CountFilms  int
+	CountImages int
+}
 
-const (
-	// Validation HTTP
-	ContentTypeJSON = "application/json"
-	ContentTypeJPEG = "image/webp"
+// GetCollectionTagParams in struct for tagCollectionHandler
+type GetCollectionTagParams struct {
+	Tag        string
+	CountFilms int
+	Delimiter  string
+}
 
-	// Validattion size Requests
-	BufSizeRequest = 1024 * 1024 * 2.5
-	BufSizeImage   = 1024 * 1024 * 2
+// GetReviewsFilmParams in struct for reviewHandler
+type GetReviewsFilmParams struct {
+	FilmID int
+	Count  int
+	Offset int
+}
 
-	// Cookie
-	CookieValueLength = 40
-	TimeoutLiveCookie = 10 * time.Hour
+// GetFilmParams in struct for filmHandler
+type GetFilmParams struct {
+	CountImages int
+}
 
-	// Handler factory
-	SignupRequest         = "SignupRequest"
-	LoginRequest          = "LoginRequest"
-	AuthRequest           = "AuthRequest"
-	LogoutRequest         = "LogoutRequest"
-	InCinemaRequest       = "InCinemaRequest"
-	PopularRequest        = "PopularRequest"
-	RecommendationRequest = "RecommendationRequest"
-	DownloadImageRequest  = "DownloadImageRequest"
-	UploadImageRequest    = "UploadImageRequest"
-	ChangeImageRequest    = "ChangeImageRequest"
+// ChangeUserSettings in struct for changeUserSettings
+type ChangeUserSettings struct {
+	CurPassword string
+	NewPassword string
+	Nickname    string
+}
 
-	// Images params request
-	ImageObjectFilmPosterHor = "film_poster_hor"
-	ImageObjectFilmPosterVer = "film_poster_ver"
-	ImageObjectDefault       = "default"
-	ImageObjectAvatar        = "user_avatar"
+// FilmRateParams in struct for filmRateHandler
+type FilmRateParams struct {
+	FilmID int
+	Score  float32
+}
 
-	// GetReviewsParams
-	GetReviewsParams = "GetReviewsRequestParams"
+// FilmRateDropParams in struct for filmRateDropHandler
+type FilmRateDropParams struct {
+	FilmID int
+}
 
-	// User
-	GetUserProfile = "GetUserProfile"
+// NewFilmReviewParams in struct for newFilmReviewHandler
+type NewFilmReviewParams struct {
+	FilmID int
+}
 
-	// Crypt
-	SaltLength     = 16
-	ArgonTime      = 1
-	ArgonMemory    = 32 * 1024
-	ArgonThreads   = 4
-	ArgonKeyLength = 32
-)
-
-type ContextType string
-
-var SessionKey ContextType = "cookie"
-var LoggerKey ContextType = "logger"
-
-var GetReviewsParamsKey ContextType = GetReviewsParams
-
-// TxDefaultOptions for Postgres
-var TxDefaultOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  true,
+// GetUserActivityOnFilmParams in struct for getUserActivityOnFilmHandler
+type GetUserActivityOnFilmParams struct {
+	FilmID int
 }

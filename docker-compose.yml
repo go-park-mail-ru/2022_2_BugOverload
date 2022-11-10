@@ -6,7 +6,7 @@ services:
     networks:
       - localstack-net
       - postgres-net
-    image: andeo1812/golang_web:latest
+    image: andeo1812/golang_web_light:latest
     command: make -C project debug-mode
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -29,7 +29,6 @@ services:
       - localstack
       - main_db
 
-
   localstack:
     hostname: localstack
     networks:
@@ -38,6 +37,10 @@ services:
     image: localstack/localstack:latest
     restart: unless-stopped
     environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+
       - LOCALSTACK_HOSTNAME=localstack
       - EXTERNAL_HOSTNAME=localstack
 
@@ -60,7 +63,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
       - ./data:/tmp/localstack
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      # - "/var/run/docker.sock:/var/run/docker.sock"
       - ./bin:/docker-entrypoint-initaws.d
     ports:
       - "4566-4599:4566-4599"
@@ -74,7 +77,7 @@ services:
     command:
       - "postgres"
       - "-c"
-      - "max_connections=50"
+      - "max_connections=100"
       - "-c"
       - "shared_buffers=512MB"
       - "-c"
@@ -122,7 +125,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "admin"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
-      - "5050:80"
+      - "5050:5050"
     restart: unless-stopped
     depends_on:
       - main_db

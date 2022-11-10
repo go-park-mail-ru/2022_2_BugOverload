@@ -3,11 +3,13 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -18,41 +20,46 @@ type userProfileHandler struct {
 }
 
 // NewUserProfileHandler is constructor for userProfileHandler in this pkg - settings.
-func NewUserProfileHandler(us serviceUserProfile.UserService) pkg.Handler {
+func NewUserProfileHandler(us serviceUserProfile.UserService) handler.Handler {
 	return &userProfileHandler{
 		us,
 	}
+}
+
+func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", h.Action).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user stat
 // @Description Getting user public info.
-// @tags in_dev
+// @tags user, completed
 // @Produce json
 // @Param   id        path   int true "user id"
 // @Success 200 {object} models.UserProfileResponse "successfully getting"
 // @Failure 400 "return error"
-// @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchUser "no such user"
+// @Failure 404 {object} httpmodels.ErrResponseProfileNoSuchProfile "no such profile"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/profile/{id} [GET]
 func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
-	userProfileRequest := models.NewUserProfileRequest()
+	request := models.NewUserProfileRequest()
 
-	err := userProfileRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
 		return
 	}
 
-	user, err := h.userProfileService.GetUserProfileByID(r.Context(), userProfileRequest.GetUser())
+	user, err := h.userProfileService.GetUserProfileByID(r.Context(), request.GetUser())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
 		return
 	}
 
-	userProfileResponse := models.NewUserProfileResponse(&user)
+	response := models.NewUserProfileResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, userProfileResponse)
+	httpwrapper.Response(w, http.StatusOK, response)
 }

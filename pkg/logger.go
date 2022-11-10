@@ -25,9 +25,23 @@ func NewLogger(config *pkg.Logger) (*logrus.Logger, func() error) {
 
 	currentTime := time.Now().In(location)
 
-	formatted := config.LogAddr + "__" + fmt.Sprintf("Date:%d.%02d.%02d__Time:%02d:%02d:%02d",
+	formatted := config.LogAddr + fmt.Sprintf("Date:%d.%02d.%02d__Time:%02d:%02d:%02d",
 		currentTime.Year(), currentTime.Month(), currentTime.Day(),
 		currentTime.Hour(), currentTime.Minute(), currentTime.Second()) + ".log"
+
+	err = os.MkdirAll(config.LogAddr, 0777)
+	if err != nil {
+		if os.IsExist(err) {
+			info, errInfo := os.Stat(config.LogAddr)
+			if errInfo != nil {
+				logrus.Fatalf("Error creating directory for logs: [%s]", errInfo)
+			}
+			if !info.IsDir() {
+				logrus.Fatalf("Error: path exists but is not directory")
+			}
+		}
+		logrus.Fatalf("Error creating directory for logs: [%s]", err)
+	}
 
 	f, err := os.OpenFile(formatted, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

@@ -2,64 +2,66 @@ package fillerdb
 
 import (
 	"context"
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func (f *DBFiller) uploadFilms() (int, error) {
 	countInserts := len(f.filmsSQL)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilms, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilms, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	for idx, value := range f.filmsSQL {
-		posAttr := 0
-		posValue := idx * countAttributes
+	pos := 0
 
-		values[posValue+posAttr] = value.Name
-		posAttr++
-		values[posValue+posAttr] = value.ProdYear
-		posAttr++
-		values[posValue+posAttr] = value.PosterVer
-		posAttr++
-		values[posValue+posAttr] = value.PosterHor
-		posAttr++
-		values[posValue+posAttr] = value.Description
-		posAttr++
-		values[posValue+posAttr] = value.ShortDescription
-		posAttr++
-		values[posValue+posAttr] = value.OriginalName
-		posAttr++
-		values[posValue+posAttr] = value.Slogan
-		posAttr++
-		values[posValue+posAttr] = value.AgeLimit
-		posAttr++
-		values[posValue+posAttr] = value.BoxOffice
-		posAttr++
-		values[posValue+posAttr] = value.Budget
-		posAttr++
-		values[posValue+posAttr] = value.Duration
-		posAttr++
-		values[posValue+posAttr] = value.CurrencyBudget
-		posAttr++
-		values[posValue+posAttr] = value.Type
-		posAttr++
-		values[posValue+posAttr] = value.CountSeasons
-		posAttr++
-		values[posValue+posAttr] = value.EndYear
+	for _, value := range f.filmsSQL {
+		values[pos] = value.Name
+		pos++
+		values[pos] = value.ProdYear
+		pos++
+		values[pos] = value.PosterVer
+		pos++
+		values[pos] = value.PosterHor
+		pos++
+		values[pos] = value.Description
+		pos++
+		values[pos] = value.ShortDescription
+		pos++
+		values[pos] = value.OriginalName
+		pos++
+		values[pos] = value.Slogan
+		pos++
+		values[pos] = value.AgeLimit
+		pos++
+		values[pos] = value.BoxOffice
+		pos++
+		values[pos] = value.Budget
+		pos++
+		values[pos] = value.Duration
+		pos++
+		values[pos] = value.CurrencyBudget
+		pos++
+		values[pos] = value.Type
+		pos++
+		values[pos] = value.CountSeasons
+		pos++
+		values[pos] = value.EndYear
+		pos++
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	rows, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	rows, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadFilms")
 	}
@@ -68,8 +70,6 @@ func (f *DBFiller) uploadFilms() (int, error) {
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadFilms")
 	}
-
-	logrus.Info(affected)
 
 	for i := 0; i < int(affected); i++ {
 		f.films[i].ID = i + 1
@@ -81,7 +81,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 func (f *DBFiller) linkFilmsReviews() (int, error) {
 	countInserts := len(f.faceReviews)
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsReviews, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsReviews, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -113,7 +113,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmsReviews")
 	}
@@ -128,7 +128,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsGenres, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsGenres, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -154,7 +154,7 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmGenres")
 	}
@@ -169,7 +169,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 		countInserts += len(value.ProdCountries)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsCountries, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsCountries, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -199,7 +199,7 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmCountries")
 	}
@@ -214,7 +214,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 		countInserts += len(value.ProdCompanies)
 	}
 
-	insertStatement, countAttributes := pkgInner.CreateFullQuery(insertFilmsCompanies, countInserts)
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsCompanies, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -240,7 +240,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmCompanies")
 	}
@@ -260,7 +260,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		sequenceActors := pkg.CryptoRandSequence(len(f.persons)+1, 1)
 
 		for i := 0; i < countActors; i++ {
-			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], pkgInner.NewSQLNullString(faker.Word()), weightActors)
+			values = append(values, sequenceActors[i], value.ID, f.professions["актер"], sqltools.NewSQLNullString(faker.Word()), weightActors)
 			weightActors--
 		}
 
@@ -271,7 +271,7 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 			sequencePersons := pkg.CryptoRandSequence(len(f.persons)+1, 1)
 
 			for i := 0; i < countPersons; i++ {
-				values = append(values, sequencePersons[i], value.ID, profession, pkgInner.NewSQLNullString(""), weightPersons)
+				values = append(values, sequencePersons[i], value.ID, profession, sqltools.NewSQLNullString(""), weightPersons)
 				weightPersons--
 			}
 
@@ -281,12 +281,12 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 		countInserts += countActors
 	}
 
-	insertStatement, _ := pkgInner.CreateFullQuery(insertFilmsPersons, countInserts)
+	insertStatement, _ := sqltools.CreateFullQuery(insertFilmsPersons, countInserts)
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmPersons")
 	}
@@ -311,15 +311,60 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 		countInserts += count
 	}
 
-	insertStatement, _ := pkgInner.CreateFullQuery(insertFilmsTags, countInserts)
+	insertStatement, _ := sqltools.CreateFullQuery(insertFilmsTags, countInserts)
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 	defer cancelFunc()
 
-	_, err := pkgInner.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
 		return 0, errors.Wrap(err, "linkFilmTags")
 	}
 
 	return countInserts, nil
+}
+
+func (f *DBFiller) linkFilmImages() (int, error) {
+	countInserts := len(f.films)
+
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsImages, countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+	for _, value := range f.films {
+		values[pos] = value.ID
+		pos++
+
+		imagesList := strings.Join(value.Images, "_")
+		values[pos] = sqltools.NewSQLNullString(imagesList)
+		pos++
+	}
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmImages")
+	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) UpdateFilms() (int, error) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	rows, err := f.DB.Connection.ExecContext(ctx, updateFilms)
+	if err != nil {
+		return 0, fmt.Errorf("UpdateFilms: [%w] when inserting row into [%s] table", err, updateFilms)
+	}
+
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "UpdateFilms")
+	}
+
+	return int(affected), nil
 }

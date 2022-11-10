@@ -1,38 +1,46 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 // signupHandler is the structure that handles the request for auth.
 type signupHandler struct {
-	userService serviceUser.AuthService
-	authService serviceAuth.SessionService
+	authService    authService.AuthService
+	sessionService sessionService.SessionService
 }
 
 // NewSingUpHandler is constructor for signupHandler in this pkg - auth.
-func NewSingUpHandler(us serviceUser.AuthService, as serviceAuth.SessionService) pkg.Handler {
+func NewSingUpHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &signupHandler{
-		us,
 		as,
+		ss,
 	}
+}
+
+func (h *signupHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/auth/signup", h.Action).Methods(http.MethodPost)
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary New user registration
-// @Description Sending login and password for registration
-// @tags auth
+// @Description Sending login and password for registration. Email, password, nickname - required.
+// @tags auth, completed
 // @Accept json
 // @Produce json
 // @Param user body models.UserSignupRequest true "Request body for signup"
@@ -47,26 +55,36 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, err)
+		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
 		return
 	}
 
-	user, err := h.userService.Signup(r.Context(), signupRequest.GetUser())
+	user, err := h.authService.Signup(r.Context(), signupRequest.GetUser())
+	if err != nil {
+		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		errors.CreateLog(r.Context(), err)
+		return
+	}
+
+	newSession, err := h.sessionService.CreateSession(r.Context(), &user)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
 
-	newSession, err := h.authService.CreateSession(r.Context(), &user)
+	token, err := security.CreateCsrfToken(&newSession)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
 		return
 	}
+
+	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
-		Name:     "session_id",
+		Name:     pkg.SessionCookieName,
 		Value:    newSession.ID,
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:     pkg.GlobalCookiePath,
 		HttpOnly: true,
 	}
 

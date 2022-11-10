@@ -3,15 +3,16 @@ package security
 import (
 	"bytes"
 
+	stdErrors "github.com/pkg/errors"
 	"golang.org/x/crypto/argon2"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	commonPkg "go-park-mail-ru/2022_2_BugOverload/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 // genSalt generate slice of random bytes with SaltLength(Params.go) length
 func genSalt() ([]byte, error) {
-	salt, err := commonPkg.GenerateRandomBytes(pkg.SaltLength)
+	salt, err := pkg.GenerateRandomBytes(innerPKG.SaltLength)
 
 	if err != nil {
 		return []byte{}, err
@@ -22,7 +23,7 @@ func genSalt() ([]byte, error) {
 
 // getHash return salt + hash using Argon2
 func getHash(salt, plainPassword []byte) []byte {
-	hashedPassword := argon2.IDKey(plainPassword, salt, pkg.ArgonTime, pkg.ArgonMemory, pkg.ArgonThreads, pkg.ArgonKeyLength)
+	hashedPassword := argon2.IDKey(plainPassword, salt, innerPKG.ArgonTime, innerPKG.ArgonMemory, innerPKG.ArgonThreads, innerPKG.ArgonKeyLength)
 
 	return append(salt, hashedPassword...)
 }
@@ -32,7 +33,7 @@ func HashPassword(plainPassword string) (string, error) {
 	salt, err := genSalt()
 
 	if err != nil {
-		return "", err
+		return "", stdErrors.Wrap(err, "GenSalt falls")
 	}
 
 	hashedPassword := getHash(salt, []byte(plainPassword))
@@ -42,11 +43,7 @@ func HashPassword(plainPassword string) (string, error) {
 
 // IsPasswordsEqual return true if passwords equal, false otherwise
 func IsPasswordsEqual(hashedPassword, plainPassword string) bool {
-	if len(hashedPassword) < pkg.ArgonKeyLength+pkg.SaltLength {
-		return false
-	}
-
-	salt := hashedPassword[0:pkg.SaltLength]
+	salt := hashedPassword[0:innerPKG.SaltLength]
 
 	userPasswordHash := getHash([]byte(salt), []byte(plainPassword))
 

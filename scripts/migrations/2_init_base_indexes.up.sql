@@ -2,15 +2,18 @@
 
 CREATE INDEX IF NOT EXISTS idx_film_name_prod_date_rating
     ON films USING btree
-        (name, rating, prod_year);
+        (rating, name, prod_year);
+
+CREATE INDEX IF NOT EXISTS idx_users_email
+    ON users USING btree
+        (email);
+
+CREATE INDEX IF NOT EXISTS idx_tags_name
+    ON tags USING btree
+        (name);
 
 CREATE INDEX IF NOT EXISTS idx_film_name
     ON films (LOWER(name));
 
 CREATE INDEX IF NOT EXISTS idx_person_name
     ON persons (LOWER(name));
-
-CREATE INDEX IF NOT EXISTS idx_collection_name_create_date_is_public
-    ON collections USING btree
-        (name, create_time, count_likes, is_public);
-

@@ -2,7 +2,10 @@ package repository
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
+	"strconv"
 )
 
 type ImageS3 struct {
@@ -11,26 +14,46 @@ type ImageS3 struct {
 	Bytes  []byte `json:"-"`
 }
 
-func NewImageS3Pattern(imageParams *models.Image) *ImageS3 {
+func NewImageS3Pattern(imageParams *models.Image) (*ImageS3, error) {
 	image := &ImageS3{}
 
 	switch imageParams.Object {
-	case pkg.ImageObjectFilmPosterVer:
-		image.Bucket = "film/"
+	case innerPKG.ImageObjectFilmPosterVer:
+		image.Bucket = innerPKG.FilmsBucket
 		image.Key = "posters/ver/"
-	case pkg.ImageObjectFilmPosterHor:
-		image.Bucket = "film/"
+	case innerPKG.ImageObjectFilmPosterHor:
+		image.Bucket = innerPKG.FilmsBucket
 		image.Key = "posters/hor/"
-	case pkg.ImageObjectAvatar:
-		image.Bucket = "users/"
-		image.Key = "avatar/"
-	case pkg.ImageObjectDefault:
-		image.Bucket = "default/"
+	case innerPKG.ImageObjectFilmImage:
+		image.Bucket = innerPKG.FilmsBucket
+		image.Key = "images/"
+
+	case innerPKG.ImageObjectUserAvatar:
+		image.Bucket = innerPKG.UsersBucket
+		image.Key = "avatars/"
+
+	case innerPKG.ImageObjectPersonAvatar:
+		image.Bucket = innerPKG.PersonsBucket
+		image.Key = "avatars/"
+	case innerPKG.ImageObjectPersonImage:
+		image.Bucket = innerPKG.PersonsBucket
+		image.Key = "images/"
+
+	case innerPKG.ImageObjectDefault:
+		image.Bucket = innerPKG.DefBucket
+
+		if imageParams.Key == "login" || imageParams.Key == "signup" {
+			randID := pkg.RandMaxInt(innerPKG.ImageCountSignupLogin) + 1
+
+			imageParams.Key = strconv.Itoa(randID)
+		}
+	default:
+		return nil, errors.ErrBadImageType
 	}
 
-	image.Key += imageParams.Key + ".jpeg"
+	image.Key += imageParams.Key + ".webp"
 
 	image.Bytes = imageParams.Bytes
 
-	return image
+	return image, nil
 }

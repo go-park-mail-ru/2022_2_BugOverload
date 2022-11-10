@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"io"
 	"net/http"
 
@@ -24,16 +25,16 @@ func NewUserLoginRequest() *UserLoginRequest {
 
 func (u *UserLoginRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") == "" {
-		return errors.NewErrValidation(errors.ErrContentTypeUndefined)
+		return errors.ErrContentTypeUndefined
 	}
 
 	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrUnsupportedMediaType
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return err
+		return errors.ErrBadBodyRequest
 	}
 	defer func() {
 		err = r.Body.Close()
@@ -43,16 +44,16 @@ func (u *UserLoginRequest) Bind(r *http.Request) error {
 	}()
 
 	if len(body) == 0 {
-		return errors.NewErrValidation(errors.ErrEmptyBody)
+		return errors.ErrEmptyBody
 	}
 
 	err = json.Unmarshal(body, u)
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrCJSONUnexpectedEnd)
+		return errors.ErrJSONUnexpectedEnd
 	}
 
 	if (u.Nickname == "" && u.Email == "") || u.Password == "" {
-		return errors.NewErrAuth(errors.ErrEmptyFieldAuth)
+		return errors.ErrEmptyFieldAuth
 	}
 
 	return nil
@@ -74,8 +75,8 @@ type UserLoginResponse struct {
 
 func NewUserLoginResponse(user *models.User) *UserLoginResponse {
 	return &UserLoginResponse{
-		Email:    user.Email,
-		Nickname: user.Nickname,
+		Email:    security.Sanitize(user.Email),
+		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Profile.Avatar,
 	}
 }

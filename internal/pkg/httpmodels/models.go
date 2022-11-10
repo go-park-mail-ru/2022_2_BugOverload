@@ -35,3 +35,11 @@ type ErrResponseFilmNoSuchFilm struct {
 type ErrResponsePersonNoSuchPerson struct {
 	ErrMassage string `json:"error,omitempty" example:"Person: [no such person]"`
 }
+
+type ErrResponseCollectionNoSuchCollection struct {
+	ErrMassage string `json:"error,omitempty" example:"Collection: [no such collection]"`
+}
+
+type ErrResponseProfileNoSuchProfile struct {
+	ErrMassage string `json:"error,omitempty" example:"Profile: [no such profile]"`
+}
