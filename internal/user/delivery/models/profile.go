@@ -1,6 +1,7 @@
 package models
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 	"strconv"
 
@@ -49,7 +50,7 @@ type UserProfileResponse struct {
 
 func NewUserProfileResponse(user *models.User) *UserProfileResponse {
 	return &UserProfileResponse{
-		Nickname:         user.Nickname,
+		Nickname:         security.Sanitize(user.Nickname),
 		Avatar:           user.Profile.Avatar,
 		JoinedDate:       user.Profile.JoinedDate,
 		CountViewsFilms:  user.Profile.CountViewsFilms,
