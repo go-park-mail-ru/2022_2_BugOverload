@@ -72,11 +72,11 @@ SET (rating, count_scores) =
 
 	updatePersons = `
 UPDATE persons p
-SET count_films = (SELECT COUNT(*) as count
+SET count_films = (SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()
                    FROM film_persons fp
                    WHERE fp.fk_person_id = p.person_id
-                   GROUP BY fp.fk_person_id, fp.fk_profession_id
-                   HAVING fp.fk_profession_id = (SELECT profession_id FROM professions WHERE name = 'актер'));`
+                   GROUP BY fk_film_id, fk_person_id
+                   LIMIT 1);`
 
 	updateProfiles = `
 UPDATE profiles p
