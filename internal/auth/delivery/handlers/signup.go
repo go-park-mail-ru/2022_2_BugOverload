@@ -89,11 +89,10 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookieCSRF := &http.Cookie{
-		Name:     "CSRF-TOKEN",
-		Value:    token,
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
-		HttpOnly: true,
+		Name:    "CSRF-TOKEN",
+		Value:   token,
+		Expires: time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:    pkg.GlobalCookiePath,
 	}
 
 	http.SetCookie(w, cookieCSRF)
