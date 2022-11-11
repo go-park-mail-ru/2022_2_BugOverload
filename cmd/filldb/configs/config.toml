@@ -5,7 +5,7 @@ timeout = 1
 count_users = 200
 
 count_ratings = 600
-max_rating = 10.0
+max_rating = 10
 max_count_ratings_on_film = 20
 
 count_reviews = 600

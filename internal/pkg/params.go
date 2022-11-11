@@ -35,7 +35,7 @@ type ChangeUserSettings struct {
 // FilmRateParams in struct for filmRateHandler
 type FilmRateParams struct {
 	FilmID int
-	Score  float32
+	Score  int
 }
 
 // FilmRateDropParams in struct for filmRateDropHandler

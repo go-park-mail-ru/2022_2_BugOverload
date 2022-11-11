@@ -209,7 +209,7 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 
 	if errMain != nil {
 		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d, %d, %2.1f]. Special Error [%s]",
+			"Err: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, params.Score, errMain)
 	}
 
