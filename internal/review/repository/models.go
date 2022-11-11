@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"time"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -28,7 +29,7 @@ func (r *ReviewSQL) Convert() models.Review {
 		Name:       r.Name,
 		Type:       r.Type,
 		Body:       r.Body,
-		CreateTime: r.CreateTime.Format("2006.01.02 15:04:05"),
+		CreateTime: r.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
 		CountLikes: int(r.CountLikes.Int32),
 		Author: models.User{
 			ID:       r.Author.ID,

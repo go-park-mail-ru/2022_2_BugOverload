@@ -52,6 +52,9 @@ const (
 	FilmRateDropRequest          = "FilmRateDropRequest"
 	NewFilmReviewRequest         = "NewFilmReviewRequest"
 	GetUserActivityOnFilmRequest = "GetUserActivityOnFilmRequest"
+
+	DateFormat = "2006.01.02"
+	TimeFormat = "15:04:05"
 )
 
 // DB

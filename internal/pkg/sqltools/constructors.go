@@ -2,6 +2,7 @@ package sqltools
 
 import (
 	"database/sql"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"time"
 )
 
@@ -28,7 +29,7 @@ func NewSQLNullInt32(i int) sql.NullInt32 {
 }
 
 func NewSQLNNullDate(date string) sql.NullTime {
-	dateTime, err := time.Parse("2006.01.02", date)
+	dateTime, err := time.Parse(innerPKG.TimeFormat, date)
 	if err != nil {
 		return sql.NullTime{}
 	}

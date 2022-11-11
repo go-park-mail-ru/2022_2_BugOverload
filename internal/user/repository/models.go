@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 )
@@ -31,7 +32,7 @@ func NewUserSQL() UserSQL {
 }
 
 func NewUserSQLOnUser(user *models.User) UserSQL {
-	joinedDate, _ := time.Parse("2006.01.02", user.Profile.JoinedDate)
+	joinedDate, _ := time.Parse(innerPKG.DateFormat, user.Profile.JoinedDate)
 
 	return UserSQL{
 		ID:       user.ID,
@@ -61,7 +62,7 @@ func (u *UserSQL) Convert() models.User {
 		Password: string(u.Password),
 		Profile: models.Profile{
 			Avatar:           u.Profile.Avatar.String,
-			JoinedDate:       u.Profile.JoinedDate.Format("2006.01.02"),
+			JoinedDate:       u.Profile.JoinedDate.Format(innerPKG.DateFormat),
 			CountViewsFilms:  int(u.Profile.CountViewsFilms.Int32),
 			CountCollections: int(u.Profile.CountCollections.Int32),
 			CountReviews:     int(u.Profile.CountReviews.Int32),
@@ -89,7 +90,7 @@ func NewUserActivitySQL() UserActivitySQL {
 func (u *UserActivitySQL) Convert() models.UserActivity {
 	rateDate := ""
 	if u.DateRating.Valid {
-		rateDate = u.DateRating.Time.Format("2006.01.02")
+		rateDate = u.DateRating.Time.Format(innerPKG.DateFormat)
 	}
 
 	res := models.UserActivity{
