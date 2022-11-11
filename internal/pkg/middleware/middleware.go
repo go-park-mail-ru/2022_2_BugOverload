@@ -127,11 +127,6 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("X-Csrf-Token")
 
-		if token == "" {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenNotFound))
-			return
-		}
-
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
 			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
@@ -150,7 +145,10 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		correctToken, err := security.CheckCsrfToken(&currentSession, token)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+			if stdErrors.Cause(err) == errors.ErrCsrfTokenCheckInternal {
+				errors.CreateLog(r.Context(), err)
+			}
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenInvalid))
 			return
 		}
 		if !correctToken {

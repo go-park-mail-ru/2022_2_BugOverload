@@ -10,15 +10,15 @@ tls_key_file = "privkey1.pem"
 timeout = 4
 
 [logger]
-log_level = "info"
+log_level = "debug"
 log_path = "logs/prod/"
 
 [S3]
 endpoint = "http://localstack:4566"
 
 [cors]
-methods = ["POST", "GET", "PUT"]
-urls = ["http://movie-gate.online", "https://movie-gate.online", "https://www.movie-gate.online", "https://movie-gate.online:443", "https://localhost:443"]
+methods = ["POST", "GET", "PUT", "DELETE"]
+urls = ["http://movie-gate.online", "https://movie-gate.online", "https://www.movie-gate.online", "https://movie-gate.online:443", "https://localhost:443", "https://movie-gate.online:8088"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = false

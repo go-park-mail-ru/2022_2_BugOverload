@@ -127,7 +127,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	return countInserts, nil
 }
 
-const offset = 4.8
+const offset = 4
 
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
@@ -152,7 +152,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			pos++
 			values[pos] = sequence[j]
 			pos++
-			values[pos] = pkg.RandMaxFloat64(f.Config.Volume.MaxRatings-offset, 1) + offset
+			values[pos] = pkg.RandMaxInt(f.Config.Volume.MaxRatings-offset) + offset
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++
@@ -178,7 +178,7 @@ func (f *DBFiller) UpdateProfiles() (int, error) {
 
 	rows, err := f.DB.Connection.ExecContext(ctx, updateProfiles)
 	if err != nil {
-		return 0, fmt.Errorf("UpdateFilms: [%w] when inserting row into [%s] table", err, updateProfiles)
+		return 0, fmt.Errorf("UpdateProfiles: [%w] when inserting row into [%s] table", err, updateProfiles)
 	}
 
 	affected, err := rows.RowsAffected()

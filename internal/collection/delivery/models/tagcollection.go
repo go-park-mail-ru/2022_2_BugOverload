@@ -63,7 +63,7 @@ type filmTagCollectionResponse struct {
 	ProdYear  int      `json:"prod_year,omitempty" example:"2014"`
 	EndYear   int      `json:"end_year,omitempty" example:"2013"`
 	PosterVer string   `json:"poster_ver,omitempty" example:"{{key}}"`
-	Rating    float32  `json:"rating,omitempty" example:"7.9"`
+	Rating    float32  `json:"rating,omitempty" example:"7.9523542"`
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 
 	stdErrors "github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -76,6 +75,10 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 			&response.Profile.CountRatings)
 		if err != nil {
 			return err
+		}
+
+		if !response.Profile.Avatar.Valid {
+			response.Profile.Avatar.String = innerPKG.DefUserAvatar
 		}
 
 		return nil
@@ -209,7 +212,7 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 
 	if errMain != nil {
 		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d, %d, %2.1f]. Special Error [%s]",
+			"Err: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, params.Score, errMain)
 	}
 
@@ -250,6 +253,11 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 		}
 
 		_, err = tx.ExecContext(ctx, linkNewReviewAuthor, reviewID, user.ID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.ExecContext(ctx, updateAuthorCountReviews, user.ID)
 		if err != nil {
 			return err
 		}
@@ -297,16 +305,12 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
 
-		logrus.Error("123123")
-
 		err = rowRating.Scan(&response.Rating, &response.DateRating)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
-
-		logrus.Error("123123")
 
 		// UserCollections
 		rows, err := conn.QueryContext(ctx, getUserCollections, user.ID, params.FilmID)

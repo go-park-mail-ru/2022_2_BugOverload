@@ -194,10 +194,10 @@ CREATE TABLE IF NOT EXISTS film_persons
 -- Generator completed
 CREATE TABLE IF NOT EXISTS profile_ratings
 (
-    "fk_profile_id" integer       NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
-    "fk_film_id"    integer       NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
-    "score"         NUMERIC(3, 1) NOT NULL,
-    "create_date"   date          NOT NULL DEFAULT NOW(),
+    "fk_profile_id" integer  NOT NULL REFERENCES profiles (profile_id) ON DELETE CASCADE,
+    "fk_film_id"    integer  NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
+    "score"         smallint NOT NULL,
+    "create_date"   date     NOT NULL DEFAULT NOW(),
     PRIMARY KEY (fk_profile_id, fk_film_id)
 );
 

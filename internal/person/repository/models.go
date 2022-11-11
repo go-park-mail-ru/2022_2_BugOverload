@@ -42,7 +42,7 @@ func NewPersonSQLOnPerson(person models.Person) PersonSQL {
 
 	if person.Birthday != "" {
 		var err error
-		birthday, err = time.Parse("2006.04.02", person.Birthday)
+		birthday, err = time.Parse(innerPKG.DateFormat, person.Birthday)
 		if err != nil {
 			birthday = time.Time{}
 		}
@@ -65,13 +65,13 @@ func NewPersonSQLOnPerson(person models.Person) PersonSQL {
 func (p *PersonSQL) Convert() models.Person {
 	death := ""
 	if p.Death.Valid {
-		death = p.Death.Time.Format("2006.01.02")
+		death = p.Death.Time.Format(innerPKG.DateFormat)
 	}
 
 	res := models.Person{
 		ID:       p.ID,
 		Name:     p.Name,
-		Birthday: p.Birthday.Format("2006.01.02"),
+		Birthday: p.Birthday.Format(innerPKG.DateFormat),
 		Growth:   p.Growth,
 
 		Avatar:       p.Avatar.String,

@@ -16,12 +16,12 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-// getActivityOnFilmHandler is the structure that handles the request for auth.
+// getSettingsHandler is the structure that handles the request for auth.
 type getSettingsHandler struct {
 	userService serviceUser.UserService
 }
 
-// NewGetActivityOnFilmHandler is constructor for getActivityOnFilmHandler in this pkg - settings.
+// NewGetSettingsHandler is constructor for getActivityOnFilmHandler in this pkg - settings.
 func NewGetSettingsHandler(us serviceUser.UserService) handler.Handler {
 	return &getSettingsHandler{
 		us,

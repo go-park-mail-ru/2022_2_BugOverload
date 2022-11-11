@@ -58,7 +58,7 @@ func NewImageS3(config *innerPKG.Config, database *sqltools.Database) ImageRepos
 func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image) (models.Image, error) {
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
-		return models.Image{}, stdErrors.WithMessagef(errors.ErrImage,
+		return models.Image{}, stdErrors.WithMessagef(err,
 			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
 			image.Key, image.Object, len(image.Bytes), err)
 	}

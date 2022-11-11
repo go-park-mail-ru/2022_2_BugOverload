@@ -49,7 +49,7 @@ type NodeInUserCollectionResponse struct {
 
 type GetUserActivityOnFilmResponse struct {
 	CountReviews int                            `json:"count_reviews,omitempty" example:"44"`
-	Rating       float32                        `json:"rating,omitempty" example:"5.2"`
+	Rating       int                            `json:"rating,omitempty" example:"5"`
 	DateRating   string                         `json:"date_rating,omitempty" example:"2022.12.29"`
 	Collections  []NodeInUserCollectionResponse `json:"collections,omitempty"`
 }

@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	4d63.com/gochecknoglobals v0.1.0 // indirect
+	github.com/golang/mock v1.6.0
 	github.com/Antonboom/errname v0.1.7 // indirect
 	github.com/Antonboom/nilnil v0.1.1 // indirect
 	github.com/BurntSushi/toml v1.2.0 // indirect

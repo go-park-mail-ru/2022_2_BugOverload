@@ -56,6 +56,10 @@ func (r *reviewPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPK
 				return err
 			}
 
+			if !review.Author.Avatar.Valid {
+				review.Author.Avatar.String = innerPKG.DefPersonAvatar
+			}
+
 			response = append(response, review)
 		}
 

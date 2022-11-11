@@ -3,9 +3,9 @@ package fillerdb
 type Volume struct {
 	CountUser int `toml:"count_users"`
 
-	CountRatings          int     `toml:"count_ratings"`
-	MaxRatings            float64 `toml:"max_rating"`
-	MaxCountRatingsOnFilm int     `toml:"max_count_ratings_on_film"`
+	CountRatings          int `toml:"count_ratings"`
+	MaxRatings            int `toml:"max_rating"`
+	MaxCountRatingsOnFilm int `toml:"max_count_ratings_on_film"`
 
 	CountViews    int `toml:"count_views"`
 	MaxViewOnFilm int `toml:"max_views_on_film"`

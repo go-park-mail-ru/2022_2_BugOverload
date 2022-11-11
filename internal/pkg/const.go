@@ -52,6 +52,9 @@ const (
 	FilmRateDropRequest          = "FilmRateDropRequest"
 	NewFilmReviewRequest         = "NewFilmReviewRequest"
 	GetUserActivityOnFilmRequest = "GetUserActivityOnFilmRequest"
+
+	DateFormat = "2006.01.02"
+	TimeFormat = "15:04:05"
 )
 
 // DB
@@ -90,9 +93,11 @@ const (
 	HTTPS = "https"
 
 	// Validation HTTP
-	ContentTypeJSON = "application/json"
-	ContentTypeWEBP = "image/webp"
-	ContentTypeJPEG = "image/jpeg"
+	ContentTypeJSON              = "application/json"
+	ContentTypeMultipartFormData = "multipart/form-data"
+	ContentTypeWEBP              = "image/webp"
+	ContentTypeJPEG              = "image/jpeg"
+	ContentTypePNG               = "image/png"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5

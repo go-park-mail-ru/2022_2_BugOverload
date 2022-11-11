@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"time"
 )
@@ -31,7 +32,7 @@ func NewUserSQL() UserSQL {
 }
 
 func NewUserSQLOnUser(user *models.User) UserSQL {
-	joinedDate, _ := time.Parse("2006.01.02", user.Profile.JoinedDate)
+	joinedDate, _ := time.Parse(innerPKG.DateFormat, user.Profile.JoinedDate)
 
 	return UserSQL{
 		ID:       user.ID,
@@ -50,10 +51,6 @@ func NewUserSQLOnUser(user *models.User) UserSQL {
 }
 
 func (u *UserSQL) Convert() models.User {
-	if !u.Profile.Avatar.Valid {
-		u.Profile.Avatar.String = "avatar"
-	}
-
 	return models.User{
 		ID:       u.ID,
 		Nickname: u.Nickname.String,
@@ -61,7 +58,7 @@ func (u *UserSQL) Convert() models.User {
 		Password: string(u.Password),
 		Profile: models.Profile{
 			Avatar:           u.Profile.Avatar.String,
-			JoinedDate:       u.Profile.JoinedDate.Format("2006.01.02"),
+			JoinedDate:       u.Profile.JoinedDate.Format(innerPKG.DateFormat),
 			CountViewsFilms:  int(u.Profile.CountViewsFilms.Int32),
 			CountCollections: int(u.Profile.CountCollections.Int32),
 			CountReviews:     int(u.Profile.CountReviews.Int32),
@@ -77,7 +74,7 @@ type NodeInUserCollectionSQL struct {
 
 type UserActivitySQL struct {
 	CountReviews    sql.NullInt32
-	Rating          sql.NullFloat64
+	Rating          sql.NullInt32
 	DateRating      sql.NullTime
 	ListCollections []NodeInUserCollectionSQL
 }
@@ -89,12 +86,12 @@ func NewUserActivitySQL() UserActivitySQL {
 func (u *UserActivitySQL) Convert() models.UserActivity {
 	rateDate := ""
 	if u.DateRating.Valid {
-		rateDate = u.DateRating.Time.Format("2006.01.02")
+		rateDate = u.DateRating.Time.Format(innerPKG.DateFormat)
 	}
 
 	res := models.UserActivity{
 		CountReviews: int(u.CountReviews.Int32),
-		Rating:       float32(u.Rating.Float64),
+		Rating:       int(u.Rating.Int32),
 		DateRating:   rateDate,
 		Collections:  make([]models.NodeInUserCollection, len(u.ListCollections)),
 	}

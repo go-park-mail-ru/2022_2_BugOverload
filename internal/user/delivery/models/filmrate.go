@@ -14,8 +14,8 @@ import (
 )
 
 type FilmRateRequest struct {
-	FilmID int     `json:"-"`
-	Score  float32 `json:"score,omitempty" example:"4.2"`
+	FilmID int `json:"-"`
+	Score  int `json:"score,omitempty" example:"4"`
 }
 
 func NewFilmRateRequest() FilmRateRequest {

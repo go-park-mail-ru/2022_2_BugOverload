@@ -89,6 +89,15 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	}
 
+	cookieCSRF := &http.Cookie{
+		Name:    "CSRF-TOKEN",
+		Value:   token,
+		Expires: time.Now().Add(pkg.TimeoutLiveCookie),
+		Path:    pkg.GlobalCookiePath,
+	}
+
+	http.SetCookie(w, cookieCSRF)
+
 	http.SetCookie(w, cookie)
 
 	loginResponse := models.NewUserLoginResponse(&userLogged)

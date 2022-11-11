@@ -102,6 +102,7 @@ main-debug-restart:
 	docker-compose restart $(SERVICE_MAIN)
 
 main-prod-restart:
+	make prod-create-env
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
 
 # Example: make infro-command COMMAND=run-all-tests
