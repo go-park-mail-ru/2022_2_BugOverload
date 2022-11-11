@@ -78,6 +78,10 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 			return err
 		}
 
+		if !response.Profile.Avatar.Valid {
+			response.Profile.Avatar.String = innerPKG.DefUserAvatar
+		}
+
 		return nil
 	})
 

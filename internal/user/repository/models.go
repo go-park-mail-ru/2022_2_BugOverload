@@ -51,10 +51,6 @@ func NewUserSQLOnUser(user *models.User) UserSQL {
 }
 
 func (u *UserSQL) Convert() models.User {
-	if !u.Profile.Avatar.Valid {
-		u.Profile.Avatar.String = "avatar"
-	}
-
 	return models.User{
 		ID:       u.ID,
 		Nickname: u.Nickname.String,
@@ -78,7 +74,7 @@ type NodeInUserCollectionSQL struct {
 
 type UserActivitySQL struct {
 	CountReviews    sql.NullInt32
-	Rating          sql.NullFloat64
+	Rating          sql.NullInt32
 	DateRating      sql.NullTime
 	ListCollections []NodeInUserCollectionSQL
 }
@@ -95,7 +91,7 @@ func (u *UserActivitySQL) Convert() models.UserActivity {
 
 	res := models.UserActivity{
 		CountReviews: int(u.CountReviews.Int32),
-		Rating:       float32(u.Rating.Float64),
+		Rating:       int(u.Rating.Int32),
 		DateRating:   rateDate,
 		Collections:  make([]models.NodeInUserCollection, len(u.ListCollections)),
 	}
