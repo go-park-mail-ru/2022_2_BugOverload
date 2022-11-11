@@ -65,7 +65,7 @@ var (
 	ErrCsrfTokenCheckInternal = stdErrors.New("csrf token check internal error")
 	ErrCsrfTokenExpired       = stdErrors.New("csrf token expired")
 	ErrCsrfTokenNotFound      = stdErrors.New("csrf token not found")
-	ErrCsrfTokenInvalid       = stdErrors.New("csrf token is invalid")
+	ErrCsrfTokenInvalid       = stdErrors.New("invalid csrf token")
 )
 
 type ErrClassifier struct {

@@ -37,10 +37,23 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 		return errors.ErrBigImage
 	}
 
-	file, _, err := r.FormFile("object")
-
+	file, multipartFileHeader, err := r.FormFile("object")
 	if err != nil {
 		return errors.ErrEmptyBody
+	}
+
+	fileHeader := make([]byte, multipartFileHeader.Size)
+	if _, errRead := file.Read(fileHeader); errRead != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	if _, errSeek := file.Seek(0, io.SeekStart); errSeek != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	contentType := http.DetectContentType(fileHeader)
+	if !(contentType == pkg.ContentTypeJPEG || contentType == pkg.ContentTypeWEBP) {
+		return errors.ErrContentTypeUndefined
 	}
 
 	body := bytes.NewBuffer(nil)

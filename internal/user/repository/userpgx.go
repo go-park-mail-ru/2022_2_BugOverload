@@ -5,7 +5,6 @@ import (
 	"database/sql"
 
 	stdErrors "github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -306,16 +305,12 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
 
-		logrus.Error("123123")
-
 		err = rowRating.Scan(&response.Rating, &response.DateRating)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
-
-		logrus.Error("123123")
 
 		// UserCollections
 		rows, err := conn.QueryContext(ctx, getUserCollections, user.ID, params.FilmID)
