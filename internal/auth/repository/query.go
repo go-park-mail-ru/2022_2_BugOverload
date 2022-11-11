@@ -8,7 +8,7 @@ INSERT INTO users (email,
 VALUES ($1, $2, $3)
 RETURNING user_id`
 
-	createUserProfile = `INSERT INTO profiles (profile_id) VALUES ($1)`
+	createUserProfile = `INSERT INTO profiles (profile_id, count_collections) VALUES ($1, 2)`
 
 	createDefCollections = `
 INSERT INTO collections(name, description)
