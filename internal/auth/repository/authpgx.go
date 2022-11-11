@@ -34,8 +34,11 @@ func NewAuthDatabase(database *sqltools.Database) AuthRepository {
 // CheckExist is a check for the existence of such a user by email.
 func (ad *AuthPostgres) CheckExist(ctx context.Context, email string) (bool, error) {
 	response := false
-	err := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		row := conn.QueryRowContext(ctx, checkExist, email)
+		if stdErrors.Is(row.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
 		if row.Err() != nil {
 			return row.Err()
 		}
@@ -48,10 +51,14 @@ func (ad *AuthPostgres) CheckExist(ctx context.Context, email string) (bool, err
 		return nil
 	})
 
-	if err != nil {
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return false, errors.ErrNotFoundInDB
+	}
+
+	if errMain != nil {
 		return false, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
-			checkExist, email, err)
+			checkExist, email, errMain)
 	}
 
 	return response, nil
@@ -140,6 +147,9 @@ func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (model
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowUser := conn.QueryRowContext(ctx, getUserByEmail, email)
+		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
@@ -154,6 +164,9 @@ func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (model
 		}
 
 		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
+		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
 		if rowProfile.Err() != nil {
 			return rowProfile.Err()
 		}
@@ -169,6 +182,10 @@ func (ad *AuthPostgres) GetUserByEmail(ctx context.Context, email string) (model
 
 		return nil
 	})
+
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return models.User{}, errors.ErrNotFoundInDB
+	}
 
 	if errMain != nil {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
@@ -185,6 +202,9 @@ func (ad *AuthPostgres) GetUserByID(ctx context.Context, userID int) (models.Use
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowUser := conn.QueryRowContext(ctx, getUserByID, userID)
+		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
@@ -199,6 +219,9 @@ func (ad *AuthPostgres) GetUserByID(ctx context.Context, userID int) (models.Use
 		}
 
 		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
+		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
+			return errors.ErrNotFoundInDB
+		}
 		if rowProfile.Err() != nil {
 			return rowProfile.Err()
 		}
@@ -214,6 +237,10 @@ func (ad *AuthPostgres) GetUserByID(ctx context.Context, userID int) (models.Use
 
 		return nil
 	})
+
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return models.User{}, errors.ErrNotFoundInDB
+	}
 
 	if errMain != nil {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,

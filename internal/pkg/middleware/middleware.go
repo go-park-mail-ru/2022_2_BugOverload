@@ -148,7 +148,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			if stdErrors.Cause(err) == errors.ErrCsrfTokenCheckInternal {
 				errors.CreateLog(r.Context(), err)
 			}
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenInvalid))
 			return
 		}
 		if !correctToken {
