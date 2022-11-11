@@ -50,10 +50,13 @@ ON CONFLICT (fk_profile_id, fk_film_id) DO UPDATE SET score = $3`
 
 	linkNewReviewAuthor = `INSERT INTO profile_reviews (fk_review_id, fk_profile_id, fk_film_id) VALUES ($1, $2, $3)`
 
-	updateAuthorCountReviews = `UPDATE profiles
+	updateAuthorCountReviews = `
+UPDATE profiles
 SET count_reviews = CASE
                         WHEN count_reviews IS NULL THEN 1
                         ELSE count_reviews + 1
     END
 WHERE profile_id = $1`
+
+	updateFilmCountReviews = ``
 )

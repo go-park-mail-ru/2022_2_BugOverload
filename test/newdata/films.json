@@ -461,6 +461,7 @@
   {
     "name": "Черное зеркало",
     "prod_year": 2011,
+    "type": "serial",
     "end_year": 2019,
     "poster_ver": "21",
     "poster_hor": "21",
