@@ -262,10 +262,21 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 			return err
 		}
 
-		// _, err = tx.ExecContext(ctx, updateFilmCountReviews, params.FilmID, review.Type)
-		// if err != nil {
-		//	return err
-		// }
+		var targetCounterReviews string
+
+		switch review.Type {
+		case innerPKG.TypeReviewNegative:
+			targetCounterReviews = updateFilmCountReviewNegative
+		case innerPKG.TypeReviewNeutral:
+			targetCounterReviews = updateFilmCountReviewNeutral
+		default:
+			targetCounterReviews = updateFilmCountReviewPositive
+		}
+
+		_, err = tx.ExecContext(ctx, targetCounterReviews, params.FilmID)
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})

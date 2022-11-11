@@ -58,5 +58,24 @@ SET count_reviews = CASE
     END
 WHERE profile_id = $1`
 
-	//  updateFilmCountReviews = `asdasd`
+	updateFilmCountReviewPositive = `UPDATE films
+SET count_positive_reviews = CASE
+                        WHEN count_positive_reviews IS NULL THEN 1
+                        ELSE count_positive_reviews + 1
+    END
+WHERE film_id = $1`
+
+	updateFilmCountReviewNegative = `UPDATE films
+SET count_negative_reviews = CASE
+                        WHEN count_negative_reviews IS NULL THEN 1
+                        ELSE count_negative_reviews + 1
+    END
+WHERE film_id = $1`
+
+	updateFilmCountReviewNeutral = `UPDATE films
+SET count_neutral_reviews = CASE
+                        WHEN count_neutral_reviews IS NULL THEN 1
+                        ELSE count_neutral_reviews + 1
+    END
+WHERE film_id = $1`
 )
