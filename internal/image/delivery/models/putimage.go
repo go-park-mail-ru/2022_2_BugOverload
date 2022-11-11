@@ -1,14 +1,14 @@
 package models
 
 import (
-	"io"
-	"net/http"
-
+	"bytes"
 	"github.com/sirupsen/logrus"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"io"
+	"net/http"
+	"strings"
 )
 
 type PutImageRequest struct {
@@ -22,37 +22,34 @@ func NewPutImageRequest() *PutImageRequest {
 }
 
 func (i *PutImageRequest) Bind(r *http.Request) error {
-	/*	if r.Header.Get("Content-Type") == "" {
-			return errors.ErrContentTypeUndefined
-		}
+	if r.Header.Get("Content-Type") == "" {
+		return errors.ErrContentTypeUndefined
+	}
 
-		if !(r.Header.Get("Content-Type") == pkg.ContentTypeWEBP || r.Header.Get("Content-Type") == pkg.ContentTypeJPEG) {
-			return errors.ErrUnsupportedMediaType
-		}*/
+	if !(strings.Contains(r.Header.Get("Content-Type"), pkg.ContentTypeMultipartFormData)) {
+		return errors.ErrUnsupportedMediaType
+	}
 
 	i.Key = r.FormValue("key")
 	i.Object = r.FormValue("object")
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return errors.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
-
-	if len(body) == 0 {
-		return errors.ErrEmptyBody
-	}
-
-	if len(body) > pkg.BufSizeImage {
+	errParse := r.ParseMultipartForm(pkg.BufSizeImage)
+	if errParse != nil {
 		return errors.ErrBigImage
 	}
 
-	i.Bytes = body
+	file, _, err := r.FormFile("object")
+	logrus.Info(file)
+	if err != nil {
+		return errors.ErrEmptyBody
+	}
+
+	body := bytes.NewBuffer(nil)
+	if _, errCopy := io.Copy(body, file); errCopy != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	i.Bytes = body.Bytes()
 
 	return nil
 }

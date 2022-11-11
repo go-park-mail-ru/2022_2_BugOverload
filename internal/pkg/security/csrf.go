@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	stdErrors "github.com/pkg/errors"
 	"io"
 	"time"
 
@@ -64,28 +65,38 @@ func CreateCsrfToken(session *models.Session) (string, error) {
 func CheckCsrfToken(session *models.Session, inputToken string) (bool, error) {
 	block, err := aes.NewCipher(secret)
 	if err != nil {
-		return false, errors.ErrCsrfTokenCheck
+		return false, stdErrors.WithMessagef(errors.ErrCsrfTokenCheckInternal,
+			"csrf aes.NewCipher error, input token: [%s]",
+			inputToken)
 	}
 
 	aesgcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return false, errors.ErrCsrfTokenCheck
+		return false, stdErrors.WithMessagef(errors.ErrCsrfTokenCheckInternal,
+			"csrf cipher.NewGCM error, input token: [%s]",
+			inputToken)
 	}
 
 	ciphertext, err := base64.StdEncoding.DecodeString(inputToken)
 	if err != nil {
-		return false, errors.ErrCsrfTokenCheck
+		return false, stdErrors.WithMessagef(errors.ErrCsrfTokenCheckInternal,
+			"csrf decode base64 input token error, input token: [%s]",
+			inputToken)
 	}
 
 	nonceSize := aesgcm.NonceSize()
 	if len(ciphertext) < nonceSize {
-		return false, errors.ErrCsrfTokenCheck
+		return false, stdErrors.WithMessagef(errors.ErrCsrfTokenCheckInternal,
+			"csrf noncesize error, cipher text len = [%d], noncesize = [%d], input token: [%s]",
+			len(ciphertext), nonceSize, inputToken)
 	}
 
 	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
 	plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return false, errors.ErrCsrfTokenCheck
+		return false, stdErrors.WithMessagef(errors.ErrCsrfTokenCheckInternal,
+			"csrf error with decode token(aesgcm.Open), inputToken: [%s]",
+			inputToken)
 	}
 
 	td := TokenData{}

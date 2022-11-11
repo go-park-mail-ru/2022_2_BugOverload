@@ -60,11 +60,12 @@ var (
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
 
 	// Security
-	ErrCsrfTokenCreate   = stdErrors.New("csrf token create error")
-	ErrCsrfTokenCheck    = stdErrors.New("csrf tokens check error")
-	ErrCsrfTokenExpired  = stdErrors.New("csrf token expired")
-	ErrCsrfTokenNotFound = stdErrors.New("csrf token not found")
-	ErrCsrfTokenInvalid  = stdErrors.New("csrf token is invalid")
+	ErrCsrfTokenCreate        = stdErrors.New("csrf token create error")
+	ErrCsrfTokenCheck         = stdErrors.New("csrf token check error")
+	ErrCsrfTokenCheckInternal = stdErrors.New("csrf token check internal error")
+	ErrCsrfTokenExpired       = stdErrors.New("csrf token expired")
+	ErrCsrfTokenNotFound      = stdErrors.New("csrf token not found")
+	ErrCsrfTokenInvalid       = stdErrors.New("csrf token is invalid")
 )
 
 type ErrClassifier struct {
@@ -126,7 +127,8 @@ func NewErrClassifier() ErrClassifier {
 
 	// Security
 	res[ErrCsrfTokenCreate] = http.StatusInternalServerError
-	res[ErrCsrfTokenCheck] = http.StatusInternalServerError
+	res[ErrCsrfTokenCheck] = http.StatusForbidden
+	res[ErrCsrfTokenCheckInternal] = http.StatusInternalServerError
 	res[ErrCsrfTokenExpired] = http.StatusForbidden
 	res[ErrCsrfTokenNotFound] = http.StatusForbidden
 	res[ErrCsrfTokenInvalid] = http.StatusForbidden
