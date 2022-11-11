@@ -52,7 +52,7 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 	}
 
 	contentType := http.DetectContentType(fileHeader)
-	if !(contentType == pkg.ContentTypeJPEG || contentType == pkg.ContentTypeWEBP) {
+	if !(contentType == pkg.ContentTypeJPEG || contentType == pkg.ContentTypeWEBP || contentType == pkg.ContentTypePNG) {
 		return errors.ErrContentTypeUndefined
 	}
 

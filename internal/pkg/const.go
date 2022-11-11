@@ -97,6 +97,7 @@ const (
 	ContentTypeMultipartFormData = "multipart/form-data"
 	ContentTypeWEBP              = "image/webp"
 	ContentTypeJPEG              = "image/jpeg"
+	ContentTypePNG               = "image/png"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5
