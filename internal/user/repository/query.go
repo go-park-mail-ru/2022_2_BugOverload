@@ -58,5 +58,5 @@ SET count_reviews = CASE
     END
 WHERE profile_id = $1`
 
-	updateFilmCountReviews = ``
+	//  updateFilmCountReviews = `asdasd`
 )
