@@ -258,6 +258,11 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 			return err
 		}
 
+		_, err = tx.ExecContext(ctx, updateAuthorCountReviews, user.ID)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
