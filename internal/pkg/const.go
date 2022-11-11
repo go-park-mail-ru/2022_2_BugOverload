@@ -93,9 +93,10 @@ const (
 	HTTPS = "https"
 
 	// Validation HTTP
-	ContentTypeJSON = "application/json"
-	ContentTypeWEBP = "image/webp"
-	ContentTypeJPEG = "image/jpeg"
+	ContentTypeJSON              = "application/json"
+	ContentTypeMultipartFormData = "multipart/form-data"
+	ContentTypeWEBP              = "image/webp"
+	ContentTypeJPEG              = "image/jpeg"
 
 	// Validattion size Requests
 	BufSizeRequest = 1024 * 1024 * 2.5
