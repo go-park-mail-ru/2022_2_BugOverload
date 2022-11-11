@@ -2,7 +2,6 @@ package models
 
 import (
 	"bytes"
-	"github.com/sirupsen/logrus"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -39,7 +38,7 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 	}
 
 	file, _, err := r.FormFile("object")
-	logrus.Info(file)
+
 	if err != nil {
 		return errors.ErrEmptyBody
 	}
