@@ -13,11 +13,13 @@ import (
 func DefaultHandlerError(ctx context.Context, w http.ResponseWriter, err error) {
 	errors.CreateLog(ctx, err)
 
+	errCause := stdErrors.Cause(err)
+
 	errResp := ErrResponse{
-		ErrMassage: stdErrors.Cause(err).Error(),
+		ErrMassage: errCause.Error(),
 	}
 
-	code := errors.GetCode(err)
+	code := errors.GetCode(errCause)
 
 	Response(ctx, w, code, errResp)
 }

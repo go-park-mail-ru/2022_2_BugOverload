@@ -56,7 +56,7 @@ var (
 
 	// DB
 	ErrPostgresRequest  = stdErrors.New("error sql")
-	ErrNotFoundInDB     = stdErrors.New("not fount")
+	ErrNotFoundInDB     = stdErrors.New("not found")
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
 
 	// Security
@@ -138,6 +138,8 @@ func NewErrClassifier() ErrClassifier {
 	}
 }
 
+var errCsf = NewErrClassifier()
+
 func GetCode(err error) int {
 	code, exist := errCsf.table[err]
 	if !exist {
@@ -146,5 +148,3 @@ func GetCode(err error) int {
 
 	return code
 }
-
-var errCsf = NewErrClassifier()
