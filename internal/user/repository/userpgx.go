@@ -207,6 +207,11 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 			return err
 		}
 
+		_, err = tx.ExecContext(ctx, updateAuthorCountRatingsUp, user.ID)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
@@ -222,6 +227,11 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error {
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, dropRateFilm, user.ID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.ExecContext(ctx, updateAuthorCountRatingsDown, user.ID)
 		if err != nil {
 			return err
 		}

@@ -58,6 +58,23 @@ SET count_reviews = CASE
     END
 WHERE profile_id = $1`
 
+	updateAuthorCountRatingsUp = `
+UPDATE profiles
+SET count_ratings = CASE
+                        WHEN count_ratings IS NULL THEN 1
+                        ELSE count_ratings + 1
+    END
+WHERE profile_id = $1`
+
+	updateAuthorCountRatingsDown = `
+UPDATE profiles
+SET count_ratings = CASE
+                        WHEN count_ratings ISNULL THEN NULL
+                        WHEN count_ratings = 0 THEN 0
+                        WHEN count_ratings > 0 THEN count_ratings - 1
+    END
+WHERE profile_id = $1`
+
 	updateFilmCountReviewPositive = `UPDATE films
 SET count_positive_reviews = CASE
                         WHEN count_positive_reviews IS NULL THEN 1
