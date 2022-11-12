@@ -73,6 +73,12 @@ const (
 	TagInPopular    = "популярное"
 	TagFromInCinema = "in_cinema"
 	TagInInCinema   = "сейчас в кино"
+
+	DefTypeFilm = "film"
+
+	TypeReviewPositive = "positive"
+	TypeReviewNegative = "negative"
+	TypeReviewNeutral  = "neutral"
 )
 
 // TxDefaultOptions for Postgres

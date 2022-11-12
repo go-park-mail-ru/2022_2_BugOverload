@@ -230,6 +230,10 @@ func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, arg
 			return err
 		}
 
+		if !f.Type.Valid {
+			f.Type.String = innerPKG.DefTypeFilm
+		}
+
 		if !f.PosterHor.Valid {
 			f.PosterHor.String = innerPKG.DefFilmPosterHor
 		}

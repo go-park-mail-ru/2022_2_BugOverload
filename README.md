@@ -29,7 +29,7 @@
 ## Менторы
 * [**Сарафанников Александр**](https://github.com/Sarafa2n) - *Frontend*
 * [**Трущелёв Михаил**](https://github.com/ThePsina) - *Backend*
-* [**Шишова Анастасия**]() - *Interfaces*
+* [**Шишова Анастасия**](https://github.com/NellinLin) - *Interfaces*
 
 ### Аннотация
 Проект выполнен на:

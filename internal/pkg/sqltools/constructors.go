@@ -29,7 +29,7 @@ func NewSQLNullInt32(i int) sql.NullInt32 {
 }
 
 func NewSQLNNullDate(date string) sql.NullTime {
-	dateTime, err := time.Parse(innerPKG.TimeFormat, date)
+	dateTime, err := time.Parse(innerPKG.DateFormat, date)
 	if err != nil {
 		return sql.NullTime{}
 	}
