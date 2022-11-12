@@ -10,14 +10,25 @@ import (
 )
 
 func CreateLog(ctx context.Context, errFull error) {
-	errShort := stdErrors.Cause(errFull)
+	errCause := stdErrors.Cause(errFull)
 
 	logger, ok := ctx.Value(pkg.LoggerKey).(*logrus.Entry)
 	if !ok {
-		logrus.Infof("CreateLog: errFull convert context -> *logrus.Logger on errFull [%s]", errShort)
+		logrus.Infof("CreateLog: errFull convert context -> *logrus.Logger on errFull [%s]", errCause)
 	}
 
-	logger.Error(errFull)
+	logLevel, err := GetLogLevelErr(errCause)
+	if err != nil {
+		logger.Error(stdErrors.Wrap(errFull, "Undefined error"))
+		return
+	}
 
-	logger.Info(errShort)
+	switch logLevel {
+	case "error":
+		logger.Error(errFull)
+	case "debug":
+		logger.Debug(errFull)
+	default:
+		logger.Info(errCause)
+	}
 }

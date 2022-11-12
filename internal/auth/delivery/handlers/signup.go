@@ -5,12 +5,10 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -55,26 +53,25 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := signupRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(err))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	user, err := h.authService.Signup(r.Context(), signupRequest.GetUser())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	newSession, err := h.sessionService.CreateSession(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	token, err := security.CreateCsrfToken(&newSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
@@ -101,5 +98,5 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	signupResponse := models.NewUserSignUpResponse(&user)
 
-	httpwrapper.Response(w, http.StatusCreated, signupResponse)
+	httpwrapper.Response(r.Context(), w, http.StatusCreated, signupResponse)
 }

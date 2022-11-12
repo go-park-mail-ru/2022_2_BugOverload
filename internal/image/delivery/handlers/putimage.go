@@ -1,17 +1,15 @@
 package handlers
 
 import (
-	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/models"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -56,13 +54,13 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
@@ -70,7 +68,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	if !user.IsAdmin {
 		if image.Object != pkg.ImageObjectUserAvatar {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAccess(errors.ErrNoAccess))
+			httpwrapper.DefaultHandlerError(r.Context(), w, err)
 			return
 		}
 
@@ -79,8 +77,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err = h.imageService.UpdateImage(r.Context(), image)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrImages(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 

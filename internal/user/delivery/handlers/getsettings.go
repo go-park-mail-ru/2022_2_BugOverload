@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -48,18 +47,17 @@ func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
+		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
 	userProfile, err := h.userService.GetUserProfileSettings(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewGetUserSettingsResponse(&userProfile)
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

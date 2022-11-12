@@ -4,11 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -45,12 +43,11 @@ func (h *recommendationFilmHandler) Configure(r *mux.Router, mw *middleware.Midd
 func (h *recommendationFilmHandler) Action(w http.ResponseWriter, r *http.Request) {
 	filmRecommendation, err := h.filmService.GetRecommendation(r.Context())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewRecommendFilmResponse(&filmRecommendation)
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

@@ -4,11 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -52,18 +50,17 @@ func (h *tagCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	collection, err := h.collectionService.GetCollectionByTag(r.Context(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrCollection(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewTagCollectionResponse(&collection)
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

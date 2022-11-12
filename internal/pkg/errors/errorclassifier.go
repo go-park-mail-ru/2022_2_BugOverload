@@ -56,7 +56,7 @@ var (
 
 	// DB
 	ErrPostgresRequest  = stdErrors.New("error sql")
-	ErrNotFoundInDB     = stdErrors.New("not fount")
+	ErrNotFoundInDB     = stdErrors.New("not found")
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
 
 	// Security
@@ -138,13 +138,13 @@ func NewErrClassifier() ErrClassifier {
 	}
 }
 
-func (ec *ErrClassifier) GetCode(err error) int {
-	code, exist := ec.table[err]
+var errCsf = NewErrClassifier()
+
+func GetCode(err error) int {
+	code, exist := errCsf.table[err]
 	if !exist {
 		return http.StatusInternalServerError
 	}
 
 	return code
 }
-
-var ErrCsf = NewErrClassifier()
