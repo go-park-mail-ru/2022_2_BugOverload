@@ -1,21 +1,19 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -55,13 +53,13 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := authRequest.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCookieNotExist))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
@@ -71,21 +69,20 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.sessionService.GetUserBySession(r.Context(), requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	userAuth, err := h.authService.Auth(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	requestSession.User = &user
 	token, err := security.CreateCsrfToken(&requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
@@ -102,5 +99,5 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	authResponse := models.NewUserAuthResponse(&userAuth)
 
-	httpwrapper.Response(w, http.StatusOK, authResponse)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, authResponse)
 }

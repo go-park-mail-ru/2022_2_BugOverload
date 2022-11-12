@@ -1,6 +1,7 @@
 package httpwrapper
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -9,10 +10,10 @@ import (
 )
 
 // Response is a function for giving any response with a JSON body
-func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
+func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
-		DefaultHandlerError(w, errors.NewErrValidation(errors.ErrJSONUnexpectedEnd))
+		DefaultHandlerError(ctx, w, errors.ErrJSONUnexpectedEnd)
 		return
 	}
 
@@ -22,20 +23,20 @@ func Response(w http.ResponseWriter, statusCode int, someStruct interface{}) {
 
 	_, err = w.Write(out)
 	if err != nil {
-		DefaultHandlerError(w, err)
+		DefaultHandlerError(ctx, w, err)
 		return
 	}
 }
 
 // ResponseImage is a function for giving any response with a body - image
-func ResponseImage(w http.ResponseWriter, statusCode int, image []byte) {
+func ResponseImage(ctx context.Context, w http.ResponseWriter, statusCode int, image []byte) {
 	w.Header().Set("Content-Type", pkg.ContentTypeWEBP)
 
 	w.WriteHeader(statusCode)
 
 	_, err := w.Write(image)
 	if err != nil {
-		DefaultHandlerError(w, err)
+		DefaultHandlerError(ctx, w, err)
 		return
 	}
 }

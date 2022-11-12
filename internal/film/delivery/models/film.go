@@ -27,16 +27,16 @@ func (f *FilmRequest) Bind(r *http.Request) error {
 
 	f.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
 	f.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
 	if err != nil {
-		return errors.NewErrValidation(errors.ErrConvertQuery)
+		return errors.ErrConvertQuery
 	}
 
 	if f.CountImages <= 0 {
-		return errors.NewErrValidation(errors.ErrQueryBad)
+		return errors.ErrQueryBad
 	}
 
 	return nil

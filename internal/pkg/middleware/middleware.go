@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"time"
 
-	stdErrors "github.com/pkg/errors"
 	"github.com/rs/cors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
@@ -87,12 +86,12 @@ func (m *Middleware) SetSizeRequest(h http.Handler) http.Handler {
 
 		length, err := strconv.Atoi(strLength)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrConvertLength))
+			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrConvertLength)
 			return
 		}
 
 		if length > pkg.BufSizeRequest {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrBigRequest))
+			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrBigRequest)
 			return
 		}
 
@@ -104,7 +103,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
+			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
 			return
 		}
 
@@ -112,7 +111,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(stdErrors.Cause(err)))
+			httpwrapper.DefaultHandlerError(r.Context(), w, err)
 			return
 		}
 
@@ -129,7 +128,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(errors.ErrNoCookie))
+			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
 			return
 		}
 
@@ -137,22 +136,15 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(err))
+			httpwrapper.DefaultHandlerError(r.Context(), w, err)
 			return
 		}
 
 		currentSession.User = &user
 
-		correctToken, err := security.CheckCsrfToken(&currentSession, token)
+		_, err = security.CheckCsrfToken(&currentSession, token)
 		if err != nil {
-			if stdErrors.Cause(err) == errors.ErrCsrfTokenCheckInternal {
-				errors.CreateLog(r.Context(), err)
-			}
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenInvalid))
-			return
-		}
-		if !correctToken {
-			httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrCsrfTokenInvalid))
+			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrCsrfTokenInvalid)
 			return
 		}
 

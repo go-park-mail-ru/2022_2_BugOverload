@@ -4,9 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -48,18 +46,17 @@ func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	user, err := h.userProfileService.GetUserProfileByID(r.Context(), request.GetUser())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewUserProfileResponse(&user)
 
-	httpwrapper.Response(w, http.StatusOK, response)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	stdErrors "github.com/pkg/errors"
 
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -49,7 +48,7 @@ func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware
 func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrAuth(errors.ErrGetUserRequest))
+		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
@@ -57,14 +56,13 @@ func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrValidation(stdErrors.Cause(err)))
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
 	err = h.userService.FilmRateDrop(r.Context(), &user, request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(w, errors.NewErrProfile(stdErrors.Cause(err)))
-		errors.CreateLog(r.Context(), err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 

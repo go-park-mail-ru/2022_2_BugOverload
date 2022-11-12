@@ -24,7 +24,7 @@ func NewReviewsRequest() *ReviewsRequest {
 
 func (rr *ReviewsRequest) Bind(r *http.Request) error {
 	if r.Header.Get("Content-Type") != "" {
-		return errors.NewErrValidation(errors.ErrUnsupportedMediaType)
+		return errors.ErrUnsupportedMediaType
 	}
 
 	var err error

@@ -138,8 +138,8 @@ func NewErrClassifier() ErrClassifier {
 	}
 }
 
-func (ec *ErrClassifier) GetCode(err error) int {
-	code, exist := ec.table[err]
+func GetCode(err error) int {
+	code, exist := errCsf.table[err]
 	if !exist {
 		return http.StatusInternalServerError
 	}
@@ -147,4 +147,4 @@ func (ec *ErrClassifier) GetCode(err error) int {
 	return code
 }
 
-var ErrCsf = NewErrClassifier()
+var errCsf = NewErrClassifier()
