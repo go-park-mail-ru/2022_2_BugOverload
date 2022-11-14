@@ -43,13 +43,20 @@ func (u *authService) Auth(ctx context.Context, user *models.User) (models.User,
 // Login is the service that accesses the interface AuthRepository.
 // Validation: request password and password user from repository equal.
 func (u *authService) Login(ctx context.Context, user *models.User) (models.User, error) {
+	if err := ValidateEmail(user.Email); err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Login")
+	}
+	if err := ValidatePassword(user.Password); err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Login")
+	}
+
 	userRepo, err := u.authRepo.GetUserByEmail(ctx, user.Email)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Login")
 	}
 
 	if !security.IsPasswordsEqual(userRepo.Password, user.Password) {
-		return models.User{}, stdErrors.Wrap(errors.ErrLoginCombinationNotFound, "Login")
+		return models.User{}, stdErrors.Wrap(errors.ErrIncorrectPassword, "Login")
 	}
 
 	return userRepo, nil
@@ -57,10 +64,12 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 
 // Signup is the service that accesses the interface AuthRepository
 func (u *authService) Signup(ctx context.Context, user *models.User) (models.User, error) {
+	if err := ValidateNickname(user.Email); err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
 	if err := ValidateEmail(user.Email); err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
-
 	if err := ValidatePassword(user.Password); err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
