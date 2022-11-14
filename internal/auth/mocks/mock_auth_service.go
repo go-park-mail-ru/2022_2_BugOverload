@@ -95,15 +95,15 @@ func (mr *MockAuthServiceMockRecorder) Signup(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // UpdatePassword mocks base method.
-func (m *MockAuthService) UpdatePassword(arg0 context.Context, arg1 *models.User, arg2 string) error {
+func (m *MockAuthService) UpdatePassword(arg0 context.Context, arg1 *models.User, arg2, arg3 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdatePassword", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdatePassword", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdatePassword indicates an expected call of UpdatePassword.
-func (mr *MockAuthServiceMockRecorder) UpdatePassword(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAuthServiceMockRecorder) UpdatePassword(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockAuthService)(nil).UpdatePassword), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockAuthService)(nil).UpdatePassword), arg0, arg1, arg2, arg3)
 }

@@ -33,9 +33,10 @@ type userService struct {
 }
 
 // NewUserProfileService is constructor for userService. Accepts UserService interfaces.
-func NewUserProfileService(ur repository.UserRepository) UserService {
+func NewUserProfileService(ur repository.UserRepository, as authService.AuthService) UserService {
 	return &userService{
-		userRepo: ur,
+		userRepo:    ur,
+		authService: as,
 	}
 }
 
@@ -72,7 +73,7 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 		return nil
 	}
 
-	err := u.authService.UpdatePassword(ctx, user, params.NewPassword)
+	err := u.authService.UpdatePassword(ctx, user, params.CurPassword, params.NewPassword)
 	if err != nil {
 		return stdErrors.Wrap(err, "ChangeUserProfileNickname")
 	}

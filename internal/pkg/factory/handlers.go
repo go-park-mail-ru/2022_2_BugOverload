@@ -78,7 +78,7 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	// Users
 	userRepo := repoUser.NewUserPostgres(postgres)
 
-	userService := serviceUser.NewUserProfileService(userRepo)
+	userService := serviceUser.NewUserProfileService(userRepo, authService)
 
 	profileHandler := handlersUser.NewUserProfileHandler(userService)
 	res[pkg.GetUserProfileRequest] = profileHandler

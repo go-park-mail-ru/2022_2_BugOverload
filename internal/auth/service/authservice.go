@@ -19,7 +19,7 @@ type AuthService interface {
 	Login(ctx context.Context, user *models.User) (models.User, error)
 	Signup(ctx context.Context, user *models.User) (models.User, error)
 	GetAccess(ctx context.Context, user *models.User, userPassword string) error
-	UpdatePassword(ctx context.Context, user *models.User, userPassword string) error
+	UpdatePassword(ctx context.Context, user *models.User, userPassword, userNewPassword string) error
 }
 
 // authService is implementation for users service corresponding to the AuthService interface.
@@ -103,13 +103,13 @@ func (u *authService) GetAccess(ctx context.Context, user *models.User, userPass
 	return nil
 }
 
-func (u *authService) UpdatePassword(ctx context.Context, user *models.User, userPassword string) error {
+func (u *authService) UpdatePassword(ctx context.Context, user *models.User, userPassword, userNewPassword string) error {
 	errAccess := u.GetAccess(ctx, user, userPassword)
 	if errAccess != nil {
 		return stdErrors.Wrap(errAccess, "UpdatePassword")
 	}
 
-	newUserPassword, err := security.HashPassword(userPassword)
+	newUserPassword, err := security.HashPassword(userNewPassword)
 	if err != nil {
 		return stdErrors.Wrap(err, "UpdatePassword")
 	}
