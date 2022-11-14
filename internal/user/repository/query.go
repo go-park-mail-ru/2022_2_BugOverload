@@ -59,7 +59,7 @@ RETURNING count_scores`
 UPDATE films
 SET count_scores = CASE
 						WHEN count_scores IS NULL THEN NULL
-    					WHEN count_scores = 0 THEN 0
+						WHEN count_scores = 0 THEN 0
 						ELSE count_scores - 1
 END
 WHERE film_id = $1
