@@ -46,6 +46,25 @@ ON CONFLICT (fk_profile_id, fk_film_id) DO UPDATE SET score = $3`
 
 	dropRateFilm = `DELETE FROM profile_ratings WHERE fk_profile_id = $1 AND fk_film_id = $2`
 
+	addScoreFilm = `
+UPDATE films
+SET count_scores = CASE
+						WHEN count_scores IS NULL THEN 1
+						ELSE count_scores + 1
+END
+WHERE film_id = $1
+RETURNING count_scores`
+
+	deleteScoreFilm = `
+UPDATE films
+SET count_scores = CASE
+						WHEN count_scores IS NULL THEN NULL
+    					WHEN count_scores = 0 THEN 0
+						ELSE count_scores - 1
+END
+WHERE film_id = $1
+RETURNING count_scores`
+
 	insertNewReview = `INSERT INTO reviews (name, type, body) VALUES ($1, $2, $3) RETURNING review_id`
 
 	linkNewReviewAuthor = `INSERT INTO profile_reviews (fk_review_id, fk_profile_id, fk_film_id) VALUES ($1, $2, $3)`

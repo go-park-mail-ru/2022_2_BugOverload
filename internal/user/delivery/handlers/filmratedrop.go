@@ -60,11 +60,11 @@ func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userService.FilmRateDrop(r.Context(), &user, request.GetParams())
-	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+	film, errService := h.userService.FilmRateDrop(r.Context(), &user, request.GetParams())
+	if errService != nil {
+		httpwrapper.DefaultHandlerError(r.Context(), w, errService)
 		return
 	}
 
-	httpwrapper.NoBody(w, http.StatusNoContent)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, film)
 }

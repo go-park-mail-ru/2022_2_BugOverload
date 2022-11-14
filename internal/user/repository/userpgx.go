@@ -6,6 +6,7 @@ import (
 
 	stdErrors "github.com/pkg/errors"
 
+	filmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -28,8 +29,8 @@ type UserRepository interface {
 	GetPassword(ctx context.Context, user *models.User) (string, error)
 
 	// Film
-	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
-	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error
+	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
+	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error)
 
 	// Review
 	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
@@ -200,7 +201,9 @@ func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (stri
 	return string(res), nil
 }
 
-func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+	resultFilm := filmRepo.NewFilmSQL()
+
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
 		if err != nil {
@@ -212,19 +215,31 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 			return err
 		}
 
+		rowFilm := tx.QueryRowContext(ctx, addScoreFilm, params.FilmID)
+		if rowFilm.Err() != nil {
+			return err
+		}
+
+		err = rowFilm.Scan(&resultFilm.CountScores)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, params.Score, errMain)
 	}
 
-	return nil
+	return resultFilm.Convert(), nil
 }
 
-func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error {
+func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error) {
+	resultFilm := filmRepo.NewFilmSQL()
+
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, dropRateFilm, user.ID, params.FilmID)
 		if err != nil {
@@ -236,16 +251,26 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 			return err
 		}
 
+		rowFilm := tx.QueryRowContext(ctx, deleteScoreFilm, params.FilmID)
+		if rowFilm.Err() != nil {
+			return err
+		}
+
+		err = rowFilm.Scan(&resultFilm.CountScores)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, errMain)
 	}
 
-	return nil
+	return resultFilm.Convert(), nil
 }
 
 func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error {
