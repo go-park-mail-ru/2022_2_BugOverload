@@ -22,10 +22,6 @@ type UserRepository interface {
 
 	// ChangeInfo
 	ChangeUserProfileNickname(ctx context.Context, user *models.User) error
-	ChangeUserProfilePassword(ctx context.Context, user *models.User) error
-
-	// Support
-	GetPassword(ctx context.Context, user *models.User) (string, error)
 
 	// Film
 	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
@@ -153,51 +149,6 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 	}
 
 	return nil
-}
-
-func (u *userPostgres) ChangeUserProfilePassword(ctx context.Context, user *models.User) error {
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, updateUserSettingsPassword, []byte(user.Password), user.ID)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	// execution error
-	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
-			updateUserSettingsPassword, user.Password, user.ID, errMain)
-	}
-
-	return nil
-}
-
-func (u *userPostgres) GetPassword(ctx context.Context, user *models.User) (string, error) {
-	var res []byte
-
-	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		row := conn.QueryRowContext(ctx, getPass, user.ID)
-		if row.Err() != nil {
-			return row.Err()
-		}
-
-		err := row.Scan(&res)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-
-	if errMain != nil {
-		return "", stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPass, user.ID, errMain)
-	}
-
-	return string(res), nil
 }
 
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {

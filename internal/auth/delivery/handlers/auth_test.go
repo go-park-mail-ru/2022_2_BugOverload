@@ -85,7 +85,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
-	assert.Equal(t, http.StatusUnauthorized, w.Code)
+	assert.Equal(t, http.StatusNotFound, w.Code)
 }
 
 func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {

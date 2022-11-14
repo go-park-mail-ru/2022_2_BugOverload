@@ -50,6 +50,20 @@ func (mr *MockAuthServiceMockRecorder) Auth(arg0, arg1 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Auth", reflect.TypeOf((*MockAuthService)(nil).Auth), arg0, arg1)
 }
 
+// GetAccess mocks base method.
+func (m *MockAuthService) GetAccess(arg0 context.Context, arg1 *models.User, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccess", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetAccess indicates an expected call of GetAccess.
+func (mr *MockAuthServiceMockRecorder) GetAccess(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccess", reflect.TypeOf((*MockAuthService)(nil).GetAccess), arg0, arg1, arg2)
+}
+
 // Login mocks base method.
 func (m *MockAuthService) Login(arg0 context.Context, arg1 *models.User) (models.User, error) {
 	m.ctrl.T.Helper()
@@ -78,4 +92,18 @@ func (m *MockAuthService) Signup(arg0 context.Context, arg1 *models.User) (model
 func (mr *MockAuthServiceMockRecorder) Signup(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Signup", reflect.TypeOf((*MockAuthService)(nil).Signup), arg0, arg1)
+}
+
+// UpdatePassword mocks base method.
+func (m *MockAuthService) UpdatePassword(arg0 context.Context, arg1 *models.User, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePassword", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdatePassword indicates an expected call of UpdatePassword.
+func (mr *MockAuthServiceMockRecorder) UpdatePassword(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockAuthService)(nil).UpdatePassword), arg0, arg1, arg2)
 }

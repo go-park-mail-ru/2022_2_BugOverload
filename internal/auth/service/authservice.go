@@ -18,6 +18,8 @@ type AuthService interface {
 	Auth(ctx context.Context, user *models.User) (models.User, error)
 	Login(ctx context.Context, user *models.User) (models.User, error)
 	Signup(ctx context.Context, user *models.User) (models.User, error)
+	GetAccess(ctx context.Context, user *models.User, userPassword string) error
+	UpdatePassword(ctx context.Context, user *models.User, userPassword string) error
 }
 
 // authService is implementation for users service corresponding to the AuthService interface.
@@ -86,4 +88,36 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 	}
 
 	return newUser, nil
+}
+
+func (u *authService) GetAccess(ctx context.Context, user *models.User, userPassword string) error {
+	userRepo, err := u.authRepo.GetUserByID(ctx, user.ID)
+	if err != nil {
+		return stdErrors.Wrap(err, "GetAccess")
+	}
+
+	if !security.IsPasswordsEqual(userRepo.Password, userPassword) {
+		return stdErrors.Wrap(errors.ErrIncorrectPassword, "GetAccess")
+	}
+
+	return nil
+}
+
+func (u *authService) UpdatePassword(ctx context.Context, user *models.User, userPassword string) error {
+	errAccess := u.GetAccess(ctx, user, userPassword)
+	if errAccess != nil {
+		return stdErrors.Wrap(errAccess, "UpdatePassword")
+	}
+
+	newUserPassword, err := security.HashPassword(userPassword)
+	if err != nil {
+		return stdErrors.Wrap(err, "UpdatePassword")
+	}
+
+	updateErr := u.authRepo.UpdatePassword(ctx, user, newUserPassword)
+	if updateErr != nil {
+		return stdErrors.Wrap(updateErr, "UpdatePassword")
+	}
+
+	return nil
 }
