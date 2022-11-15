@@ -25,14 +25,14 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrEmptyBody] = infoLogLevel
 	res[ErrConvertQueryType] = infoLogLevel
 	res[ErrQueryRequiredEmpty] = infoLogLevel
-	res[ErrQueryBad] = infoLogLevel
+	res[ErrBadQueryParams] = infoLogLevel
 	res[ErrEmptyField] = infoLogLevel
 	res[ErrEmptyRequiredFields] = infoLogLevel
 	res[ErrBadRequestParams] = infoLogLevel
 
 	// Common repository
 	res[ErrNotFoundInDB] = errLogLevel
-	res[ErrPostgresRequest] = errLogLevel
+	res[ErrWorkDatabase] = errLogLevel
 	res[ErrGetParamsConvert] = errLogLevel
 
 	// Auth delivery

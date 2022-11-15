@@ -42,7 +42,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 	}
 
 	if rr.CountReviews <= 0 {
-		return errors.ErrQueryBad
+		return errors.ErrBadQueryParams
 	}
 
 	rr.Offset, err = strconv.Atoi(r.FormValue("offset"))
@@ -51,7 +51,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 	}
 
 	if rr.Offset < 0 {
-		return errors.ErrQueryBad
+		return errors.ErrBadQueryParams
 	}
 
 	return nil

@@ -15,14 +15,14 @@ var (
 	ErrEmptyBody            = stdErrors.New("empty body")
 	ErrConvertQueryType     = stdErrors.New("bad input query")
 	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
-	ErrQueryBad             = stdErrors.New("bad query params")
+	ErrBadQueryParams       = stdErrors.New("bad query params")
 	ErrEmptyField           = stdErrors.New("empty field")
 	ErrEmptyRequiredFields  = stdErrors.New("bad params, empty")
 	ErrBadRequestParams     = stdErrors.New("bad params, impossible value")
 
 	// Common repository
 	ErrNotFoundInDB     = stdErrors.New("not found")
-	ErrPostgresRequest  = stdErrors.New("error sql")
+	ErrWorkDatabase     = stdErrors.New("error sql")
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
 
 	// Auth delivery
@@ -78,14 +78,14 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrEmptyBody] = http.StatusBadRequest
 	res[ErrConvertQueryType] = http.StatusBadRequest
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
-	res[ErrQueryBad] = http.StatusBadRequest
+	res[ErrBadQueryParams] = http.StatusBadRequest
 	res[ErrEmptyField] = http.StatusBadRequest
 	res[ErrEmptyRequiredFields] = http.StatusBadRequest
 	res[ErrBadRequestParams] = http.StatusBadRequest
 
 	// Common repository
 	res[ErrNotFoundInDB] = http.StatusNotFound
-	res[ErrPostgresRequest] = http.StatusInternalServerError
+	res[ErrWorkDatabase] = http.StatusInternalServerError
 	res[ErrGetParamsConvert] = http.StatusInternalServerError
 
 	// Auth delivery

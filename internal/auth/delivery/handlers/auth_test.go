@@ -147,7 +147,7 @@ func TestAuthHandler_AuthFallAuthService(t *testing.T) {
 	}, nil)
 	authService.EXPECT().Auth(context.WithValue(r.Context(), pkg.LoggerKey, logger), &models.User{
 		ID: 0,
-	}).Return(models.User{}, errors.ErrPostgresRequest)
+	}).Return(models.User{}, errors.ErrWorkDatabase)
 
 	w := httptest.NewRecorder()
 

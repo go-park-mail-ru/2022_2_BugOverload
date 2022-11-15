@@ -13,59 +13,99 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
-	mockCollectionService "go-park-mail-ru/2022_2_BugOverload/internal/collection/service/mocks"
+	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
-func TestTagCollectionHandler_Action_OK(t *testing.T) {
+func TestFilmHandler_Action_OK(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection/popular?count_films=1&delimiter=10", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=2", nil)
 	vars := make(map[string]string)
-	vars["tag"] = "popular"
+	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := models.Collection{
-		Name: "популярное",
-		Films: []models.Film{{
-			Name:      "Игра престолов",
-			ProdYear:  "2013",
-			EndYear:   "2014",
-			ID:        123,
-			Rating:    7.12332,
-			PosterVer: "123",
-			Genres:    []string{"фэнтези", "приключения"},
+	expectedBody := models.Film{
+		Name: "Игра престолов",
+		Actors: []models.FilmActor{{
+			Name:      "Питер Динклэйдж",
+			ID:        1,
+			Character: "some",
+			Avatar:    "1",
 		}},
+		Artists: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Producers: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Composers: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Directors: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Montage: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Operators: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		Writers: []models.FilmPerson{{
+			Name: "Питер Динклэйдж",
+			ID:   1,
+		}},
+		AgeLimit:             "18+",
+		BoxOffice:            60000000,
+		Budget:               10000000,
+		CountActors:          1,
+		CountPositiveReviews: 1,
+		CountNeutralReviews:  1,
+		CountNegativeReviews: 1,
+		CountRatings:         1,
+		CountSeasons:         8,
+		CurrencyBudget:       "USD",
+		Description:          "Британская лингвистка Алетея прилетает из Лондона",
+		ShortDescription:     "Много насилия и фэнтези",
+		DurationMinutes:      55,
+		EndYear:              "2019",
+		Genres:               []string{"фантастика", "боевик"},
+		Images:               []string{"1", "2"},
+		OriginalName:         "Game of Thrones",
+		PosterHor:            "1",
+		ProdCountries:        []string{"США", "Великобритания"},
+		ProdCompanies:        []string{"HBO"},
+		ProdYear:             "2011",
+		Rating:               9.2,
+		Type:                 "serial",
+		Slogan:               "Победа или смерть",
 	}
 
-	oldLogger := logrus.New()
-	logger := logrus.NewEntry(oldLogger)
-
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
-
-	r = r.WithContext(ctx)
-
-	collectionService.EXPECT().GetCollectionByTag(r.Context(), &pkg.GetCollectionTagParams{
-		Tag:        "popular",
-		CountFilms: 1,
-		Delimiter:  "10",
+	filmService.EXPECT().GetFilmByID(r.Context(), &models.Film{ID: 1}, &pkg.GetFilmParams{
+		CountImages: 2,
 	}).Return(expectedBody, nil)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	tagCollectionHandler := NewTagCollectionHandler(collectionService)
-	tagCollectionHandler.Configure(router, nil)
+	filmHandler := NewFilmHandler(filmService)
+	filmHandler.Configure(router, nil)
 
-	tagCollectionHandler.Action(w, r)
+	filmHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
@@ -79,7 +119,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody models.Collection
+	var actualBody models.Film
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -87,17 +127,17 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
+func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection/popular?count_films=1&delimiter=10", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=2", nil)
 	vars := make(map[string]string)
-	vars["tag"] = "popular"
+	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
 	expectedBody := httpwrapper.ErrResponse{
@@ -111,19 +151,17 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetCollectionByTag(r.Context(), &pkg.GetCollectionTagParams{
-		Tag:        "popular",
-		CountFilms: 1,
-		Delimiter:  "10",
-	}).Return(models.Collection{}, errors.ErrNotFoundInDB)
+	filmService.EXPECT().GetFilmByID(r.Context(), &models.Film{ID: 1}, &pkg.GetFilmParams{
+		CountImages: 2,
+	}).Return(models.Film{}, errors.ErrNotFoundInDB)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	tagCollectionHandler := NewTagCollectionHandler(collectionService)
-	tagCollectionHandler.Configure(router, nil)
+	filmHandler := NewFilmHandler(filmService)
+	filmHandler.Configure(router, nil)
 
-	tagCollectionHandler.Action(w, r)
+	filmHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
@@ -145,17 +183,17 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
+func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection/popular?count_films=вфы&delimiter=10", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=ddas", nil)
 	vars := make(map[string]string)
-	vars["tag"] = "popular"
+	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
 	expectedBody := httpwrapper.ErrResponse{
@@ -165,15 +203,15 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	tagCollectionHandler := NewTagCollectionHandler(collectionService)
-	tagCollectionHandler.Configure(router, nil)
+	filmHandler := NewFilmHandler(filmService)
+	filmHandler.Configure(router, nil)
 
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
 	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
 
-	tagCollectionHandler.Action(w, r.WithContext(ctx))
+	filmHandler.Action(w, r.WithContext(ctx))
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
@@ -195,17 +233,17 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
+func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection/popular?count_films=-1&delimiter=10", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=-1", nil)
 	vars := make(map[string]string)
-	vars["tag"] = "popular"
+	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
 	expectedBody := httpwrapper.ErrResponse{
@@ -215,15 +253,15 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	tagCollectionHandler := NewTagCollectionHandler(collectionService)
-	tagCollectionHandler.Configure(router, nil)
+	filmHandler := NewFilmHandler(filmService)
+	filmHandler.Configure(router, nil)
 
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
 	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
 
-	tagCollectionHandler.Action(w, r.WithContext(ctx))
+	filmHandler.Action(w, r.WithContext(ctx))
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")

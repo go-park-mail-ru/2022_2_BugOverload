@@ -80,6 +80,8 @@ const (
 	TypeReviewNegative = "negative"
 	TypeReviewNeutral  = "neutral"
 
+	DefGender = "male"
+
 	OnlyDate = "2006"
 )
 

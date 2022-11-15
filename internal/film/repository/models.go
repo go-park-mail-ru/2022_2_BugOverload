@@ -51,7 +51,7 @@ type FilmSQL struct {
 	Type         sql.NullString
 
 	Rating               sql.NullFloat64
-	CountScores          sql.NullInt32
+	CountRatings         sql.NullInt32
 	CountActors          sql.NullInt32
 	CountNegativeReviews sql.NullInt32
 	CountNeutralReviews  sql.NullInt32
@@ -79,11 +79,11 @@ func NewFilmSQL() FilmSQL {
 
 func (f *FilmSQL) Convert() models.Film {
 	res := models.Film{
-		ID:          f.ID,
-		Name:        f.Name,
-		ProdYear:    f.ProdYear.Format(innerPKG.OnlyDate),
-		Description: f.Description,
-		Duration:    f.Duration,
+		ID:              f.ID,
+		Name:            f.Name,
+		ProdYear:        f.ProdYear.Format(innerPKG.OnlyDate),
+		Description:     f.Description,
+		DurationMinutes: f.Duration,
 
 		ShortDescription: f.ShortDescription.String,
 		OriginalName:     f.OriginalName.String,
@@ -101,7 +101,7 @@ func (f *FilmSQL) Convert() models.Film {
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),
-		CountScores:          int(f.CountScores.Int32),
+		CountRatings:         int(f.CountRatings.Int32),
 		CountActors:          int(f.CountActors.Int32),
 		CountNegativeReviews: int(f.CountNegativeReviews.Int32),
 		CountNeutralReviews:  int(f.CountNeutralReviews.Int32),
@@ -193,7 +193,7 @@ func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, arg
 			&f.Type,
 			&f.Rating,
 			&f.CountActors,
-			&f.CountScores,
+			&f.CountRatings,
 			&f.CountNegativeReviews,
 			&f.CountNeutralReviews,
 			&f.CountPositiveReviews)
@@ -309,7 +309,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
-		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
 			getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 	}
@@ -321,7 +321,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
-			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
 				getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 		}

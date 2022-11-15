@@ -21,7 +21,7 @@ type Film struct {
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`
 	AgeLimit         string `json:"age_limit,omitempty"`
-	Duration         int    `json:"duration,omitempty"`
+	DurationMinutes  int    `json:"duration_minutes,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
 
@@ -34,7 +34,7 @@ type Film struct {
 	Type         string `json:"type,omitempty"`
 
 	Rating               float32 `json:"rating,omitempty"`
-	CountScores          int     `json:"count_scores,omitempty"`
+	CountRatings         int     `json:"count_ratings,omitempty"`
 	CountActors          int     `json:"count_actors,omitempty"`
 	CountNegativeReviews int     `json:"count_negative_reviews,omitempty"`
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty"`

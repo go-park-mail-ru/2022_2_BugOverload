@@ -23,7 +23,7 @@ func (i *imageS3WithPostgres) UpdateImageInfo(ctx context.Context, image *models
 	})
 
 	if err != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%s]. Special Error [%s]",
 			updateUserAvatar, image.Key, err)
 	}

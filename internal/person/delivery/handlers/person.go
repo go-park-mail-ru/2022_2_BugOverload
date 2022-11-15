@@ -55,7 +55,7 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	person, err := h.personService.GePersonByID(r.Context(), request.GetPerson(), request.GetParams())
+	person, err := h.personService.GetPersonByID(r.Context(), request.GetPerson(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return

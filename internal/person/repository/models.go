@@ -92,6 +92,10 @@ func (p *PersonSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, a
 			p.Avatar.String = innerPKG.DefPersonAvatar
 		}
 
+		if !p.Gender.Valid {
+			p.Gender.String = innerPKG.DefGender
+		}
+
 		return nil
 	})
 
@@ -100,7 +104,7 @@ func (p *PersonSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, a
 	}
 
 	if err != nil {
-		return errors.ErrPostgresRequest
+		return errors.ErrWorkDatabase
 	}
 
 	return nil

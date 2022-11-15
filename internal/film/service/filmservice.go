@@ -10,6 +10,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+//go:generate mockgen -source filmservice.go -destination mocks/mockfilmservice.go -package mockFilmService
+
 // FilmsService provides universal service for work with film.
 type FilmsService interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
