@@ -15,6 +15,7 @@ func CreateLog(ctx context.Context, errFull error) {
 	logger, ok := ctx.Value(pkg.LoggerKey).(*logrus.Entry)
 	if !ok {
 		logrus.Infof("CreateLog: errFull convert context -> *logrus.Logger on errFull [%s]", errCause)
+		return
 	}
 
 	logLevel, err := GetLogLevelErr(errCause)

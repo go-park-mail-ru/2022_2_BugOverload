@@ -35,10 +35,6 @@ WHERE pc.fk_profile_id = $1`
 
 	updateUserSettingsNickname = `UPDATE users SET nickname = $1 WHERE user_id = $2`
 
-	updateUserSettingsPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
-
-	getPass = `SELECT password FROM users WHERE user_id = $1`
-
 	setRateFilm = `
 INSERT INTO profile_ratings(fk_profile_id, fk_film_id, score)
 VALUES ($1, $2, $3)

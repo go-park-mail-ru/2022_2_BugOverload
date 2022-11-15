@@ -1,26 +1,9 @@
 package models
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
-	"net/http"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
-
-type UserAuthRequest struct{}
-
-func NewUserAuthRequest() *UserAuthRequest {
-	return &UserAuthRequest{}
-}
-
-func (u *UserAuthRequest) Bind(r *http.Request) error {
-	if r.Header.Get("Cookie") == "" {
-		return errors.ErrNoCookie
-	}
-
-	return nil
-}
 
 type UserAuthResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"Bot373"`
@@ -30,7 +13,7 @@ type UserAuthResponse struct {
 
 func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 	return &UserAuthResponse{
-		Email:    security.Sanitize(user.Email),
+		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Profile.Avatar,
 	}

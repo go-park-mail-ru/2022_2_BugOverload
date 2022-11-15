@@ -6,7 +6,6 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
@@ -31,7 +30,7 @@ func NewLogoutHandler(as authService.AuthService, ss sessionService.SessionServi
 }
 
 func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodDelete)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -47,14 +46,6 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/logout [GET]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
-	var logoutRequest models.UserLogoutRequest
-
-	err := logoutRequest.Bind(r)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
-		return
-	}
-
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
