@@ -3,12 +3,10 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
@@ -132,22 +130,18 @@ func (f *DBFiller) linkFilmGenres() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
 
 	for _, value := range f.films {
-		posValue += offset
-		offset = 0
 		weight := len(value.Genres)
-
 		for _, genre := range value.Genres {
-			values[posValue+offset] = value.ID
-			offset++
-			values[posValue+offset] = f.genres[genre]
+			values[pos] = value.ID
+			pos++
+			values[pos] = f.genres[genre]
 			weight--
-			offset++
-			values[posValue+offset] = weight
-			offset++
+			pos++
+			values[pos] = weight
+			pos++
 		}
 	}
 
@@ -173,26 +167,19 @@ func (f *DBFiller) linkFilmCountries() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
 
 	for _, value := range f.films {
-		posValue += offset
-		offset = 0
 		weight := len(value.ProdCountries)
 
 		for _, country := range value.ProdCountries {
-			values[posValue+offset] = value.ID
-			offset++
-			_, ok := f.countries[country]
-			if !ok {
-				logrus.Error(country)
-			}
-			values[posValue+offset] = f.countries[country]
+			values[pos] = value.ID
+			pos++
+			values[pos] = f.countries[country]
 			weight--
-			offset++
-			values[posValue+offset] = weight
-			offset++
+			pos++
+			values[pos] = weight
+			pos++
 		}
 	}
 
@@ -218,22 +205,19 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
 
 	for _, value := range f.films {
-		posValue += offset
-		offset = 0
 		weight := len(value.ProdCompanies)
 
 		for _, company := range value.ProdCompanies {
-			values[posValue+offset] = value.ID
-			offset++
-			values[posValue+offset] = f.companies[company]
+			values[pos] = value.ID
+			pos++
+			values[pos] = f.companies[company]
 			weight--
-			offset++
-			values[posValue+offset] = weight
-			offset++
+			pos++
+			values[pos] = weight
+			pos++
 		}
 	}
 
@@ -325,20 +309,34 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 }
 
 func (f *DBFiller) linkFilmImages() (int, error) {
-	countInserts := len(f.films)
+	countInserts := 0
+
+	for _, value := range f.films {
+		countInserts += len(value.Images)
+	}
+
+	if countInserts == 0 {
+		return 0, nil
+	}
 
 	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsImages, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	for _, value := range f.films {
-		values[pos] = value.ID
-		pos++
 
-		imagesList := strings.Join(value.Images, "_")
-		values[pos] = sqltools.NewSQLNullString(imagesList)
-		pos++
+	for _, value := range f.persons {
+		weight := len(value.Images)
+
+		for _, image := range value.Images {
+			values[pos] = value.ID
+			pos++
+			values[pos] = image
+			weight--
+			pos++
+			values[pos] = weight
+			pos++
+		}
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)

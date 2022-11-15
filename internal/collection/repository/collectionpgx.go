@@ -38,14 +38,23 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 
 	delimiter, err := strconv.ParseFloat(params.Delimiter, 32)
 	if err != nil {
-		return models.Collection{}, errors.ErrGetParamsConvert
+		return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
+			"Get Delimeter Err: params input:[%s]",
+			params.Delimiter)
 	}
 
 	//  Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, getFilmsByTag, params.Tag, delimiter, params.CountFilms)
+		if stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
+				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
+		}
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
+				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
 		}
 
 		response.Name = params.Tag
@@ -59,16 +68,8 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 		return nil
 	})
 
-	// the main entity is not found
-	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Collection{}, errors.ErrNotFoundInDB
-	}
-
-	// execution error
 	if errMain != nil {
-		return models.Collection{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
-			getFilmsByTag, params.Tag, delimiter, params.CountFilms, errMain)
+		return models.Collection{}, errMain
 	}
 
 	return response.Convert(), nil

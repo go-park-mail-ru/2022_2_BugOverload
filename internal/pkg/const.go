@@ -79,6 +79,8 @@ const (
 	TypeReviewPositive = "positive"
 	TypeReviewNegative = "negative"
 	TypeReviewNeutral  = "neutral"
+
+	OnlyDate = "2006"
 )
 
 // TxDefaultOptions for Postgres

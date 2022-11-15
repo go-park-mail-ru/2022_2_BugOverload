@@ -44,7 +44,7 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/auth/logout [GET]
+// @Router /api/v1/auth/logout [DELETE]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {

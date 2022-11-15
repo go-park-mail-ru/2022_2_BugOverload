@@ -31,17 +31,17 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrBadRequestParams] = infoLogLevel
 
 	// Common repository
-	res[ErrNotFoundInDB] = infoLogLevel
-	res[ErrPostgresRequest] = infoLogLevel
-	res[ErrGetParamsConvert] = infoLogLevel
+	res[ErrNotFoundInDB] = errLogLevel
+	res[ErrPostgresRequest] = errLogLevel
+	res[ErrGetParamsConvert] = errLogLevel
 
 	// Auth delivery
 	res[ErrNoCookie] = infoLogLevel
 	res[ErrSessionNotExist] = infoLogLevel
 
 	// Auth repository
-	res[ErrSignupUserExist] = infoLogLevel
-	res[ErrUserNotExist] = infoLogLevel
+	res[ErrUserExist] = errLogLevel
+	res[ErrUserNotExist] = errLogLevel
 
 	// Auth service
 	res[ErrInvalidNickname] = infoLogLevel
@@ -54,23 +54,23 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrBadImageType] = infoLogLevel
 
 	// Image repository
-	res[ErrImageNotFound] = infoLogLevel
-	res[ErrImage] = infoLogLevel
+	res[ErrImageNotFound] = errLogLevel
+	res[ErrImage] = errLogLevel
 
 	// User delivery
 	res[ErrGetUserRequest] = infoLogLevel
-	res[ErrWrongPassword] = infoLogLevel
+	res[ErrWrongValidPassword] = infoLogLevel
 
 	// Middleware
 	res[ErrBigRequest] = infoLogLevel
 	res[ErrConvertLength] = infoLogLevel
 
 	// Security
-	res[ErrCsrfTokenCreate] = infoLogLevel
-	res[ErrCsrfTokenCheck] = infoLogLevel
-	res[ErrCsrfTokenCheckInternal] = infoLogLevel
-	res[ErrCsrfTokenExpired] = infoLogLevel
-	res[ErrCsrfTokenInvalid] = infoLogLevel
+	res[ErrCsrfTokenCreate] = errLogLevel
+	res[ErrCsrfTokenCheck] = errLogLevel
+	res[ErrCsrfTokenCheckInternal] = errLogLevel
+	res[ErrCsrfTokenExpired] = errLogLevel
+	res[ErrCsrfTokenInvalid] = errLogLevel
 
 	return ErrLogClassifier{
 		table: res,

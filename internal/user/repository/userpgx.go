@@ -48,22 +48,12 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 	response := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowUser := conn.QueryRowContext(ctx, getUser, user.ID)
-		if rowUser.Err() != nil {
-			return rowUser.Err()
+		rowUserProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
+		if rowUserProfile.Err() != nil {
+			return rowUserProfile.Err()
 		}
-
-		err := rowUser.Scan(&response.Nickname)
-		if err != nil {
-			return err
-		}
-
-		rowProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
-		if rowProfile.Err() != nil {
-			return rowProfile.Err()
-		}
-
-		err = rowProfile.Scan(
+		err := rowUserProfile.Scan(
+			&response.Nickname,
 			&response.Profile.JoinedDate,
 			&response.Profile.Avatar,
 			&response.Profile.CountViewsFilms,
@@ -90,7 +80,7 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 	if errMain != nil {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getUser, user.ID, errMain)
+			getUserProfile, user.ID, errMain)
 	}
 
 	return response.Convert(), nil
@@ -152,10 +142,9 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 	return nil
 }
 
-
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
 	resultFilm := filmRepo.NewFilmSQL()
-	
+
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
 		if err != nil {
@@ -167,7 +156,7 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 			return err
 		}
 
-		rowFilm := tx.QueryRowContext(ctx, addScoreFilm, params.FilmID)
+		rowFilm := tx.QueryRowContext(ctx, updateFilmCountRatingsUp, params.FilmID)
 		if rowFilm.Err() != nil {
 			return err
 		}
@@ -203,7 +192,7 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 			return err
 		}
 
-		rowFilm := tx.QueryRowContext(ctx, deleteScoreFilm, params.FilmID)
+		rowFilm := tx.QueryRowContext(ctx, updateFilmCountRatingsDown, params.FilmID)
 		if rowFilm.Err() != nil {
 			return err
 		}
@@ -229,19 +218,25 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, insertNewReview, review.Name, review.Type, review.Body)
 		if row.Err() != nil {
-			return row.Err()
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
+				insertNewReview, user.ID, review, row.Err())
 		}
 
 		var reviewID int
 
 		err := row.Scan(&reviewID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
+				insertNewReview, user.ID, review, err)
 		}
 
 		_, err = tx.ExecContext(ctx, linkNewReviewAuthor, reviewID, user.ID, params.FilmID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
+				linkNewReviewAuthor, reviewID, user.ID, params.FilmID, err)
 		}
 
 		_, err = tx.ExecContext(ctx, updateAuthorCountReviews, user.ID)
@@ -262,16 +257,16 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 
 		_, err = tx.ExecContext(ctx, targetCounterReviews, params.FilmID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
+				targetCounterReviews, params.FilmID, err)
 		}
 
 		return nil
 	})
 
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
-			insertNewReview, user.ID, review, errMain)
+		return errMain
 	}
 
 	return nil
@@ -284,7 +279,9 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		// CountReviews
 		rowUser := conn.QueryRowContext(ctx, getUserCountReviews, user.ID)
 		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
-			return errors.ErrNotFoundInDB
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getUserCountReviews, user.ID, rowUser.Err())
 		}
 
 		if rowUser.Err() != nil {

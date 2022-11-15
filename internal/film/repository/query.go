@@ -9,7 +9,7 @@ SELECT name,
        description,
 	   short_description,
        age_limit,
-       duration,
+       duration_minutes,
        poster_hor,
        budget,
        box_office,
@@ -19,7 +19,7 @@ SELECT name,
        type,
        rating,
        count_actors,
-       count_scores,
+       count_ratings,
        count_negative_reviews,
        count_neutral_reviews,
        count_positive_reviews
@@ -55,9 +55,11 @@ WHERE ft.fk_film_id = $1
 ORDER BY t.name DESC`
 
 	getFilmImages = `
-SELECT images_list
+SELECT image_key
 FROM film_images
-WHERE film_id = $1`
+WHERE film_id = $1
+ORDER BY weight DESC
+LIMIT $2`
 
 	getFilmActors = `
 SELECT fp.fk_person_id, p.name, p.avatar, fp.character

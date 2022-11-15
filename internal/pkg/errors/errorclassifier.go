@@ -30,8 +30,8 @@ var (
 	ErrSessionNotExist = stdErrors.New("no such session")
 
 	// Auth repository
-	ErrSignupUserExist = stdErrors.New("such user exists")
-	ErrUserNotExist    = stdErrors.New("no such user")
+	ErrUserExist    = stdErrors.New("such user exists")
+	ErrUserNotExist = stdErrors.New("no such user")
 
 	// Auth service
 	ErrInvalidNickname   = stdErrors.New("invalid nickname")
@@ -48,8 +48,8 @@ var (
 	ErrImage         = stdErrors.New("service picture not work")
 
 	// User delivery
-	ErrGetUserRequest = stdErrors.New("fatal getting user")
-	ErrWrongPassword  = stdErrors.New("bad pass")
+	ErrGetUserRequest     = stdErrors.New("fatal getting user")
+	ErrWrongValidPassword = stdErrors.New("bad pass")
 
 	// Middleware
 	ErrBigRequest    = stdErrors.New("big request")
@@ -93,7 +93,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrSessionNotExist] = http.StatusNotFound
 
 	// Auth repository
-	res[ErrSignupUserExist] = http.StatusBadRequest
+	res[ErrUserExist] = http.StatusBadRequest
 	res[ErrUserNotExist] = http.StatusNotFound
 
 	// Auth service
@@ -112,7 +112,7 @@ func NewErrClassifier() ErrClassifier {
 
 	// User delivery
 	res[ErrGetUserRequest] = http.StatusInternalServerError
-	res[ErrWrongPassword] = http.StatusForbidden
+	res[ErrWrongValidPassword] = http.StatusForbidden
 
 	// Middleware
 	res[ErrBigRequest] = http.StatusBadRequest

@@ -5,11 +5,14 @@ import (
 	"database/sql"
 	"strconv"
 	"strings"
+	"time"
 
+	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -28,14 +31,14 @@ type FilmPersonSQL struct {
 type FilmSQL struct {
 	ID          int
 	Name        string
-	ProdYear    int
+	ProdYear    time.Time
 	Description string
 	Duration    int
 
 	ShortDescription sql.NullString
 	OriginalName     sql.NullString
 	Slogan           sql.NullString
-	AgeLimit         sql.NullInt32
+	AgeLimit         sql.NullString
 	PosterHor        sql.NullString
 	PosterVer        sql.NullString
 
@@ -44,7 +47,7 @@ type FilmSQL struct {
 	CurrencyBudget sql.NullString
 
 	CountSeasons sql.NullInt32
-	EndYear      sql.NullInt32
+	EndYear      sql.NullTime
 	Type         sql.NullString
 
 	Rating               sql.NullFloat64
@@ -74,50 +77,18 @@ func NewFilmSQL() FilmSQL {
 	return FilmSQL{}
 }
 
-func NewFilmSQLOnFilm(film models.Film) FilmSQL {
-	return FilmSQL{
-		ID:          film.ID,
-		Name:        film.Name,
-		ProdYear:    film.ProdYear,
-		Description: film.Description,
-		Duration:    film.Duration,
-
-		ShortDescription: sqltools.NewSQLNullString(film.ShortDescription),
-		OriginalName:     sqltools.NewSQLNullString(film.OriginalName),
-		Slogan:           sqltools.NewSQLNullString(film.Slogan),
-		AgeLimit:         sqltools.NewSQLNullInt32(film.AgeLimit),
-		PosterHor:        sqltools.NewSQLNullString(film.PosterHor),
-		PosterVer:        sqltools.NewSQLNullString(film.PosterVer),
-
-		BoxOffice:      sqltools.NewSQLNullInt32(film.BoxOffice),
-		Budget:         sqltools.NewSQLNullInt32(film.Budget),
-		CurrencyBudget: sqltools.NewSQLNullString(film.CurrencyBudget),
-
-		CountSeasons: sqltools.NewSQLNullInt32(film.CountSeasons),
-		EndYear:      sqltools.NewSQLNullInt32(film.EndYear),
-		Type:         sqltools.NewSQLNullString(film.Type),
-
-		Rating:               sqltools.NewSQLNullFloat64(film.Rating),
-		CountScores:          sqltools.NewSQLNullInt32(film.CountScores),
-		CountActors:          sqltools.NewSQLNullInt32(film.CountActors),
-		CountNegativeReviews: sqltools.NewSQLNullInt32(film.CountNegativeReviews),
-		CountNeutralReviews:  sqltools.NewSQLNullInt32(film.CountNeutralReviews),
-		CountPositiveReviews: sqltools.NewSQLNullInt32(film.CountPositiveReviews),
-	}
-}
-
 func (f *FilmSQL) Convert() models.Film {
 	res := models.Film{
 		ID:          f.ID,
 		Name:        f.Name,
-		ProdYear:    f.ProdYear,
+		ProdYear:    f.ProdYear.Format(innerPKG.OnlyDate),
 		Description: f.Description,
 		Duration:    f.Duration,
 
 		ShortDescription: f.ShortDescription.String,
 		OriginalName:     f.OriginalName.String,
 		Slogan:           f.Slogan.String,
-		AgeLimit:         int(f.AgeLimit.Int32),
+		AgeLimit:         f.AgeLimit.String,
 		PosterHor:        f.PosterHor.String,
 		PosterVer:        f.PosterVer.String,
 
@@ -126,7 +97,7 @@ func (f *FilmSQL) Convert() models.Film {
 		CurrencyBudget: f.CurrencyBudget.String,
 
 		CountSeasons: int(f.CountSeasons.Int32),
-		EndYear:      int(f.EndYear.Int32),
+		EndYear:      f.EndYear.Time.Format(innerPKG.OnlyDate),
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),
@@ -338,7 +309,9 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
-		return []FilmSQL{}, err
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 	}
 	defer rowsFilmsGenres.Close()
 
@@ -346,11 +319,11 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 		var filmID int
 		var genre sql.NullString
 
-		err = rowsFilmsGenres.Scan(
-			&filmID,
-			&genre)
+		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
-			return []FilmSQL{}, err
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 		}
 
 		target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)

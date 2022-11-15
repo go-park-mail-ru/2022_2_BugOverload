@@ -2,10 +2,8 @@ package repository
 
 import (
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
 type CollectionSQL struct {
@@ -23,19 +21,6 @@ type CollectionSQL struct {
 
 func NewCollectionSQL() CollectionSQL {
 	return CollectionSQL{}
-}
-
-func NewCollectionSQLOnCollection(collection models.Collection) CollectionSQL {
-	return CollectionSQL{
-		ID:   collection.ID,
-		Name: collection.Name,
-		Time: collection.Time,
-
-		Description: sqltools.NewSQLNullString(collection.Description),
-		Poster:      sqltools.NewSQLNullString(collection.Poster),
-		CountLikes:  sqltools.NewSQLNullInt32(collection.CountLikes),
-		CountFilms:  sqltools.NewSQLNullInt32(collection.CountFilms),
-	}
 }
 
 func (c *CollectionSQL) Convert() models.Collection {

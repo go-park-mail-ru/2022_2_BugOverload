@@ -4,7 +4,7 @@ const (
 	getPersonByID = `SELECT 
     name, 
     birthday, 
-    growth, 
+    growth_meters, 
     original_name, 
     avatar, 
     death, 
@@ -28,7 +28,7 @@ const (
 		GROUP BY f.film_id
 		LIMIT $2`
 
-	getPersonImages = `SELECT images_list  FROM person_images WHERE person_id = $1`
+	getPersonImages = `SELECT image_key  FROM person_images WHERE person_id = $1 ORDER BY weight DESC LIMIT $2`
 
 	getPersonProfessions = `
 SELECT p.name
