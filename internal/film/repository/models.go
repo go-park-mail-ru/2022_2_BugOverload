@@ -51,7 +51,7 @@ type FilmSQL struct {
 	Type         sql.NullString
 
 	Rating               sql.NullFloat64
-	CountScores          sql.NullInt32
+	CountRatings         sql.NullInt32
 	CountActors          sql.NullInt32
 	CountNegativeReviews sql.NullInt32
 	CountNeutralReviews  sql.NullInt32
@@ -101,7 +101,7 @@ func (f *FilmSQL) Convert() models.Film {
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),
-		CountScores:          int(f.CountScores.Int32),
+		CountRatings:         int(f.CountRatings.Int32),
 		CountActors:          int(f.CountActors.Int32),
 		CountNegativeReviews: int(f.CountNegativeReviews.Int32),
 		CountNeutralReviews:  int(f.CountNeutralReviews.Int32),
@@ -193,7 +193,7 @@ func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, arg
 			&f.Type,
 			&f.Rating,
 			&f.CountActors,
-			&f.CountScores,
+			&f.CountRatings,
 			&f.CountNegativeReviews,
 			&f.CountNeutralReviews,
 			&f.CountPositiveReviews)

@@ -150,7 +150,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 
 		Rating:               film.Rating,
 		CountActors:          film.CountActors,
-		CountScores:          film.CountScores,
+		CountScores:          film.CountRatings,
 		CountNegativeReviews: film.CountNegativeReviews,
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,
