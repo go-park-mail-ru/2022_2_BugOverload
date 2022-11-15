@@ -51,22 +51,12 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 	response := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowUser := conn.QueryRowContext(ctx, getUserProfile, user.ID)
-		if rowUser.Err() != nil {
-			return rowUser.Err()
+		rowUserProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
+		if rowUserProfile.Err() != nil {
+			return rowUserProfile.Err()
 		}
-
-		err := rowUser.Scan(&response.Nickname)
-		if err != nil {
-			return err
-		}
-
-		rowProfile := conn.QueryRowContext(ctx, getUserProfile, user.ID)
-		if rowProfile.Err() != nil {
-			return rowProfile.Err()
-		}
-
-		err = rowProfile.Scan(
+		err := rowUserProfile.Scan(
+			&response.Nickname,
 			&response.Profile.JoinedDate,
 			&response.Profile.Avatar,
 			&response.Profile.CountViewsFilms,
