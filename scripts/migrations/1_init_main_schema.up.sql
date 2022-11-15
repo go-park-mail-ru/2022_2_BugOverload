@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS films
     -- Denormalize fields
     "rating"                 real               DEFAULT NULL,
     "count_actors"           integer   NOT NULL DEFAULT 0,
-    "count_scores"           integer   NOT NULL DEFAULT 0,
+    "count_ratings"          integer   NOT NULL DEFAULT 0,
     "count_negative_reviews" integer   NOT NULL DEFAULT 0,
     "count_neutral_reviews"  integer   NOT NULL DEFAULT 0,
     "count_positive_reviews" integer   NOT NULL DEFAULT 0,

@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"strings"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -81,31 +80,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	}
 
 	//  Images
-	errQuery = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowPersonImages := conn.QueryRowContext(ctx, getFilmImages, film.ID)
-		if rowPersonImages.Err() != nil {
-			return rowPersonImages.Err()
-		}
-
-		var images sql.NullString
-
-		err := rowPersonImages.Scan(&images)
-		if err != nil {
-			return err
-		}
-
-		response.Images = strings.Split(images.String, "_")
-
-		imagesSet := strings.Split(images.String, "_")
-
-		if params.CountImages > len(imagesSet) {
-			params.CountImages = len(imagesSet)
-		}
-
-		response.Images = imagesSet[:params.CountImages]
-
-		return nil
-	})
+	errQuery = response.GetActors(ctx, f.database.Connection, getFilmActors, film.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",

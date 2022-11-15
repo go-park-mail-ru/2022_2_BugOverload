@@ -34,7 +34,7 @@ VALUES`
 
 	updateFilms = `
 UPDATE films f
-SET (rating, count_scores) =
+SET (rating, count_ratings) =
         (SELECT SUM(pr.score) / CAST(COUNT(*) AS float) AS rating,
                 COALESCE(COUNT(*), 0)
          FROM profile_ratings pr
