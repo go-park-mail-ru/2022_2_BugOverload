@@ -66,5 +66,7 @@ func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, film)
+	response := models.NewFilmRateResponse(&film)
+
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }
