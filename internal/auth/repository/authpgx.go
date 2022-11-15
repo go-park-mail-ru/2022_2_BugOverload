@@ -75,20 +75,24 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 		return models.User{}, errors.ErrSignupUserExist
 	}
 
+	userDB := NewUserSQL()
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password))
+		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password), innerPKG.DefUserAvatar)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
 
-		err = rowUser.Scan(&user.ID)
+		err = rowUser.Scan(
+			&userDB.ID,
+			&userDB.email,
+			&userDB.nickname,
+			&userDB.avatar)
 		if err != nil {
 			return err
 		}
 
-		_, err = tx.ExecContext(ctx, createUserProfile, user.ID)
-		if err != nil {
-			return err
+		if !userDB.avatar.Valid {
+			userDB.avatar.String = innerPKG.DefPersonAvatar
 		}
 
 		rowsCollections, errCollections := tx.QueryContext(ctx, createDefCollections)
@@ -113,7 +117,7 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 			return err
 		}
 
-		_, err = tx.ExecContext(ctx, linkUserProfileDefCollections, user.ID, ids[0], ids[1])
+		_, err = tx.ExecContext(ctx, linkUserDefCollections, userDB.ID, ids[0], ids[1])
 		if err != nil {
 			return err
 		}
@@ -127,11 +131,7 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 			user, err)
 	}
 
-	user.Profile = models.Profile{
-		Avatar: innerPKG.DefUserAvatar,
-	}
-
-	return *user, nil
+	return userDB.Convert(), nil
 }
 
 // GetUserByEmail is returns all user attributes by part user attributes.
@@ -159,20 +159,8 @@ func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (model
 			&userDB.ID,
 			&userDB.email,
 			&userDB.nickname,
-			&userDB.password)
-		if err != nil {
-			return err
-		}
-
-		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
-		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
-			return errors.ErrNotFoundInDB
-		}
-		if rowProfile.Err() != nil {
-			return rowProfile.Err()
-		}
-
-		err = rowProfile.Scan(&userDB.avatar)
+			&userDB.password,
+			&userDB.avatar)
 		if err != nil {
 			return err
 		}
@@ -217,23 +205,6 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 			&userDB.password)
 		if err != nil {
 			return err
-		}
-
-		rowProfile := conn.QueryRowContext(ctx, getProfileAvatar, userDB.ID)
-		if stdErrors.Is(rowProfile.Err(), sql.ErrNoRows) {
-			return errors.ErrNotFoundInDB
-		}
-		if rowProfile.Err() != nil {
-			return rowProfile.Err()
-		}
-
-		err = rowProfile.Scan(&userDB.avatar)
-		if err != nil {
-			return err
-		}
-
-		if !userDB.avatar.Valid {
-			userDB.avatar.String = innerPKG.DefPersonAvatar
 		}
 
 		return nil
