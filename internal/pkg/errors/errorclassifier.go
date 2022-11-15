@@ -48,8 +48,8 @@ var (
 	ErrImage         = stdErrors.New("service picture not work")
 
 	// User delivery
-	ErrGetUserRequest = stdErrors.New("fatal getting user")
-	ErrWrongPassword  = stdErrors.New("bad pass")
+	ErrGetUserRequest     = stdErrors.New("fatal getting user")
+	ErrWrongValidPassword = stdErrors.New("bad pass")
 
 	// Middleware
 	ErrBigRequest    = stdErrors.New("big request")
@@ -112,7 +112,7 @@ func NewErrClassifier() ErrClassifier {
 
 	// User delivery
 	res[ErrGetUserRequest] = http.StatusInternalServerError
-	res[ErrWrongPassword] = http.StatusForbidden
+	res[ErrWrongValidPassword] = http.StatusForbidden
 
 	// Middleware
 	res[ErrBigRequest] = http.StatusBadRequest

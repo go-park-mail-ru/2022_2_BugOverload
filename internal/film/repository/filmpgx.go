@@ -35,7 +35,9 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	// Film - Main
 	errMain := response.GetMainInfo(ctx, f.database.Connection, getFilmByID, film.ID)
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Film{}, errors.ErrNotFoundInDB
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			"Film main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getFilmByID, film.ID, errMain)
 	}
 
 	if errMain != nil {
@@ -111,8 +113,15 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 
 	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowFilm := conn.QueryRowContext(ctx, getFilmRecommendation)
+		if stdErrors.Is(rowFilm.Err(), sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Err: params input: query - [%s]. Special Error [%s]",
+				getFilmRecommendation, rowFilm.Err())
+		}
 		if rowFilm.Err() != nil {
-			return rowFilm.Err()
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s]. Special Error [%s]",
+				getFilmRecommendation, rowFilm.Err())
 		}
 
 		err := rowFilm.Scan(
@@ -130,15 +139,8 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 		return nil
 	})
 
-	// the main entity is not found
-	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Film{}, errors.ErrNotFoundInDB
-	}
-
 	if errMain != nil {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s]. Special Error [%s]",
-			getFilmRecommendation, errMain)
+		return models.Film{}, errMain
 	}
 
 	var errQuery error

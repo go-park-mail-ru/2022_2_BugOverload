@@ -34,8 +34,16 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 	// Person - Main
 	errMain := response.GetMainInfo(ctx, p.database.Connection, getPersonByID, person.ID)
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPersonByID, person.ID, errMain)
+	}
+
 	if errMain != nil {
-		return models.Person{}, stdErrors.Wrap(errMain, "GetMainInfo")
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getPersonByID, person.ID, errMain)
 	}
 
 	// Parts
@@ -44,8 +52,10 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		var err error
 
 		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, conn, getPersonBestFilms, person.ID, params.CountFilms)
-		if err != nil {
-			return err
+		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				getPersonBestFilms, person.ID, params.CountFilms, err)
 		}
 
 		response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, conn)
@@ -55,10 +65,8 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 		return nil
 	})
-	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
-			getPersonBestFilms, person.ID, params.CountFilms, errQuery)
+	if errQuery != nil {
+		return models.Person{}, errQuery
 	}
 
 	//  Images

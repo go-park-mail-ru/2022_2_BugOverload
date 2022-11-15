@@ -59,8 +59,8 @@ func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image)
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return models.Image{}, stdErrors.WithMessagef(err,
-			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
-			image.Key, image.Object, len(image.Bytes), err)
+			"Err: params input: image key - [%s], object - [%s], size image [%d]",
+			image.Key, image.Object, len(image.Bytes))
 	}
 
 	res := make([]byte, innerPKG.BufSizeImage)
@@ -101,8 +101,8 @@ func (i *imageS3WithPostgres) UpdateImage(ctx context.Context, image *models.Ima
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return stdErrors.WithMessagef(err,
-			"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
-			image.Key, image.Object, len(image.Bytes), err)
+			"Err: params input: image key - [%s], object - [%s], size image [%d]",
+			image.Key, image.Object, len(image.Bytes))
 	}
 
 	body := bytes.NewReader(image.Bytes)

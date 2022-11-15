@@ -7,10 +7,12 @@ import (
 	"strings"
 	"time"
 
+	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -307,7 +309,9 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
-		return []FilmSQL{}, err
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 	}
 	defer rowsFilmsGenres.Close()
 
@@ -315,11 +319,11 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 		var filmID int
 		var genre sql.NullString
 
-		err = rowsFilmsGenres.Scan(
-			&filmID,
-			&genre)
+		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
-			return []FilmSQL{}, err
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 		}
 
 		target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)

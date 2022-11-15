@@ -218,19 +218,25 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, insertNewReview, review.Name, review.Type, review.Body)
 		if row.Err() != nil {
-			return row.Err()
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
+				insertNewReview, user.ID, review, row.Err())
 		}
 
 		var reviewID int
 
 		err := row.Scan(&reviewID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
+				insertNewReview, user.ID, review, err)
 		}
 
 		_, err = tx.ExecContext(ctx, linkNewReviewAuthor, reviewID, user.ID, params.FilmID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
+				linkNewReviewAuthor, reviewID, user.ID, params.FilmID, err)
 		}
 
 		_, err = tx.ExecContext(ctx, updateAuthorCountReviews, user.ID)
@@ -251,16 +257,16 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 
 		_, err = tx.ExecContext(ctx, targetCounterReviews, params.FilmID)
 		if err != nil {
-			return err
+			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
+				targetCounterReviews, params.FilmID, err)
 		}
 
 		return nil
 	})
 
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
-			"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
-			insertNewReview, user.ID, review, errMain)
+		return errMain
 	}
 
 	return nil
@@ -273,7 +279,9 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		// CountReviews
 		rowUser := conn.QueryRowContext(ctx, getUserCountReviews, user.ID)
 		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
-			return errors.ErrNotFoundInDB
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getUserCountReviews, user.ID, rowUser.Err())
 		}
 
 		if rowUser.Err() != nil {
