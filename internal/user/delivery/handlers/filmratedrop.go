@@ -38,7 +38,7 @@ func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware
 // @tags user, completed
 // @Produce json
 // @Param   id    path  int    true "film id"
-// @Success 204 "successfully drop rate"
+// @Success 200 {object} models.FilmRateDropResponse "successfully drop rate"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
