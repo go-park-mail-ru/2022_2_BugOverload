@@ -18,8 +18,8 @@ type UserService interface {
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
 	ChangeUserProfileSettings(ctx context.Context, user *models.User, params *innerPKG.ChangeUserSettings) error
 
-	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error
-	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error
+	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
+	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error)
 
 	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
 
@@ -82,27 +82,27 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 }
 
 // FilmRate is the service that accesses the interface UserService
-func (u *userService) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) error {
+func (u *userService) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
 	if !(0 <= params.Score && params.Score <= 10) {
-		return stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRate")
+		return models.Film{}, stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRate")
 	}
 
-	err := u.userRepo.FilmRate(ctx, user, params)
+	film, err := u.userRepo.FilmRate(ctx, user, params)
 	if err != nil {
-		return stdErrors.Wrap(err, "FilmRate")
+		return models.Film{}, stdErrors.Wrap(err, "FilmRate")
 	}
 
-	return nil
+	return film, nil
 }
 
 // FilmRateDrop is the service that accesses the interface UserService
-func (u *userService) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) error {
-	err := u.userRepo.FilmRateDrop(ctx, user, params)
+func (u *userService) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error) {
+	film, err := u.userRepo.FilmRateDrop(ctx, user, params)
 	if err != nil {
-		return stdErrors.Wrap(err, "FilmRateDrop")
+		return models.Film{}, stdErrors.Wrap(err, "FilmRateDrop")
 	}
 
-	return nil
+	return film, nil
 }
 
 // NewFilmReview is the service that accesses the interface UserService
