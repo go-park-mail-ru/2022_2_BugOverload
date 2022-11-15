@@ -154,6 +154,8 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 
 
 func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+	resultFilm := filmRepo.NewFilmSQL()
+	
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, setRateFilm, user.ID, params.FilmID, params.Score)
 		if err != nil {
