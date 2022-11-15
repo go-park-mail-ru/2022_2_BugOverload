@@ -40,7 +40,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrSessionNotExist] = infoLogLevel
 
 	// Auth repository
-	res[ErrSignupUserExist] = errLogLevel
+	res[ErrUserExist] = errLogLevel
 	res[ErrUserNotExist] = errLogLevel
 
 	// Auth service

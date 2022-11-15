@@ -72,7 +72,7 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 		return models.User{}, stdErrors.Wrap(err, "CreateUser falls on check exist")
 	}
 	if exist {
-		return models.User{}, errors.ErrSignupUserExist
+		return models.User{}, errors.ErrUserExist
 	}
 
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {

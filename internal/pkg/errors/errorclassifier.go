@@ -30,8 +30,8 @@ var (
 	ErrSessionNotExist = stdErrors.New("no such session")
 
 	// Auth repository
-	ErrSignupUserExist = stdErrors.New("such user exists")
-	ErrUserNotExist    = stdErrors.New("no such user")
+	ErrUserExist    = stdErrors.New("such user exists")
+	ErrUserNotExist = stdErrors.New("no such user")
 
 	// Auth service
 	ErrInvalidNickname   = stdErrors.New("invalid nickname")
@@ -93,7 +93,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrSessionNotExist] = http.StatusNotFound
 
 	// Auth repository
-	res[ErrSignupUserExist] = http.StatusBadRequest
+	res[ErrUserExist] = http.StatusBadRequest
 	res[ErrUserNotExist] = http.StatusNotFound
 
 	// Auth service
