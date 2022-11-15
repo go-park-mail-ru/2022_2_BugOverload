@@ -9,10 +9,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	modelsCollectionRepo "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
-	modelsFilmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	modelsPersonRepo "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/generatordatadb"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -22,14 +18,14 @@ type DBFiller struct {
 
 	DB *sqltools.Database
 
-	films    []models.Film
-	filmsSQL []modelsFilmRepo.FilmSQL
+	films    []FilmFiller
+	filmsSQL []FilmSQLFiller
 
-	persons    []models.Person
-	personsSQL []modelsPersonRepo.PersonSQL
+	persons    []PersonFiller
+	personsSQL []PersonSQLFiller
 
-	collections    []models.Collection
-	collectionsSQL []modelsCollectionRepo.CollectionSQL
+	collections    []CollectionFiller
+	collectionsSQL []CollectionSQLFiller
 
 	genres      map[string]int
 	countries   map[string]int
@@ -169,22 +165,22 @@ func (f *DBFiller) fillStorages(path string) error {
 }
 
 func (f *DBFiller) convertStructs() {
-	f.filmsSQL = make([]modelsFilmRepo.FilmSQL, len(f.films))
+	f.filmsSQL = make([]FilmSQLFiller, len(f.films))
 
 	for idx, value := range f.films {
-		f.filmsSQL[idx] = modelsFilmRepo.NewFilmSQLOnFilm(value)
+		f.filmsSQL[idx] = NewFilmSQLFillerOnFilm(value)
 	}
 
-	f.personsSQL = make([]modelsPersonRepo.PersonSQL, len(f.persons))
+	f.personsSQL = make([]PersonSQLFiller, len(f.persons))
 
 	for idx, value := range f.persons {
-		f.personsSQL[idx] = modelsPersonRepo.NewPersonSQLOnPerson(value)
+		f.personsSQL[idx] = NewPersonSQLFillerOnPerson(value)
 	}
 
-	f.collectionsSQL = make([]modelsCollectionRepo.CollectionSQL, len(f.collections))
+	f.collectionsSQL = make([]CollectionSQLFiller, len(f.collections))
 
 	for idx, value := range f.collections {
-		f.collectionsSQL[idx] = modelsCollectionRepo.NewCollectionSQLOnCollection(value)
+		f.collectionsSQL[idx] = NewCollectionSQLFilmOnCollection(value)
 	}
 }
 
@@ -255,12 +251,6 @@ func (f *DBFiller) Action() error {
 		return errors.Wrap(err, "Action")
 	}
 	logrus.Infof("%d face users upload", count)
-
-	count, err = f.linkUsersProfiles()
-	if err != nil {
-		return errors.Wrap(err, "Action")
-	}
-	logrus.Infof("%d face users profiles link end", count)
 
 	count, err = f.linkProfileViews()
 	if err != nil {

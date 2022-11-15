@@ -70,11 +70,11 @@ type FilmResponse struct {
 	ID               int    `json:"id,omitempty" example:"23"`
 	Name             string `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`
-	ProdYear         int    `json:"prod_year,omitempty" example:"2011"`
+	ProdYear         string `json:"prod_year,omitempty" example:"2011"`
 	Slogan           string `json:"slogan,omitempty" example:"Победа или смерть"`
 	Description      string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
 	ShortDescription string `json:"short_description,omitempty" example:"Что вы знаете о джинах кроме желайний?"`
-	AgeLimit         int    `json:"age_limit,omitempty" example:"18"`
+	AgeLimit         string `json:"age_limit,omitempty" example:"18"`
 	Duration         int    `json:"duration,omitempty" example:"55"`
 	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
 
@@ -83,7 +83,7 @@ type FilmResponse struct {
 	CurrencyBudget string `json:"currency_budget,omitempty"  example:"USD"`
 
 	CountSeasons int    `json:"count_seasons,omitempty" example:"8"`
-	EndYear      int    `json:"end_year,omitempty" example:"2019"`
+	EndYear      string `json:"end_year,omitempty" example:"2019"`
 	Type         string `json:"type,omitempty" example:"serial"`
 
 	Rating               float32 `json:"rating,omitempty" example:"9.0"`

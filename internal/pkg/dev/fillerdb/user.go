@@ -58,32 +58,6 @@ func (f *DBFiller) uploadUsers() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) linkUsersProfiles() (int, error) {
-	countInserts := len(f.faceUsers)
-
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertUsersProfiles, countInserts)
-
-	values := make([]interface{}, countAttributes*countInserts)
-
-	pos := 0
-	for _, value := range f.faceUsers {
-		values[pos] = value.ID
-		pos++
-		values[pos] = faker.Timestamp()
-		pos++
-	}
-
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
-	defer cancelFunc()
-
-	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
-	if err != nil {
-		return 0, errors.Wrap(err, "linkUsersProfiles")
-	}
-
-	return countInserts, nil
-}
-
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
@@ -127,7 +101,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 	return countInserts, nil
 }
 
-const offset = 4
+const offset = 3
 
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
@@ -152,7 +126,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			pos++
 			values[pos] = sequence[j]
 			pos++
-			values[pos] = pkg.RandMaxInt(f.Config.Volume.MaxRatings-offset) + offset
+			values[pos] = pkg.RandMaxInt(f.Config.Volume.MaxRatings-offset) + 1 + offset
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++

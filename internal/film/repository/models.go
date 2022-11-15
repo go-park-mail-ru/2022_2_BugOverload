@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -28,14 +29,14 @@ type FilmPersonSQL struct {
 type FilmSQL struct {
 	ID          int
 	Name        string
-	ProdYear    int
+	ProdYear    time.Time
 	Description string
 	Duration    int
 
 	ShortDescription sql.NullString
 	OriginalName     sql.NullString
 	Slogan           sql.NullString
-	AgeLimit         sql.NullInt32
+	AgeLimit         sql.NullString
 	PosterHor        sql.NullString
 	PosterVer        sql.NullString
 
@@ -44,7 +45,7 @@ type FilmSQL struct {
 	CurrencyBudget sql.NullString
 
 	CountSeasons sql.NullInt32
-	EndYear      sql.NullInt32
+	EndYear      sql.NullTime
 	Type         sql.NullString
 
 	Rating               sql.NullFloat64
@@ -74,50 +75,18 @@ func NewFilmSQL() FilmSQL {
 	return FilmSQL{}
 }
 
-func NewFilmSQLOnFilm(film models.Film) FilmSQL {
-	return FilmSQL{
-		ID:          film.ID,
-		Name:        film.Name,
-		ProdYear:    film.ProdYear,
-		Description: film.Description,
-		Duration:    film.Duration,
-
-		ShortDescription: sqltools.NewSQLNullString(film.ShortDescription),
-		OriginalName:     sqltools.NewSQLNullString(film.OriginalName),
-		Slogan:           sqltools.NewSQLNullString(film.Slogan),
-		AgeLimit:         sqltools.NewSQLNullInt32(film.AgeLimit),
-		PosterHor:        sqltools.NewSQLNullString(film.PosterHor),
-		PosterVer:        sqltools.NewSQLNullString(film.PosterVer),
-
-		BoxOffice:      sqltools.NewSQLNullInt32(film.BoxOffice),
-		Budget:         sqltools.NewSQLNullInt32(film.Budget),
-		CurrencyBudget: sqltools.NewSQLNullString(film.CurrencyBudget),
-
-		CountSeasons: sqltools.NewSQLNullInt32(film.CountSeasons),
-		EndYear:      sqltools.NewSQLNullInt32(film.EndYear),
-		Type:         sqltools.NewSQLNullString(film.Type),
-
-		Rating:               sqltools.NewSQLNullFloat64(film.Rating),
-		CountScores:          sqltools.NewSQLNullInt32(film.CountScores),
-		CountActors:          sqltools.NewSQLNullInt32(film.CountActors),
-		CountNegativeReviews: sqltools.NewSQLNullInt32(film.CountNegativeReviews),
-		CountNeutralReviews:  sqltools.NewSQLNullInt32(film.CountNeutralReviews),
-		CountPositiveReviews: sqltools.NewSQLNullInt32(film.CountPositiveReviews),
-	}
-}
-
 func (f *FilmSQL) Convert() models.Film {
 	res := models.Film{
 		ID:          f.ID,
 		Name:        f.Name,
-		ProdYear:    f.ProdYear,
+		ProdYear:    f.ProdYear.Format(innerPKG.DateFormat),
 		Description: f.Description,
 		Duration:    f.Duration,
 
 		ShortDescription: f.ShortDescription.String,
 		OriginalName:     f.OriginalName.String,
 		Slogan:           f.Slogan.String,
-		AgeLimit:         int(f.AgeLimit.Int32),
+		AgeLimit:         f.AgeLimit.String,
 		PosterHor:        f.PosterHor.String,
 		PosterVer:        f.PosterVer.String,
 
@@ -126,7 +95,7 @@ func (f *FilmSQL) Convert() models.Film {
 		CurrencyBudget: f.CurrencyBudget.String,
 
 		CountSeasons: int(f.CountSeasons.Int32),
-		EndYear:      int(f.EndYear.Int32),
+		EndYear:      f.EndYear.Time.Format(innerPKG.OnlyDate),
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),

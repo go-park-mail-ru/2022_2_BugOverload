@@ -1,5 +1,5 @@
 -- Зависимые таблицы N:M
-DROP TABLE  IF EXISTS film_genres;
+DROP TABLE IF EXISTS film_genres;
 
 DROP TABLE IF EXISTS film_countries;
 
@@ -35,8 +35,6 @@ DROP TABLE IF EXISTS film_images;
 DROP TABLE IF EXISTS person_images;
 
 -- Главные таблицы
-DROP TABLE IF EXISTS profiles;
-
 DROP TABLE IF EXISTS reviews;
 
 DROP TABLE IF EXISTS users;
@@ -56,3 +54,14 @@ DROP TABLE IF EXISTS persons;
 DROP TABLE IF EXISTS professions;
 
 DROP TABLE IF EXISTS collections;
+
+-- Enums
+DROP TYPE IF EXISTS film_type_enum CASCADE;
+
+DROP TYPE IF EXISTS currency_enum CASCADE;
+
+DROP TYPE IF EXISTS age_limit_enum CASCADE;
+
+DROP TYPE IF EXISTS gender_enum CASCADE;
+
+DROP TYPE IF EXISTS type_review_enum CASCADE;

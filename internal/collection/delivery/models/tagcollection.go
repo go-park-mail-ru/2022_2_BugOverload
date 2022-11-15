@@ -60,8 +60,8 @@ func (p *TagCollectionRequest) GetParams() *innerPKG.GetCollectionTagParams {
 type filmTagCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
-	ProdYear  int      `json:"prod_year,omitempty" example:"2014"`
-	EndYear   int      `json:"end_year,omitempty" example:"2013"`
+	ProdYear  string   `json:"prod_year,omitempty" example:"2014"`
+	EndYear   string   `json:"end_year,omitempty" example:"2013"`
 	PosterVer string   `json:"poster_ver,omitempty" example:"{{key}}"`
 	Rating    float32  `json:"rating,omitempty" example:"7.9523542"`
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`

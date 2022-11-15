@@ -16,11 +16,11 @@ type Film struct {
 	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name,omitempty"`
 	OriginalName     string `json:"original_name,omitempty"`
-	ProdYear         int    `json:"prod_year,omitempty"`
+	ProdYear         string `json:"prod_year,omitempty"`
 	Slogan           string `json:"slogan,omitempty"`
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`
-	AgeLimit         int    `json:"age_limit,omitempty"`
+	AgeLimit         string `json:"age_limit,omitempty"`
 	Duration         int    `json:"duration,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
@@ -30,7 +30,7 @@ type Film struct {
 	CurrencyBudget string `json:"currency_budget,omitempty"`
 
 	CountSeasons int    `json:"count_seasons,omitempty"`
-	EndYear      int    `json:"end_year,omitempty"`
+	EndYear      string `json:"end_year,omitempty"`
 	Type         string `json:"type,omitempty"`
 
 	Rating               float32 `json:"rating,omitempty"`

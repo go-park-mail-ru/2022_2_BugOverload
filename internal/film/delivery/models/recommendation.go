@@ -8,10 +8,10 @@ type RecommendFilmResponse struct {
 	ID               int    `json:"id,omitempty" example:"23"`
 	Name             string `json:"name,omitempty" example:"Терминатор"`
 	ShortDescription string `json:"short_description,omitempty" example:"Идет борьба сопротивления людей против машин"`
-	ProdYear         int    `json:"prod_year,omitempty" example:"2008"`
+	ProdYear         string `json:"prod_year,omitempty" example:"2008"`
 	PosterHor        string `json:"poster_hor,omitempty" example:"{{ключ}}"`
 
-	EndYear int `json:"end_year,omitempty" example:"2013"`
+	EndYear string `json:"end_year,omitempty" example:"2013"`
 
 	Rating float32 `json:"rating,omitempty" example:"8.8"`
 

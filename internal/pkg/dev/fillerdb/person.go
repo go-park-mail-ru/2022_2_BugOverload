@@ -3,7 +3,6 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -68,22 +67,19 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
 
 	for _, value := range f.persons {
-		posValue += offset
-		offset = 0
 		weight := len(value.Professions)
 
 		for _, profession := range value.Professions {
-			values[posValue+offset] = value.ID
-			offset++
-			values[posValue+offset] = f.professions[profession]
+			values[pos] = value.ID
+			pos++
+			values[pos] = f.professions[profession]
 			weight--
-			offset++
-			values[posValue+offset] = weight
-			offset++
+			pos++
+			values[pos] = weight
+			pos++
 		}
 	}
 
@@ -109,22 +105,19 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 
 	values := make([]interface{}, countAttributes*countInserts)
 
-	offset := 0
-	posValue := 0
+	pos := 0
 
 	for _, value := range f.persons {
-		posValue += offset
-		offset = 0
 		weight := len(value.Genres)
 
 		for _, genre := range value.Genres {
-			values[posValue+offset] = value.ID
-			offset++
-			values[posValue+offset] = f.genres[genre]
+			values[pos] = value.ID
+			pos++
+			values[pos] = f.genres[genre]
 			weight--
-			offset++
-			values[posValue+offset] = weight
-			offset++
+			pos++
+			values[pos] = weight
+			pos++
 		}
 	}
 
@@ -140,20 +133,30 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 }
 
 func (f *DBFiller) linkPersonImages() (int, error) {
-	countInserts := len(f.persons)
+	countInserts := 0
+
+	for _, value := range f.persons {
+		countInserts += len(value.Images)
+	}
 
 	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsImages, countInserts)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
-	for _, value := range f.persons {
-		values[pos] = value.ID
-		pos++
 
-		imagesList := strings.Join(value.Images, "_")
-		values[pos] = imagesList
-		pos++
+	for _, value := range f.persons {
+		weight := len(value.Images)
+
+		for _, image := range value.Images {
+			values[pos] = value.ID
+			pos++
+			values[pos] = image
+			weight--
+			pos++
+			values[pos] = weight
+			pos++
+		}
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
