@@ -30,20 +30,13 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 	countFilms := r.FormValue("count_films")
 	p.Delimiter = r.FormValue("delimiter")
 
-	switch p.Tag {
-	case innerPKG.TagFromPopular:
-		p.Tag = innerPKG.TagInPopular
-	case innerPKG.TagFromInCinema:
-		p.Tag = innerPKG.TagInInCinema
-	}
-
 	p.CountFilms, err = strconv.Atoi(countFilms)
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	if p.CountFilms <= 0 {
-		return errors.ErrQueryRequiredEmpty
+		return errors.ErrQueryBad
 	}
 
 	return nil

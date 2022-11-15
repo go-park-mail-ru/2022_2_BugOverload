@@ -2,6 +2,9 @@
 coverage.*
 main
 c.out
+c2.out
+cover
+cover2
 
 docs/docs.go
 docs/swagger*

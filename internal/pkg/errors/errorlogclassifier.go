@@ -23,7 +23,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrContentTypeUndefined] = infoLogLevel
 	res[ErrUnsupportedMediaType] = infoLogLevel
 	res[ErrEmptyBody] = infoLogLevel
-	res[ErrConvertQuery] = infoLogLevel
+	res[ErrConvertQueryType] = infoLogLevel
 	res[ErrQueryRequiredEmpty] = infoLogLevel
 	res[ErrQueryBad] = infoLogLevel
 	res[ErrEmptyField] = infoLogLevel

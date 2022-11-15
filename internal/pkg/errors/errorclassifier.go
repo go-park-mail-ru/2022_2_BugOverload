@@ -13,7 +13,7 @@ var (
 	ErrContentTypeUndefined = stdErrors.New("content-type undefined")
 	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
 	ErrEmptyBody            = stdErrors.New("empty body")
-	ErrConvertQuery         = stdErrors.New("bad input query")
+	ErrConvertQueryType     = stdErrors.New("bad input query")
 	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
 	ErrQueryBad             = stdErrors.New("bad query params")
 	ErrEmptyField           = stdErrors.New("empty field")
@@ -76,7 +76,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
 	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
 	res[ErrEmptyBody] = http.StatusBadRequest
-	res[ErrConvertQuery] = http.StatusBadRequest
+	res[ErrConvertQueryType] = http.StatusBadRequest
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
 	res[ErrQueryBad] = http.StatusBadRequest
 	res[ErrEmptyField] = http.StatusBadRequest

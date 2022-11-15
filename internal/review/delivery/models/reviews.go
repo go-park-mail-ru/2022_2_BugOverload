@@ -33,12 +33,12 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 	rr.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	rr.CountReviews, err = strconv.Atoi(r.FormValue("count_reviews"))
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	if rr.CountReviews <= 0 {
@@ -47,7 +47,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 	rr.Offset, err = strconv.Atoi(r.FormValue("offset"))
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	if rr.Offset < 0 {

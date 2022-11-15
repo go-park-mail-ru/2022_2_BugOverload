@@ -40,18 +40,19 @@ run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
 
 run-tests:
-	go test -race ./cmd/debug/tests/ -cover -coverpkg $(PKG)
-
-get-coverage:
-	go test ${PKG} -coverprofile coverage.out
-	go tool cover -html coverage.out -o coverage.html
+	go test -race ${PKG} -cover -coverpkg $(PKG)
 
 get-stat-coverage:
 	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
-	go tool cover -func=c.out
+	cat c.out | fgrep -v "easyjson" | fgrep -v "mock" | fgrep -v "testing.go" | fgrep -v "docs" | fgrep -v ".pb.go" | fgrep -v "config" > c2.out
+	go tool cover -func=c2.out
+	go tool cover -html c2.out -o coverage.html
 
 generate-api-doc:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
+
+generate-mocks:
+	go generate ${PKG}
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:

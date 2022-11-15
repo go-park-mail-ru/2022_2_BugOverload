@@ -26,7 +26,7 @@ func (f *FilmRateDropRequest) Bind(r *http.Request) error {
 
 	f.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	return nil
