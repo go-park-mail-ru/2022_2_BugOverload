@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"time"
 
@@ -49,17 +50,9 @@ func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
-	authRequest := models.NewUserAuthRequest()
-
-	err := authRequest.Bind(r)
-	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
-		return
-	}
-
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
 		return
 	}
 

@@ -17,62 +17,59 @@ const (
 func NewErrLogClassifier() ErrLogClassifier {
 	res := make(map[error]string)
 
-	// Auth
-	res[ErrEmptyFieldAuth] = infoLogLevel
-	res[ErrUserExist] = infoLogLevel
-	res[ErrUserNotExist] = infoLogLevel
-	res[ErrSignupUserExist] = infoLogLevel
+	// Common delivery
 	res[ErrBadBodyRequest] = infoLogLevel
-
-	res[ErrLoginCombinationNotFound] = infoLogLevel
-	res[ErrNoCookie] = infoLogLevel
-	res[ErrCookieNotExist] = infoLogLevel
-	res[ErrSessionNotExist] = infoLogLevel
-	res[ErrQueryRequiredEmpty] = infoLogLevel
-	res[ErrWrongPassword] = infoLogLevel
-
-	// Access
-	res[ErrNoAccess] = infoLogLevel
-
-	// Auth Validation
-	res[ErrInvalidEmail] = infoLogLevel
-	res[ErrInvalidPassword] = infoLogLevel
-
-	// Films
-	res[ErrFilmNotFound] = infoLogLevel
-
-	// Images
-	res[ErrImageNotFound] = infoLogLevel
-
-	res[ErrGetImageStorage] = infoLogLevel
-	res[ErrReadImage] = infoLogLevel
-
-	res[ErrImage] = infoLogLevel
-	res[ErrBadImageType] = infoLogLevel
-
-	// Def Validation
 	res[ErrJSONUnexpectedEnd] = infoLogLevel
 	res[ErrContentTypeUndefined] = infoLogLevel
 	res[ErrUnsupportedMediaType] = infoLogLevel
 	res[ErrEmptyBody] = infoLogLevel
-	res[ErrBigRequest] = infoLogLevel
-	res[ErrConvertLength] = infoLogLevel
 	res[ErrConvertQuery] = infoLogLevel
+	res[ErrQueryRequiredEmpty] = infoLogLevel
 	res[ErrQueryBad] = infoLogLevel
+	res[ErrEmptyField] = infoLogLevel
 	res[ErrEmptyRequiredFields] = infoLogLevel
 	res[ErrBadRequestParams] = infoLogLevel
 
-	// DB
-	res[ErrPostgresRequest] = errLogLevel
+	// Common repository
 	res[ErrNotFoundInDB] = infoLogLevel
+	res[ErrPostgresRequest] = infoLogLevel
 	res[ErrGetParamsConvert] = infoLogLevel
+
+	// Auth delivery
+	res[ErrNoCookie] = infoLogLevel
+	res[ErrSessionNotExist] = infoLogLevel
+
+	// Auth repository
+	res[ErrSignupUserExist] = infoLogLevel
+	res[ErrUserNotExist] = infoLogLevel
+
+	// Auth service
+	res[ErrInvalidNickname] = infoLogLevel
+	res[ErrInvalidEmail] = infoLogLevel
+	res[ErrInvalidPassword] = infoLogLevel
+	res[ErrIncorrectPassword] = infoLogLevel
+
+	// Image delivery
+	res[ErrBigImage] = infoLogLevel
+	res[ErrBadImageType] = infoLogLevel
+
+	// Image repository
+	res[ErrImageNotFound] = infoLogLevel
+	res[ErrImage] = infoLogLevel
+
+	// User delivery
+	res[ErrGetUserRequest] = infoLogLevel
+	res[ErrWrongPassword] = infoLogLevel
+
+	// Middleware
+	res[ErrBigRequest] = infoLogLevel
+	res[ErrConvertLength] = infoLogLevel
 
 	// Security
 	res[ErrCsrfTokenCreate] = infoLogLevel
 	res[ErrCsrfTokenCheck] = infoLogLevel
 	res[ErrCsrfTokenCheckInternal] = infoLogLevel
 	res[ErrCsrfTokenExpired] = infoLogLevel
-	res[ErrCsrfTokenNotFound] = infoLogLevel
 	res[ErrCsrfTokenInvalid] = infoLogLevel
 
 	return ErrLogClassifier{

@@ -40,4 +40,6 @@ WHERE user_id = $1`
 	getProfileAvatar = `SELECT avatar FROM profiles WHERE profile_id = $1`
 
 	checkExist = `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)`
+
+	updateUserPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
 )
