@@ -79,7 +79,7 @@ func (f *FilmSQL) Convert() models.Film {
 	res := models.Film{
 		ID:          f.ID,
 		Name:        f.Name,
-		ProdYear:    f.ProdYear.Format(innerPKG.DateFormat),
+		ProdYear:    f.ProdYear.Format(innerPKG.OnlyDate),
 		Description: f.Description,
 		Duration:    f.Duration,
 

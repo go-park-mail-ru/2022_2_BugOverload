@@ -63,7 +63,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrBadRequestParams] = infoLogLevel
 
 	// DB
-	res[ErrPostgresRequest] = infoLogLevel
+	res[ErrPostgresRequest] = errLogLevel
 	res[ErrNotFoundInDB] = infoLogLevel
 	res[ErrGetParamsConvert] = infoLogLevel
 

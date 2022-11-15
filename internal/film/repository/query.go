@@ -19,7 +19,7 @@ SELECT name,
        type,
        rating,
        count_actors,
-       count_scores,
+       count_ratings,
        count_negative_reviews,
        count_neutral_reviews,
        count_positive_reviews

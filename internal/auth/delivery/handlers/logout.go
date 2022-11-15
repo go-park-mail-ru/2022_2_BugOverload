@@ -31,7 +31,7 @@ func NewLogoutHandler(as authService.AuthService, ss sessionService.SessionServi
 }
 
 func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodDelete)
 }
 
 // Action is a method for initial validation of the request and data and
@@ -45,7 +45,7 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/auth/logout [GET]
+// @Router /api/v1/auth/logout [DELETE]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	var logoutRequest models.UserLogoutRequest
 

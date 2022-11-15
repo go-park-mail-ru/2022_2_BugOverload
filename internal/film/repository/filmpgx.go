@@ -80,7 +80,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	}
 
 	//  Images
-	errQuery = response.GetActors(ctx, f.database.Connection, getFilmActors, film.ID, params.CountImages)
+	errQuery = response.GetActors(ctx, f.database.Connection, getFilmImages, film.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",

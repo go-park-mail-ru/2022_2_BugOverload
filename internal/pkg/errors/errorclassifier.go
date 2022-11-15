@@ -76,38 +76,44 @@ func NewErrClassifier() ErrClassifier {
 	res := make(map[error]int)
 
 	// Auth
+	// Delivery
 	res[ErrEmptyFieldAuth] = http.StatusBadRequest
+	res[ErrBadBodyRequest] = http.StatusBadRequest
+	res[ErrNoCookie] = http.StatusUnauthorized
+	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
+
+	// Service
+	res[ErrInvalidEmail] = http.StatusBadRequest
+	res[ErrInvalidPassword] = http.StatusBadRequest
+	res[ErrLoginCombinationNotFound] = http.StatusForbidden
+	res[ErrWrongPassword] = http.StatusForbidden
+
+	// Repository
 	res[ErrUserExist] = http.StatusBadRequest
 	res[ErrUserNotExist] = http.StatusNotFound
 	res[ErrSignupUserExist] = http.StatusBadRequest
-	res[ErrBadBodyRequest] = http.StatusBadRequest
-
-	res[ErrLoginCombinationNotFound] = http.StatusForbidden
-	res[ErrNoCookie] = http.StatusUnauthorized
 	res[ErrCookieNotExist] = http.StatusNotFound
 	res[ErrSessionNotExist] = http.StatusNotFound
-	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
-	res[ErrWrongPassword] = http.StatusForbidden
 
 	// Access
+	// Service
 	res[ErrNoAccess] = http.StatusForbidden
 
-	// Auth Validation
-	res[ErrInvalidEmail] = http.StatusBadRequest
-	res[ErrInvalidPassword] = http.StatusBadRequest
-
 	// Films
+	// Repository
 	res[ErrFilmNotFound] = http.StatusNotFound
 
 	// Images
-	res[ErrImageNotFound] = http.StatusNotFound
-
-	res[ErrGetImageStorage] = http.StatusBadRequest
+	// Delivery
 	res[ErrReadImage] = http.StatusBadRequest
-
-	res[ErrImage] = http.StatusInternalServerError
 	res[ErrBadImageType] = http.StatusBadRequest
 
+	// Repository
+	res[ErrImageNotFound] = http.StatusNotFound
+	res[ErrGetImageStorage] = http.StatusBadRequest
+	res[ErrImage] = http.StatusInternalServerError
+
+	// Global
 	// Def Validation
 	res[ErrJSONUnexpectedEnd] = http.StatusBadRequest
 	res[ErrContentTypeUndefined] = http.StatusBadRequest
