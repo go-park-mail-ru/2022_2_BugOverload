@@ -308,9 +308,10 @@ func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.
 		return nil
 	})
 
-	// the main entity is not found
 	if stdErrors.Is(errMain, sql.ErrNoRows) || len(response) == 0 {
-		return []models.Review{}, errors.ErrNotFoundInDB
+		return []models.Review{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			"Err: params input: query - [%s], valies - [%d, %d, %d]. Special Error [%s]",
+			getReviewsByFilmID, params.FilmID, params.Count, params.Offset, sql.ErrNoRows)
 	}
 
 	if errMain != nil {

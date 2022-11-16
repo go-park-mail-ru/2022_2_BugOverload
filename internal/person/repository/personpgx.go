@@ -33,7 +33,31 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	response := NewPersonSQL()
 
 	// Person - Main
-	errMain := response.GetMainInfo(ctx, p.database.Connection, getPersonByID, person.ID)
+	errMain := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowPerson := conn.QueryRowContext(ctx, getPersonByID, person.ID)
+		if rowPerson.Err() != nil {
+			return rowPerson.Err()
+		}
+
+		err := rowPerson.Scan(
+			&response.Name,
+			&response.Birthday,
+			&response.Growth,
+			&response.OriginalName,
+			&response.Avatar,
+			&response.Death,
+			&response.Gender,
+			&response.CountFilms)
+		if err != nil {
+			return err
+		}
+
+		if !response.Avatar.Valid {
+			response.Avatar.String = innerPKG.DefPersonAvatar
+		}
+
+		return nil
+	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",

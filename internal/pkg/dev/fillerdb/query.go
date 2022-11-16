@@ -4,11 +4,7 @@ const (
 	insertFilms = `
 INSERT INTO films(name, prod_year, poster_ver, poster_hor, description,
                   short_description, original_name, slogan, age_limit,
-<<<<<<< HEAD
                   box_office_dollars, budget, duration_minutes, currency_budget, type)
-=======
-                  box_office, budget, duration_minutes, currency_budget, type, count_seasons, end_year)
->>>>>>> main
 VALUES`
 
 	insertSerials = `INSERT INTO serials(film_id, count_seasons, end_year) VALUES`

@@ -283,7 +283,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 			&film.OriginalName,
 			&film.ProdYear,
 			&film.PosterVer,
-			&film.EndYear,
+			&film.Type,
 			&film.Rating)
 		if err != nil {
 			return []FilmSQL{}, err
@@ -300,6 +300,20 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 	if len(res) == 0 {
 		logrus.Info("BadCondition")
 		return []FilmSQL{}, sql.ErrNoRows
+	}
+
+	for idx := range res {
+		if res[idx].Type.String == innerPKG.DefTypeSerial {
+			rowSerial := conn.QueryRowContext(ctx, getShortSerialByID, res[idx].ID)
+			if rowSerial.Err() != nil {
+				return []FilmSQL{}, rowSerial.Err()
+			}
+
+			err = rowSerial.Scan(&res[idx].EndYear)
+			if err != nil {
+				return []FilmSQL{}, err
+			}
+		}
 	}
 
 	return res, nil

@@ -25,9 +25,9 @@ func CreateLog(ctx context.Context, errFull error) {
 	}
 
 	switch logLevel {
-	case "error":
+	case errLogLevel:
 		logger.Error(errFull)
-	case "debug":
+	case debugLogLevel:
 		logger.Debug(errFull)
 	default:
 		logger.Info(errCause)

@@ -51,7 +51,11 @@ func NewLogger(config *pkg.Logger) (*logrus.Logger, func() error) {
 	logger.SetOutput(f)
 	logger.Writer()
 	logger.SetLevel(level)
-	// logger.SetFormatter(&logrus.JSONFormatter{})
+
+	formatter := &logrus.TextFormatter{}
+	formatter.DisableQuote = true
+
+	logger.SetFormatter(formatter)
 
 	return logger, f.Close
 }

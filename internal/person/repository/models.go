@@ -1,17 +1,12 @@
 package repository
 
 import (
-	"context"
 	"database/sql"
 	"time"
-
-	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type PersonSQL struct {
@@ -66,46 +61,4 @@ func (p *PersonSQL) Convert() models.Person {
 	}
 
 	return res
-}
-
-func (p *PersonSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	err := sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
-		rowPerson := conn.QueryRowContext(ctx, query, args...)
-		if rowPerson.Err() != nil {
-			return rowPerson.Err()
-		}
-
-		err := rowPerson.Scan(
-			&p.Name,
-			&p.Birthday,
-			&p.Growth,
-			&p.OriginalName,
-			&p.Avatar,
-			&p.Death,
-			&p.Gender,
-			&p.CountFilms)
-		if err != nil {
-			return err
-		}
-
-		if !p.Avatar.Valid {
-			p.Avatar.String = innerPKG.DefPersonAvatar
-		}
-
-		if !p.Gender.Valid {
-			p.Gender.String = innerPKG.DefGender
-		}
-
-		return nil
-	})
-
-	if stdErrors.Is(err, sql.ErrNoRows) {
-		return errors.ErrNotFoundInDB
-	}
-
-	if err != nil {
-		return errors.ErrWorkDatabase
-	}
-
-	return nil
 }

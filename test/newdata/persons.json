@@ -29,6 +29,7 @@
     "avatar": "2",
     "original_name": "Sean Connery",
     "birthday": "1930.08.25",
+    "gender": "male",
     "death": "2020.10.31",
     "growth": 1.9,
     "genres": [
@@ -80,6 +81,7 @@
     "avatar": "4",
     "original_name": "Peter Dinklage",
     "birthday": "1969.06.11",
+    "gender": "male",
     "growth": 1.31,
     "genres": [
       "комедия",
@@ -102,6 +104,7 @@
     "avatar": "5",
     "original_name": "Anthony Hopkins",
     "birthday": "1937.12.31",
+    "gender": "male",
     "growth": 1.75,
     "genres": [
       "драма",
@@ -129,6 +132,7 @@
     "avatar": "6",
     "original_name": "Al Pacino",
     "birthday": "1940.04.25",
+    "gender": "male",
     "growth": 1.68,
     "genres": [
       "драма",
@@ -155,6 +159,7 @@
     "avatar": "7",
     "original_name": "Christian Bale",
     "birthday": "1974.01.30",
+    "gender": "male",
     "growth": 1.83,
     "genres": [
       "драма",
@@ -183,6 +188,7 @@
     "avatar": "8",
     "original_name": "Brad Pitt",
     "birthday": "1963.12.18",
+    "gender": "male",
     "growth": 1.8,
     "genres": [
       "драма",
@@ -210,6 +216,7 @@
     "avatar": "9",
     "original_name": "Tom Holland",
     "birthday": "1996.06.01",
+    "gender": "male",
     "growth": 1.68,
     "genres": [
       "боевик",
@@ -235,6 +242,7 @@
     "avatar": "10",
     "original_name": "Ryan Reynolds",
     "birthday": "1976.11.23",
+    "gender": "male",
     "growth": 1.88,
     "genres": [
       "комедия",

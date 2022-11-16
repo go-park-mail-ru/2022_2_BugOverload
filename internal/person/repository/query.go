@@ -19,7 +19,7 @@ const (
     	f.original_name, 
         f.prod_year,  
         f.poster_ver, 
-        f.end_year, 
+        f.type, 
         f.rating
 		FROM
     		films f

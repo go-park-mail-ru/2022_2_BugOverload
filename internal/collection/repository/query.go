@@ -7,7 +7,7 @@ SELECT f.film_id,
        f.original_name,
        f.prod_year,
        f.poster_ver,
-       f.end_year,
+       f.type,
        f.rating
 FROM films f
          JOIN film_tags ft on f.film_id = ft.fk_film_id

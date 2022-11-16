@@ -1,10 +1,7 @@
 [
   {
     "name": "Три тысячи лет желаний",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2022",
     "poster_ver": "1",
     "poster_hor": "1",
@@ -27,19 +24,12 @@
     "box_office_dollars": 18570937,
     "budget": 60000000,
     "age_limit": "18+",
-<<<<<<< HEAD
     "duration_minutes": 108,
     "currency_budget": "USD"
   },
   {
     "name": "Джиперс Криперс: Возрожденный",
     "type": "film",
-=======
-    "duration": 108
-  },
-  {
-    "name": "Джиперс Криперс: Возрожденный",
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "2",
     "poster_hor": "2",
@@ -61,19 +51,12 @@
     "box_office_dollars": 4273101,
     "budget": 2000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 88,
     "currency_budget": "USD"
   },
   {
     "name": "Эра выживания",
     "type": "film",
-=======
-    "duration": 88
-  },
-  {
-    "name": "Эра выживания",
->>>>>>> main
     "prod_year": "2022",
     "poster_ver": "3",
     "poster_hor": "3",
@@ -95,19 +78,12 @@
     "box_office_dollars": 1575774,
     "budget": 2000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 114,
     "currency_budget": "USD"
   },
   {
     "name": "Проклятие Плачущей. Возвращение",
     "type": "film",
-=======
-    "duration": 114
-  },
-  {
-    "name": "Проклятие Плачущей. Возвращение",
->>>>>>> main
     "prod_year": "2022",
     "poster_ver": "4",
     "poster_hor": "4",
@@ -121,7 +97,6 @@
       "Мексика"
     ],
     "slogan": "Она заберет ваших детей",
-<<<<<<< HEAD
     "box_office_dollars": 177533,
     "budget": 9000000,
     "age_limit": "16+",
@@ -131,15 +106,6 @@
   {
     "name": "Люси",
     "type": "film",
-=======
-    "box_office": 177533,
-    "budget": 9000000,
-    "age_limit": "16+",
-    "duration": 98
-  },
-  {
-    "name": "Люси",
->>>>>>> main
     "prod_year": "2014",
     "poster_ver": "5",
     "poster_hor": "5",
@@ -165,19 +131,12 @@
     "box_office_dollars": 458863600,
     "budget": 40000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 89,
     "currency_budget": "USD"
   },
   {
     "name": "Властелин колец. Братство кольца",
     "type": "film",
-=======
-    "duration": 89
-  },
-  {
-    "name": "Властелин колец. Братство кольца",
->>>>>>> main
     "prod_year": "2001",
     "poster_ver": "6",
     "poster_hor": "6",
@@ -200,19 +159,12 @@
     "box_office_dollars": 880839846,
     "budget": 93000000,
     "age_limit": "12+",
-<<<<<<< HEAD
     "duration_minutes": 178,
     "currency_budget": "USD"
   },
   {
     "name": "Дом, который построил Джек",
     "type": "film",
-=======
-    "duration": 178
-  },
-  {
-    "name": "Дом, который построил Джек",
->>>>>>> main
     "prod_year": "2018",
     "poster_ver": "7",
     "poster_hor": "7",
@@ -240,19 +192,12 @@
     "box_office_dollars": 2911800,
     "budget": 8700000,
     "age_limit": "18+",
-<<<<<<< HEAD
     "duration_minutes": 152,
-=======
-    "duration": 152,
->>>>>>> main
     "currency_budget": "EURO"
   },
   {
     "name": "Интерстеллар",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2014",
     "poster_ver": "8",
     "poster_hor": "8",
@@ -276,19 +221,12 @@
     "box_office_dollars": 677896797,
     "budget": 165000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 169,
     "currency_budget": "USD"
   },
   {
     "name": "1+1",
     "type": "film",
-=======
-    "duration": 169
-  },
-  {
-    "name": "1+1",
->>>>>>> main
     "prod_year": "2011",
     "poster_ver": "9",
     "poster_hor": "9",
@@ -310,19 +248,12 @@
     "box_office_dollars": 677896797,
     "budget": 9500000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 169,
-=======
-    "duration": 169,
->>>>>>> main
     "currency_budget": "EURO"
   },
   {
     "name": "Темный рыцарь",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2008",
     "poster_ver": "10",
     "poster_hor": "10",
@@ -348,19 +279,12 @@
     "box_office_dollars": 1003045358,
     "budget": 185000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 152,
     "currency_budget": "USD"
   },
   {
     "name": "Бойцовский клуб",
     "type": "film",
-=======
-    "duration": 152
-  },
-  {
-    "name": "Бойцовский клуб",
->>>>>>> main
     "prod_year": "1999",
     "poster_ver": "11",
     "poster_hor": "11",
@@ -383,19 +307,12 @@
     "box_office_dollars": 100853753,
     "budget": 63000000,
     "age_limit": "18+",
-<<<<<<< HEAD
     "duration_minutes": 139,
     "currency_budget": "USD"
   },
   {
     "name": "Титаник",
     "type": "film",
-=======
-    "duration": 139
-  },
-  {
-    "name": "Титаник",
->>>>>>> main
     "prod_year": "1997",
     "poster_ver": "12",
     "poster_hor": "12",
@@ -420,19 +337,12 @@
     "box_office_dollars": 2201647264,
     "budget": 200000000,
     "age_limit": "12+",
-<<<<<<< HEAD
     "duration_minutes": 194,
     "currency_budget": "USD"
   },
   {
     "name": "Ходячий замок",
     "type": "film",
-=======
-    "duration": 194
-  },
-  {
-    "name": "Ходячий замок",
->>>>>>> main
     "prod_year": "2004",
     "poster_ver": "13",
     "poster_hor": "13",
@@ -456,19 +366,12 @@
     "box_office_dollars": 236214446,
     "budget": 24000000,
     "age_limit": "6+",
-<<<<<<< HEAD
     "duration_minutes": 119,
     "currency_budget": "USD"
   },
   {
     "name": "Волк с Уолл-стрит",
     "type": "film",
-=======
-    "duration": 119
-  },
-  {
-    "name": "Волк с Уолл-стрит",
->>>>>>> main
     "prod_year": "2013",
     "poster_ver": "14",
     "poster_hor": "14",
@@ -491,19 +394,12 @@
     "box_office_dollars": 392000694,
     "budget": 100000000,
     "age_limit": "16+",
-<<<<<<< HEAD
     "duration_minutes": 180,
     "currency_budget": "USD"
   },
   {
     "name": "Дюна",
     "type": "film",
-=======
-    "duration": 180
-  },
-  {
-    "name": "Дюна",
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "15",
     "poster_hor": "15",
@@ -528,19 +424,12 @@
     "box_office_dollars": 401847900,
     "budget": 165000000,
     "age_limit": "12+",
-<<<<<<< HEAD
     "duration_minutes": 155,
     "currency_budget": "USD"
   },
   {
     "name": "Убить Билла",
     "type": "film",
-=======
-    "duration": 155
-  },
-  {
-    "name": "Убить Билла",
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "16",
     "poster_hor": "16",
@@ -553,10 +442,7 @@
   },
   {
     "name": "Головокружение",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "17",
     "poster_hor": "17",
@@ -569,10 +455,7 @@
   },
   {
     "name": "Петровы в гриппе",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2020",
     "poster_ver": "18",
     "poster_hor": "18",
@@ -585,10 +468,7 @@
   },
   {
     "name": "Она",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2013",
     "poster_ver": "19",
     "poster_hor": "19",
@@ -601,10 +481,7 @@
   },
   {
     "name": "Плата за страх",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "1952",
     "poster_ver": "20",
     "poster_hor": "20",
@@ -632,10 +509,7 @@
   },
   {
     "name": "Олдбой",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2003",
     "poster_ver": "22",
     "poster_hor": "22",
@@ -648,10 +522,7 @@
   },
   {
     "name": "Доказательство смерти",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "23",
     "poster_hor": "23",
@@ -664,10 +535,7 @@
   },
   {
     "name": "Чунгингский экспресс",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "24",
     "poster_hor": "24",
@@ -680,10 +548,7 @@
   },
   {
     "name": "Девушка с татуировкой дракона",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "25",
     "poster_hor": "25",
@@ -696,10 +561,7 @@
   },
   {
     "name": "Человек",
-<<<<<<< HEAD
     "type": "film",
-=======
->>>>>>> main
     "prod_year": "2021",
     "poster_ver": "26",
     "poster_hor": "26",
