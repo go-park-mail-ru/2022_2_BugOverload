@@ -31,6 +31,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	res := []modelsGlobal.Review{{
 		Name:       "Много насилия и только",
@@ -96,6 +97,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
@@ -135,6 +137,52 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
+func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "app")
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrUnsupportedMediaType.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
+
+	reviewsHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, actualBody, expectedBody, "Wrong body")
+}
+
 func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *testing.T) {
 	t.Parallel()
 
@@ -147,6 +195,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *te
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
@@ -192,6 +241,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
@@ -237,6 +287,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
 		ErrMassage: errors.ErrBadQueryParams.Error(),
@@ -268,6 +319,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	r.Header.Set("Content-Type", "")
 }
 
 func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T) {
@@ -282,6 +334,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
 		ErrMassage: errors.ErrBadQueryParams.Error(),

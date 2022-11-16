@@ -31,10 +31,7 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	rr.FilmID, err = strconv.Atoi(vars["id"])
-	if err != nil {
-		return errors.ErrConvertQueryType
-	}
+	rr.FilmID, _ = strconv.Atoi(vars["id"])
 
 	rr.CountReviews, err = strconv.Atoi(r.FormValue("count_reviews"))
 	if err != nil {
