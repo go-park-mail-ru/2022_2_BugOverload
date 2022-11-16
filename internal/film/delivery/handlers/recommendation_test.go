@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -30,7 +31,7 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 
-	expectedBody := models.Film{
+	res := modelsGlobal.Film{
 		Name:      "Игра престолов",
 		ProdYear:  "2013",
 		EndYear:   "2014",
@@ -40,7 +41,7 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 		Genres:    []string{"фэнтези", "приключения"},
 	}
 
-	filmService.EXPECT().GetRecommendation(r.Context()).Return(expectedBody, nil)
+	filmService.EXPECT().GetRecommendation(r.Context()).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
@@ -62,7 +63,9 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody models.Film
+	expectedBody := models.NewRecommendFilmResponse(&res)
+
+	var actualBody *models.RecommendFilmResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -91,7 +94,7 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	filmService.EXPECT().GetRecommendation(r.Context()).Return(models.Film{}, errors.ErrWorkDatabase)
+	filmService.EXPECT().GetRecommendation(r.Context()).Return(modelsGlobal.Film{}, errors.ErrWorkDatabase)
 
 	w := httptest.NewRecorder()
 
