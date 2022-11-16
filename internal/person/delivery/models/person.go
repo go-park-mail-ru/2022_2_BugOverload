@@ -26,10 +26,7 @@ func (p *PersonRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	p.ID, err = strconv.Atoi(vars["id"])
-	if err != nil {
-		return errors.ErrConvertQueryType
-	}
+	p.ID, _ = strconv.Atoi(vars["id"])
 
 	p.CountFilms, err = strconv.Atoi(r.FormValue("count_films"))
 	if err != nil {

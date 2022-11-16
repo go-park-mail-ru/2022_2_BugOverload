@@ -44,7 +44,7 @@ run-tests:
 
 get-stat-coverage:
 	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
-	cat c.out | fgrep -v "easyjson" | fgrep -v "mock" | fgrep -v "testing.go" | fgrep -v "docs" | fgrep -v ".pb.go" | fgrep -v "config" > c2.out
+	cat c.out | fgrep -v "easyjson" | fgrep -v "mock" | fgrep -v "test.go" | fgrep -v "docs" | fgrep -v ".pb.go" | fgrep -v "config" > c2.out
 	go tool cover -func=c2.out
 	go tool cover -html c2.out -o coverage.html
 
