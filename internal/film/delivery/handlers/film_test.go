@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -33,39 +34,39 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := models.Film{
+	res := modelsGlobal.Film{
 		Name: "Игра престолов",
-		Actors: []models.FilmActor{{
+		Actors: []modelsGlobal.FilmActor{{
 			Name:      "Питер Динклэйдж",
 			ID:        1,
 			Character: "some",
 			Avatar:    "1",
 		}},
-		Artists: []models.FilmPerson{{
+		Artists: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Producers: []models.FilmPerson{{
+		Producers: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Composers: []models.FilmPerson{{
+		Composers: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Directors: []models.FilmPerson{{
+		Directors: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Montage: []models.FilmPerson{{
+		Montage: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Operators: []models.FilmPerson{{
+		Operators: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
-		Writers: []models.FilmPerson{{
+		Writers: []modelsGlobal.FilmPerson{{
 			Name: "Питер Динклэйдж",
 			ID:   1,
 		}},
@@ -95,9 +96,9 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 		Slogan:               "Победа или смерть",
 	}
 
-	filmService.EXPECT().GetFilmByID(r.Context(), &models.Film{ID: 1}, &pkg.GetFilmParams{
+	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &pkg.GetFilmParams{
 		CountImages: 2,
-	}).Return(expectedBody, nil)
+	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
@@ -119,7 +120,9 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody models.Film
+	expectedBody := models.NewFilmResponse(&res)
+
+	var actualBody *models.FilmResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -151,9 +154,9 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	filmService.EXPECT().GetFilmByID(r.Context(), &models.Film{ID: 1}, &pkg.GetFilmParams{
+	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &pkg.GetFilmParams{
 		CountImages: 2,
-	}).Return(models.Film{}, errors.ErrNotFoundInDB)
+	}).Return(modelsGlobal.Film{}, errors.ErrNotFoundInDB)
 
 	w := httptest.NewRecorder()
 

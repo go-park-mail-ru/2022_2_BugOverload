@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,61 +12,55 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/require"
 
+	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/person/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 )
 
-func TestPersonHandler_Action_OK(t *testing.T) {
+func TestReviewsHandler_Action_OK(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=2", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	res := modelsGlobal.Person{
-		Name:         "Шон Коннери",
-		OriginalName: "Sean Connery",
-		Professions:  []string{"актер", "продюсер", "режиссер"},
-		Images:       []string{"1", "2"},
-		Growth:       1.9,
-		Genres:       []string{"драма", "боевик", "триллер"},
-		Gender:       "male",
-		CountFilms:   218,
-		Birthday:     "1930.08.25",
-		Death:        "2020.10.31",
-		BestFilms: []modelsGlobal.Film{{
-			Name:      "Игра престолов",
-			ProdYear:  "2013",
-			EndYear:   "2014",
-			ID:        123,
-			Rating:    7.12332,
-			PosterVer: "123",
-			Genres:    []string{"фэнтези", "приключения"},
-		}},
-		Avatar: "12",
-	}
+	res := []modelsGlobal.Review{{
+		Name:       "Много насилия и только",
+		Type:       "negative",
+		Body:       "Игра престолов дюже наполнена насилием и смертью",
+		CountLikes: 12,
+		CreateTime: "2019.12.31",
+		Author: modelsGlobal.User{
+			ID:       12,
+			Nickname: "steepbyy",
+			Profile: modelsGlobal.Profile{
+				Avatar:       "12",
+				CountReviews: 44,
+			},
+		},
+	}}
 
-	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &pkg.GetPersonParams{
-		CountImages: 2,
-		CountFilms:  1,
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
+		Count:  1,
+		Offset: 0,
+		FilmID: 1,
 	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
@@ -80,9 +74,9 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	expectedBody := models.NewPersonResponse(&res)
+	expectedBody := models.NewReviewsResponse(&res)
 
-	var actualBody *models.PersonResponse
+	var actualBody []*models.ReviewResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -90,15 +84,15 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestPersonHandler_Action_NotOKService(t *testing.T) {
+func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=2", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -107,18 +101,19 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
-	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &pkg.GetPersonParams{
-		CountImages: 2,
-		CountFilms:  1,
-	}).Return(modelsGlobal.Person{}, errors.ErrNotFoundInDB)
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
+		Count:  1,
+		Offset: 0,
+		FilmID: 1,
+	}).Return([]modelsGlobal.Review{}, errors.ErrNotFoundInDB)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
@@ -140,15 +135,15 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=ds&count_images=2", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -160,10 +155,10 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
@@ -185,15 +180,15 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=dsd", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=asd", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -205,10 +200,10 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
@@ -230,15 +225,15 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	require.Equal(t, actualBody, expectedBody, "Wrong body")
 }
 
-func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=-1&count_images=2", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=-1&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -250,10 +245,10 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
@@ -281,9 +276,9 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=-2", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=-1", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -295,10 +290,10 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	reviewsHandler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
