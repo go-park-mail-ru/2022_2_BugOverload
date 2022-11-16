@@ -81,12 +81,8 @@ const (
 	TypeReviewNegative = "negative"
 	TypeReviewNeutral  = "neutral"
 
-<<<<<<< HEAD
 	DefGender = "male"
-
-=======
->>>>>>> main
-	OnlyDate = "2006"
+	OnlyDate  = "2006"
 )
 
 // TxDefaultOptions for Postgres

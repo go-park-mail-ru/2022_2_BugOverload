@@ -3,15 +3,12 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-<<<<<<< HEAD
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-=======
->>>>>>> main
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
