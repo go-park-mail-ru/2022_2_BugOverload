@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	mockCollectionService "go-park-mail-ru/2022_2_BugOverload/internal/collection/service/mocks"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
@@ -33,9 +34,9 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	vars["tag"] = "popular"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := models.Collection{
+	res := modelsGlobal.Collection{
 		Name: "популярное",
-		Films: []models.Film{{
+		Films: []modelsGlobal.Film{{
 			Name:      "Игра престолов",
 			ProdYear:  "2013",
 			EndYear:   "2014",
@@ -57,7 +58,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 		Tag:        "popular",
 		CountFilms: 1,
 		Delimiter:  "10",
-	}).Return(expectedBody, nil)
+	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
@@ -79,7 +80,9 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody models.Collection
+	expectedBody := models.NewTagCollectionResponse(&res)
+
+	var actualBody *models.TagCollectionResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -115,7 +118,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 		Tag:        "popular",
 		CountFilms: 1,
 		Delimiter:  "10",
-	}).Return(models.Collection{}, errors.ErrNotFoundInDB)
+	}).Return(modelsGlobal.Collection{}, errors.ErrNotFoundInDB)
 
 	w := httptest.NewRecorder()
 
