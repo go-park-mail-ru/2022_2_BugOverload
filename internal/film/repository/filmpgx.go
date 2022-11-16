@@ -134,7 +134,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	}
 
 	//  Images
-	errQuery = response.GetActors(ctx, f.database.Connection, getFilmImages, film.ID, params.CountImages)
+	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmImages, film.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
@@ -142,7 +142,30 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	}
 
 	// Actors
-	errQuery = response.GetActors(ctx, f.database.Connection, getFilmActors, film.ID)
+	errQuery = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmActors, err := conn.QueryContext(ctx, getFilmActors, film.ID)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmActors.Close()
+
+		for rowsFilmActors.Next() {
+			var actor FilmActorSQL
+
+			err = rowsFilmActors.Scan(
+				&actor.ID,
+				&actor.Name,
+				&actor.Avatar,
+				&actor.Character)
+			if err != nil {
+				return err
+			}
+
+			response.Actors = append(response.Actors, actor)
+		}
+
+		return nil
+	})
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Actors Err: params input: query - [%s], values - [%d]. Special Error [%s]",
@@ -150,7 +173,45 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	}
 
 	// Persons
-	errQuery = response.GetPersons(ctx, f.database.Connection, getFilmPersons, film.ID)
+	errQuery = sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmPersons, err := conn.QueryContext(ctx, getFilmPersons, film.ID)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmPersons.Close()
+
+		for rowsFilmPersons.Next() {
+			var person FilmPersonSQL
+			var professionID int
+
+			err = rowsFilmPersons.Scan(
+				&person.ID,
+				&person.Name,
+				&professionID)
+			if err != nil {
+				return err
+			}
+
+			switch professionID {
+			case innerPKG.Artist:
+				response.Artists = append(response.Artists, person)
+			case innerPKG.Director:
+				response.Directors = append(response.Directors, person)
+			case innerPKG.Writer:
+				response.Writers = append(response.Writers, person)
+			case innerPKG.Producer:
+				response.Producers = append(response.Producers, person)
+			case innerPKG.Operator:
+				response.Operators = append(response.Operators, person)
+			case innerPKG.Montage:
+				response.Montage = append(response.Montage, person)
+			case innerPKG.Composer:
+				response.Composers = append(response.Composers, person)
+			}
+		}
+
+		return nil
+	})
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
 		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Persons Err: params input: query - [%s], values - [%d]. Special Error [%s]",

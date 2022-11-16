@@ -13,7 +13,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type AuthorSQL struct {
@@ -212,75 +211,6 @@ func (f *FilmSQL) Convert() models.Film {
 	}
 
 	return res
-}
-
-func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
-		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
-		if err != nil {
-			return err
-		}
-		defer rowsFilmActors.Close()
-
-		for rowsFilmActors.Next() {
-			var person FilmPersonSQL
-			var professionID int
-
-			err = rowsFilmActors.Scan(
-				&person.ID,
-				&person.Name,
-				&professionID)
-			if err != nil {
-				return err
-			}
-
-			switch professionID {
-			case innerPKG.Artist:
-				f.Artists = append(f.Artists, person)
-			case innerPKG.Director:
-				f.Directors = append(f.Directors, person)
-			case innerPKG.Writer:
-				f.Writers = append(f.Writers, person)
-			case innerPKG.Producer:
-				f.Producers = append(f.Producers, person)
-			case innerPKG.Operator:
-				f.Operators = append(f.Operators, person)
-			case innerPKG.Montage:
-				f.Montage = append(f.Montage, person)
-			case innerPKG.Composer:
-				f.Composers = append(f.Composers, person)
-			}
-		}
-
-		return nil
-	})
-}
-
-func (f *FilmSQL) GetActors(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
-		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
-		if err != nil {
-			return err
-		}
-		defer rowsFilmActors.Close()
-
-		for rowsFilmActors.Next() {
-			var actor FilmActorSQL
-
-			err = rowsFilmActors.Scan(
-				&actor.ID,
-				&actor.Name,
-				&actor.Avatar,
-				&actor.Character)
-			if err != nil {
-				return err
-			}
-
-			f.Actors = append(f.Actors, actor)
-		}
-
-		return nil
-	})
 }
 
 const (
