@@ -70,8 +70,13 @@ type FilmResponse struct {
 	Slogan           string `json:"slogan,omitempty" example:"Победа или смерть"`
 	Description      string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
 	ShortDescription string `json:"short_description,omitempty" example:"Что вы знаете о джинах кроме желайний?"`
+<<<<<<< HEAD
 	AgeLimit         string `json:"age_limit,omitempty" example:"18+"`
 	DurationMinutes  int    `json:"duration_minutes,omitempty" example:"55"`
+=======
+	AgeLimit         string `json:"age_limit,omitempty" example:"18"`
+	Duration         int    `json:"duration,omitempty" example:"55"`
+>>>>>>> main
 	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
 
 	Budget           int    `json:"budget,omitempty" example:"18323222"`
@@ -145,7 +150,11 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 
 		Rating:               film.Rating,
 		CountActors:          film.CountActors,
+<<<<<<< HEAD
 		CountRatings:         film.CountRatings,
+=======
+		CountScores:          film.CountRatings,
+>>>>>>> main
 		CountNegativeReviews: film.CountNegativeReviews,
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,

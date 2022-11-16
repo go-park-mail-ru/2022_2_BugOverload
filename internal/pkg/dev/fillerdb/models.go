@@ -39,6 +39,7 @@ type FilmFiller struct {
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`
 	AgeLimit         string `json:"age_limit,omitempty"`
+<<<<<<< HEAD
 	DurationMinutes  int    `json:"duration_minutes,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
@@ -46,6 +47,15 @@ type FilmFiller struct {
 	BoxOfficeDollars int    `json:"box_office_dollars,omitempty"`
 	Budget           int    `json:"budget,omitempty"`
 	CurrencyBudget   string `json:"currency_budget,omitempty"`
+=======
+	Duration         int    `json:"duration,omitempty"`
+	PosterHor        string `json:"poster_hor,omitempty"`
+	PosterVer        string `json:"poster_ver,omitempty"`
+
+	BoxOffice      int    `json:"box_office,omitempty"`
+	Budget         int    `json:"budget,omitempty"`
+	CurrencyBudget string `json:"currency_budget,omitempty"`
+>>>>>>> main
 
 	CountSeasons int    `json:"count_seasons,omitempty"`
 	EndYear      string `json:"end_year,omitempty"`
@@ -105,7 +115,11 @@ func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
 		Name:        film.Name,
 		ProdYear:    date,
 		Description: film.Description,
+<<<<<<< HEAD
 		Duration:    film.DurationMinutes,
+=======
+		Duration:    film.Duration,
+>>>>>>> main
 
 		ShortDescription: sqltools.NewSQLNullString(film.ShortDescription),
 		OriginalName:     sqltools.NewSQLNullString(film.OriginalName),
@@ -114,7 +128,11 @@ func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
 		PosterHor:        sqltools.NewSQLNullString(film.PosterHor),
 		PosterVer:        sqltools.NewSQLNullString(film.PosterVer),
 
+<<<<<<< HEAD
 		BoxOffice:      sqltools.NewSQLNullInt32(film.BoxOfficeDollars),
+=======
+		BoxOffice:      sqltools.NewSQLNullInt32(film.BoxOffice),
+>>>>>>> main
 		Budget:         sqltools.NewSQLNullInt32(film.Budget),
 		CurrencyBudget: sqltools.NewSQLNullString(film.CurrencyBudget),
 

@@ -13,6 +13,10 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+<<<<<<< HEAD
+=======
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+>>>>>>> main
 )
 
 type AuthorSQL struct {
@@ -124,11 +128,19 @@ func (f *FilmSQL) Convert() models.Film {
 	}
 
 	res := models.Film{
+<<<<<<< HEAD
 		ID:              f.ID,
 		Name:            f.Name,
 		ProdYear:        prodYear,
 		Description:     f.Description,
 		DurationMinutes: f.Duration,
+=======
+		ID:          f.ID,
+		Name:        f.Name,
+		ProdYear:    f.ProdYear.Format(innerPKG.OnlyDate),
+		Description: f.Description,
+		Duration:    f.Duration,
+>>>>>>> main
 
 		ShortDescription: f.ShortDescription.String,
 		OriginalName:     f.OriginalName.String,
@@ -142,7 +154,11 @@ func (f *FilmSQL) Convert() models.Film {
 		CurrencyBudget:   f.CurrencyBudget.String,
 
 		CountSeasons: int(f.CountSeasons.Int32),
+<<<<<<< HEAD
 		EndYear:      endYear,
+=======
+		EndYear:      f.EndYear.Time.Format(innerPKG.OnlyDate),
+>>>>>>> main
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),
@@ -213,6 +229,123 @@ func (f *FilmSQL) Convert() models.Film {
 	return res
 }
 
+<<<<<<< HEAD
+=======
+func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowFilm := conn.QueryRowContext(ctx, query, args...)
+		if rowFilm.Err() != nil {
+			return rowFilm.Err()
+		}
+
+		err := rowFilm.Scan(
+			&f.Name,
+			&f.OriginalName,
+			&f.ProdYear,
+			&f.Slogan,
+			&f.Description,
+			&f.ShortDescription,
+			&f.AgeLimit,
+			&f.Duration,
+			&f.PosterHor,
+			&f.Budget,
+			&f.BoxOffice,
+			&f.CurrencyBudget,
+			&f.CountSeasons,
+			&f.EndYear,
+			&f.Type,
+			&f.Rating,
+			&f.CountActors,
+			&f.CountRatings,
+			&f.CountNegativeReviews,
+			&f.CountNeutralReviews,
+			&f.CountPositiveReviews)
+		if err != nil {
+			return err
+		}
+
+		if !f.Type.Valid {
+			f.Type.String = innerPKG.DefTypeFilm
+		}
+
+		if !f.PosterHor.Valid {
+			f.PosterHor.String = innerPKG.DefFilmPosterHor
+		}
+
+		return nil
+	})
+}
+
+func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmActors.Close()
+
+		for rowsFilmActors.Next() {
+			var person FilmPersonSQL
+			var professionID int
+
+			err = rowsFilmActors.Scan(
+				&person.ID,
+				&person.Name,
+				&professionID)
+			if err != nil {
+				return err
+			}
+
+			switch professionID {
+			case innerPKG.Artist:
+				f.Artists = append(f.Artists, person)
+			case innerPKG.Director:
+				f.Directors = append(f.Directors, person)
+			case innerPKG.Writer:
+				f.Writers = append(f.Writers, person)
+			case innerPKG.Producer:
+				f.Producers = append(f.Producers, person)
+			case innerPKG.Operator:
+				f.Operators = append(f.Operators, person)
+			case innerPKG.Montage:
+				f.Montage = append(f.Montage, person)
+			case innerPKG.Composer:
+				f.Composers = append(f.Composers, person)
+			}
+		}
+
+		return nil
+	})
+}
+
+func (f *FilmSQL) GetActors(ctx context.Context, db *sql.DB, query string, args ...any) error {
+	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
+		rowsFilmActors, err := conn.QueryContext(ctx, query, args...)
+		if err != nil {
+			return err
+		}
+		defer rowsFilmActors.Close()
+
+		for rowsFilmActors.Next() {
+			var actor FilmActorSQL
+
+			err = rowsFilmActors.Scan(
+				&actor.ID,
+				&actor.Name,
+				&actor.Avatar,
+				&actor.Character)
+			if err != nil {
+				return err
+			}
+
+			f.Actors = append(f.Actors, actor)
+		}
+
+		return nil
+	})
+}
+
+>>>>>>> main
 const (
 	getGenresFilmBatchBegin = `
 SELECT f.film_id,
@@ -240,7 +373,11 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
 	if err != nil {
+<<<<<<< HEAD
 		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+=======
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+>>>>>>> main
 			"Err: params input: query - [%s]. Special Error [%s]",
 			getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 	}
@@ -252,7 +389,11 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
+<<<<<<< HEAD
 			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+=======
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+>>>>>>> main
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
 				getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
 		}

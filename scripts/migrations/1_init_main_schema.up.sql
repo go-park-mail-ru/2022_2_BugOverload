@@ -23,9 +23,15 @@ CREATE TABLE IF NOT EXISTS users
     "count_ratings"     integer NOT NULL DEFAULT 0
 );
 
+<<<<<<< HEAD
 CREATE TYPE film_type_enum AS ENUM ('film', 'serial');
 
 CREATE TYPE currency_enum AS ENUM ('USD', 'EURO');
+=======
+CREATE TYPE film_type_enum AS ENUM ('serial');
+
+CREATE TYPE currency_enum AS ENUM ('EURO');
+>>>>>>> main
 
 CREATE TYPE age_limit_enum AS ENUM ('6+','12+','16+','18+','21+');
 
@@ -40,19 +46,33 @@ CREATE TABLE IF NOT EXISTS films
     "short_description"      text               DEFAULT NULL,
     CONSTRAINT "short_description_length" CHECK (LENGTH("short_description") <= 180),
     "duration_minutes"       integer            DEFAULT NULL,
+<<<<<<< HEAD
+=======
+    "type"                   film_type_enum     DEFAULT NULL,
+>>>>>>> main
     "original_name"          text               DEFAULT NULL,
     CONSTRAINT "original_name_length" CHECK (LENGTH("original_name") <= 80),
     "slogan"                 text               DEFAULT NULL,
     CONSTRAINT "slogan_length" CHECK (LENGTH("slogan") <= 128),
     "age_limit"              age_limit_enum     DEFAULT NULL,
     "budget"                 integer            DEFAULT NULL,
+<<<<<<< HEAD
     "box_office_dollars"     integer            DEFAULT NULL,
     "currency_budget"        currency_enum      DEFAULT 'USD',
+=======
+    "box_office"             integer            DEFAULT NULL,
+    "currency_budget"        currency_enum      DEFAULT NULL,
+>>>>>>> main
     "poster_hor"             text               DEFAULT NULL,
     CONSTRAINT "poster_hor_length" CHECK (LENGTH("poster_hor") <= 32),
     "poster_ver"             text               DEFAULT NULL,
     CONSTRAINT "poster_ver_length" CHECK (LENGTH("poster_ver") <= 32),
+<<<<<<< HEAD
     "type"                   film_type_enum     DEFAULT 'film',
+=======
+    "end_year"               date               DEFAULT NULL,
+    "count_seasons"          integer            DEFAULT NULL,
+>>>>>>> main
     -- Denormalize fields
     "rating"                 real               DEFAULT NULL,
     "count_actors"           integer   NOT NULL DEFAULT 0,
@@ -61,6 +81,7 @@ CREATE TABLE IF NOT EXISTS films
     "count_neutral_reviews"  integer   NOT NULL DEFAULT 0,
     "count_positive_reviews" integer   NOT NULL DEFAULT 0,
     "updated_at"             timestamp NOT NULL DEFAULT NOW()
+<<<<<<< HEAD
 );
 
 -- Generator completed
@@ -69,6 +90,8 @@ CREATE TABLE IF NOT EXISTS serials
     "film_id"    integer NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
     "count_seasons" integer DEFAULT 1,
     "end_year"      date    DEFAULT NULL
+=======
+>>>>>>> main
 );
 
 -- Generator completed
