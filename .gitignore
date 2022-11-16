@@ -9,7 +9,7 @@ cover2
 docs/docs.go
 docs/swagger*
 
-*mock*
+#*mock*
 
 logs/
 *.log

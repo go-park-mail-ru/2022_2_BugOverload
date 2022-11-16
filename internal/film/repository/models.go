@@ -112,10 +112,22 @@ func NewFilmSQL() FilmSQL {
 }
 
 func (f *FilmSQL) Convert() models.Film {
+	endYear := ""
+
+	if f.EndYear.Valid {
+		endYear = f.EndYear.Time.Format(innerPKG.OnlyDate)
+	}
+
+	prodYear := ""
+
+	if !f.ProdYear.IsZero() {
+		prodYear = f.ProdYear.Format(innerPKG.OnlyDate)
+	}
+
 	res := models.Film{
 		ID:              f.ID,
 		Name:            f.Name,
-		ProdYear:        f.ProdYear.Format(innerPKG.OnlyDate),
+		ProdYear:        prodYear,
 		Description:     f.Description,
 		DurationMinutes: f.Duration,
 
@@ -131,7 +143,7 @@ func (f *FilmSQL) Convert() models.Film {
 		CurrencyBudget:   f.CurrencyBudget.String,
 
 		CountSeasons: int(f.CountSeasons.Int32),
-		EndYear:      f.EndYear.Time.Format(innerPKG.OnlyDate),
+		EndYear:      endYear,
 		Type:         f.Type.String,
 
 		Rating:               float32(f.Rating.Float64),
