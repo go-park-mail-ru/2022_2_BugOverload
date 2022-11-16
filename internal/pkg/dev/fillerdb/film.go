@@ -8,6 +8,7 @@ import (
 	"github.com/go-faker/faker/v4"
 	"github.com/pkg/errors"
 
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -50,10 +51,6 @@ func (f *DBFiller) uploadFilms() (int, error) {
 		pos++
 		values[pos] = value.Type
 		pos++
-		values[pos] = value.CountSeasons
-		pos++
-		values[pos] = value.EndYear
-		pos++
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
@@ -67,6 +64,54 @@ func (f *DBFiller) uploadFilms() (int, error) {
 	affected, err := rows.RowsAffected()
 	if err != nil {
 		return 0, errors.Wrap(err, "uploadFilms")
+	}
+
+	for i := 0; i < int(affected); i++ {
+		f.films[i].ID = i + 1
+	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) uploadSerials() (int, error) {
+	countInserts := 0
+
+	ids := make([]int, 0)
+
+	for idx := range f.films {
+		if f.films[idx].Type == innerPKG.DefTypeSerial {
+			countInserts++
+
+			ids = append(ids, idx)
+		}
+	}
+
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertSerials, countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+
+	for _, value := range ids {
+		values[pos] = f.films[value].ID
+		pos++
+		values[pos] = f.filmsSQL[value].CountSeasons
+		pos++
+		values[pos] = f.filmsSQL[value].EndYear
+		pos++
+	}
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	rows, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadSerials")
+	}
+
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadSerials")
 	}
 
 	for i := 0; i < int(affected); i++ {

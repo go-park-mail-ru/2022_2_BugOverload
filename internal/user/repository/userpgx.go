@@ -78,7 +78,7 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 
 	// execution error
 	if errMain != nil {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getUserProfile, user.ID, errMain)
 	}
@@ -115,7 +115,7 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 
 	// execution error
 	if errMain != nil {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getUserProfileShort, user.ID, errMain)
 	}
@@ -134,7 +134,7 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 
 	// execution error
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
 			updateUserSettingsNickname, user.Nickname, user.ID, errMain)
 	}
@@ -170,7 +170,7 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 	})
 
 	if errMain != nil {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, params.Score, errMain)
 	}
@@ -206,7 +206,7 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 	})
 
 	if errMain != nil {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 			setRateFilm, user.ID, params.FilmID, errMain)
 	}
@@ -218,7 +218,7 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, insertNewReview, review.Name, review.Type, review.Body)
 		if row.Err() != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
 				insertNewReview, user.ID, review, row.Err())
 		}
@@ -227,14 +227,14 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 
 		err := row.Scan(&reviewID)
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s], values - [%d, %+v]. Special Error [%s]",
 				insertNewReview, user.ID, review, err)
 		}
 
 		_, err = tx.ExecContext(ctx, linkNewReviewAuthor, reviewID, user.ID, params.FilmID)
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
 				linkNewReviewAuthor, reviewID, user.ID, params.FilmID, err)
 		}
@@ -257,7 +257,7 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 
 		_, err = tx.ExecContext(ctx, targetCounterReviews, params.FilmID)
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
 				targetCounterReviews, params.FilmID, err)
 		}
@@ -285,14 +285,14 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		}
 
 		if rowUser.Err() != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 				getUserCountReviews, user.ID, rowUser.Err())
 		}
 
 		err := rowUser.Scan(&response.CountReviews)
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
 				getUserCountReviews, user.ID, rowUser.Err())
 		}
@@ -300,14 +300,14 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		// UserRateFilm
 		rowRating := conn.QueryRowContext(ctx, getUserRatingOnFilm, user.ID, params.FilmID)
 		if rowRating.Err() != nil && !stdErrors.Is(rowRating.Err(), sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
 
 		err = rowRating.Scan(&response.Rating, &response.DateRating)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getUserRatingOnFilm, user.ID, params.FilmID, err)
 		}
@@ -315,7 +315,7 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		// UserCollections
 		rows, err := conn.QueryContext(ctx, getUserCollections, user.ID, params.FilmID)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getUserCollections, user.ID, params.FilmID, err)
 		}
@@ -326,7 +326,7 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 
 			err = rows.Scan(&collectionInfo.NameCollection, &collectionInfo.IsUsed)
 			if err != nil {
-				return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+				return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 					"Err Scan: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 					getUserCollections, user.ID, params.FilmID, err)
 			}

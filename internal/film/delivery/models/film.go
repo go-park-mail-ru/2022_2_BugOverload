@@ -25,18 +25,15 @@ func (f *FilmRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	f.FilmID, err = strconv.Atoi(vars["id"])
-	if err != nil {
-		return errors.ErrConvertQuery
-	}
+	f.FilmID, _ = strconv.Atoi(vars["id"])
 
 	f.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
-	if f.CountImages <= 0 {
-		return errors.ErrQueryBad
+	if f.CountImages < 0 {
+		return errors.ErrBadQueryParams
 	}
 
 	return nil
@@ -67,28 +64,27 @@ type FilmPersonResponse struct {
 }
 
 type FilmResponse struct {
-	ID               int    `json:"id,omitempty" example:"23"`
 	Name             string `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`
 	ProdYear         string `json:"prod_year,omitempty" example:"2011"`
 	Slogan           string `json:"slogan,omitempty" example:"Победа или смерть"`
 	Description      string `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
 	ShortDescription string `json:"short_description,omitempty" example:"Что вы знаете о джинах кроме желайний?"`
-	AgeLimit         string `json:"age_limit,omitempty" example:"18"`
-	Duration         int    `json:"duration,omitempty" example:"55"`
+	AgeLimit         string `json:"age_limit,omitempty" example:"18+"`
+	DurationMinutes  int    `json:"duration_minutes,omitempty" example:"55"`
 	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
 
-	Budget         int    `json:"budget,omitempty" example:"18323222"`
-	BoxOffice      int    `json:"box_office,omitempty" example:"60000000"`
-	CurrencyBudget string `json:"currency_budget,omitempty"  example:"USD"`
+	Budget           int    `json:"budget,omitempty" example:"18323222"`
+	BoxOfficeDollars int    `json:"box_office_dollars,omitempty" example:"60000000"`
+	CurrencyBudget   string `json:"currency_budget,omitempty"  example:"USD"`
 
 	CountSeasons int    `json:"count_seasons,omitempty" example:"8"`
 	EndYear      string `json:"end_year,omitempty" example:"2019"`
 	Type         string `json:"type,omitempty" example:"serial"`
 
-	Rating               float32 `json:"rating,omitempty" example:"9.0"`
+	Rating               float32 `json:"rating,omitempty" example:"9.2"`
 	CountActors          int     `json:"count_actors,omitempty" example:"783"`
-	CountScores          int     `json:"count_scores,omitempty" example:"786442"`
+	CountRatings         int     `json:"count_ratings,omitempty" example:"786442"`
 	CountNegativeReviews int     `json:"count_negative_reviews,omitempty" example:"373"`
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty" example:"63"`
 	CountPositiveReviews int     `json:"count_positive_reviews,omitempty" example:"65"`
@@ -130,7 +126,6 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	}
 
 	return &FilmResponse{
-		ID:               film.ID,
 		Name:             film.Name,
 		OriginalName:     film.OriginalName,
 		ProdYear:         film.ProdYear,
@@ -138,10 +133,10 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		Description:      film.Description,
 		ShortDescription: film.ShortDescription,
 		AgeLimit:         film.AgeLimit,
-		BoxOffice:        film.BoxOffice,
+		BoxOfficeDollars: film.BoxOfficeDollars,
 		Budget:           film.Budget,
 		CurrencyBudget:   film.CurrencyBudget,
-		Duration:         film.Duration,
+		DurationMinutes:  film.DurationMinutes,
 		PosterHor:        film.PosterHor,
 
 		CountSeasons: film.CountSeasons,
@@ -150,7 +145,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 
 		Rating:               film.Rating,
 		CountActors:          film.CountActors,
-		CountScores:          film.CountRatings,
+		CountRatings:         film.CountRatings,
 		CountNegativeReviews: film.CountNegativeReviews,
 		CountNeutralReviews:  film.CountNeutralReviews,
 		CountPositiveReviews: film.CountPositiveReviews,

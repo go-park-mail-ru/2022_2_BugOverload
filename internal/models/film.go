@@ -21,13 +21,13 @@ type Film struct {
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`
 	AgeLimit         string `json:"age_limit,omitempty"`
-	Duration         int    `json:"duration,omitempty"`
+	DurationMinutes  int    `json:"duration_minutes,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
 
-	BoxOffice      int    `json:"box_office,omitempty"`
-	Budget         int    `json:"budget,omitempty"`
-	CurrencyBudget string `json:"currency_budget,omitempty"`
+	BoxOfficeDollars int    `json:"box_office_dollars,omitempty"`
+	Budget           int    `json:"budget,omitempty"`
+	CurrencyBudget   string `json:"currency_budget,omitempty"`
 
 	CountSeasons int    `json:"count_seasons,omitempty"`
 	EndYear      string `json:"end_year,omitempty"`

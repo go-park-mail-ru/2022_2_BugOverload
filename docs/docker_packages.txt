@@ -1,3 +1,5 @@
 gcc
 make
 go
+migrate
+golangci-lint

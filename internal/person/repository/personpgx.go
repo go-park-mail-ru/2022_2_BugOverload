@@ -33,7 +33,31 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	response := NewPersonSQL()
 
 	// Person - Main
-	errMain := response.GetMainInfo(ctx, p.database.Connection, getPersonByID, person.ID)
+	errMain := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowPerson := conn.QueryRowContext(ctx, getPersonByID, person.ID)
+		if rowPerson.Err() != nil {
+			return rowPerson.Err()
+		}
+
+		err := rowPerson.Scan(
+			&response.Name,
+			&response.Birthday,
+			&response.Growth,
+			&response.OriginalName,
+			&response.Avatar,
+			&response.Death,
+			&response.Gender,
+			&response.CountFilms)
+		if err != nil {
+			return err
+		}
+
+		if !response.Avatar.Valid {
+			response.Avatar.String = innerPKG.DefPersonAvatar
+		}
+
+		return nil
+	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
@@ -53,7 +77,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, conn, getPersonBestFilms, person.ID, params.CountFilms)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getPersonBestFilms, person.ID, params.CountFilms, err)
 		}
@@ -72,7 +96,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	//  Images
 	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonImages, person.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonImages, person.ID, errQuery)
 	}
@@ -80,7 +104,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	// Professions
 	response.Professions, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonProfessions, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Professions Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonProfessions, person.ID, errQuery)
 	}
@@ -88,7 +112,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	// Genres
 	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonGenres, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Genres Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonGenres, person.ID, errQuery)
 	}

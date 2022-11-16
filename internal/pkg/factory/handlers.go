@@ -18,9 +18,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	handlersReview "go-park-mail-ru/2022_2_BugOverload/internal/review/delivery/handlers"
-	repoReview "go-park-mail-ru/2022_2_BugOverload/internal/review/repository"
-	serviceReview "go-park-mail-ru/2022_2_BugOverload/internal/review/service"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
@@ -60,6 +57,10 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 
 	filmHandler := handlersFilm.NewFilmHandler(filmsService)
 	res[pkg.FilmRequest] = filmHandler
+
+	// Reviews
+	reviewsHandler := handlersFilm.NewReviewsHandler(filmsService)
+	res[pkg.ReviewsFilmRequest] = reviewsHandler
 
 	// Images
 	is := repoImage.NewImageS3(config, postgres)
@@ -108,14 +109,6 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 
 	personHandler := handlersPerson.NewPersonHandler(personService)
 	res[pkg.PersonRequest] = personHandler
-
-	// Reviews
-	reviewRepo := repoReview.NewReviewPostgres(postgres)
-
-	reviewService := serviceReview.NewReviewService(reviewRepo)
-
-	reviewsHandler := handlersReview.NewReviewsHandler(reviewService)
-	res[pkg.ReviewsFilmRequest] = reviewsHandler
 
 	return res
 }

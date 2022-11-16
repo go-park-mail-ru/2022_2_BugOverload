@@ -74,13 +74,15 @@ const (
 	TagFromInCinema = "in_cinema"
 	TagInInCinema   = "сейчас в кино"
 
-	DefTypeFilm = "film"
+	DefTypeFilm   = "film"
+	DefTypeSerial = "serial"
 
 	TypeReviewPositive = "positive"
 	TypeReviewNegative = "negative"
 	TypeReviewNeutral  = "neutral"
 
-	OnlyDate = "2006"
+	DefGender = "male"
+	OnlyDate  = "2006"
 )
 
 // TxDefaultOptions for Postgres

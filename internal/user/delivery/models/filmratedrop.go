@@ -26,7 +26,7 @@ func (f *FilmRateDropRequest) Bind(r *http.Request) error {
 
 	f.FilmID, err = strconv.Atoi(vars["id"])
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	return nil
@@ -45,7 +45,7 @@ func (f *FilmRateDropRequest) GetFilm() *models.Film {
 }
 
 type FilmRateDropResponse struct {
-	CountRatings int `json:"count_scores,omitempty" example:"786442"`
+	CountRatings int `json:"count_ratings,omitempty" example:"12"`
 }
 
 func NewFilmRateDropResponse(film *models.Film) *FilmRateDropResponse {

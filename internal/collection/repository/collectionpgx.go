@@ -52,7 +52,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
 		}
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
 				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
 		}

@@ -26,27 +26,24 @@ func (p *PersonRequest) Bind(r *http.Request) error {
 
 	vars := mux.Vars(r)
 
-	p.ID, err = strconv.Atoi(vars["id"])
-	if err != nil {
-		return errors.ErrConvertQuery
-	}
+	p.ID, _ = strconv.Atoi(vars["id"])
 
 	p.CountFilms, err = strconv.Atoi(r.FormValue("count_films"))
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	if p.CountFilms < 0 {
-		return errors.ErrQueryBad
+		return errors.ErrBadQueryParams
 	}
 
 	p.CountImages, err = strconv.Atoi(r.FormValue("count_images"))
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
 	if p.CountImages < 0 {
-		return errors.ErrQueryBad
+		return errors.ErrBadQueryParams
 	}
 
 	return nil
@@ -76,11 +73,10 @@ type filmInPersonResponse struct {
 }
 
 type PersonResponse struct {
-	ID           int                    `json:"id,omitempty" example:"4526"`
 	Name         string                 `json:"name,omitempty" example:"Шон Коннери"`
 	OriginalName string                 `json:"original_name,omitempty" example:"Sean Connery"`
-	Birthday     string                 `json:"birthday,omitempty" example:"1930-08-25"`
-	Death        string                 `json:"death,omitempty" example:"2020-10-31"`
+	Birthday     string                 `json:"birthday,omitempty" example:"1930.08.25"`
+	Death        string                 `json:"death,omitempty" example:"2020.10.31"`
 	Growth       float32                `json:"growth,omitempty" example:"1.9"`
 	Gender       string                 `json:"gender,omitempty" example:"male"`
 	Avatar       string                 `json:"avatar,omitempty" example:"4526"`
@@ -94,7 +90,6 @@ type PersonResponse struct {
 
 func NewPersonResponse(person *models.Person) *PersonResponse {
 	res := &PersonResponse{
-		ID:           person.ID,
 		Name:         person.Name,
 		Birthday:     person.Birthday,
 		OriginalName: person.OriginalName,

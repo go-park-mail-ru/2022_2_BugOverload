@@ -10,9 +10,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 )
 
+//go:generate mockgen -source personservice.go -destination mocks/mockpersonservice.go -package mockPersonService
+
 // PersonService provides universal service for work with persons.
 type PersonService interface {
-	GePersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error)
+	GetPersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error)
 }
 
 // personService is implementation for users service corresponding to the PersonService interface.
@@ -27,8 +29,8 @@ func NewPersonService(pr repository.PersonRepository) PersonService {
 	}
 }
 
-// GePersonByID is the service that accesses the interface PersonService.
-func (p *personService) GePersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error) {
+// GetPersonByID is the service that accesses the interface PersonService.
+func (p *personService) GetPersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error) {
 	personRepo, err := p.personRepo.GetPersonByID(ctx, person, params)
 	if err != nil {
 		return models.Person{}, stdErrors.Wrap(err, "GetPersonByID")

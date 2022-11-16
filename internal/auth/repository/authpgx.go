@@ -57,7 +57,7 @@ func (ad *AuthDatabase) CheckExist(ctx context.Context, email string) (bool, err
 	}
 
 	if errMain != nil {
-		return false, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return false, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
 			checkExist, email, errMain)
 	}
@@ -126,7 +126,7 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 	})
 
 	if errMain != nil {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: user - [%v]. Special error: [%s]",
 			user, err)
 	}
@@ -177,7 +177,7 @@ func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (model
 	}
 
 	if errMain != nil {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: email - [%s]. Special error - [%s]",
 			email, errMain)
 	}
@@ -215,7 +215,7 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 	}
 
 	if errMain != nil {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: userID - [%d]. Special error - [%s]",
 			userID, errMain)
 	}
@@ -233,7 +233,7 @@ func (ad *AuthDatabase) UpdatePassword(ctx context.Context, user *models.User, p
 	})
 
 	if errMain != nil {
-		return stdErrors.WithMessagef(errors.ErrPostgresRequest,
+		return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
 			updateUserPassword, user.Password, user.ID, errMain)
 	}

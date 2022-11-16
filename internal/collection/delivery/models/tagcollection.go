@@ -30,20 +30,13 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 	countFilms := r.FormValue("count_films")
 	p.Delimiter = r.FormValue("delimiter")
 
-	switch p.Tag {
-	case innerPKG.TagFromPopular:
-		p.Tag = innerPKG.TagInPopular
-	case innerPKG.TagFromInCinema:
-		p.Tag = innerPKG.TagInInCinema
-	}
-
 	p.CountFilms, err = strconv.Atoi(countFilms)
 	if err != nil {
-		return errors.ErrConvertQuery
+		return errors.ErrConvertQueryType
 	}
 
-	if p.CountFilms <= 0 {
-		return errors.ErrQueryRequiredEmpty
+	if p.CountFilms < 0 {
+		return errors.ErrBadQueryParams
 	}
 
 	return nil
@@ -57,7 +50,7 @@ func (p *TagCollectionRequest) GetParams() *innerPKG.GetCollectionTagParams {
 	}
 }
 
-type filmTagCollectionResponse struct {
+type FilmTagCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
 	ProdYear  string   `json:"prod_year,omitempty" example:"2014"`
@@ -69,17 +62,17 @@ type filmTagCollectionResponse struct {
 
 type TagCollectionResponse struct {
 	Name  string                      `json:"name,omitempty" example:"Сейчас в кино"`
-	Films []filmTagCollectionResponse `json:"films,omitempty"`
+	Films []FilmTagCollectionResponse `json:"films,omitempty"`
 }
 
 func NewTagCollectionResponse(collection *models.Collection) *TagCollectionResponse {
 	res := &TagCollectionResponse{
 		Name:  collection.Name,
-		Films: make([]filmTagCollectionResponse, len(collection.Films)),
+		Films: make([]FilmTagCollectionResponse, len(collection.Films)),
 	}
 
 	for idx, value := range collection.Films {
-		res.Films[idx] = filmTagCollectionResponse{
+		res.Films[idx] = FilmTagCollectionResponse{
 			ID:        value.ID,
 			Name:      value.Name,
 			ProdYear:  value.ProdYear,

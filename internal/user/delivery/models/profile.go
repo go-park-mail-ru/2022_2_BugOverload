@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
@@ -22,11 +21,7 @@ func NewUserProfileRequest() *UserProfileRequest {
 func (u *UserProfileRequest) Bind(r *http.Request) error {
 	vars := mux.Vars(r)
 
-	var err error
-	u.ID, err = strconv.Atoi(vars["id"])
-	if err != nil {
-		return errors.ErrConvertQuery
-	}
+	u.ID, _ = strconv.Atoi(vars["id"])
 
 	return nil
 }

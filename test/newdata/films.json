@@ -1,6 +1,7 @@
 [
   {
     "name": "Три тысячи лет желаний",
+    "type": "film",
     "prod_year": "2022",
     "poster_ver": "1",
     "poster_hor": "1",
@@ -20,13 +21,15 @@
       "Metro-Goldwyn-Mayer"
     ],
     "slogan": "What would you wish for?",
-    "box_office": 18570937,
+    "box_office_dollars": 18570937,
     "budget": 60000000,
     "age_limit": "18+",
-    "duration": 108
+    "duration_minutes": 108,
+    "currency_budget": "USD"
   },
   {
     "name": "Джиперс Криперс: Возрожденный",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "2",
     "poster_hor": "2",
@@ -45,13 +48,15 @@
       "Infinity Films"
     ],
     "slogan": "Твоя смерть — его жизнь",
-    "box_office": 4273101,
+    "box_office_dollars": 4273101,
     "budget": 2000000,
     "age_limit": "16+",
-    "duration": 88
+    "duration_minutes": 88,
+    "currency_budget": "USD"
   },
   {
     "name": "Эра выживания",
+    "type": "film",
     "prod_year": "2022",
     "poster_ver": "3",
     "poster_hor": "3",
@@ -70,13 +75,15 @@
       "Natrix Natrix"
     ],
     "slogan": "Настала новая эра",
-    "box_office": 1575774,
+    "box_office_dollars": 1575774,
     "budget": 2000000,
     "age_limit": "16+",
-    "duration": 114
+    "duration_minutes": 114,
+    "currency_budget": "USD"
   },
   {
     "name": "Проклятие Плачущей. Возвращение",
+    "type": "film",
     "prod_year": "2022",
     "poster_ver": "4",
     "poster_hor": "4",
@@ -90,13 +97,15 @@
       "Мексика"
     ],
     "slogan": "Она заберет ваших детей",
-    "box_office": 177533,
+    "box_office_dollars": 177533,
     "budget": 9000000,
     "age_limit": "16+",
-    "duration": 98
+    "duration_minutes": 98,
+    "currency_budget": "USD"
   },
   {
     "name": "Люси",
+    "type": "film",
     "prod_year": "2014",
     "poster_ver": "5",
     "poster_hor": "5",
@@ -119,13 +128,15 @@
       "Canal+"
     ],
     "slogan": "Она — ключ к тайнам Вселенной",
-    "box_office": 458863600,
+    "box_office_dollars": 458863600,
     "budget": 40000000,
     "age_limit": "16+",
-    "duration": 89
+    "duration_minutes": 89,
+    "currency_budget": "USD"
   },
   {
     "name": "Властелин колец. Братство кольца",
+    "type": "film",
     "prod_year": "2001",
     "poster_ver": "6",
     "poster_hor": "6",
@@ -145,13 +156,15 @@
       "New Line Cinema"
     ],
     "slogan": "Power can be held in the smallest of things...",
-    "box_office": 880839846,
+    "box_office_dollars": 880839846,
     "budget": 93000000,
     "age_limit": "12+",
-    "duration": 178
+    "duration_minutes": 178,
+    "currency_budget": "USD"
   },
   {
     "name": "Дом, который построил Джек",
+    "type": "film",
     "prod_year": "2018",
     "poster_ver": "7",
     "poster_hor": "7",
@@ -176,14 +189,15 @@
       "Eurimages"
     ],
     "slogan": "If you feel like screaming... you definitely should",
-    "box_office": 2911800,
+    "box_office_dollars": 2911800,
     "budget": 8700000,
     "age_limit": "18+",
-    "duration": 152,
+    "duration_minutes": 152,
     "currency_budget": "EURO"
   },
   {
     "name": "Интерстеллар",
+    "type": "film",
     "prod_year": "2014",
     "poster_ver": "8",
     "poster_hor": "8",
@@ -204,13 +218,15 @@
       "Legendary Pictures"
     ],
     "slogan": "Следующий шаг человечества станет величайшим",
-    "box_office": 677896797,
+    "box_office_dollars": 677896797,
     "budget": 165000000,
     "age_limit": "16+",
-    "duration": 169
+    "duration_minutes": 169,
+    "currency_budget": "USD"
   },
   {
     "name": "1+1",
+    "type": "film",
     "prod_year": "2011",
     "poster_ver": "9",
     "poster_hor": "9",
@@ -229,14 +245,15 @@
       "Gaumont"
     ],
     "slogan": "Sometimes you have to reach into someone else's world to find out what's missing in your own",
-    "box_office": 677896797,
+    "box_office_dollars": 677896797,
     "budget": 9500000,
     "age_limit": "16+",
-    "duration": 169,
+    "duration_minutes": 169,
     "currency_budget": "EURO"
   },
   {
     "name": "Темный рыцарь",
+    "type": "film",
     "prod_year": "2008",
     "poster_ver": "10",
     "poster_hor": "10",
@@ -259,13 +276,15 @@
       "DC Comics"
     ],
     "slogan": "Добро пожаловать в мир Хаоса!",
-    "box_office": 1003045358,
+    "box_office_dollars": 1003045358,
     "budget": 185000000,
     "age_limit": "16+",
-    "duration": 152
+    "duration_minutes": 152,
+    "currency_budget": "USD"
   },
   {
     "name": "Бойцовский клуб",
+    "type": "film",
     "prod_year": "1999",
     "poster_ver": "11",
     "poster_hor": "11",
@@ -285,13 +304,15 @@
       "20th Century Fox"
     ],
     "slogan": "Интриги. Хаос. Мыло",
-    "box_office": 100853753,
+    "box_office_dollars": 100853753,
     "budget": 63000000,
     "age_limit": "18+",
-    "duration": 139
+    "duration_minutes": 139,
+    "currency_budget": "USD"
   },
   {
     "name": "Титаник",
+    "type": "film",
     "prod_year": "1997",
     "poster_ver": "12",
     "poster_hor": "12",
@@ -313,13 +334,15 @@
       "20th Century Fox"
     ],
     "slogan": "Ничто на Земле не сможет разлучить их",
-    "box_office": 2201647264,
+    "box_office_dollars": 2201647264,
     "budget": 200000000,
     "age_limit": "12+",
-    "duration": 194
+    "duration_minutes": 194,
+    "currency_budget": "USD"
   },
   {
     "name": "Ходячий замок",
+    "type": "film",
     "prod_year": "2004",
     "poster_ver": "13",
     "poster_hor": "13",
@@ -340,13 +363,15 @@
       "Studio Ghibli"
     ],
     "slogan": "Ничто на Земле не сможет разлучить их",
-    "box_office": 236214446,
+    "box_office_dollars": 236214446,
     "budget": 24000000,
     "age_limit": "6+",
-    "duration": 119
+    "duration_minutes": 119,
+    "currency_budget": "USD"
   },
   {
     "name": "Волк с Уолл-стрит",
+    "type": "film",
     "prod_year": "2013",
     "poster_ver": "14",
     "poster_hor": "14",
@@ -366,13 +391,15 @@
       "Paramount Pictures"
     ],
     "slogan": "Earn. Spend. Party",
-    "box_office": 392000694,
+    "box_office_dollars": 392000694,
     "budget": 100000000,
     "age_limit": "16+",
-    "duration": 180
+    "duration_minutes": 180,
+    "currency_budget": "USD"
   },
   {
     "name": "Дюна",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "15",
     "poster_hor": "15",
@@ -394,13 +421,15 @@
       "Legendary Pictures"
     ],
     "slogan": "Час настал",
-    "box_office": 401847900,
+    "box_office_dollars": 401847900,
     "budget": 165000000,
     "age_limit": "12+",
-    "duration": 155
+    "duration_minutes": 155,
+    "currency_budget": "USD"
   },
   {
     "name": "Убить Билла",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "16",
     "poster_hor": "16",
@@ -413,6 +442,7 @@
   },
   {
     "name": "Головокружение",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "17",
     "poster_hor": "17",
@@ -425,6 +455,7 @@
   },
   {
     "name": "Петровы в гриппе",
+    "type": "film",
     "prod_year": "2020",
     "poster_ver": "18",
     "poster_hor": "18",
@@ -437,6 +468,7 @@
   },
   {
     "name": "Она",
+    "type": "film",
     "prod_year": "2013",
     "poster_ver": "19",
     "poster_hor": "19",
@@ -449,6 +481,7 @@
   },
   {
     "name": "Плата за страх",
+    "type": "film",
     "prod_year": "1952",
     "poster_ver": "20",
     "poster_hor": "20",
@@ -476,6 +509,7 @@
   },
   {
     "name": "Олдбой",
+    "type": "film",
     "prod_year": "2003",
     "poster_ver": "22",
     "poster_hor": "22",
@@ -488,6 +522,7 @@
   },
   {
     "name": "Доказательство смерти",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "23",
     "poster_hor": "23",
@@ -500,6 +535,7 @@
   },
   {
     "name": "Чунгингский экспресс",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "24",
     "poster_hor": "24",
@@ -512,6 +548,7 @@
   },
   {
     "name": "Девушка с татуировкой дракона",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "25",
     "poster_hor": "25",
@@ -524,6 +561,7 @@
   },
   {
     "name": "Человек",
+    "type": "film",
     "prod_year": "2021",
     "poster_ver": "26",
     "poster_hor": "26",
@@ -536,6 +574,7 @@
   },
   {
     "name": "Звёздные войны. Эпизод IV: Новая надежда",
+    "type": "film",
     "short_description": "Галактическая империя порабощает целые системы, повстанцы будут мешать этому",
     "description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
     "prod_year": "2021",
@@ -548,6 +587,7 @@
   },
   {
     "name": "Джокер",
+    "type": "film",
     "short_description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
     "description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
     "prod_year": "2021",
@@ -559,6 +599,7 @@
   },
   {
     "name": "2001: Космическая одисея",
+    "type": "film",
     "short_description": "Экипаж космического корабля «Дискавери» должен исследовать район галактики",
     "description": "Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью",
     "prod_year": "1968",
