@@ -74,7 +74,8 @@ const (
 	TagFromInCinema = "in_cinema"
 	TagInInCinema   = "сейчас в кино"
 
-	DefTypeFilm = "film"
+	DefTypeFilm   = "film"
+	DefTypeSerial = "serial"
 
 	TypeReviewPositive = "positive"
 	TypeReviewNegative = "negative"

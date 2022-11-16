@@ -191,6 +191,12 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d films upload", count)
 
+	count, err = f.uploadSerials()
+	if err != nil {
+		return errors.Wrap(err, "Action")
+	}
+	logrus.Infof("%d serials upload", count)
+
 	count, err = f.linkFilmGenres()
 	if err != nil {
 		return errors.Wrap(err, "Action")

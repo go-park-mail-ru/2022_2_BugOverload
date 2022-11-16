@@ -5,21 +5,21 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	"go-park-mail-ru/2022_2_BugOverload/internal/review/delivery/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/review/service"
 )
 
 // reviewLikeHandler is the structure that handles the request for
 // getting film by id.
 type reviewsHandler struct {
-	reviewsService service.ReviewService
+	reviewsService service.FilmsService
 }
 
 // NewReviewsHandler is constructor for reviewLikeHandler in this pkg - film.
-func NewReviewsHandler(fs service.ReviewService) handler.Handler {
+func NewReviewsHandler(fs service.FilmsService) handler.Handler {
 	return &reviewsHandler{
 		fs,
 	}

@@ -25,9 +25,9 @@ type Film struct {
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
 
-	BoxOffice      int    `json:"box_office,omitempty"`
-	Budget         int    `json:"budget,omitempty"`
-	CurrencyBudget string `json:"currency_budget,omitempty"`
+	BoxOfficeDollars int    `json:"box_office_dollars,omitempty"`
+	Budget           int    `json:"budget,omitempty"`
+	CurrencyBudget   string `json:"currency_budget,omitempty"`
 
 	CountSeasons int    `json:"count_seasons,omitempty"`
 	EndYear      string `json:"end_year,omitempty"`

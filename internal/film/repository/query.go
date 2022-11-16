@@ -12,10 +12,8 @@ SELECT name,
        duration_minutes,
        poster_hor,
        budget,
-       box_office,
+       box_office_dollars,
        currency_budget,
-       count_seasons,
-       end_year,
        type,
        rating,
        count_actors,
@@ -25,6 +23,29 @@ SELECT name,
        count_positive_reviews
 FROM films
 WHERE film_id = $1`
+
+	getSerialByID = `
+SELECT count_seasons,
+       end_year
+FROM serials
+WHERE film_id = $1`
+
+	getReviewsByFilmID = `
+SELECT r.name,
+       r.type,
+       r.body,
+       r.count_likes,
+       r.create_time,
+       u.user_id,
+       u.nickname,
+       u.avatar,
+       u.count_reviews
+FROM reviews r
+         JOIN profile_reviews pr on r.review_id = pr.fk_review_id
+         JOIN users u on pr.fk_user_id = u.user_id
+WHERE pr.fk_film_id = $1
+ORDER BY r.count_likes IS NULL, r.count_likes DESC
+LIMIT $2 OFFSET $3`
 
 	getFilmGenres = `
 SELECT g.name

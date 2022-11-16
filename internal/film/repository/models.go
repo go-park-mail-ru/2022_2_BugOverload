@@ -16,6 +16,40 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
+type AuthorSQL struct {
+	ID           int
+	Nickname     string
+	CountReviews sql.NullInt32
+	Avatar       sql.NullString
+}
+
+type ReviewSQL struct {
+	Name       string
+	Type       string
+	Body       string
+	CountLikes sql.NullInt32
+	CreateTime time.Time
+	Author     AuthorSQL
+}
+
+func (r *ReviewSQL) Convert() models.Review {
+	return models.Review{
+		Name:       r.Name,
+		Type:       r.Type,
+		Body:       r.Body,
+		CreateTime: r.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
+		CountLikes: int(r.CountLikes.Int32),
+		Author: models.User{
+			ID:       r.Author.ID,
+			Nickname: r.Author.Nickname,
+			Profile: models.Profile{
+				Avatar:       r.Author.Avatar.String,
+				CountReviews: int(r.Author.CountReviews.Int32),
+			},
+		},
+	}
+}
+
 type FilmActorSQL struct {
 	ID        int
 	Name      string
@@ -92,9 +126,9 @@ func (f *FilmSQL) Convert() models.Film {
 		PosterHor:        f.PosterHor.String,
 		PosterVer:        f.PosterVer.String,
 
-		BoxOffice:      int(f.BoxOffice.Int32),
-		Budget:         int(f.Budget.Int32),
-		CurrencyBudget: f.CurrencyBudget.String,
+		BoxOfficeDollars: int(f.BoxOffice.Int32),
+		Budget:           int(f.Budget.Int32),
+		CurrencyBudget:   f.CurrencyBudget.String,
 
 		CountSeasons: int(f.CountSeasons.Int32),
 		EndYear:      f.EndYear.Time.Format(innerPKG.OnlyDate),
@@ -166,51 +200,6 @@ func (f *FilmSQL) Convert() models.Film {
 	}
 
 	return res
-}
-
-func (f *FilmSQL) GetMainInfo(ctx context.Context, db *sql.DB, query string, args ...any) error {
-	return sqltools.RunQuery(ctx, db, func(ctx context.Context, conn *sql.Conn) error {
-		rowFilm := conn.QueryRowContext(ctx, query, args...)
-		if rowFilm.Err() != nil {
-			return rowFilm.Err()
-		}
-
-		err := rowFilm.Scan(
-			&f.Name,
-			&f.OriginalName,
-			&f.ProdYear,
-			&f.Slogan,
-			&f.Description,
-			&f.ShortDescription,
-			&f.AgeLimit,
-			&f.Duration,
-			&f.PosterHor,
-			&f.Budget,
-			&f.BoxOffice,
-			&f.CurrencyBudget,
-			&f.CountSeasons,
-			&f.EndYear,
-			&f.Type,
-			&f.Rating,
-			&f.CountActors,
-			&f.CountRatings,
-			&f.CountNegativeReviews,
-			&f.CountNeutralReviews,
-			&f.CountPositiveReviews)
-		if err != nil {
-			return err
-		}
-
-		if !f.Type.Valid {
-			f.Type.String = innerPKG.DefTypeFilm
-		}
-
-		if !f.PosterHor.Valid {
-			f.PosterHor.String = innerPKG.DefFilmPosterHor
-		}
-
-		return nil
-	})
 }
 
 func (f *FilmSQL) GetPersons(ctx context.Context, db *sql.DB, query string, args ...any) error {

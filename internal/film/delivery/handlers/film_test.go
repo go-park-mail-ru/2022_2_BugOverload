@@ -70,7 +70,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 			ID:   1,
 		}},
 		AgeLimit:             "18+",
-		BoxOffice:            60000000,
+		BoxOfficeDollars:     60000000,
 		Budget:               10000000,
 		CountActors:          1,
 		CountPositiveReviews: 1,
