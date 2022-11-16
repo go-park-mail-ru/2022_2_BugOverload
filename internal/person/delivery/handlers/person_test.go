@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/person/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"

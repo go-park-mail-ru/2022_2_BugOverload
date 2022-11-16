@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
