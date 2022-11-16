@@ -34,7 +34,7 @@ type Film struct {
 	Type         string `json:"type,omitempty"`
 
 	Rating               float32 `json:"rating,omitempty"`
-	CountScores          int     `json:"count_scores,omitempty"`
+	CountRatings         int     `json:"count_ratings,omitempty"`
 	CountActors          int     `json:"count_actors,omitempty"`
 	CountNegativeReviews int     `json:"count_negative_reviews,omitempty"`
 	CountNeutralReviews  int     `json:"count_neutral_reviews,omitempty"`

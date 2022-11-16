@@ -161,7 +161,7 @@ func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *
 			return err
 		}
 
-		err = rowFilm.Scan(&resultFilm.CountScores)
+		err = rowFilm.Scan(&resultFilm.CountRatings)
 		if err != nil {
 			return err
 		}
@@ -197,7 +197,7 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 			return err
 		}
 
-		err = rowFilm.Scan(&resultFilm.CountScores)
+		err = rowFilm.Scan(&resultFilm.CountRatings)
 		if err != nil {
 			return err
 		}

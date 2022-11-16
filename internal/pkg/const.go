@@ -120,9 +120,9 @@ const (
 	// Crypt
 	SaltLength     = 16
 	ArgonTime      = 1
-	ArgonMemory    = 32 * 1024
+	ArgonMemory    = 16 * 1024
 	ArgonThreads   = 4
-	ArgonKeyLength = 32
+	ArgonKeyLength = 16
 
 	// csrf
 	CsrfSecretDefault = "J25qeHRobmpkc2NyZmN0cmh0biEhIQ=="

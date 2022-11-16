@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
@@ -67,5 +68,15 @@ func (f *FilmRateRequest) GetParams() *innerPKG.FilmRateParams {
 	return &innerPKG.FilmRateParams{
 		FilmID: f.FilmID,
 		Score:  f.Score,
+	}
+}
+
+type FilmRateResponse struct {
+	CountRatings int `json:"count_scores,omitempty" example:"786442"`
+}
+
+func NewFilmRateResponse(film *models.Film) *FilmRateResponse {
+	return &FilmRateResponse{
+		CountRatings: film.CountRatings,
 	}
 }
