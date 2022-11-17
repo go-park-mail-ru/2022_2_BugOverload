@@ -84,25 +84,25 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 // FilmRate is the service that accesses the interface UserService
 func (u *userService) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
 	if !(0 <= params.Score && params.Score <= 10) {
-		return models.Film{}, stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRateSet")
+		return models.Film{}, stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRate")
 	}
 
 	var film models.Film
 
 	exist, err := u.userRepo.FilmRatingExist(ctx, user, params.FilmID)
 	if err != nil {
-		return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+		return models.Film{}, stdErrors.Wrap(err, "FilmRate")
 	}
 
 	if exist {
 		film, err = u.userRepo.FilmRateUpdate(ctx, user, params)
 		if err != nil {
-			return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+			return models.Film{}, stdErrors.Wrap(err, "FilmRate")
 		}
 	} else {
 		film, err = u.userRepo.FilmRateSet(ctx, user, params)
 		if err != nil {
-			return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+			return models.Film{}, stdErrors.Wrap(err, "FilmRate")
 		}
 	}
 
