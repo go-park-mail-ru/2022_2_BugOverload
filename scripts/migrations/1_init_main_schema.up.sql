@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS films
     "film_id"                serial    NOT NULL PRIMARY KEY,
     "name"                   text      NOT NULL,
     CONSTRAINT "name_length" CHECK (LENGTH("name") <= 80),
-    "prod_year"              date      NOT NULL,
+    "prod_date"              date      NOT NULL,
     "description"            text      NOT NULL,
     "short_description"      text               DEFAULT NULL,
     CONSTRAINT "short_description_length" CHECK (LENGTH("short_description") <= 180),

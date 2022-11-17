@@ -38,7 +38,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 		Name: "популярное",
 		Films: []modelsGlobal.Film{{
 			Name:      "Игра престолов",
-			ProdYear:  "2013",
+			ProdDate:  "2013",
 			EndYear:   "2014",
 			ID:        123,
 			Rating:    7.12332,

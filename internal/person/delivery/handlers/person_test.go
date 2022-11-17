@@ -45,7 +45,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 		Death:        "2020.10.31",
 		BestFilms: []modelsGlobal.Film{{
 			Name:      "Игра престолов",
-			ProdYear:  "2013",
+			ProdDate:  "2013",
 			EndYear:   "2014",
 			ID:        123,
 			Rating:    7.12332,

@@ -33,7 +33,7 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 
 	res := modelsGlobal.Film{
 		Name:      "Игра престолов",
-		ProdYear:  "2013",
+		ProdDate:  "2013",
 		EndYear:   "2014",
 		ID:        123,
 		Rating:    7.12332,

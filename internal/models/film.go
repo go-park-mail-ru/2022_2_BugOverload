@@ -16,7 +16,7 @@ type Film struct {
 	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name,omitempty"`
 	OriginalName     string `json:"original_name,omitempty"`
-	ProdYear         string `json:"prod_year,omitempty"`
+	ProdDate         string `json:"prod_date,omitempty"`
 	Slogan           string `json:"slogan,omitempty"`
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`

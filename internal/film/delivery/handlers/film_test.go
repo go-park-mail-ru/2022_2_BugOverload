@@ -90,7 +90,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 		PosterHor:            "1",
 		ProdCountries:        []string{"США", "Великобритания"},
 		ProdCompanies:        []string{"HBO"},
-		ProdYear:             "2011",
+		ProdDate:             "2011",
 		Rating:               9.2,
 		Type:                 "serial",
 		Slogan:               "Победа или смерть",

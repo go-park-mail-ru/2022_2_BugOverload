@@ -108,7 +108,7 @@ func NewPersonResponse(person *models.Person) *PersonResponse {
 		res.BestFilms[idx] = filmInPersonResponse{
 			ID:        value.ID,
 			Name:      value.Name,
-			ProdYear:  value.ProdYear,
+			ProdYear:  value.ProdDate,
 			EndYear:   value.EndYear,
 			PosterVer: value.PosterVer,
 			Rating:    value.Rating,

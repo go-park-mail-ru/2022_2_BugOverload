@@ -118,13 +118,13 @@ func (f *FilmSQL) Convert() models.Film {
 	prodYear := ""
 
 	if !f.ProdYear.IsZero() {
-		prodYear = f.ProdYear.Format(innerPKG.OnlyDate)
+		prodYear = f.ProdYear.Format(innerPKG.DateFormat)
 	}
 
 	res := models.Film{
 		ID:              f.ID,
 		Name:            f.Name,
-		ProdYear:        prodYear,
+		ProdDate:        prodYear,
 		Description:     f.Description,
 		DurationMinutes: f.Duration,
 

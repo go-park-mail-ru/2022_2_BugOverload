@@ -2,7 +2,7 @@ package fillerdb
 
 const (
 	insertFilms = `
-INSERT INTO films(name, prod_year, poster_ver, poster_hor, description,
+INSERT INTO films(name, prod_date, poster_ver, poster_hor, description,
                   short_description, original_name, slogan, age_limit,
                   box_office_dollars, budget, duration_minutes, currency_budget, type)
 VALUES`
