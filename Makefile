@@ -71,8 +71,8 @@ prod-mode:
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-create-env:
-	sudo cp /etc/letsencrypt/archive/movie-gate.online/cert1.pem .
-	sudo cp /etc/letsencrypt/archive/movie-gate.online/privkey1.pem .
+	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem .
+	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem .
 
 prod-deploy:
 	make prod-create-env
