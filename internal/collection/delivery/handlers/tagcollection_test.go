@@ -87,7 +87,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
@@ -145,7 +145,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
@@ -195,7 +195,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
@@ -245,5 +245,5 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }

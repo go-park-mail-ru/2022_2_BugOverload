@@ -39,12 +39,10 @@ func (r *ReviewSQL) Convert() models.Review {
 		CreateTime: r.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
 		CountLikes: int(r.CountLikes.Int32),
 		Author: models.User{
-			ID:       r.Author.ID,
-			Nickname: r.Author.Nickname,
-			Profile: models.Profile{
-				Avatar:       r.Author.Avatar.String,
-				CountReviews: int(r.Author.CountReviews.Int32),
-			},
+			ID:           r.Author.ID,
+			Nickname:     r.Author.Nickname,
+			Avatar:       r.Author.Avatar.String,
+			CountReviews: int(r.Author.CountReviews.Int32),
 		},
 	}
 }

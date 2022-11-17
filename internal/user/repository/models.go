@@ -9,14 +9,10 @@ import (
 )
 
 type UserSQL struct {
-	ID       int
-	Nickname sql.NullString
-	Email    sql.NullString
-	Password []byte
-	Profile  ProfileSQL
-}
-
-type ProfileSQL struct {
+	ID               int
+	Nickname         sql.NullString
+	Email            sql.NullString
+	Password         []byte
 	Avatar           sql.NullString
 	JoinedDate       time.Time
 	CountViewsFilms  sql.NullInt32
@@ -26,44 +22,38 @@ type ProfileSQL struct {
 }
 
 func NewUserSQL() UserSQL {
-	return UserSQL{
-		Profile: ProfileSQL{},
-	}
+	return UserSQL{}
 }
 
 func NewUserSQLOnUser(user *models.User) UserSQL {
-	joinedDate, _ := time.Parse(innerPKG.DateFormat, user.Profile.JoinedDate)
+	joinedDate, _ := time.Parse(innerPKG.DateFormat, user.JoinedDate)
 
 	return UserSQL{
-		ID:       user.ID,
-		Nickname: sqltools.NewSQLNullString(user.Nickname),
-		Email:    sqltools.NewSQLNullString(user.Email),
-		Password: []byte(user.Password),
-		Profile: ProfileSQL{
-			Avatar:           sqltools.NewSQLNullString(user.Profile.Avatar),
-			JoinedDate:       joinedDate,
-			CountViewsFilms:  sqltools.NewSQLNullInt32(user.Profile.CountViewsFilms),
-			CountCollections: sqltools.NewSQLNullInt32(user.Profile.CountCollections),
-			CountReviews:     sqltools.NewSQLNullInt32(user.Profile.CountReviews),
-			CountRatings:     sqltools.NewSQLNullInt32(user.Profile.CountRatings),
-		},
+		ID:               user.ID,
+		Nickname:         sqltools.NewSQLNullString(user.Nickname),
+		Email:            sqltools.NewSQLNullString(user.Email),
+		Password:         []byte(user.Password),
+		Avatar:           sqltools.NewSQLNullString(user.Avatar),
+		JoinedDate:       joinedDate,
+		CountViewsFilms:  sqltools.NewSQLNullInt32(user.CountViewsFilms),
+		CountCollections: sqltools.NewSQLNullInt32(user.CountCollections),
+		CountReviews:     sqltools.NewSQLNullInt32(user.CountReviews),
+		CountRatings:     sqltools.NewSQLNullInt32(user.CountRatings),
 	}
 }
 
 func (u *UserSQL) Convert() models.User {
 	return models.User{
-		ID:       u.ID,
-		Nickname: u.Nickname.String,
-		Email:    u.Email.String,
-		Password: string(u.Password),
-		Profile: models.Profile{
-			Avatar:           u.Profile.Avatar.String,
-			JoinedDate:       u.Profile.JoinedDate.Format(innerPKG.DateFormat),
-			CountViewsFilms:  int(u.Profile.CountViewsFilms.Int32),
-			CountCollections: int(u.Profile.CountCollections.Int32),
-			CountReviews:     int(u.Profile.CountReviews.Int32),
-			CountRatings:     int(u.Profile.CountRatings.Int32),
-		},
+		ID:               u.ID,
+		Nickname:         u.Nickname.String,
+		Email:            u.Email.String,
+		Password:         string(u.Password),
+		Avatar:           u.Avatar.String,
+		JoinedDate:       u.JoinedDate.Format(innerPKG.DateFormat),
+		CountViewsFilms:  int(u.CountViewsFilms.Int32),
+		CountCollections: int(u.CountCollections.Int32),
+		CountReviews:     int(u.CountReviews.Int32),
+		CountRatings:     int(u.CountRatings.Int32),
 	}
 }
 

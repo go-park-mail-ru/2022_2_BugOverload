@@ -50,15 +50,15 @@ func (h *loginHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/login [POST]
 func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
-	loginRequest := models.NewUserLoginRequest()
+	request := models.NewUserLoginRequest()
 
-	err := loginRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
-	userLogged, err := h.authService.Login(r.Context(), loginRequest.GetUser())
+	userLogged, err := h.authService.Login(r.Context(), request.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
@@ -97,7 +97,7 @@ func (h *loginHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, cookie)
 
-	loginResponse := models.NewUserLoginResponse(&userLogged)
+	response := models.NewUserLoginResponse(&userLogged)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, loginResponse)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

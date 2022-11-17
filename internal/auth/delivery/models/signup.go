@@ -73,6 +73,6 @@ func NewUserSignUpResponse(user *models.User) *UserSignupResponse {
 	return &UserSignupResponse{
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
-		Avatar:   user.Profile.Avatar,
+		Avatar:   user.Avatar,
 	}
 }

@@ -54,18 +54,18 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 		}
 		err := rowUserProfile.Scan(
 			&response.Nickname,
-			&response.Profile.JoinedDate,
-			&response.Profile.Avatar,
-			&response.Profile.CountViewsFilms,
-			&response.Profile.CountCollections,
-			&response.Profile.CountReviews,
-			&response.Profile.CountRatings)
+			&response.JoinedDate,
+			&response.Avatar,
+			&response.CountViewsFilms,
+			&response.CountCollections,
+			&response.CountReviews,
+			&response.CountRatings)
 		if err != nil {
 			return err
 		}
 
-		if !response.Profile.Avatar.Valid {
-			response.Profile.Avatar.String = innerPKG.DefUserAvatar
+		if !response.Avatar.Valid {
+			response.Avatar.String = innerPKG.DefUserAvatar
 		}
 
 		return nil
@@ -96,11 +96,11 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 		}
 
 		err := rowProfile.Scan(
-			&response.Profile.JoinedDate,
-			&response.Profile.CountViewsFilms,
-			&response.Profile.CountCollections,
-			&response.Profile.CountReviews,
-			&response.Profile.CountRatings)
+			&response.JoinedDate,
+			&response.CountViewsFilms,
+			&response.CountCollections,
+			&response.CountReviews,
+			&response.CountRatings)
 		if err != nil {
 			return err
 		}

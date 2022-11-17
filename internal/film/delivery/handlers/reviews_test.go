@@ -40,12 +40,10 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 		CountLikes: 12,
 		CreateTime: "2019.12.31",
 		Author: modelsGlobal.User{
-			ID:       12,
-			Nickname: "steepbyy",
-			Profile: modelsGlobal.Profile{
-				Avatar:       "12",
-				CountReviews: 44,
-			},
+			ID:           12,
+			Nickname:     "steepbyy",
+			Avatar:       "12",
+			CountReviews: 44,
 		},
 	}}
 
@@ -82,7 +80,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestReviewsHandler_Action_NotOKService(t *testing.T) {
@@ -134,7 +132,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
@@ -180,7 +178,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *testing.T) {
@@ -226,7 +224,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *te
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
@@ -272,7 +270,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing.T) {
@@ -318,7 +316,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 	r.Header.Set("Content-Type", "")
 }
 
@@ -365,5 +363,5 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }

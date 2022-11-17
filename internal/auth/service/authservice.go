@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -11,9 +12,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
+//go:generate mockgen -source authservice.go -destination mocks/mockauthservice.go -package mockAuthService
+
 // AuthService provides universal service for work with users.
-//
-//go:generate mockgen -destination=../mocks/mock_auth_service.go -package=mock go-park-mail-ru/2022_2_BugOverload/internal/auth/service AuthService
 type AuthService interface {
 	Auth(ctx context.Context, user *models.User) (models.User, error)
 	Login(ctx context.Context, user *models.User) (models.User, error)
@@ -82,12 +83,24 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 	}
 	user.Password = hashedPassword
 
-	newUser, err := u.authRepo.CreateUser(ctx, user)
+	exist, err := u.authRepo.CheckExistUserByEmail(ctx, user.Email)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
+	if exist {
+		return models.User{}, errors.ErrUserExist
+	}
+
+	userDB, err := u.authRepo.CreateUser(ctx, user)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
 
-	return newUser, nil
+	user.Password = ""
+	user.Avatar = innerPKG.DefUserAvatar
+	user.ID = userDB.ID
+
+	return *user, nil
 }
 
 func (u *authService) GetAccess(ctx context.Context, user *models.User, userPassword string) error {

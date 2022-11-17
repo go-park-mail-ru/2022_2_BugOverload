@@ -87,7 +87,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestPersonHandler_Action_NotOKService(t *testing.T) {
@@ -137,7 +137,7 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testing.T) {
@@ -182,7 +182,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) {
@@ -227,7 +227,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T) {
@@ -272,7 +272,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T) {
@@ -317,5 +317,5 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }

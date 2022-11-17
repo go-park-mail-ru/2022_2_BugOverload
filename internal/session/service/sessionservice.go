@@ -10,9 +10,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
 )
 
+//go:generate mockgen -source sessionservice.go -destination mocks/mocksessionservice.go -package mockSessionService
+
 // SessionService provides universal service for authorization. Needed for stateful session pattern.
-//
-//go:generate mockgen -destination=../mocks/mock_session_service.go -package=mock go-park-mail-ru/2022_2_BugOverload/internal/session/service SessionService
 type SessionService interface {
 	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
@@ -43,10 +43,10 @@ func (a *sessionService) GetUserBySession(ctx context.Context, session models.Se
 
 // CreateSession is the service that accesses the interface SessionRepository
 func (a *sessionService) CreateSession(ctx context.Context, user *models.User) (models.Session, error) {
-	// user.ID should be >= 1
-	if user.ID == 0 {
+	if user.ID < 1 {
 		return models.Session{}, errors.Wrap(customErrors.ErrUserNotExist, "CreateSession")
 	}
+
 	newSession, err := a.sessionRepo.CreateSession(ctx, &models.User{ID: user.ID})
 	if err != nil {
 		return models.Session{}, errors.Wrap(err, "CreateSession")

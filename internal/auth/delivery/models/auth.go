@@ -15,6 +15,6 @@ func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 	return &UserAuthResponse{
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
-		Avatar:   user.Profile.Avatar,
+		Avatar:   user.Avatar,
 	}
 }

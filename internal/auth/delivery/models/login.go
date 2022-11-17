@@ -14,7 +14,6 @@ import (
 )
 
 type UserLoginRequest struct {
-	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"YasaPupkinEzji@top.world"`
 	Password string `json:"password,omitempty" example:"Widget Adapter"`
 }
@@ -58,7 +57,6 @@ func (u *UserLoginRequest) Bind(r *http.Request) error {
 func (u *UserLoginRequest) GetUser() *models.User {
 	return &models.User{
 		Email:    u.Email,
-		Nickname: u.Nickname,
 		Password: u.Password,
 	}
 }
@@ -73,6 +71,6 @@ func NewUserLoginResponse(user *models.User) *UserLoginResponse {
 	return &UserLoginResponse{
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
-		Avatar:   user.Profile.Avatar,
+		Avatar:   user.Avatar,
 	}
 }
