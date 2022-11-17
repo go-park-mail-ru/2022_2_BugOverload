@@ -128,7 +128,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 	return &FilmResponse{
 		Name:             film.Name,
 		OriginalName:     film.OriginalName,
-		ProdYear:         film.ProdDate[:len(innerPKG.OnlyDate)],
+		ProdYear:         film.ProdDate,
 		Slogan:           film.Slogan,
 		Description:      film.Description,
 		ShortDescription: film.ShortDescription,

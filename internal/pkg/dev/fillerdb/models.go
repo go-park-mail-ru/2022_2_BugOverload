@@ -95,9 +95,20 @@ type FilmSQLFiller struct {
 }
 
 func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
-	date, err := time.Parse(innerPKG.DateFormat, film.ProdDate)
-	if err != nil {
-		date = time.Time{}
+	var date time.Time
+
+	var err error
+
+	if len(film.ProdDate) == len(innerPKG.OnlyDate) {
+		date, err = time.Parse(innerPKG.OnlyDate, film.ProdDate)
+		if err != nil {
+			date = time.Time{}
+		}
+	} else {
+		date, err = time.Parse(innerPKG.DateFormat, film.ProdDate)
+		if err != nil {
+			date = time.Time{}
+		}
 	}
 
 	return FilmSQLFiller{
