@@ -17,7 +17,7 @@ const (
     	f.film_id, 
     	f.name, 
     	f.original_name, 
-        f.prod_date,
+        extract(YEAR FROM  f.prod_date),
         f.poster_ver, 
         f.type, 
         f.rating

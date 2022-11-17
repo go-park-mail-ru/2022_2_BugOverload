@@ -43,7 +43,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		err := rowFilm.Scan(
 			&response.Name,
 			&response.OriginalName,
-			&response.ProdYear,
+			&response.ProdDate,
 			&response.Slogan,
 			&response.Description,
 			&response.ShortDescription,
@@ -240,7 +240,7 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 		err := rowFilm.Scan(
 			&response.ID,
 			&response.Name,
-			&response.ProdYear,
+			&response.ProdDate,
 			&response.Type,
 			&response.PosterHor,
 			&response.ShortDescription,

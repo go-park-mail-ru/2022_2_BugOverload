@@ -62,7 +62,7 @@ type FilmPersonSQL struct {
 type FilmSQL struct {
 	ID          int
 	Name        string
-	ProdYear    time.Time
+	ProdDate    string
 	Description string
 	Duration    int
 
@@ -115,16 +115,10 @@ func (f *FilmSQL) Convert() models.Film {
 		endYear = f.EndYear.Time.Format(innerPKG.OnlyDate)
 	}
 
-	prodYear := ""
-
-	if !f.ProdYear.IsZero() {
-		prodYear = f.ProdYear.Format(innerPKG.DateFormat)
-	}
-
 	res := models.Film{
 		ID:              f.ID,
 		Name:            f.Name,
-		ProdDate:        prodYear,
+		ProdDate:        f.ProdDate,
 		Description:     f.Description,
 		DurationMinutes: f.Duration,
 
@@ -279,7 +273,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 			&film.ID,
 			&film.Name,
 			&film.OriginalName,
-			&film.ProdYear,
+			&film.ProdDate,
 			&film.PosterVer,
 			&film.Type,
 			&film.Rating)
