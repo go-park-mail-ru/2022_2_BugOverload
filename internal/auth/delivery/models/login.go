@@ -66,6 +66,7 @@ func (u *UserLoginRequest) GetUser() *models.User {
 }
 
 type UserLoginResponse struct {
+	ID       int    `json:"id,omitempty" example:"13"`
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
 	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
@@ -73,6 +74,7 @@ type UserLoginResponse struct {
 
 func NewUserLoginResponse(user *models.User) *UserLoginResponse {
 	return &UserLoginResponse{
+		ID:       user.ID,
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Avatar,
