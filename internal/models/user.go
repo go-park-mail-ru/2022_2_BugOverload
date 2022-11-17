@@ -1,15 +1,11 @@
 package models
 
 type User struct {
-	ID       int     `json:"user_id,omitempty"`
-	Nickname string  `json:"nickname,omitempty"`
-	Email    string  `json:"email,omitempty"`
-	Password string  `json:"password,omitempty"`
-	IsAdmin  bool    `json:"-"`
-	Profile  Profile `json:"profile,omitempty"`
-}
-
-type Profile struct {
+	ID               int    `json:"user_id,omitempty"`
+	Nickname         string `json:"nickname,omitempty"`
+	Email            string `json:"email,omitempty"`
+	Password         string `json:"password,omitempty"`
+	IsAdmin          bool   `json:"-"`
 	Avatar           string `json:"avatar,omitempty"`
 	JoinedDate       string `json:"joined_date,omitempty"`
 	CountViewsFilms  int    `json:"count_views_films,omitempty"`

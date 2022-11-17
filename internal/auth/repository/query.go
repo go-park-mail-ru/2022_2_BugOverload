@@ -8,7 +8,7 @@ INSERT INTO users (email,
                    count_collections,
                    avatar)
 VALUES ($1, $2, $3, 2, $4)
-RETURNING user_id, email, nickname, avatar`
+RETURNING user_id`
 
 	createDefCollections = `
 INSERT INTO collections(name, description)
@@ -34,7 +34,8 @@ SELECT
 	user_id,
 	email,
 	nickname,
-	password
+	password,
+	avatar
 FROM users
 WHERE user_id = $1`
 

@@ -90,7 +90,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, cookieCSRF)
 
-	authResponse := models.NewUserAuthResponse(&userAuth)
+	response := models.NewUserAuthResponse(&userAuth)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, authResponse)
+	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

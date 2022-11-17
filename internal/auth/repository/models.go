@@ -23,8 +23,6 @@ func (u *UserSQL) Convert() models.User {
 		Nickname: u.nickname.String,
 		Email:    u.email.String,
 		Password: string(u.password),
-		Profile: models.Profile{
-			Avatar: u.avatar.String,
-		},
+		Avatar:   u.avatar.String,
 	}
 }

@@ -4,7 +4,7 @@ const (
 	getFilmByID = `
 SELECT name,
        original_name,
-       prod_year,
+       prod_date,
        slogan,
        description,
 	   short_description,
@@ -106,7 +106,7 @@ GROUP BY fp.fk_film_id, fp.fk_profession_id, fp.weight, p.name, fp.fk_person_id
 ORDER BY fp.fk_profession_id, fp.weight DESC`
 
 	getFilmRecommendation = `
-SELECT f.film_id, f.name, f.prod_year, f.end_year, f.poster_hor, f.short_description, f.rating
+SELECT f.film_id, f.name, f.prod_date, f.type, f.poster_hor, f.short_description, f.rating
 FROM films f
 WHERE f.poster_hor IS NOT NULL AND f.film_id BETWEEN 27 AND 29 or film_id = 15
 ORDER BY random()

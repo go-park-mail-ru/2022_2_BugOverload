@@ -34,7 +34,7 @@ type FilmFiller struct {
 	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name,omitempty"`
 	OriginalName     string `json:"original_name,omitempty"`
-	ProdYear         string `json:"prod_year,omitempty"`
+	ProdDate         string `json:"prod_date,omitempty"`
 	Slogan           string `json:"slogan,omitempty"`
 	ShortDescription string `json:"short_description,omitempty"`
 	Description      string `json:"description,omitempty"`
@@ -95,7 +95,7 @@ type FilmSQLFiller struct {
 }
 
 func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
-	date, err := time.Parse(innerPKG.OnlyDate, film.ProdYear)
+	date, err := time.Parse(innerPKG.DateFormat, film.ProdDate)
 	if err != nil {
 		date = time.Time{}
 	}

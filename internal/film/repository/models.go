@@ -39,12 +39,10 @@ func (r *ReviewSQL) Convert() models.Review {
 		CreateTime: r.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
 		CountLikes: int(r.CountLikes.Int32),
 		Author: models.User{
-			ID:       r.Author.ID,
-			Nickname: r.Author.Nickname,
-			Profile: models.Profile{
-				Avatar:       r.Author.Avatar.String,
-				CountReviews: int(r.Author.CountReviews.Int32),
-			},
+			ID:           r.Author.ID,
+			Nickname:     r.Author.Nickname,
+			Avatar:       r.Author.Avatar.String,
+			CountReviews: int(r.Author.CountReviews.Int32),
 		},
 	}
 }
@@ -120,13 +118,13 @@ func (f *FilmSQL) Convert() models.Film {
 	prodYear := ""
 
 	if !f.ProdYear.IsZero() {
-		prodYear = f.ProdYear.Format(innerPKG.OnlyDate)
+		prodYear = f.ProdYear.Format(innerPKG.DateFormat)
 	}
 
 	res := models.Film{
 		ID:              f.ID,
 		Name:            f.Name,
-		ProdYear:        prodYear,
+		ProdDate:        prodYear,
 		Description:     f.Description,
 		DurationMinutes: f.Duration,
 

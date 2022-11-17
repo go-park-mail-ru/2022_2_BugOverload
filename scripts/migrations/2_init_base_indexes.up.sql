@@ -1,7 +1,7 @@
 --  PostgreSQL автоматически создает индексы по PRIMARY KEY
 
 CREATE INDEX IF NOT EXISTS idx_film_name_prod_date_rating
-    ON films (rating, name, prod_year);
+    ON films (rating, name, prod_date);
 
 CREATE INDEX IF NOT EXISTS idx_users_email
     ON users (email);

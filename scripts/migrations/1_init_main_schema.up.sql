@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS films
     "film_id"                serial    NOT NULL PRIMARY KEY,
     "name"                   text      NOT NULL,
     CONSTRAINT "name_length" CHECK (LENGTH("name") <= 80),
-    "prod_year"              date      NOT NULL,
+    "prod_date"              date      NOT NULL,
     "description"            text      NOT NULL,
     "short_description"      text               DEFAULT NULL,
     CONSTRAINT "short_description_length" CHECK (LENGTH("short_description") <= 180),
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS films
     "age_limit"              age_limit_enum     DEFAULT NULL,
     "budget"                 integer            DEFAULT NULL,
     "box_office_dollars"     integer            DEFAULT NULL,
-    "currency_budget"        currency_enum      DEFAULT 'USD',
+    "currency_budget"        currency_enum      DEFAULT NULL,
     "poster_hor"             text               DEFAULT NULL,
     CONSTRAINT "poster_hor_length" CHECK (LENGTH("poster_hor") <= 32),
     "poster_ver"             text               DEFAULT NULL,
@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS films
     "updated_at"             timestamp NOT NULL DEFAULT NOW()
 );
 
+-- 1:1
 -- Generator completed
 CREATE TABLE IF NOT EXISTS serials
 (

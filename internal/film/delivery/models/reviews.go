@@ -91,8 +91,8 @@ func NewReviewsResponse(reviews *[]models.Review) []*ReviewResponse {
 			Author: ReviewAuthorResponse{
 				ID:           value.Author.ID,
 				Nickname:     security.Sanitize(value.Author.Nickname),
-				CountReviews: value.Author.Profile.CountReviews,
-				Avatar:       value.Author.Profile.Avatar,
+				CountReviews: value.Author.CountReviews,
+				Avatar:       value.Author.Avatar,
 			},
 		}
 	}

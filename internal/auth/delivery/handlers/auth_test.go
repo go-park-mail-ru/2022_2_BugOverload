@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,39 +12,41 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
-	authMock "go-park-mail-ru/2022_2_BugOverload/internal/auth/mocks"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
+	mockAuthService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service/mocks"
+	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	sessionMock "go-park-mail-ru/2022_2_BugOverload/internal/session/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	mockSessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service/mocks"
 )
 
-func TestAuthHandler_AuthSuccess(t *testing.T) {
+func TestAuthHandler_Action_OK(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := authMock.NewMockAuthService(ctrl)
-	sessService := sessionMock.NewMockSessionService(ctrl)
+	authService := mockAuthService.NewMockAuthService(ctrl)
+	sessService := mockSessionService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
-	authService.EXPECT().Auth(r.Context(), &models.User{
-		ID: 1,
-	}).Return(models.User{
+	resAuth := modelsGlobal.User{
 		Nickname: "StepByyyy",
 		Email:    "YasaPupkinEzji@top.world",
-		Profile: models.Profile{
-			Avatar: "avatar",
-		},
-	}, nil)
+		Avatar:   "avatar",
+	}
 
-	sessService.EXPECT().GetUserBySession(r.Context(), models.Session{
+	authService.EXPECT().Auth(r.Context(), &modelsGlobal.User{
+		ID: 1,
+	}).Return(resAuth, nil)
+
+	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{
 		ID: "c9QuR4KQR4RkXi_rbATHWITwQGDG9r801tHIA_AHkDt2JNiVWU8Tjg==",
-	}).Return(models.User{
+	}).Return(modelsGlobal.User{
 		ID: 1,
 	}, nil)
 
@@ -58,13 +62,35 @@ func TestAuthHandler_AuthSuccess(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	router := mux.NewRouter().PathPrefix("/api/v1").Subrouter()
+	router := mux.NewRouter()
 	authHandler := NewAuthHandler(authService, sessService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.True(t, len(w.Header().Get("X-Csrf-Token")) > 0)
+
+	// Check code
+	require.Equal(t, http.StatusOK, w.Code)
+
+	// Check Needed headers
+	require.True(t, len(w.Header().Get("X-Csrf-Token")) > 0)
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	expectedBody := models.NewUserAuthResponse(&resAuth)
+
+	var actualBody *models.UserAuthResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
@@ -73,19 +99,48 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := authMock.NewMockAuthService(ctrl)
-	sessService := sessionMock.NewMockSessionService(ctrl)
+	authService := mockAuthService.NewMockAuthService(ctrl)
+	sessService := mockSessionService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrNoCookie.Error(),
+	}
+
+	oldLogger := logrus.New()
+	logger := logrus.NewEntry(oldLogger)
+
+	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+
+	r = r.WithContext(ctx)
+
 	w := httptest.NewRecorder()
 
-	router := mux.NewRouter().PathPrefix("/api/v1").Subrouter()
+	router := mux.NewRouter()
 	authHandler := NewAuthHandler(authService, sessService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
-	assert.Equal(t, http.StatusNotFound, w.Code)
+
+	// Check code
+	require.Equal(t, http.StatusNotFound, w.Code)
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
@@ -94,10 +149,21 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := authMock.NewMockAuthService(ctrl)
-	sessService := sessionMock.NewMockSessionService(ctrl)
+	authService := mockAuthService.NewMockAuthService(ctrl)
+	sessService := mockSessionService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrNoCookie.Error(),
+	}
+
+	oldLogger := logrus.New()
+	logger := logrus.NewEntry(oldLogger)
+
+	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+
+	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
 		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
@@ -109,24 +175,53 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	router := mux.NewRouter().PathPrefix("/api/v1").Subrouter()
+	router := mux.NewRouter()
 	authHandler := NewAuthHandler(authService, sessService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
-	assert.Equal(t, http.StatusNotFound, w.Code)
+
+	// Check code
+	require.Equal(t, http.StatusNotFound, w.Code)
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
-func TestAuthHandler_AuthFallAuthService(t *testing.T) {
+func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := authMock.NewMockAuthService(ctrl)
-	sessService := sessionMock.NewMockSessionService(ctrl)
+	authService := mockAuthService.NewMockAuthService(ctrl)
+	sessService := mockSessionService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrWorkDatabase.Error(),
+	}
+
+	oldLogger := logrus.New()
+	logger := logrus.NewEntry(oldLogger)
+
+	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+
+	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
@@ -137,38 +232,63 @@ func TestAuthHandler_AuthFallAuthService(t *testing.T) {
 
 	r.AddCookie(cookie)
 
-	oldlogger := logrus.New()
-	logger := logrus.NewEntry(oldlogger)
-
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
-
-	sessService.EXPECT().GetUserBySession(context.WithValue(r.Context(), pkg.LoggerKey, logger), models.Session{ID: ""}).Return(models.User{
-		ID: 0,
+	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{}).Return(modelsGlobal.User{
+		ID: 1,
 	}, nil)
-	authService.EXPECT().Auth(context.WithValue(r.Context(), pkg.LoggerKey, logger), &models.User{
-		ID: 0,
-	}).Return(models.User{}, errors.ErrWorkDatabase)
+
+	authService.EXPECT().Auth(r.Context(), &modelsGlobal.User{
+		ID: 1,
+	}).Return(modelsGlobal.User{}, errors.ErrWorkDatabase)
 
 	w := httptest.NewRecorder()
 
-	router := mux.NewRouter().PathPrefix("/api/v1").Subrouter()
+	router := mux.NewRouter()
 	authHandler := NewAuthHandler(authService, sessService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r.WithContext(ctx))
-	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Check code
+	require.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
-func TestAuthHandler_AuthFallSessionService(t *testing.T) {
+func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := authMock.NewMockAuthService(ctrl)
-	sessService := sessionMock.NewMockSessionService(ctrl)
+	authService := mockAuthService.NewMockAuthService(ctrl)
+	sessService := mockSessionService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrSessionNotExist.Error(),
+	}
+
+	oldLogger := logrus.New()
+	logger := logrus.NewEntry(oldLogger)
+
+	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+
+	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
@@ -179,14 +299,34 @@ func TestAuthHandler_AuthFallSessionService(t *testing.T) {
 
 	r.AddCookie(cookie)
 
-	sessService.EXPECT().GetUserBySession(r.Context(), models.Session{ID: ""}).Return(models.User{}, errors.ErrSessionNotExist)
+	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{}).Return(modelsGlobal.User{
+		ID: 1,
+	}, errors.ErrSessionNotExist)
 
 	w := httptest.NewRecorder()
 
-	router := mux.NewRouter().PathPrefix("/api/v1").Subrouter()
+	router := mux.NewRouter()
 	authHandler := NewAuthHandler(authService, sessService)
 	authHandler.Configure(router, nil)
 
-	authHandler.Action(w, r)
-	assert.Equal(t, http.StatusNotFound, w.Code)
+	authHandler.Action(w, r.WithContext(ctx))
+
+	// Check code
+	require.Equal(t, http.StatusNotFound, w.Code)
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }

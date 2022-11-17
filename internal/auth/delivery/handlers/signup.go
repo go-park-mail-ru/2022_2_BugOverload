@@ -49,15 +49,15 @@ func (h *signupHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/signup [POST]
 func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
-	signupRequest := models.NewUserSignupRequest()
+	request := models.NewUserSignupRequest()
 
-	err := signupRequest.Bind(r)
+	err := request.Bind(r)
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
-	user, err := h.authService.Signup(r.Context(), signupRequest.GetUser())
+	user, err := h.authService.Signup(r.Context(), request.GetUser())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
@@ -96,7 +96,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, cookie)
 
-	signupResponse := models.NewUserSignUpResponse(&user)
+	response := models.NewUserSignUpResponse(&user)
 
-	httpwrapper.Response(r.Context(), w, http.StatusCreated, signupResponse)
+	httpwrapper.Response(r.Context(), w, http.StatusCreated, response)
 }

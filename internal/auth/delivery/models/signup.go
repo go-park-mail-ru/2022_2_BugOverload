@@ -52,6 +52,10 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 		return errors.ErrJSONUnexpectedEnd
 	}
 
+	if u.Password == "" || u.Email == "" || u.Nickname == "" {
+		return errors.ErrEmptyRequiredFields
+	}
+
 	return nil
 }
 
@@ -73,6 +77,6 @@ func NewUserSignUpResponse(user *models.User) *UserSignupResponse {
 	return &UserSignupResponse{
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
-		Avatar:   user.Profile.Avatar,
+		Avatar:   user.Avatar,
 	}
 }

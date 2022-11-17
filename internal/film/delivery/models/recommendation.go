@@ -2,6 +2,7 @@ package models
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type RecommendFilmResponse struct {
@@ -23,7 +24,7 @@ func NewRecommendFilmResponse(film *models.Film) *RecommendFilmResponse {
 		ID:               film.ID,
 		Name:             film.Name,
 		ShortDescription: film.ShortDescription,
-		ProdYear:         film.ProdYear,
+		ProdYear:         film.ProdDate[:len(innerPKG.OnlyDate)],
 		EndYear:          film.EndYear,
 		PosterHor:        film.PosterHor,
 		Genres:           film.Genres,

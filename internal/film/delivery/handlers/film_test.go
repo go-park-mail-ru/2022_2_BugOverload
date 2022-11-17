@@ -90,7 +90,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 		PosterHor:            "1",
 		ProdCountries:        []string{"США", "Великобритания"},
 		ProdCompanies:        []string{"HBO"},
-		ProdYear:             "2011",
+		ProdDate:             "2011",
 		Rating:               9.2,
 		Type:                 "serial",
 		Slogan:               "Победа или смерть",
@@ -127,7 +127,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestFilmHandler_Action_NotOKService(t *testing.T) {
@@ -183,7 +183,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
@@ -233,7 +233,7 @@ func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
 func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
@@ -283,5 +283,5 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, actualBody, expectedBody, "Wrong body")
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
