@@ -52,6 +52,10 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 		return errors.ErrJSONUnexpectedEnd
 	}
 
+	if u.Password == "" || u.Email == "" || u.Nickname == "" {
+		return errors.ErrEmptyRequiredFields
+	}
+
 	return nil
 }
 
