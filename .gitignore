@@ -17,3 +17,6 @@ logs/
 data
 pgdata
 pgadmin
+
+fullchain.pem
+privkey.pem
