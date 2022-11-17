@@ -51,6 +51,9 @@ var (
 	ErrGetUserRequest     = stdErrors.New("fatal getting user")
 	ErrWrongValidPassword = stdErrors.New("bad pass")
 
+	// User service
+	ErrFilmRatingNotExist = stdErrors.New("film rating not exist")
+
 	// Middleware
 	ErrBigRequest    = stdErrors.New("big request")
 	ErrConvertLength = stdErrors.New("getting content-length failed")
@@ -113,6 +116,9 @@ func NewErrClassifier() ErrClassifier {
 	// User delivery
 	res[ErrGetUserRequest] = http.StatusInternalServerError
 	res[ErrWrongValidPassword] = http.StatusForbidden
+
+	// User service
+	res[ErrFilmRatingNotExist] = http.StatusNotFound
 
 	// Middleware
 	res[ErrBigRequest] = http.StatusBadRequest

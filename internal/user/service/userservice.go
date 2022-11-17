@@ -84,12 +84,26 @@ func (u *userService) ChangeUserProfileSettings(ctx context.Context, user *model
 // FilmRate is the service that accesses the interface UserService
 func (u *userService) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
 	if !(0 <= params.Score && params.Score <= 10) {
-		return models.Film{}, stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRate")
+		return models.Film{}, stdErrors.Wrap(errors.ErrBadRequestParams, "FilmRateSet")
 	}
 
-	film, err := u.userRepo.FilmRate(ctx, user, params)
+	var film models.Film
+
+	exist, err := u.userRepo.FilmRatingExist(ctx, user, params.FilmID)
 	if err != nil {
-		return models.Film{}, stdErrors.Wrap(err, "FilmRate")
+		return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+	}
+
+	if exist {
+		film, err = u.userRepo.FilmRateUpdate(ctx, user, params)
+		if err != nil {
+			return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+		}
+	} else {
+		film, err = u.userRepo.FilmRateSet(ctx, user, params)
+		if err != nil {
+			return models.Film{}, stdErrors.Wrap(err, "FilmRateSet")
+		}
 	}
 
 	return film, nil
@@ -97,6 +111,14 @@ func (u *userService) FilmRate(ctx context.Context, user *models.User, params *i
 
 // FilmRateDrop is the service that accesses the interface UserService
 func (u *userService) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error) {
+	exist, err := u.userRepo.FilmRatingExist(ctx, user, params.FilmID)
+	if err != nil {
+		return models.Film{}, stdErrors.Wrap(err, "FilmRateDrop")
+	}
+	if !exist {
+		return models.Film{}, stdErrors.Wrap(errors.ErrFilmRatingNotExist, "FilmRateDrop")
+	}
+
 	film, err := u.userRepo.FilmRateDrop(ctx, user, params)
 	if err != nil {
 		return models.Film{}, stdErrors.Wrap(err, "FilmRateDrop")

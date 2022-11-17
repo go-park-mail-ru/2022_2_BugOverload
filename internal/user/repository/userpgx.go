@@ -25,7 +25,9 @@ type UserRepository interface {
 	ChangeUserProfileNickname(ctx context.Context, user *models.User) error
 
 	// Film
-	FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
+	FilmRatingExist(ctx context.Context, user *models.User, filmID int) (bool, error)
+	FilmRateUpdate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
+	FilmRateSet(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
 	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error)
 
 	// Review
@@ -142,7 +144,64 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 	return nil
 }
 
-func (u *userPostgres) FilmRate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+func (u *userPostgres) FilmRatingExist(ctx context.Context, user *models.User, filmID int) (bool, error) {
+	response := false
+
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		rowExist := tx.QueryRowContext(ctx, checkRateExist, user.ID, filmID)
+		if rowExist.Err() != nil {
+			return rowExist.Err()
+		}
+
+		err := rowExist.Scan(&response)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+			checkRateExist, user.ID, filmID, errMain)
+	}
+
+	return response, nil
+}
+
+func (u *userPostgres) FilmRateUpdate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+	resultFilm := filmRepo.NewFilmSQL()
+
+	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, updateRateFilm, user.ID, params.FilmID, params.Score)
+		if err != nil {
+			return err
+		}
+
+		rowFilm := tx.QueryRowContext(ctx, getFilmRatingsCount, params.FilmID)
+		if rowFilm.Err() != nil {
+			return err
+		}
+
+		err = rowFilm.Scan(&resultFilm.CountRatings)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s], values - [%d, %d, %d]. Special Error [%s]",
+			updateRateFilm, user.ID, params.FilmID, params.Score, errMain)
+	}
+
+	return resultFilm.Convert(), nil
+}
+
+func (u *userPostgres) FilmRateSet(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
 	resultFilm := filmRepo.NewFilmSQL()
 
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
@@ -182,7 +241,7 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 	resultFilm := filmRepo.NewFilmSQL()
 
 	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, dropRateFilm, user.ID, params.FilmID)
+		_, err := tx.ExecContext(ctx, deleteRateFilm, user.ID, params.FilmID)
 		if err != nil {
 			return err
 		}
