@@ -61,6 +61,9 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrGetUserRequest] = infoLogLevel
 	res[ErrWrongValidPassword] = infoLogLevel
 
+	// User service
+	res[ErrFilmRatingNotExist] = errLogLevel
+
 	// Middleware
 	res[ErrBigRequest] = infoLogLevel
 	res[ErrConvertLength] = infoLogLevel

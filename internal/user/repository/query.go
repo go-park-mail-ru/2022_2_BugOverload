@@ -34,12 +34,22 @@ WHERE pc.fk_user_id = $1`
 
 	updateUserSettingsNickname = `UPDATE users SET nickname = $1 WHERE user_id = $2`
 
+	checkRateExist = `SELECT EXISTS(SELECT 1 FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2)`
+
+	updateRateFilm = `
+UPDATE profile_ratings
+SET score = $3, create_date = now()
+WHERE fk_user_id = $1 AND fk_film_id = $2`
+
+	getFilmRatingsCount = `
+SELECT count_ratings FROM films
+WHERE film_id = $1`
+
 	setRateFilm = `
 INSERT INTO profile_ratings(fk_user_id, fk_film_id, score)
-VALUES ($1, $2, $3)
-ON CONFLICT (fk_user_id, fk_film_id) DO UPDATE SET score = $3`
+VALUES ($1, $2, $3)`
 
-	dropRateFilm = `DELETE FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
+	deleteRateFilm = `DELETE FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
 
 	insertNewReview = `INSERT INTO reviews (name, type, body) VALUES ($1, $2, $3) RETURNING review_id`
 
