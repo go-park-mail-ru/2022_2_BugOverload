@@ -49,7 +49,7 @@ FROM reviews r
          JOIN profile_reviews pr on r.review_id = pr.fk_review_id
          JOIN users u on pr.fk_user_id = u.user_id
 WHERE pr.fk_film_id = $1
-ORDER BY r.count_likes IS NULL, r.count_likes DESC
+ORDER BY r.create_time DESC
 LIMIT $2 OFFSET $3`
 
 	getFilmGenres = `
