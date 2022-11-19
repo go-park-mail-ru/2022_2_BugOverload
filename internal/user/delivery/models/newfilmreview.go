@@ -83,3 +83,13 @@ func (f *NewFilmReviewRequest) GetParams() *innerPKG.NewFilmReviewParams {
 		FilmID: f.FilmID,
 	}
 }
+
+type FilmReviewResponse struct {
+	UserID int `json:"user_id,omitempty" example:"13"`
+}
+
+func NewFilmReviewResponse(user *models.User) *FilmReviewResponse {
+	return &FilmReviewResponse{
+		UserID: user.ID,
+	}
+}
