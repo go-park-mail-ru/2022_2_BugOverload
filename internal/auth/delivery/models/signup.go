@@ -76,7 +76,6 @@ type UserSignupResponse struct {
 
 func NewUserSignUpResponse(user *models.User) *UserSignupResponse {
 	return &UserSignupResponse{
-		ID:       user.ID,
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Avatar,

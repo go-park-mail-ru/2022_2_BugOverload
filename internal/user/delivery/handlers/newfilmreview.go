@@ -39,7 +39,7 @@ func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middlewar
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param score body models.NewFilmReviewRequest true "Request body for rate film"
-// @Success 201 "successfully added new review"
+// @Success 201 {object} models.FilmReviewResponse "successfully added new review"
 // @Failure 400 "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"
 // @Failure 404 {object} httpmodels.ErrResponseAuthNoSuchCookie "no such cookie"
@@ -67,5 +67,7 @@ func (h *newFilmReviewHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpwrapper.NoBody(w, http.StatusCreated)
+	response := models.NewFilmReviewResponse(&user)
+
+	httpwrapper.Response(r.Context(), w, http.StatusCreated, response)
 }
