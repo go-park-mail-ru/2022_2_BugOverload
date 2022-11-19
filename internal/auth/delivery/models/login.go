@@ -74,7 +74,6 @@ type UserLoginResponse struct {
 
 func NewUserLoginResponse(user *models.User) *UserLoginResponse {
 	return &UserLoginResponse{
-		ID:       user.ID,
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Avatar,

@@ -14,7 +14,6 @@ type UserAuthResponse struct {
 
 func NewUserAuthResponse(user *models.User) *UserAuthResponse {
 	return &UserAuthResponse{
-		ID:       user.ID,
 		Email:    user.Email,
 		Nickname: security.Sanitize(user.Nickname),
 		Avatar:   user.Avatar,
