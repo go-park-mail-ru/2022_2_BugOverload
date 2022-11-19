@@ -68,7 +68,6 @@ func (u *UserSignupRequest) GetUser() *models.User {
 }
 
 type UserSignupResponse struct {
-	ID       int    `json:"id,omitempty" example:"13"`
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`
 	Avatar   string `json:"avatar,omitempty" example:"{{ключ}}"`
