@@ -37,12 +37,13 @@ func (h *getStdCollectionHandler) Configure(r *mux.Router, mw *middleware.Middle
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Films by genre or tag by DESK rating or DESK date
-// @Description Films by tag "популярное" or "сейчас в кино". Key, count_films, delimiter - required.
-// @tags collection
+// @Summary Getter std collection (tag, genre)
+// @Description Films by genre or tag by DESC rating or DESC date. prod_company, prod_country also in the future.
+// @Description All fields required
+// @tags collection, completed
 // @Produce json
-// @Param target      query string true "genre, tag, prod_company, prod_country"
-// @Param key         query string true "for genre - comedy, tag, prod_company, prod_country"
+// @Param target      query string true "genre, tag"
+// @Param key         query string true "for genre - comedy, tag - popular"
 // @Param sort_param  query string true "rating, date"
 // @Param count_films query int    true "count films"
 // @Param delimiter   query string true "last value while in is rating last returned film for rating OR offset for date"
