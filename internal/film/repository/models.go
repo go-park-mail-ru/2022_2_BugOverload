@@ -230,11 +230,13 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	setIDRes := strings.Join(setID, ",")
 
-	rowsFilmsGenres, err := conn.QueryContext(ctx, getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd)
+	query := getGenresFilmBatchBegin + setIDRes + getGenresFilmBatchEnd
+
+	rowsFilmsGenres, err := conn.QueryContext(ctx, query)
 	if err != nil {
 		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
-			getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
+			query, err)
 	}
 	defer rowsFilmsGenres.Close()
 
@@ -246,10 +248,66 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 		if err != nil {
 			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
-				getGenresFilmBatchBegin+setIDRes+getGenresFilmBatchEnd, err)
+				query, err)
 		}
 
-		target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)
+		if len(target[mapFilms[filmID]].Genres) < innerPKG.MaxCountAttrInCollection {
+			target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)
+		}
+	}
+
+	return target, nil
+}
+
+const (
+	getProdCountriesFilmBatchBegin = `
+SELECT f.film_id,
+       countries.name
+FROM countries
+         JOIN film_countries fc on countries.country_id = fc.fk_country_id
+         JOIN films f ON fc.fk_film_id = f.film_id
+WHERE f.film_id IN (`
+
+	getProdCountriesBatchEnd = `) ORDER BY f.film_id, fc.weight DESC`
+)
+
+func GetProdCountiesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+	setID := make([]string, len(target))
+
+	mapFilms := make(map[int]int, len(target))
+
+	for idx := range target {
+		setID[idx] = strconv.Itoa(target[idx].ID)
+
+		mapFilms[target[idx].ID] = idx
+	}
+
+	setIDRes := strings.Join(setID, ",")
+
+	query := getProdCountriesFilmBatchBegin + setIDRes + getProdCountriesBatchEnd
+
+	rowsFilmsGenres, err := conn.QueryContext(ctx, query)
+	if err != nil {
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			query, err)
+	}
+	defer rowsFilmsGenres.Close()
+
+	for rowsFilmsGenres.Next() {
+		var filmID int
+		var country sql.NullString
+
+		err = rowsFilmsGenres.Scan(&filmID, &country)
+		if err != nil {
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				query, err)
+		}
+
+		if len(target[mapFilms[filmID]].ProdCountries) < innerPKG.MaxCountAttrInCollection {
+			target[mapFilms[filmID]].ProdCountries = append(target[mapFilms[filmID]].ProdCountries, country.String)
+		}
 	}
 
 	return target, nil

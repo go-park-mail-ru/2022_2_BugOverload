@@ -79,8 +79,7 @@ const (
 	CollectionSortParamDate       = "date"
 	CollectionSortParamFilmRating = "rating"
 
-	CollectionSortDirDown = "down"
-	CollectionSortDirUp   = "up"
+	MaxCountAttrInCollection = 2
 )
 
 // Global
