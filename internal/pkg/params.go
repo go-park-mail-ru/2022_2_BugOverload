@@ -6,9 +6,11 @@ type GetPersonParams struct {
 	CountImages int
 }
 
-// GetCollectionTagParams in struct for tagCollectionHandler
-type GetCollectionTagParams struct {
-	Tag        string
+// GetCollectionParams in struct for tagCollectionHandler
+type GetCollectionParams struct {
+	Target     string
+	Key        string
+	SortParam  string
 	CountFilms int
 	Delimiter  string
 }

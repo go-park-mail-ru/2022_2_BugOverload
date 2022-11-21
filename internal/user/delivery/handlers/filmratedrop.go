@@ -35,7 +35,7 @@ func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware
 // delivery of the data to the service at the business logic level.
 // @Summary Drop user rate on film
 // @Description  Drop user rate on film by filmID
-// @tags user, completed
+// @tags user
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Success 200 {object} models.FilmRateDropResponse "successfully drop rate"

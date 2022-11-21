@@ -57,34 +57,6 @@ const (
 	TimeFormat = "15:04:05"
 )
 
-// DB
-const (
-	// PersonProfessions
-	Actor    = 1
-	Artist   = 7
-	Director = 2
-	Writer   = 3
-	Producer = 4
-	Operator = 5
-	Montage  = 8
-	Composer = 6
-
-	TagFromPopular  = "popular"
-	TagInPopular    = "популярное"
-	TagFromInCinema = "in_cinema"
-	TagInInCinema   = "сейчас в кино"
-
-	DefTypeFilm   = "film"
-	DefTypeSerial = "serial"
-
-	TypeReviewPositive = "positive"
-	TypeReviewNegative = "negative"
-	TypeReviewNeutral  = "neutral"
-
-	DefGender = "male"
-	OnlyDate  = "2006"
-)
-
 // TxDefaultOptions for Postgres
 var TxDefaultOptions = &sql.TxOptions{
 	Isolation: sql.LevelDefault,
@@ -96,6 +68,20 @@ var TxInsertOptions = &sql.TxOptions{
 	Isolation: sql.LevelDefault,
 	ReadOnly:  false,
 }
+
+// Service
+const (
+	CollectionTargetTag         = "tag"
+	CollectionTargetGenre       = "genre"
+	CollectionTargetProdCompany = "prod_company"
+	CollectionTargetProdCountry = "prod_country"
+
+	CollectionSortParamDate       = "date"
+	CollectionSortParamFilmRating = "rating"
+
+	CollectionSortDirDown = "down"
+	CollectionSortDirUp   = "up"
+)
 
 // Global
 const (

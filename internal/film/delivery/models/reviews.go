@@ -33,22 +33,32 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 	rr.FilmID, _ = strconv.Atoi(vars["id"])
 
-	rr.CountReviews, err = strconv.Atoi(r.FormValue("count_reviews"))
+	countReviews := r.FormValue("count_reviews")
+	if countReviews == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	rr.CountReviews, err = strconv.Atoi(countReviews)
 	if err != nil {
 		return errors.ErrConvertQueryType
 	}
 
 	if rr.CountReviews <= 0 {
-		return errors.ErrBadQueryParams
+		return errors.ErrBadRequestParams
 	}
 
-	rr.Offset, err = strconv.Atoi(r.FormValue("offset"))
+	offset := r.FormValue("offset")
+	if offset == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	rr.Offset, err = strconv.Atoi(offset)
 	if err != nil {
 		return errors.ErrConvertQueryType
 	}
 
 	if rr.Offset < 0 {
-		return errors.ErrBadQueryParams
+		return errors.ErrBadRequestParams
 	}
 
 	return nil

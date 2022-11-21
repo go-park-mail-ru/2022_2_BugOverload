@@ -16,7 +16,8 @@ import (
 
 // CollectionRepository provides the versatility of collection repositories.
 type CollectionRepository interface {
-	GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionTagParams) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error)
+	GetCollectionByGenre(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -33,31 +34,108 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 }
 
 // GetCollectionByTag it gives away movies by tag from the repository.
-func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionTagParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
-	delimiter, err := strconv.ParseFloat(params.Delimiter, 32)
-	if err != nil {
-		return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
-			"Get Delimeter Err: params input:[%s]",
-			params.Delimiter)
+	var err error
+	var query string
+	var values []interface{}
+
+	switch params.SortParam {
+	case innerPKG.CollectionSortParamDate:
+		query = getFilmsByTagDate
+
+		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
+	case innerPKG.CollectionSortParamFilmRating:
+		query = getFilmsByTagRating
+
+		var delimiter float64
+
+		delimiter, err = strconv.ParseFloat(params.Delimiter, 32)
+		if err != nil {
+			return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
+				"Get Delimeter Err: params input:[%s]",
+				params.Delimiter)
+		}
+
+		values = []interface{}{params.Key, delimiter, params.CountFilms}
 	}
 
 	//  Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, getFilmsByTag, params.Tag, delimiter, params.CountFilms)
+		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
-				"Film main info Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
-				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
 		}
 		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%s, %f, %d]. Special Error [%s]",
-				getFilmsByTag, params.Tag, delimiter, params.CountFilms, err)
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
 		}
 
-		response.Name = params.Tag
+		response.Name = params.Key
+
+		//  Genres
+		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return models.Collection{}, errMain
+	}
+
+	return response.Convert(), nil
+}
+
+// GetCollectionByGenre it gives away movies by genre from the repository.
+func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error) {
+	response := NewCollectionSQL()
+
+	var err error
+	var query string
+	var values []interface{}
+
+	switch params.SortParam {
+	case innerPKG.CollectionSortParamDate:
+		query = getFilmsByGenreDate
+
+		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
+	case innerPKG.CollectionSortParamFilmRating:
+		query = getFilmsByGenreRating
+
+		var delimiter float64
+
+		delimiter, err = strconv.ParseFloat(params.Delimiter, 32)
+		if err != nil {
+			return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
+				"Get Delimeter Err: params input:[%s]",
+				params.Delimiter)
+		}
+
+		values = []interface{}{params.Key, delimiter, params.CountFilms}
+	}
+
+	//  Films - Main
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
+		if stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
+		}
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
+		}
+
+		response.Name = params.Key
 
 		//  Genres
 		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)

@@ -32,7 +32,7 @@ func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.Middleware)
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user stat
 // @Description Getting user public info.
-// @tags user, completed
+// @tags user
 // @Produce json
 // @Param   id        path   int true "user id"
 // @Success 200 {object} models.UserProfileResponse "successfully getting"

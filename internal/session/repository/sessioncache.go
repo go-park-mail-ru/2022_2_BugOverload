@@ -44,7 +44,7 @@ func (cs *sessionCache) CheckExist(sessionID string) bool {
 // GetUserBySession is returns all user attributes by name session.
 func (cs *sessionCache) GetUserBySession(ctx context.Context, session models.Session) (models.User, error) {
 	if !cs.CheckExist(session.ID) {
-		return models.User{}, errors.ErrSessionNotExist
+		return models.User{}, errors.ErrSessionNotFound
 	}
 
 	cs.mu.RLock()
@@ -77,7 +77,7 @@ func (cs *sessionCache) CreateSession(ctx context.Context, user *models.User) (m
 // the cookie with the new date, and the repository deletes the cookie itself and the connection with the user.
 func (cs *sessionCache) DeleteSession(ctx context.Context, session models.Session) (models.Session, error) {
 	if !cs.CheckExist(session.ID) {
-		return models.Session{}, errors.ErrSessionNotExist
+		return models.Session{}, errors.ErrSessionNotFound
 	}
 
 	cs.mu.Lock()

@@ -38,7 +38,7 @@ func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Summary Change image
 // @Description Rule for create type object NameEssence_NameAttribute. Examples: "film_poster_hor", "user_avatar".
 // @Description Object, key - required. For user_avatar key not required.
-// @tags image, completed
+// @tags image
 // @produce json
 // @Param   object    query  string  true  "type object"
 // @Param   key       query  string  false  "key image"

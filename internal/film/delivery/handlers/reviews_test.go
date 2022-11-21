@@ -181,7 +181,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
-func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
@@ -189,14 +189,14 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *te
 
 	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrConvertQueryType.Error(),
+		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
 	w := httptest.NewRecorder()
@@ -227,7 +227,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Params_CountReviews(t *te
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
-func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
@@ -235,7 +235,53 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset(t *testing.T) {
 
 	filmService := mockFilmService.NewMockFilmsService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=asd", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
+
+	reviewsHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
+func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
@@ -288,7 +334,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrBadQueryParams.Error(),
+		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
 	w := httptest.NewRecorder()
@@ -317,10 +363,55 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
-	r.Header.Set("Content-Type", "")
 }
 
-func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T) {
+func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=23&offset=asd", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrConvertQueryType.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
+
+	reviewsHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
+func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
@@ -335,7 +426,53 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	r.Header.Set("Content-Type", "")
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrBadQueryParams.Error(),
+		ErrMassage: errors.ErrBadRequestParams.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	reviewsHandler := NewReviewsHandler(filmService)
+	reviewsHandler.Configure(router, nil)
+
+	reviewsHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
+func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	filmService := mockFilmService.NewMockFilmsService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+	r.Header.Set("Content-Type", "")
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
 	w := httptest.NewRecorder()

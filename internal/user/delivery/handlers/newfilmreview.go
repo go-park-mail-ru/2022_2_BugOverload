@@ -35,7 +35,7 @@ func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middlewar
 // delivery of the data to the service at the business logic level.
 // @Summary New film review
 // @Description  New film review with body, name, type. Body, name, type required.
-// @tags user, completed
+// @tags user
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param score body models.NewFilmReviewRequest true "Request body for rate film"

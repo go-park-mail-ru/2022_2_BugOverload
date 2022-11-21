@@ -280,7 +280,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrSessionNotExist.Error(),
+		ErrMassage: errors.ErrSessionNotFound.Error(),
 	}
 
 	oldLogger := logrus.New()
@@ -301,7 +301,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 
 	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{}).Return(modelsGlobal.User{
 		ID: 1,
-	}, errors.ErrSessionNotExist)
+	}, errors.ErrSessionNotFound)
 
 	w := httptest.NewRecorder()
 
