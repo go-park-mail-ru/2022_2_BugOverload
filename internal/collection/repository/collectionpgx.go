@@ -154,6 +154,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 	return response.Convert(), nil
 }
 
+// GetPremiersCollection it gives away only movies with prod_date > current from the repository.
 func (c *collectionPostgres) GetPremiersCollection(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 

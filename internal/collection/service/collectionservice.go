@@ -89,6 +89,7 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *pkg.Ge
 	return collection, nil
 }
 
+// GetPremiersCollection is the service that accesses the interface CollectionRepository
 func (c collectionService) GetPremiersCollection(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
 	collection, err := c.collectionRepo.GetPremiersCollection(ctx, params)
 	if err != nil {
