@@ -36,7 +36,7 @@ func (h *getImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Description Rule for create type object NameEssence_NameAttribute. Examples for object: "film_poster_hor", "user_avatar", "film_image",
 // @Description "default", "user_avatar", "person_avatar", "person_image", "collection_poster". Rule for film image: key = filmID/filmImageKey. Example 1/2.
 // @Description For login key - login, for signup key - signup, both with type default. Object, key - required.
-// @tags image
+// @tags image, completed
 // @produce json
 // @produce image/webp
 // @Param   object    query  string  true  "type object"
