@@ -66,14 +66,15 @@ var (
 	ErrCsrfTokenInvalid       = stdErrors.New("invalid csrf token")
 
 	// Not Found
-	ErrGenreNotFount   = stdErrors.New("genre not fount")
-	ErrTagNotFount     = stdErrors.New("tag not fount")
-	ErrFilmNotFount    = stdErrors.New("film not fount")
-	ErrPersonNotFount  = stdErrors.New("person not fount")
-	ErrImageNotFound   = stdErrors.New("image not found")
-	ErrSessionNotFound = stdErrors.New("session not found")
-	ErrUserNotFound    = stdErrors.New("user not found")
-	ErrFilmsNotFound   = stdErrors.New("films not found")
+	ErrGenreNotFount       = stdErrors.New("genre not fount")
+	ErrTagNotFount         = stdErrors.New("tag not fount")
+	ErrFilmNotFount        = stdErrors.New("film not fount")
+	ErrPersonNotFount      = stdErrors.New("person not fount")
+	ErrImageNotFound       = stdErrors.New("image not found")
+	ErrSessionNotFound     = stdErrors.New("session not found")
+	ErrUserNotFound        = stdErrors.New("user not found")
+	ErrFilmsNotFound       = stdErrors.New("films not found")
+	ErrCollectionsNotFound = stdErrors.New("collections not found")
 )
 
 type ErrClassifier struct {
@@ -151,6 +152,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrUserNotFound] = http.StatusNotFound
 	res[ErrImageNotFound] = http.StatusNotFound
 	res[ErrFilmsNotFound] = http.StatusNotFound
+	res[ErrCollectionsNotFound] = http.StatusNotFound
 
 	return ErrClassifier{
 		table: res,

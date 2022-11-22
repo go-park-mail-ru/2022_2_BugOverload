@@ -60,7 +60,8 @@ func (p *GetUserCollectionRequest) GetParams() *innerPKG.GetUserCollectionsParam
 }
 
 type ShortFilmCollectionResponse struct {
-	Name       string `json:"name,omitempty" example:"Популярное"`
+	ID         int    `json:"id,omitempty" example:"12"`
+	Name       string `json:"name,omitempty" example:"Избранное"`
 	Poster     string `json:"poster,omitempty" example:"42"`
 	CountLikes int    `json:"count_likes,omitempty" example:"1023"`
 	CountFilms int    `json:"count_films,omitempty"  example:"10"`
@@ -71,6 +72,7 @@ func NewShortFilmCollectionResponse(collections []models.Collection) []ShortFilm
 
 	for idx := range collections {
 		res[idx] = ShortFilmCollectionResponse{
+			ID:         collections[idx].ID,
 			Name:       collections[idx].Name,
 			Poster:     collections[idx].Poster,
 			CountLikes: collections[idx].CountLikes,

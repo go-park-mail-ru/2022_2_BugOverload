@@ -122,7 +122,7 @@ func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *model
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowsCollections, err := conn.QueryContext(ctx, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
+			return stdErrors.WithMessagef(errors.ErrCollectionsNotFound,
 				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
 				query, values, err)
 		}
