@@ -37,7 +37,7 @@ func (m *MockCollectionService) EXPECT() *MockCollectionServiceMockRecorder {
 }
 
 // GetCollectionByGenre mocks base method.
-func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCollectionByGenre", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -52,7 +52,7 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByGenre(ctx, params in
 }
 
 // GetCollectionByTag mocks base method.
-func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCollectionByTag", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -67,7 +67,7 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params inte
 }
 
 // GetStdCollection mocks base method.
-func (m *MockCollectionService) GetStdCollection(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetStdCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetStdCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)

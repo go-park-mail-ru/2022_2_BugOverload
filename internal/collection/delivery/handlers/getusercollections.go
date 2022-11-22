@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -25,11 +28,11 @@ func NewGetUserCollectionsHandler(uc service.CollectionService) handler.Handler 
 }
 
 func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/user/collections", h.Action).
+	r.HandleFunc("/api/v1/user/collections", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodGet).
 		Queries(
 			"sort_param", "{sort_param}",
-			"count_collections", "{count_films}",
+			"count_collections", "{count_collections}",
 			"delimiter", "{delimiter}")
 }
 
@@ -40,11 +43,9 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Midd
 // @Description All fields required
 // @tags collection, completed
 // @Produce json
-// @Param target      query string true "genre, tag"
-// @Param key         query string true "for genre - comedy, tag - popular"
-// @Param sort_param  query string true "rating, date"
-// @Param count_films query int    true "count films"
-// @Param delimiter   query string true "last value while in is rating last returned film for rating OR offset for date"
+// @Param sort_param        query string true "create_time, update_time"
+// @Param count_collections query int    true "count collections"
+// @Param delimiter         query string true "last value while in is date last returned collection for create_time AND update_time"
 // @Success 200 {object} models.GetStdCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"
@@ -52,7 +53,13 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Midd
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collection [GET]
 func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewGetStdCollectionRequest()
+	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	if !ok {
+		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
+		return
+	}
+
+	request := models.NewGetUserCollectionRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -60,13 +67,13 @@ func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	collection, err := h.collectionService.GetStdCollection(r.Context(), request.GetParams())
+	collection, err := h.collectionService.GetUserCollections(r.Context(), &user, request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
-	response := models.NewStdCollectionResponse(&collection)
+	response := models.NewShortFilmCollectionResponse(collection)
 
 	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }

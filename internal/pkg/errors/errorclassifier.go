@@ -19,9 +19,10 @@ var (
 	ErrBadRequestParamsEmptyRequiredFields = stdErrors.New("bad params, empty required field")
 
 	// Common repository
-	ErrNotFoundInDB     = stdErrors.New("not found")
-	ErrWorkDatabase     = stdErrors.New("error sql")
-	ErrGetParamsConvert = stdErrors.New("err get sql params")
+	ErrNotFoundInDB             = stdErrors.New("not found")
+	ErrWorkDatabase             = stdErrors.New("error sql")
+	ErrGetParamsConvert         = stdErrors.New("err get sql params")
+	ErrUnsupportedSortParameter = stdErrors.New("unsupported sort parameter")
 
 	// Collection service
 	ErrNotFindSuchTarget = stdErrors.New("not found such target")
@@ -97,6 +98,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrNotFoundInDB] = http.StatusNotFound
 	res[ErrWorkDatabase] = http.StatusInternalServerError
 	res[ErrGetParamsConvert] = http.StatusInternalServerError
+	res[ErrUnsupportedSortParameter] = http.StatusBadRequest
 
 	// Collection service
 	res[ErrNotFindSuchTarget] = http.StatusNotFound

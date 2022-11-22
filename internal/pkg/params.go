@@ -6,13 +6,20 @@ type GetPersonParams struct {
 	CountImages int
 }
 
-// GetCollectionParams in struct for tagCollectionHandler
-type GetCollectionParams struct {
+// GetStdCollectionParams in struct for getStdCollectionHandler
+type GetStdCollectionParams struct {
 	Target     string
 	Key        string
 	SortParam  string
 	CountFilms int
 	Delimiter  string
+}
+
+// GetUserCollectionsParams in struct for getUserCollectionHandler
+type GetUserCollectionsParams struct {
+	SortParam        string
+	CountCollections int
+	Delimiter        string
 }
 
 // GetReviewsFilmParams in struct for reviewHandler

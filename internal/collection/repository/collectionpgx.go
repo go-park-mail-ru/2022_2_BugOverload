@@ -16,8 +16,9 @@ import (
 
 // CollectionRepository provides the versatility of collection repositories.
 type CollectionRepository interface {
-	GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error)
-	GetCollectionByGenre(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
+	GetCollectionByGenre(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
+	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -34,7 +35,7 @@ func NewCollectionCache(database *sqltools.Database) CollectionRepository {
 }
 
 // GetCollectionByTag it gives away movies by tag from the repository.
-func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -59,6 +60,8 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 		}
 
 		values = []interface{}{params.Key, delimiter, params.CountFilms}
+	default:
+		return models.Collection{}, errors.ErrUnsupportedSortParameter
 	}
 
 	//  Films - Main
@@ -93,8 +96,54 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 	return response.Convert(), nil
 }
 
+// GetUserCollections it gives away movies by genre from the repository.
+func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error) {
+	response := NewCollectionSQL()
+
+	var err error
+	var query string
+
+	if params.Delimiter == "now" {
+		params.Delimiter = "NOW()"
+	}
+
+	values := []interface{}{user.ID, params.Delimiter, params.CountCollections}
+
+	switch params.SortParam {
+	case innerPKG.UserCollectionSortParamDate:
+		query = getFilmsByGenreDate
+	case innerPKG.UserCollectionSortParamFilmRating:
+		query = getFilmsByGenreRating
+	default:
+		return []models.Collection{}, errors.ErrUnsupportedSortParameter
+	}
+
+	//  Films - Main
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
+		if stdErrors.Is(err, sql.ErrNoRows) {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
+		}
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return []models.Collection{}, errMain
+	}
+
+	return response.Convert(), nil
+}
+
 // GetCollectionByGenre it gives away movies by genre from the repository.
-func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *innerPKG.GetCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -119,6 +168,9 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 		}
 
 		values = []interface{}{params.Key, delimiter, params.CountFilms}
+
+	default:
+		return models.Collection{}, errors.ErrUnsupportedSortParameter
 	}
 
 	//  Films - Main

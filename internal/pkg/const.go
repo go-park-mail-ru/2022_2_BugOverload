@@ -79,6 +79,9 @@ const (
 	CollectionSortParamDate       = "date"
 	CollectionSortParamFilmRating = "rating"
 
+	UserCollectionSortParamDate       = "create_time"
+	UserCollectionSortParamFilmRating = "update_time"
+
 	MaxCountAttrInCollection = 2
 )
 

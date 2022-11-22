@@ -15,9 +15,10 @@ import (
 
 // CollectionService provides universal service for work with collection.
 type CollectionService interface {
-	GetStdCollection(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error)
-	GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error)
-	GetCollectionByGenre(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error)
+	GetStdCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
+	GetCollectionByGenre(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
+	GetUserCollections(ctx context.Context, user *models.User, params *pkg.GetUserCollectionsParams) ([]models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -34,7 +35,7 @@ func NewCollectionService(cr repository.CollectionRepository) CollectionService 
 }
 
 // GetCollectionByTag is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	var ok bool
 
 	params.Key, ok = pkg.TagsMap[params.Key]
@@ -51,7 +52,7 @@ func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.
 }
 
 // GetCollectionByGenre is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	var ok bool
 
 	params.Key, ok = pkg.GenresMap[params.Key]
@@ -68,7 +69,7 @@ func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *pk
 }
 
 // GetStdCollection is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetStdCollection(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+func (c *collectionService) GetStdCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	var collection models.Collection
 	var err error
 
@@ -83,6 +84,16 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *pkg.Ge
 
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetStdCollection")
+	}
+
+	return collection, nil
+}
+
+// GetUserCollections is the service that accesses the interface CollectionRepository
+func (c *collectionService) GetUserCollections(ctx context.Context, user *models.User, params *pkg.GetUserCollectionsParams) ([]models.Collection, error) {
+	collection, err := c.collectionRepo.GetUserCollections(ctx, user, params)
+	if err != nil {
+		return []models.Collection{}, stdErrors.Wrap(err, "GetUserCollections")
 	}
 
 	return collection, nil
