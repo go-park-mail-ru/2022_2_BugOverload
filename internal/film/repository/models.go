@@ -313,6 +313,72 @@ func GetProdCountiesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn)
 	return target, nil
 }
 
+const (
+	getDirectorsFilmBatchBegin = `
+SELECT DISTINCT
+        f.film_id,
+        persons.person_id,
+        persons.name
+FROM films f
+    JOIN film_persons fp on fp.fk_film_id = f.film_id
+    JOIN persons ON persons.person_id = fp.fk_person_id
+WHERE persons.person_id IN (
+    SELECT
+        p.person_id
+    FROM persons p
+        JOIN person_professions pp on p.person_id = pp.fk_person_id
+        JOIN professions on professions.profession_id = pp.fk_profession_id
+    WHERE professions.name = 'режиссер'
+    ORDER BY pp.weight DESC
+) AND f.film_id IN (`
+
+	getDirectorsFilmBatchEnd = `) ORDER BY f.film_id`
+)
+
+func GetDirectorsBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+	setID := make([]string, len(target))
+
+	mapFilms := make(map[int]int, len(target))
+
+	for idx := range target {
+		setID[idx] = strconv.Itoa(target[idx].ID)
+
+		mapFilms[target[idx].ID] = idx
+	}
+
+	setIDRes := strings.Join(setID, ",")
+
+	query := getDirectorsFilmBatchBegin + setIDRes + getDirectorsFilmBatchEnd
+
+	rowsFilmsDirectors, err := conn.QueryContext(ctx, query)
+	if err != nil {
+		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			query, err)
+	}
+	defer rowsFilmsDirectors.Close()
+
+	for rowsFilmsDirectors.Next() {
+		var filmID int
+		var directorID int
+		var directorName sql.NullString
+
+		err = rowsFilmsDirectors.Scan(&filmID, &directorID, &directorName)
+		if err != nil {
+			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				query, err)
+		}
+
+		if len(target[mapFilms[filmID]].Directors) < innerPKG.MaxCountAttrInCollection {
+			target[mapFilms[filmID]].Directors = append(target[mapFilms[filmID]].Directors,
+				FilmPersonSQL{ID: directorID, Name: directorName.String})
+		}
+	}
+
+	return target, nil
+}
+
 func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]FilmSQL, error) {
 	res := make([]FilmSQL, 0)
 
@@ -364,6 +430,46 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 				return []FilmSQL{}, err
 			}
 		}
+	}
+
+	return res, nil
+}
+
+func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]FilmSQL, error) {
+	res := make([]FilmSQL, 0)
+
+	rowsFilms, err := conn.QueryContext(ctx, getNewFilms, args...)
+	if err != nil {
+		logrus.Info("NeededCondition ", err)
+		return []FilmSQL{}, err
+	}
+	defer rowsFilms.Close()
+
+	for rowsFilms.Next() {
+		film := NewFilmSQL()
+
+		err = rowsFilms.Scan(
+			&film.ID,
+			&film.Name,
+			&film.ProdDate,
+			&film.PosterVer,
+			&film.Rating,
+			&film.Duration,
+			&film.Description)
+		if err != nil {
+			return []FilmSQL{}, err
+		}
+
+		if !film.PosterVer.Valid {
+			film.PosterVer.String = innerPKG.DefFilmPosterVer
+		}
+
+		res = append(res, film)
+	}
+
+	if len(res) == 0 {
+		logrus.Info("BadCondition")
+		return []FilmSQL{}, sql.ErrNoRows
 	}
 
 	return res, nil
