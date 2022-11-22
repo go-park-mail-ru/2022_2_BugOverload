@@ -387,7 +387,7 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		for rows.Next() {
 			var collectionInfo NodeInUserCollectionSQL
 
-			err = rows.Scan(&collectionInfo.NameCollection, &collectionInfo.IsUsed)
+			err = rows.Scan(&collectionInfo.ID, &collectionInfo.Name, &collectionInfo.IsUsed)
 			if err != nil {
 				return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 					"Err Scan: params input: query - [%s], values - [%d, %d]. Special Error [%s]",

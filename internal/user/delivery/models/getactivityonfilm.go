@@ -43,8 +43,9 @@ func (f *GetUserActivityOnFilmRequest) GetParams() *innerPKG.GetUserActivityOnFi
 }
 
 type NodeInUserCollectionResponse struct {
-	NameCollection string `json:"name_collection,omitempty" example:"Избранное"`
-	IsUsed         bool   `json:"is_used,omitempty" example:"true"`
+	ID     int    `json:"id,omitempty" example:"123"`
+	Name   string `json:"name,omitempty" example:"Избранное"`
+	IsUsed bool   `json:"is_used,omitempty" example:"true"`
 }
 
 type GetUserActivityOnFilmResponse struct {
@@ -63,7 +64,8 @@ func NewGetUserActivityOnFilmResponse(userActivity *models.UserActivity) *GetUse
 	}
 
 	for idx, value := range userActivity.Collections {
-		res.Collections[idx].NameCollection = value.NameCollection
+		res.Collections[idx].ID = value.ID
+		res.Collections[idx].Name = value.Name
 		res.Collections[idx].IsUsed = value.IsUsed
 	}
 

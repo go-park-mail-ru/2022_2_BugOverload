@@ -36,7 +36,7 @@ OFFSET $3`
 SELECT f.film_id,
        f.name,
        f.original_name,
-       extract(YEAR FROM  f.prod_date),
+       extract(YEAR FROM f.prod_date),
        f.poster_ver,
        f.type,
        f.rating
@@ -62,4 +62,32 @@ WHERE g.name = $1 AND f.prod_date < NOW()
 ORDER BY f.prod_date DESC
 LIMIT $2
 OFFSET $3`
+
+	getUserCollectionByCreateDate = `
+SELECT c.collection_id,
+       c.name,
+       c.poster,
+       c.count_films,
+       c.count_likes
+FROM collections c
+         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
+WHERE pc.fk_user_id = $1
+  AND pc.user_type_relation = 'author'
+  AND c.create_time < $2
+ORDER BY c.create_time DESC
+LIMIT $3`
+
+	getUserCollectionByUpdateDate = `
+SELECT c.collection_id,
+       c.name,
+       c.poster,
+       c.count_films,
+       c.count_likes
+FROM collections c
+         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
+WHERE pc.fk_user_id = $1
+  AND pc.user_type_relation = 'author'
+  AND c.updated_at < $2
+ORDER BY c.updated_at DESC
+LIMIT $3`
 )

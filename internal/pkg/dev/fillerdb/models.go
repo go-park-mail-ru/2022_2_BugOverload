@@ -13,6 +13,7 @@ type CollectionFiller struct {
 	ID          int    `json:"id,omitempty"`
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
+	Poster      string `json:"poster,omitempty"`
 }
 
 type PersonFiller struct {
@@ -196,5 +197,6 @@ func NewCollectionSQLFilmOnCollection(collection CollectionFiller) CollectionSQL
 		ID:          collection.ID,
 		Name:        collection.Name,
 		Description: sqltools.NewSQLNullString(collection.Description),
+		Poster:      sqltools.NewSQLNullString(collection.Poster),
 	}
 }

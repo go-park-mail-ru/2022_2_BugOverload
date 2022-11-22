@@ -66,9 +66,9 @@ func (rr *ReviewsRequest) Bind(r *http.Request) error {
 
 func (rr *ReviewsRequest) GetParams() *innerPKG.GetReviewsFilmParams {
 	return &innerPKG.GetReviewsFilmParams{
-		FilmID: rr.FilmID,
-		Offset: rr.Offset,
-		Count:  rr.CountReviews,
+		FilmID:       rr.FilmID,
+		Offset:       rr.Offset,
+		CountReviews: rr.CountReviews,
 	}
 }
 

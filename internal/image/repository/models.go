@@ -39,6 +39,10 @@ func NewImageS3Pattern(imageParams *models.Image) (*ImageS3, error) {
 		image.Bucket = innerPKG.PersonsBucket
 		image.Key = "images/"
 
+	case innerPKG.ImageObjectCollectionImage:
+		image.Bucket = innerPKG.CollectionsBucket
+		image.Key = "posters/"
+
 	case innerPKG.ImageObjectDefault:
 		image.Bucket = innerPKG.DefBucket
 

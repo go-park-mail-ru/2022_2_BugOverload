@@ -62,8 +62,8 @@ func (p *GetStdCollectionRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (p *GetStdCollectionRequest) GetParams() *innerPKG.GetCollectionParams {
-	return &innerPKG.GetCollectionParams{
+func (p *GetStdCollectionRequest) GetParams() *innerPKG.GetStdCollectionParams {
+	return &innerPKG.GetStdCollectionParams{
 		Key:        p.Key,
 		Target:     p.Target,
 		SortParam:  p.SortParam,

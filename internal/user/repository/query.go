@@ -22,7 +22,8 @@ FROM users
 WHERE user_id = $1`
 
 	getUserCollections = `
-SELECT c.name,
+SELECT c.collection_id,
+       c.name,
        EXISTS(SELECT 1 FROM collections_films cf WHERE cf.fk_collection_id IN (c.collection_id) AND cf.fk_film_id = $2)
 FROM collections c
          JOIN profile_collections pc on c.collection_id = pc.fk_collection_id

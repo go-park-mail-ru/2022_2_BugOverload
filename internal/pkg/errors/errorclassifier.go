@@ -19,9 +19,10 @@ var (
 	ErrBadRequestParamsEmptyRequiredFields = stdErrors.New("bad params, empty required field")
 
 	// Common repository
-	ErrNotFoundInDB     = stdErrors.New("not found")
-	ErrWorkDatabase     = stdErrors.New("error sql")
-	ErrGetParamsConvert = stdErrors.New("err get sql params")
+	ErrNotFoundInDB             = stdErrors.New("not found")
+	ErrWorkDatabase             = stdErrors.New("error sql")
+	ErrGetParamsConvert         = stdErrors.New("err get sql params")
+	ErrUnsupportedSortParameter = stdErrors.New("unsupported sort parameter")
 
 	// Collection service
 	ErrNotFindSuchTarget = stdErrors.New("not found such target")
@@ -65,13 +66,15 @@ var (
 	ErrCsrfTokenInvalid       = stdErrors.New("invalid csrf token")
 
 	// Not Found
-	ErrGenreNotFount   = stdErrors.New("genre not fount")
-	ErrTagNotFount     = stdErrors.New("tag not fount")
-	ErrFilmNotFount    = stdErrors.New("film not fount")
-	ErrPersonNotFount  = stdErrors.New("person not fount")
-	ErrImageNotFound   = stdErrors.New("image not found")
-	ErrSessionNotFound = stdErrors.New("session not found")
-	ErrUserNotFound    = stdErrors.New("user not found")
+	ErrGenreNotFound       = stdErrors.New("genre not found")
+	ErrTagNotFound         = stdErrors.New("tag not found")
+	ErrFilmNotFound        = stdErrors.New("film not found")
+	ErrPersonNotFound      = stdErrors.New("person not found")
+	ErrImageNotFound       = stdErrors.New("image not found")
+	ErrSessionNotFound     = stdErrors.New("session not found")
+	ErrUserNotFound        = stdErrors.New("user not found")
+	ErrFilmsNotFound       = stdErrors.New("films not found")
+	ErrCollectionsNotFound = stdErrors.New("collections not found")
 )
 
 type ErrClassifier struct {
@@ -97,6 +100,10 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrNotFoundInDB] = http.StatusNotFound
 	res[ErrWorkDatabase] = http.StatusInternalServerError
 	res[ErrGetParamsConvert] = http.StatusInternalServerError
+	res[ErrUnsupportedSortParameter] = http.StatusBadRequest
+
+	// Collection service
+	res[ErrNotFindSuchTarget] = http.StatusNotFound
 
 	// Collection service
 	res[ErrNotFindSuchTarget] = http.StatusNotFound
@@ -140,13 +147,15 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrCsrfTokenInvalid] = http.StatusForbidden
 
 	// Not found
-	res[ErrGenreNotFount] = http.StatusNotFound
-	res[ErrTagNotFount] = http.StatusNotFound
-	res[ErrPersonNotFount] = http.StatusNotFound
-	res[ErrFilmNotFount] = http.StatusNotFound
+	res[ErrGenreNotFound] = http.StatusNotFound
+	res[ErrTagNotFound] = http.StatusNotFound
+	res[ErrPersonNotFound] = http.StatusNotFound
+	res[ErrFilmNotFound] = http.StatusNotFound
 	res[ErrSessionNotFound] = http.StatusNotFound
 	res[ErrUserNotFound] = http.StatusNotFound
 	res[ErrImageNotFound] = http.StatusNotFound
+	res[ErrFilmsNotFound] = http.StatusNotFound
+	res[ErrCollectionsNotFound] = http.StatusNotFound
 
 	return ErrClassifier{
 		table: res,

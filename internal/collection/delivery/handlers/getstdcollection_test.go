@@ -51,7 +51,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetCollectionParams{
+	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetStdCollectionParams{
 		Target:     "tag",
 		SortParam:  "date",
 		Key:        "popular",
@@ -110,7 +110,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetCollectionParams{
+	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetStdCollectionParams{
 		Target:     "tag",
 		SortParam:  "date",
 		Key:        "popular",

@@ -5,32 +5,6 @@ import (
 	"time"
 )
 
-// ImagesParams
-const (
-	// Images params request
-	ImageObjectFilmPosterHor = "film_poster_hor" // key - 1 to 1 from prev request
-	ImageObjectFilmPosterVer = "film_poster_ver" // key - 1 to 1 from prev request
-	ImageObjectFilmImage     = "film_image"      // key - filmID/filmImageKey - Example 1/2
-	ImageObjectDefault       = "default"         // key - login or signup
-	ImageObjectUserAvatar    = "user_avatar"     // key - 1 to 1 from prev request
-	ImageObjectPersonAvatar  = "person_avatar"   // key - 1 to 1 from prev request
-	ImageObjectPersonImage   = "person_image"    // key - personID/personImageKey - Example 5/12
-
-	// Image Def Images
-	DefFilmPosterHor = "hor"
-	DefFilmPosterVer = "ver"
-	DefUserAvatar    = "avatar"
-	DefPersonAvatar  = "avatar"
-
-	ImageCountSignupLogin = 12
-
-	// S3
-	FilmsBucket   = "films/"
-	DefBucket     = "default/"
-	PersonsBucket = "persons/"
-	UsersBucket   = "users/"
-)
-
 // Handler factory
 const (
 	SignupRequest                = "SignupRequest"
@@ -53,6 +27,7 @@ const (
 	FilmRateDropRequest          = "FilmRateDropRequest"
 	NewFilmReviewRequest         = "NewFilmReviewRequest"
 	GetUserActivityOnFilmRequest = "GetUserActivityOnFilmRequest"
+	UserCollectionsRequest       = "UserCollectionsRequest"
 
 	DateFormat = "2006.01.02"
 	TimeFormat = "15:04:05"
@@ -79,6 +54,10 @@ const (
 
 	CollectionSortParamDate       = "date"
 	CollectionSortParamFilmRating = "rating"
+
+	UserCollectionsSortParamCreateDate = "create_time"
+	UserCollectionsSortParamUpdateDate = "update_time"
+	UserCollectionsDelimiter           = "now"
 
 	MaxCountAttrInCollection = 2
 )

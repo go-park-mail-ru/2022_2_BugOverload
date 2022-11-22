@@ -87,7 +87,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		return nil
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrFilmNotFount,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrFilmNotFound,
 			"Film main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getFilmByID, film.ID, errMain)
 	}
@@ -283,7 +283,7 @@ func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.
 
 	// Reviews - Main
 	errMain := sqltools.RunQuery(ctx, f.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowsReviews, err := conn.QueryContext(ctx, getReviewsByFilmID, params.FilmID, params.Count, params.Offset)
+		rowsReviews, err := conn.QueryContext(ctx, getReviewsByFilmID, params.FilmID, params.CountReviews, params.Offset)
 		if err != nil {
 			return err
 		}
@@ -319,13 +319,13 @@ func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.
 	if stdErrors.Is(errMain, sql.ErrNoRows) || len(response) == 0 {
 		return []models.Review{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 			"Err: params input: query - [%s], valies - [%d, %d, %d]. Special Error [%s]",
-			getReviewsByFilmID, params.FilmID, params.Count, params.Offset, sql.ErrNoRows)
+			getReviewsByFilmID, params.FilmID, params.CountReviews, params.Offset, sql.ErrNoRows)
 	}
 
 	if errMain != nil {
 		return []models.Review{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], valies - [%d, %d, %d]. Special Error [%s]",
-			getReviewsByFilmID, params.FilmID, params.Count, params.Offset, errMain)
+			getReviewsByFilmID, params.FilmID, params.CountReviews, params.Offset, errMain)
 	}
 
 	res := make([]models.Review, len(response))

@@ -15,8 +15,9 @@ type User struct {
 }
 
 type NodeInUserCollection struct {
-	NameCollection string `json:"name_collection,omitempty"`
-	IsUsed         bool   `json:"is_used,omitempty"`
+	ID     int    `json:"id,omitempty"`
+	Name   string `json:"name,omitempty"`
+	IsUsed bool   `json:"is_used,omitempty"`
 }
 
 type UserActivity struct {
