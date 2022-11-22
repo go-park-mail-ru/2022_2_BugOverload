@@ -87,7 +87,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		return nil
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrFilmNotFount,
 			"Film main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getFilmByID, film.ID, errMain)
 	}
@@ -103,42 +103,32 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 	// Parts
 	// Genres
 	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmGenres, film.ID)
-	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Genres Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmGenres, film.ID, errQuery)
+	if errQuery != nil && !stdErrors.Is(stdErrors.Cause(errQuery), sql.ErrNoRows) {
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Companies
 	response.ProdCompanies, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmCompanies, film.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Companies Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmCompanies, film.ID, errQuery)
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Countries
 	response.ProdCountries, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmCountries, film.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Countries Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmCountries, film.ID, errQuery)
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Tags
 	response.Tags, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmTags, film.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Tags Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmTags, film.ID, errQuery)
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	//  Images
 	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmImages, film.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmImages, film.ID, errQuery)
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Actors
@@ -282,9 +272,7 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 	// Genres
 	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, f.database.Connection, getFilmGenres, response.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Genres Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getFilmGenres, response.ID, errQuery)
+		return models.Film{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	return response.Convert(), nil

@@ -3,6 +3,8 @@ package sqltools
 import (
 	"context"
 	"database/sql"
+
+	stdErrors "github.com/pkg/errors"
 )
 
 func GetSimpleAttr(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]string, error) {
@@ -10,7 +12,9 @@ func GetSimpleAttr(ctx context.Context, conn *sql.Conn, query string, args ...an
 
 	rowsAttr, err := conn.QueryContext(ctx, query, args...)
 	if err != nil {
-		return []string{}, err
+		return []string{}, stdErrors.WithMessagef(err,
+			"Err: params input: query - [%s], values - [+%v]",
+			query, []interface{}{args})
 	}
 	defer rowsAttr.Close()
 
@@ -19,7 +23,9 @@ func GetSimpleAttr(ctx context.Context, conn *sql.Conn, query string, args ...an
 
 		err = rowsAttr.Scan(&value)
 		if err != nil {
-			return []string{}, err
+			return []string{}, stdErrors.WithMessagef(err,
+				"Err Scan: params input: query - [%s], values - [+%v]",
+				query, []interface{}{args})
 		}
 
 		res = append(res, value.String)

@@ -40,7 +40,7 @@ func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Defining an authorized user
 // @Description Sending login and password. Email and password - required.
-// @tags auth, completed
+// @tags auth
 // @Produce json
 // @Success 200 {object} models.UserAuthResponse "successfully auth"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"

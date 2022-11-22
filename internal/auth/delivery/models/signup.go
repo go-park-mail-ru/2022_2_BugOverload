@@ -53,7 +53,7 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 	}
 
 	if u.Password == "" || u.Email == "" || u.Nickname == "" {
-		return errors.ErrEmptyRequiredFields
+		return errors.ErrBadRequestParamsEmptyRequiredFields
 	}
 
 	return nil

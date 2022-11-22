@@ -35,11 +35,11 @@ func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary Reviews for film
 // @Description Getting reviews by film id. Count_reviews required and >= 0.
-// @tags review, completed
+// @tags review
 // @Produce json
-// @Param   id        path   int     true "film id"
-// @Param   count_reviews     query  int     true "count reviews needed"
-// @Param   offset    query  int     true "offset count"
+// @Param   id            path   int     true "film id"
+// @Param   count_reviews query  int     true "count reviews needed"
+// @Param   offset        query  int     true "offset count"
 // @Success 200 {array} models.ReviewResponse "return reviews"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponseFilmNoSuchFilm "no such reviews"

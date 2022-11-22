@@ -37,7 +37,7 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // delivery of the data to the service at the business logic level.
 // @Summary User logout
 // @Description Session delete. Needed auth
-// @tags auth, completed
+// @tags auth
 // @Success 204 "successfully logout"
 // @Failure 400 {object} httpmodels.ErrResponseAuthDefault "return error"
 // @Failure 401 {object} httpmodels.ErrResponseAuthNoCookie "no cookie"

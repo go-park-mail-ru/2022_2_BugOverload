@@ -51,7 +51,7 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 	}
 
 	if u.Nickname == "" && (u.NewPassword == "" || u.CurPassword == "") {
-		return errors.ErrEmptyRequiredFields
+		return errors.ErrBadRequestParamsEmptyRequiredFields
 	}
 
 	return nil

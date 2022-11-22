@@ -8,26 +8,26 @@ import (
 
 var (
 	// Common delivery
-	ErrBadBodyRequest       = stdErrors.New("bad body request")
-	ErrJSONUnexpectedEnd    = stdErrors.New("unexpected end of JSON input")
-	ErrContentTypeUndefined = stdErrors.New("content-type undefined")
-	ErrUnsupportedMediaType = stdErrors.New("unsupported media type")
-	ErrEmptyBody            = stdErrors.New("empty body")
-	ErrConvertQueryType     = stdErrors.New("bad input query")
-	ErrQueryRequiredEmpty   = stdErrors.New("miss query params")
-	ErrBadQueryParams       = stdErrors.New("bad query params")
-	ErrEmptyField           = stdErrors.New("empty field")
-	ErrEmptyRequiredFields  = stdErrors.New("bad params, empty")
-	ErrBadRequestParams     = stdErrors.New("bad params, impossible value")
+	ErrBadBodyRequest                      = stdErrors.New("bad body request")
+	ErrJSONUnexpectedEnd                   = stdErrors.New("unexpected end of JSON input")
+	ErrContentTypeUndefined                = stdErrors.New("content-type undefined")
+	ErrUnsupportedMediaType                = stdErrors.New("unsupported media type")
+	ErrEmptyBody                           = stdErrors.New("empty body")
+	ErrConvertQueryType                    = stdErrors.New("bad input query")
+	ErrQueryRequiredEmpty                  = stdErrors.New("miss query params")
+	ErrBadRequestParams                    = stdErrors.New("bad query params")
+	ErrBadRequestParamsEmptyRequiredFields = stdErrors.New("bad params, empty required field")
 
 	// Common repository
 	ErrNotFoundInDB     = stdErrors.New("not found")
 	ErrWorkDatabase     = stdErrors.New("error sql")
 	ErrGetParamsConvert = stdErrors.New("err get sql params")
 
+	// Collection service
+	ErrNotFindSuchTarget = stdErrors.New("not found such target")
+
 	// Auth delivery
-	ErrNoCookie        = stdErrors.New("no such cookie")
-	ErrSessionNotExist = stdErrors.New("no such session")
+	ErrNoCookie = stdErrors.New("no such cookie")
 
 	// Auth repository
 	ErrUserExist    = stdErrors.New("such user exists")
@@ -44,8 +44,7 @@ var (
 	ErrBadImageType = stdErrors.New("bad image type")
 
 	// Image repository
-	ErrImageNotFound = stdErrors.New("no such image")
-	ErrImage         = stdErrors.New("service picture not work")
+	ErrImage = stdErrors.New("service picture not work")
 
 	// User delivery
 	ErrGetUserRequest     = stdErrors.New("fatal getting user")
@@ -64,6 +63,15 @@ var (
 	ErrCsrfTokenCheckInternal = stdErrors.New("csrf token check internal error")
 	ErrCsrfTokenExpired       = stdErrors.New("csrf token expired")
 	ErrCsrfTokenInvalid       = stdErrors.New("invalid csrf token")
+
+	// Not Found
+	ErrGenreNotFount   = stdErrors.New("genre not fount")
+	ErrTagNotFount     = stdErrors.New("tag not fount")
+	ErrFilmNotFount    = stdErrors.New("film not fount")
+	ErrPersonNotFount  = stdErrors.New("person not fount")
+	ErrImageNotFound   = stdErrors.New("image not found")
+	ErrSessionNotFound = stdErrors.New("session not found")
+	ErrUserNotFound    = stdErrors.New("user not found")
 )
 
 type ErrClassifier struct {
@@ -81,9 +89,8 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrEmptyBody] = http.StatusBadRequest
 	res[ErrConvertQueryType] = http.StatusBadRequest
 	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
-	res[ErrBadQueryParams] = http.StatusBadRequest
-	res[ErrEmptyField] = http.StatusBadRequest
-	res[ErrEmptyRequiredFields] = http.StatusBadRequest
+	res[ErrBadRequestParams] = http.StatusBadRequest
+	res[ErrBadRequestParamsEmptyRequiredFields] = http.StatusBadRequest
 	res[ErrBadRequestParams] = http.StatusBadRequest
 
 	// Common repository
@@ -91,9 +98,11 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrWorkDatabase] = http.StatusInternalServerError
 	res[ErrGetParamsConvert] = http.StatusInternalServerError
 
+	// Collection service
+	res[ErrNotFindSuchTarget] = http.StatusNotFound
+
 	// Auth delivery
 	res[ErrNoCookie] = http.StatusNotFound
-	res[ErrSessionNotExist] = http.StatusNotFound
 
 	// Auth repository
 	res[ErrUserExist] = http.StatusBadRequest
@@ -110,7 +119,6 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrBadImageType] = http.StatusBadRequest
 
 	// Image repository
-	res[ErrImageNotFound] = http.StatusNotFound
 	res[ErrImage] = http.StatusInternalServerError
 
 	// User delivery
@@ -130,6 +138,15 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrCsrfTokenCheckInternal] = http.StatusInternalServerError
 	res[ErrCsrfTokenExpired] = http.StatusForbidden
 	res[ErrCsrfTokenInvalid] = http.StatusForbidden
+
+	// Not found
+	res[ErrGenreNotFount] = http.StatusNotFound
+	res[ErrTagNotFount] = http.StatusNotFound
+	res[ErrPersonNotFount] = http.StatusNotFound
+	res[ErrFilmNotFount] = http.StatusNotFound
+	res[ErrSessionNotFound] = http.StatusNotFound
+	res[ErrUserNotFound] = http.StatusNotFound
+	res[ErrImageNotFound] = http.StatusNotFound
 
 	return ErrClassifier{
 		table: res,

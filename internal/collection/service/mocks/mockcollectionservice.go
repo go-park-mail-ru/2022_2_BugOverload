@@ -36,8 +36,23 @@ func (m *MockCollectionService) EXPECT() *MockCollectionServiceMockRecorder {
 	return m.recorder
 }
 
+// GetCollectionByGenre mocks base method.
+func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionByGenre", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionByGenre indicates an expected call of GetCollectionByGenre.
+func (mr *MockCollectionServiceMockRecorder) GetCollectionByGenre(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByGenre", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionByGenre), ctx, params)
+}
+
 // GetCollectionByTag mocks base method.
-func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionTagParams) (models.Collection, error) {
+func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCollectionByTag", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -49,4 +64,19 @@ func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *
 func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByTag", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionByTag), ctx, params)
+}
+
+// GetStdCollection mocks base method.
+func (m *MockCollectionService) GetStdCollection(ctx context.Context, params *pkg.GetCollectionParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetStdCollection", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetStdCollection indicates an expected call of GetStdCollection.
+func (mr *MockCollectionServiceMockRecorder) GetStdCollection(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStdCollection", reflect.TypeOf((*MockCollectionService)(nil).GetStdCollection), ctx, params)
 }

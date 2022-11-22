@@ -185,6 +185,51 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
+func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms_Empty(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	personService := mockPersonService.NewMockPersonService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=&count_images=2", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	filmHandler := NewPersonHandler(personService)
+	filmHandler.Configure(router, nil)
+
+	filmHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
 func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) {
 	t.Parallel()
 
@@ -230,6 +275,51 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
 
+func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountImages_Empty(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	personService := mockPersonService.NewMockPersonService(ctrl)
+
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=2&count_images=", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+
+	expectedBody := httpwrapper.ErrResponse{
+		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
+	}
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	filmHandler := NewPersonHandler(personService)
+	filmHandler.Configure(router, nil)
+
+	filmHandler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody httpwrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
 func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T) {
 	t.Parallel()
 
@@ -244,7 +334,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	r = mux.SetURLVars(r, vars)
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrBadQueryParams.Error(),
+		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
 	w := httptest.NewRecorder()
@@ -289,7 +379,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	r = mux.SetURLVars(r, vars)
 
 	expectedBody := httpwrapper.ErrResponse{
-		ErrMassage: errors.ErrBadQueryParams.Error(),
+		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
 	w := httptest.NewRecorder()

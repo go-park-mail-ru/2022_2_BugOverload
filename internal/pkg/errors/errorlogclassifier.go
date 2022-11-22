@@ -25,9 +25,8 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrEmptyBody] = infoLogLevel
 	res[ErrConvertQueryType] = infoLogLevel
 	res[ErrQueryRequiredEmpty] = infoLogLevel
-	res[ErrBadQueryParams] = infoLogLevel
-	res[ErrEmptyField] = infoLogLevel
-	res[ErrEmptyRequiredFields] = infoLogLevel
+	res[ErrBadRequestParams] = infoLogLevel
+	res[ErrBadRequestParamsEmptyRequiredFields] = infoLogLevel
 	res[ErrBadRequestParams] = infoLogLevel
 
 	// Common repository
@@ -37,7 +36,6 @@ func NewErrLogClassifier() ErrLogClassifier {
 
 	// Auth delivery
 	res[ErrNoCookie] = infoLogLevel
-	res[ErrSessionNotExist] = infoLogLevel
 
 	// Auth repository
 	res[ErrUserExist] = errLogLevel
@@ -54,7 +52,6 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrBadImageType] = infoLogLevel
 
 	// Image repository
-	res[ErrImageNotFound] = errLogLevel
 	res[ErrImage] = errLogLevel
 
 	// User delivery
@@ -74,6 +71,15 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrCsrfTokenCheckInternal] = errLogLevel
 	res[ErrCsrfTokenExpired] = errLogLevel
 	res[ErrCsrfTokenInvalid] = errLogLevel
+
+	// Not found
+	res[ErrGenreNotFount] = infoLogLevel
+	res[ErrTagNotFount] = infoLogLevel
+	res[ErrPersonNotFount] = infoLogLevel
+	res[ErrFilmNotFount] = infoLogLevel
+	res[ErrSessionNotFound] = infoLogLevel
+	res[ErrUserNotFound] = infoLogLevel
+	res[ErrImageNotFound] = infoLogLevel
 
 	return ErrLogClassifier{
 		table: res,

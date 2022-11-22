@@ -59,13 +59,13 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		return nil
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPersonNotFount,
 			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonByID, person.ID, errMain)
 	}
 
 	if errMain != nil {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonByID, person.ID, errMain)
 	}
@@ -96,25 +96,19 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	//  Images
 	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonImages, person.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPersonImages, person.ID, errQuery)
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Professions
 	response.Professions, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonProfessions, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Professions Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPersonProfessions, person.ID, errQuery)
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	// Genres
 	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonGenres, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Genres Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPersonGenres, person.ID, errQuery)
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
 	}
 
 	return response.Convert(), nil

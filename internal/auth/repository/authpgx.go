@@ -51,7 +51,7 @@ func (ad *AuthDatabase) CheckExistUserByEmail(ctx context.Context, email string)
 	})
 
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return false, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return false, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
 			checkExist, email, errMain)
 	}
@@ -159,7 +159,7 @@ func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (model
 	})
 
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], values - [%s]. Special error - [%s]",
 			getUserByEmail, email, errMain)
 	}
@@ -197,7 +197,7 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 	})
 
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.User{}, stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], values - [%d]. Special error - [%s]",
 			getUserByID, userID, errMain)
 	}

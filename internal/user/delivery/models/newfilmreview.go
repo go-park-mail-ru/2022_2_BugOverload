@@ -64,7 +64,7 @@ func (f *NewFilmReviewRequest) Bind(r *http.Request) error {
 	}
 
 	if f.ReviewName == "" || f.ReviewType == "" || f.ReviewBody == "" {
-		return errors.ErrEmptyField
+		return errors.ErrBadRequestParamsEmptyRequiredFields
 	}
 
 	return nil

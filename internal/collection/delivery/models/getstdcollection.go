@@ -4,31 +4,46 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
-
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type TagCollectionRequest struct {
-	Tag        string
+type GetStdCollectionRequest struct {
+	Target     string
+	Key        string
+	SortParam  string
+	SortDir    string
 	CountFilms int
 	Delimiter  string
 }
 
-func NewTagCollectionRequest() *TagCollectionRequest {
-	return &TagCollectionRequest{}
+func NewGetStdCollectionRequest() *GetStdCollectionRequest {
+	return &GetStdCollectionRequest{}
 }
 
-func (p *TagCollectionRequest) Bind(r *http.Request) error {
-	vars := mux.Vars(r)
-
+func (p *GetStdCollectionRequest) Bind(r *http.Request) error {
 	var err error
 
-	p.Tag = vars["tag"]
+	p.Target = r.FormValue("target")
+	if p.Target == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	p.Key = r.FormValue("key")
+	if p.Key == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	p.SortParam = r.FormValue("sort_param")
+	if p.SortParam == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
 	countFilms := r.FormValue("count_films")
-	p.Delimiter = r.FormValue("delimiter")
+	if countFilms == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
 
 	p.CountFilms, err = strconv.Atoi(countFilms)
 	if err != nil {
@@ -36,15 +51,22 @@ func (p *TagCollectionRequest) Bind(r *http.Request) error {
 	}
 
 	if p.CountFilms < 0 {
-		return errors.ErrBadQueryParams
+		return errors.ErrBadRequestParams
+	}
+
+	p.Delimiter = r.FormValue("delimiter")
+	if p.Delimiter == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
 	}
 
 	return nil
 }
 
-func (p *TagCollectionRequest) GetParams() *innerPKG.GetCollectionTagParams {
-	return &innerPKG.GetCollectionTagParams{
-		Tag:        p.Tag,
+func (p *GetStdCollectionRequest) GetParams() *innerPKG.GetCollectionParams {
+	return &innerPKG.GetCollectionParams{
+		Key:        p.Key,
+		Target:     p.Target,
+		SortParam:  p.SortParam,
 		CountFilms: p.CountFilms,
 		Delimiter:  p.Delimiter,
 	}
@@ -60,13 +82,13 @@ type FilmTagCollectionResponse struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
-type TagCollectionResponse struct {
+type GetStdCollectionResponse struct {
 	Name  string                      `json:"name,omitempty" example:"Сейчас в кино"`
 	Films []FilmTagCollectionResponse `json:"films,omitempty"`
 }
 
-func NewTagCollectionResponse(collection *models.Collection) *TagCollectionResponse {
-	res := &TagCollectionResponse{
+func NewStdCollectionResponse(collection *models.Collection) *GetStdCollectionResponse {
+	res := &GetStdCollectionResponse{
 		Name:  collection.Name,
 		Films: make([]FilmTagCollectionResponse, len(collection.Films)),
 	}

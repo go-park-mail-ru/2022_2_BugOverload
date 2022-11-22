@@ -75,7 +75,9 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 
 	// the main entity is not found
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.User{}, errors.ErrNotFoundInDB
+		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getUserProfile, user.ID, errMain)
 	}
 
 	// execution error
@@ -112,7 +114,9 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 
 	// the main entity is not found
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.User{}, errors.ErrNotFoundInDB
+		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
+			"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			getUserProfileShort, user.ID, errMain)
 	}
 
 	// execution error
@@ -338,7 +342,7 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 		// CountReviews
 		rowUser := conn.QueryRowContext(ctx, getUserCountReviews, user.ID)
 		if stdErrors.Is(rowUser.Err(), sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			return stdErrors.WithMessagef(errors.ErrUserNotFound,
 				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 				getUserCountReviews, user.ID, rowUser.Err())
 		}
