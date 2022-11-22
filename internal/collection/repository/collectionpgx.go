@@ -174,7 +174,7 @@ func (c *collectionPostgres) GetPremiersCollection(ctx context.Context, params *
 			return err
 		}
 
-		response.Films, err = repository.GetProdCountiesBatch(ctx, response.Films, conn)
+		response.Films, err = repository.GetProdCountriesBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}

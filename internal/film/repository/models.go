@@ -271,7 +271,7 @@ WHERE f.film_id IN (`
 	getProdCountriesBatchEnd = `) ORDER BY f.film_id, fc.weight DESC`
 )
 
-func GetProdCountiesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+func GetProdCountriesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
 	setID := make([]string, len(target))
 
 	mapFilms := make(map[int]int, len(target))
@@ -286,19 +286,19 @@ func GetProdCountiesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn)
 
 	query := getProdCountriesFilmBatchBegin + setIDRes + getProdCountriesBatchEnd
 
-	rowsFilmsGenres, err := conn.QueryContext(ctx, query)
+	rowsFilmsProdCountries, err := conn.QueryContext(ctx, query)
 	if err != nil {
 		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
 			query, err)
 	}
-	defer rowsFilmsGenres.Close()
+	defer rowsFilmsProdCountries.Close()
 
-	for rowsFilmsGenres.Next() {
+	for rowsFilmsProdCountries.Next() {
 		var filmID int
 		var country sql.NullString
 
-		err = rowsFilmsGenres.Scan(&filmID, &country)
+		err = rowsFilmsProdCountries.Scan(&filmID, &country)
 		if err != nil {
 			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
