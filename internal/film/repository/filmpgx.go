@@ -87,7 +87,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		return nil
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Film{}, stdErrors.WithMessagef(errors.ErrFilmNotFount,
+		return models.Film{}, stdErrors.WithMessagef(errors.ErrFilmNotFound,
 			"Film main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getFilmByID, film.ID, errMain)
 	}

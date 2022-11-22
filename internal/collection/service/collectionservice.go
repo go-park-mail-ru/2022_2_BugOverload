@@ -19,6 +19,7 @@ type CollectionService interface {
 	GetCollectionByTag(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
 	GetUserCollections(ctx context.Context, user *models.User, params *pkg.GetUserCollectionsParams) ([]models.Collection, error)
+	GetPremiersCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -40,7 +41,7 @@ func (c *collectionService) GetCollectionByTag(ctx context.Context, params *pkg.
 
 	params.Key, ok = pkg.TagsMap[params.Key]
 	if !ok {
-		return models.Collection{}, stdErrors.Wrap(errors.ErrTagNotFount, "GetCollectionByTag")
+		return models.Collection{}, stdErrors.Wrap(errors.ErrTagNotFound, "GetCollectionByTag")
 	}
 
 	tagCollection, err := c.collectionRepo.GetCollectionByTag(ctx, params)
@@ -57,7 +58,7 @@ func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *pk
 
 	params.Key, ok = pkg.GenresMap[params.Key]
 	if !ok {
-		return models.Collection{}, stdErrors.Wrap(errors.ErrGenreNotFount, "GetCollectionByGenre")
+		return models.Collection{}, stdErrors.Wrap(errors.ErrGenreNotFound, "GetCollectionByGenre")
 	}
 
 	collection, err := c.collectionRepo.GetCollectionByGenre(ctx, params)
@@ -94,6 +95,16 @@ func (c *collectionService) GetUserCollections(ctx context.Context, user *models
 	collection, err := c.collectionRepo.GetUserCollections(ctx, user, params)
 	if err != nil {
 		return []models.Collection{}, stdErrors.Wrap(err, "GetUserCollections")
+	}
+
+	return collection, nil
+}
+
+// GetPremiersCollection is the service that accesses the interface CollectionRepository
+func (c collectionService) GetPremiersCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+	collection, err := c.collectionRepo.GetPremiersCollection(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetPremiersCollection")
 	}
 
 	return collection, nil

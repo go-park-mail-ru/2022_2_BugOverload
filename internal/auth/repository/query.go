@@ -11,8 +11,8 @@ VALUES ($1, $2, $3, 2, $4)
 RETURNING user_id`
 
 	createDefCollections = `
-INSERT INTO collections(name, description)
-VALUES ('Избранное', 'Ваши сохранные фильмы'), ('Буду смотреть', 'Фильмы, которые вы отметили для просмотра')
+INSERT INTO collections(name, description, poster)
+VALUES ('Избранное', 'Ваши сохранные фильмы', '1'), ('Буду смотреть', 'Фильмы, которые вы отметили для просмотра', '2')
 RETURNING collection_id;`
 
 	linkUserDefCollections = `

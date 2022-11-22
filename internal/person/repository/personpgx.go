@@ -59,7 +59,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		return nil
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessagef(errors.ErrPersonNotFount,
+		return models.Person{}, stdErrors.WithMessagef(errors.ErrPersonNotFound,
 			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 			getPersonByID, person.ID, errMain)
 	}

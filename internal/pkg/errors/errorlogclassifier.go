@@ -73,13 +73,15 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrCsrfTokenInvalid] = errLogLevel
 
 	// Not found
-	res[ErrGenreNotFount] = infoLogLevel
-	res[ErrTagNotFount] = infoLogLevel
-	res[ErrPersonNotFount] = infoLogLevel
-	res[ErrFilmNotFount] = infoLogLevel
+	res[ErrGenreNotFound] = infoLogLevel
+	res[ErrTagNotFound] = infoLogLevel
+	res[ErrPersonNotFound] = infoLogLevel
+	res[ErrFilmNotFound] = infoLogLevel
 	res[ErrSessionNotFound] = infoLogLevel
 	res[ErrUserNotFound] = infoLogLevel
 	res[ErrImageNotFound] = infoLogLevel
+	res[ErrFilmsNotFound] = infoLogLevel
+	res[ErrCollectionsNotFound] = infoLogLevel
 
 	return ErrLogClassifier{
 		table: res,

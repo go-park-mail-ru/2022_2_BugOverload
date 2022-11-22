@@ -17,6 +17,7 @@ const (
 	ChangeImageRequest           = "ChangeImageRequest"
 	GetUserProfileRequest        = "GetUserProfileRequest"
 	TagCollectionRequest         = "TagCollectionRequest"
+	PremiersCollectionRequest    = "PremiersCollectionRequest"
 	PersonRequest                = "PersonRequest"
 	FilmRequest                  = "FilmRequest"
 	ReviewsFilmRequest           = "ReviewsFilmRequest"
