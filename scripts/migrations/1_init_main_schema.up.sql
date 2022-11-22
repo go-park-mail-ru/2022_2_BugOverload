@@ -109,19 +109,20 @@ CREATE TYPE gender_enum AS ENUM ('male', 'female');
 -- Generator completed
 CREATE TABLE IF NOT EXISTS persons
 (
-    "person_id"     serial  NOT NULL PRIMARY KEY,
-    "name"          text    NOT NULL,
+    "person_id"     serial    NOT NULL PRIMARY KEY,
+    "name"          text      NOT NULL,
     CONSTRAINT "name_length" CHECK (LENGTH("name") <= 128),
-    "birthday"      date    NOT NULL,
-    "growth_meters" numeric(3, 2)    DEFAULT NULL,
-    "original_name" text             DEFAULT NULL,
+    "birthday"      date      NOT NULL,
+    "growth_meters" numeric(3, 2)      DEFAULT NULL,
+    "original_name" text               DEFAULT NULL,
     CONSTRAINT "original_name_length" CHECK (LENGTH("original_name") <= 80),
-    "avatar"        text             DEFAULT NULL,
+    "avatar"        text               DEFAULT NULL,
     CONSTRAINT "avatar_length" CHECK (LENGTH("avatar") <= 32),
-    "death"         date             DEFAULT NULL,
-    "gender"        gender_enum      DEFAULT 'male',
+    "death"         date               DEFAULT NULL,
+    "gender"        gender_enum        DEFAULT 'male',
     -- Denormalize fields
-    "count_films"   integer NOT NULL DEFAULT 0
+    "count_films"   integer   NOT NULL DEFAULT 0,
+    "updated_at"    timestamp NOT NULL DEFAULT NOW()
 );
 
 -- Generator completed
@@ -145,7 +146,8 @@ CREATE TABLE IF NOT EXISTS collections
     "create_time"   timestamp NOT NULL DEFAULT NOW(),
     -- Denormalize fields
     "count_likes"   integer   NOT NULL DEFAULT 0,
-    "count_films"   integer   NOT NULL DEFAULT 0
+    "count_films"   integer   NOT NULL DEFAULT 0,
+    "updated_at"    timestamp NOT NULL DEFAULT NOW()
 );
 
 CREATE TYPE type_review_enum AS ENUM ('positive', 'negative','neutral');
