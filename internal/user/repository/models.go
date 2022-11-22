@@ -58,8 +58,9 @@ func (u *UserSQL) Convert() models.User {
 }
 
 type NodeInUserCollectionSQL struct {
-	NameCollection string
-	IsUsed         bool
+	ID     int
+	Name   string
+	IsUsed bool
 }
 
 type UserActivitySQL struct {
@@ -87,7 +88,8 @@ func (u *UserActivitySQL) Convert() models.UserActivity {
 	}
 
 	for idx, value := range u.ListCollections {
-		res.Collections[idx].NameCollection = value.NameCollection
+		res.Collections[idx].ID = value.ID
+		res.Collections[idx].Name = value.Name
 		res.Collections[idx].IsUsed = value.IsUsed
 	}
 

@@ -262,11 +262,14 @@ CREATE TABLE IF NOT EXISTS profile_reviews
     PRIMARY KEY (fk_review_id, fk_user_id, fk_film_id)
 );
 
+CREATE TYPE collection_user_type_relation_enum AS ENUM ('author', 'listener');
+
 -- Generator completed
 CREATE TABLE IF NOT EXISTS profile_collections
 (
-    "fk_user_id"       integer NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
-    "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
+    "fk_user_id"         integer                            NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
+    "fk_collection_id"   integer                            NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
+    "user_type_relation" collection_user_type_relation_enum NOT NULL DEFAULT 'author',
     PRIMARY KEY (fk_user_id, fk_collection_id)
 );
 

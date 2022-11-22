@@ -24,9 +24,9 @@ type GetUserCollectionsParams struct {
 
 // GetReviewsFilmParams in struct for reviewHandler
 type GetReviewsFilmParams struct {
-	FilmID int
-	Count  int
-	Offset int
+	FilmID       int
+	CountReviews int
+	Offset       int
 }
 
 // GetFilmParams in struct for filmHandler

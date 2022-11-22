@@ -184,7 +184,6 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 		}
 
 		err := rowUser.Scan(
-			&userDB.ID,
 			&userDB.email,
 			&userDB.nickname,
 			&userDB.password,

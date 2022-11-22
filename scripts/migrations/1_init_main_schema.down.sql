@@ -67,3 +67,5 @@ DROP TYPE IF EXISTS age_limit_enum CASCADE;
 DROP TYPE IF EXISTS gender_enum CASCADE;
 
 DROP TYPE IF EXISTS type_review_enum CASCADE;
+
+DROP TYPE IF EXISTS collection_user_type_relation_enum CASCADE;

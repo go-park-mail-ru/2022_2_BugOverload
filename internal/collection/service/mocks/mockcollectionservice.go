@@ -80,3 +80,18 @@ func (mr *MockCollectionServiceMockRecorder) GetStdCollection(ctx, params interf
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStdCollection", reflect.TypeOf((*MockCollectionService)(nil).GetStdCollection), ctx, params)
 }
+
+// GetUserCollections mocks base method.
+func (m *MockCollectionService) GetUserCollections(ctx context.Context, user *models.User, params *pkg.GetUserCollectionsParams) ([]models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserCollections", ctx, user, params)
+	ret0, _ := ret[0].([]models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserCollections indicates an expected call of GetUserCollections.
+func (mr *MockCollectionServiceMockRecorder) GetUserCollections(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCollections", reflect.TypeOf((*MockCollectionService)(nil).GetUserCollections), ctx, user, params)
+}

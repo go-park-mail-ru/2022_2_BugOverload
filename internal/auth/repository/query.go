@@ -31,7 +31,6 @@ WHERE email = $1`
 
 	getUserByID = `
 SELECT 
-	user_id,
 	email,
 	nickname,
 	password,

@@ -35,7 +35,7 @@ func (h *getActivityOnFilmHandler) Configure(r *mux.Router, mw *middleware.Middl
 // delivery of the data to the service at the business logic level.
 // @Summary Getting user info with film
 // @Description Getting user collections, rating on film. Needed auth
-// @tags user
+// @tags user, completed
 // @Produce json
 // @Param id  path int true "film id"
 // @Success 200 {object} models.GetUserActivityOnFilmResponse "successfully getting"

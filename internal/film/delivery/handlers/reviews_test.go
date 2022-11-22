@@ -48,9 +48,9 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	}}
 
 	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
-		Count:  1,
-		Offset: 0,
-		FilmID: 1,
+		CountReviews: 1,
+		Offset:       0,
+		FilmID:       1,
 	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
@@ -102,9 +102,9 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	}
 
 	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
-		Count:  1,
-		Offset: 0,
-		FilmID: 1,
+		CountReviews: 1,
+		Offset:       0,
+		FilmID:       1,
 	}).Return([]modelsGlobal.Review{}, errors.ErrNotFoundInDB)
 
 	w := httptest.NewRecorder()

@@ -45,13 +45,13 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Midd
 // @Produce json
 // @Param sort_param        query string true "create_time, update_time"
 // @Param count_collections query int    true "count collections"
-// @Param delimiter         query string true "last value while in is date last returned collection for create_time AND update_time"
+// @Param delimiter         query string true "last value while in is date last returned collection for create_time AND update_time for first for both is 'now'"
 // @Success 200 {object} models.GetStdCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collection [GET]
+// @Router /api/v1/user/collections [GET]
 func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {

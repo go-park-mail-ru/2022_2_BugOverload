@@ -52,6 +52,7 @@ const (
 	FilmRateDropRequest          = "FilmRateDropRequest"
 	NewFilmReviewRequest         = "NewFilmReviewRequest"
 	GetUserActivityOnFilmRequest = "GetUserActivityOnFilmRequest"
+	UserCollectionsRequest       = "UserCollectionsRequest"
 
 	DateFormat = "2006.01.02"
 	TimeFormat = "15:04:05"
@@ -79,8 +80,9 @@ const (
 	CollectionSortParamDate       = "date"
 	CollectionSortParamFilmRating = "rating"
 
-	UserCollectionSortParamDate       = "create_time"
-	UserCollectionSortParamFilmRating = "update_time"
+	UserCollectionsSortParamCreateDate = "create_time"
+	UserCollectionsSortParamUpdateDate = "update_time"
+	UserCollectionsDelimiter           = "now"
 
 	MaxCountAttrInCollection = 2
 )
