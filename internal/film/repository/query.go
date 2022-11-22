@@ -118,4 +118,18 @@ WHERE f.poster_hor IS NOT NULL AND f.film_id BETWEEN 27 AND 29
    or film_id = 15
 ORDER BY random()
 LIMIT 1`
+
+	getNewFilms = `
+SELECT f.film_id,
+       f.name,
+       to_char(f.prod_date, 'YYYY.MM.DD'),
+       f.poster_ver,
+       f.rating,
+       f.duration_minutes,
+       f.description
+FROM films f
+WHERE f.prod_date > now()
+  AND f.type = 'film'
+ORDER BY f.prod_date
+LIMIT $1`
 )
