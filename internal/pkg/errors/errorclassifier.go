@@ -73,6 +73,7 @@ var (
 	ErrImageNotFound   = stdErrors.New("image not found")
 	ErrSessionNotFound = stdErrors.New("session not found")
 	ErrUserNotFound    = stdErrors.New("user not found")
+	ErrFilmsNotFound   = stdErrors.New("films not found")
 )
 
 type ErrClassifier struct {
@@ -149,6 +150,7 @@ func NewErrClassifier() ErrClassifier {
 	res[ErrSessionNotFound] = http.StatusNotFound
 	res[ErrUserNotFound] = http.StatusNotFound
 	res[ErrImageNotFound] = http.StatusNotFound
+	res[ErrFilmsNotFound] = http.StatusNotFound
 
 	return ErrClassifier{
 		table: res,

@@ -69,7 +69,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
 				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
 				query, values, err)
 		}
@@ -122,7 +122,7 @@ func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *model
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowsCollections, err := conn.QueryContext(ctx, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
 				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
 				query, values, err)
 		}
@@ -149,6 +149,12 @@ func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *model
 			}
 
 			response = append(response, collection)
+		}
+
+		if len(response) == 0 {
+			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
+				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
+				query, values, err)
 		}
 
 		return nil
@@ -202,7 +208,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
 				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
 				query, values, err)
 		}
