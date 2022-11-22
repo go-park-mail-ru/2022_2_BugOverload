@@ -66,4 +66,10 @@ for file in $(find "$1" -type f -name "*"); do
     continue
   fi
 
+  if [[ "$file" == *"$COLLECTION_POSTERS"* ]]; then
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://collections/posters/
+
+    continue
+  fi
+
 done
