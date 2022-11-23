@@ -12,22 +12,22 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 )
 
-// premiersCollectionHandler is the structure that handles the request for movies in cinemas.
-type premiersCollectionHandler struct {
+// premieresCollectionHandler is the structure that handles the request for movies in cinemas.
+type premieresCollectionHandler struct {
 	collectionService service.CollectionService
 }
 
-// NewPremiersCollectionHandler is constructor for getStdCollectionHandler in this pkg - in cinema.
-func NewPremiersCollectionHandler(uc service.CollectionService) handler.Handler {
-	return &premiersCollectionHandler{
+// NewPremieresCollectionHandler is constructor for getStdCollectionHandler in this pkg - in cinema.
+func NewPremieresCollectionHandler(uc service.CollectionService) handler.Handler {
+	return &premieresCollectionHandler{
 		uc,
 	}
 }
 
-func (h *premiersCollectionHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
-	r.HandleFunc("/api/v1/collection/premiers", h.Action).
+func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+	r.HandleFunc("/api/v1/premieres", h.Action).
 		Methods(http.MethodGet).
-		Queries("count_films", "{count_films}")
+		Queries("count_films", "{count_films}", "delimiter", "{delimiter}")
 }
 
 // Action is a method for initial validation of the request and data and
@@ -38,13 +38,14 @@ func (h *premiersCollectionHandler) Configure(r *mux.Router, mw *middleware.Midd
 // @tags collection, completed
 // @Produce json
 // @Param count_films query int    true "count films"
-// @Success 200 {object} models.PremiersCollectionResponse "returns an array of movies"
+// @Param delimiter   query string true "offset"
+// @Success 200 {object} models.PremieresCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collection/premiers [GET]
-func (h *premiersCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewPremiersCollectionRequest()
+// @Router /api/v1/premieres [GET]
+func (h *premieresCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
+	request := models.NewPremieresCollectionRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -52,13 +53,13 @@ func (h *premiersCollectionHandler) Action(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	collection, err := h.collectionService.GetPremiersCollection(r.Context(), request.GetParams())
+	collection, err := h.collectionService.GetPremieresCollection(r.Context(), request.GetParams())
 	if err != nil {
 		httpwrapper.DefaultHandlerError(r.Context(), w, err)
 		return
 	}
 
-	response := models.NewPremiersCollectionResponse(&collection)
+	response := models.NewPremieresCollectionResponse(&collection)
 
 	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
 }
