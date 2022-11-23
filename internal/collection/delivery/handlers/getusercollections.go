@@ -38,8 +38,8 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Midd
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Getter std collection (tag, genre)
-// @Description Films by genre or tag by DESC rating or DESC date. prod_company, prod_country also in the future.
+// @Summary Get user personal collections
+// @Description Collections by create time OR update time
 // @Description All fields required
 // @tags collection, completed
 // @Produce json

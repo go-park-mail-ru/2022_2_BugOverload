@@ -1,11 +1,12 @@
 package models
 
 import (
+	"net/http"
+	"strconv"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"net/http"
-	"strconv"
 )
 
 type GetUserCollectionRequest struct {
@@ -65,6 +66,8 @@ type ShortFilmCollectionResponse struct {
 	Poster     string `json:"poster,omitempty" example:"42"`
 	CountLikes int    `json:"count_likes,omitempty" example:"1023"`
 	CountFilms int    `json:"count_films,omitempty"  example:"10"`
+	UpdateTime string `json:"update_time,omitempty"  example:"2020.12.12 15:15:15"`
+	CreateTime string `json:"create_time,omitempty"  example:"2012.06.05 01:25:00"`
 }
 
 func NewShortFilmCollectionResponse(collections []models.Collection) []ShortFilmCollectionResponse {
@@ -77,6 +80,8 @@ func NewShortFilmCollectionResponse(collections []models.Collection) []ShortFilm
 			Poster:     collections[idx].Poster,
 			CountLikes: collections[idx].CountLikes,
 			CountFilms: collections[idx].CountFilms,
+			UpdateTime: collections[idx].UpdateTime,
+			CreateTime: collections[idx].CreateTime,
 		}
 	}
 

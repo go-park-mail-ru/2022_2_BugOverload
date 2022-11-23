@@ -142,7 +142,9 @@ func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *model
 				&collection.Name,
 				&collection.Poster,
 				&collection.CountFilms,
-				&collection.CountLikes)
+				&collection.CountLikes,
+				&collection.UpdateTime,
+				&collection.CreateTime)
 			if err != nil {
 				return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 					"Err Scan: params input: query - [%s], values - [%+v]. Special Error [%s]",
