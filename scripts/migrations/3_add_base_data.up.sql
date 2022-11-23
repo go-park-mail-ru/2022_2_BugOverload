@@ -87,9 +87,9 @@ VALUES ('актер'),
        ('художник'),
        ('монтажер');
 
-INSERT INTO tags (name)
-VALUES ('популярное'),
-       ('сейчас в кино');
+INSERT INTO tags (name, description)
+VALUES ('популярное', 'Самые популярные фильмы в сообществе'),
+       ('сейчас в кино', 'Фильмы, которые можно посмотреть в российском кинопрокате');
 
 INSERT INTO companies (name)
 VALUES ('20th Century Fox'),

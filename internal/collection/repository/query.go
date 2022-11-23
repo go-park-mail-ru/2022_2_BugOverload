@@ -94,4 +94,6 @@ WHERE pc.fk_user_id = $1
   AND c.updated_at < $2
 ORDER BY c.updated_at DESC
 LIMIT $3`
+
+	getTagDescription = `SELECT description FROM tags WHERE name = $1`
 )
