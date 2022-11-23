@@ -15,7 +15,7 @@ aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket users
 # Создаем bucket для персон
 aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket persons
 
-# Создаем bucket для персон
+# Создаем bucket для коллекций
 aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket collections
 
 HOR='hor'
