@@ -391,5 +391,533 @@
       "4",
       "5"
     ]
+  },
+  {
+    "name": "Натали Портман",
+    "avatar": "16",
+    "original_name": "Natalie Portman",
+    "birthday": "1981.06.09",
+    "gender": "female",
+    "growth": 1.6,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Дэниэл Рэдклифф",
+    "avatar": "17",
+    "original_name": "Daniel Radcliffe",
+    "birthday": "1989.07.23",
+    "gender": "male",
+    "growth": 1.65,
+    "genres": [
+      "комедия",
+      "драма",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Эмма Уотсон",
+    "avatar": "18",
+    "original_name": "Emma Watson",
+    "birthday": "1990.04.15",
+    "gender": "female",
+    "growth": 1.65,
+    "genres": [
+      "фэнтези",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Алан Рикман",
+    "avatar": "19",
+    "original_name": "Alan Rickman",
+    "birthday": "1946.02.21",
+    "gender": "male",
+    "growth": 1.85,
+    "genres": [
+      "драма",
+      "комедия",
+      "фэнтези"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Винни Джонс",
+    "avatar": "20",
+    "original_name": "Vinnie Jones",
+    "birthday": "1965.01.05",
+    "gender": "male",
+    "growth": 1.85,
+    "genres": [
+      "боевик",
+      "триллер",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Марк Руффало",
+    "avatar": "21",
+    "original_name": "Mark Ruffalo",
+    "birthday": "1967.11.22",
+    "gender": "male",
+    "growth": 1.73,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Бен Кингсли",
+    "avatar": "22",
+    "original_name": "Ben Kingsley",
+    "birthday": "1943.12.31",
+    "gender": "male",
+    "growth": 1.72,
+    "genres": [
+      "драма",
+      "триллер",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Джонни Депп",
+    "avatar": "23",
+    "original_name": "Johnny Depp",
+    "birthday": "1963.06.09",
+    "gender": "male",
+    "growth": 1.78,
+    "genres": [
+      "драма",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Кира Найтли",
+    "avatar": "24",
+    "original_name": "Keira Knightley",
+    "birthday": "1985.03.26",
+    "gender": "female",
+    "growth": 1.7,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Леонардо ДиКаприо",
+    "avatar": "25",
+    "original_name": "Leonardo DiCaprio",
+    "birthday": "1974.11.11",
+    "gender": "male",
+    "growth": 1.83,
+    "genres": [
+      "драма",
+      "документальный",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Джозеф Гордон-Левитт",
+    "avatar": "26",
+    "original_name": "Joseph Gordon-Levitt",
+    "birthday": "1981.02.17",
+    "gender": "male",
+    "growth": 1.76,
+    "genres": [
+      "драма",
+      "комедия",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "композитор",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Мэттью МакКонахи",
+    "avatar": "27",
+    "original_name": "Matthew McConaughey",
+    "birthday": "1969.11.04",
+    "gender": "male",
+    "growth": 1.82,
+    "genres": [
+      "комедия",
+      "драма",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Энн Хэтэуэй",
+    "avatar": "28",
+    "original_name": "Anne Hathaway",
+    "birthday": "1982.11.12",
+    "gender": "female",
+    "growth": 1.73,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Майкл Кейн",
+    "avatar": "29",
+    "original_name": "Michael Caine",
+    "birthday": "1933.03.14",
+    "gender": "male",
+    "growth": 1.88,
+    "genres": [
+      "драма",
+      "триллер",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "композитор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Гари Олдман",
+    "avatar": "30",
+    "original_name": "Gary Oldman",
+    "birthday": "1958.03.21",
+    "gender": "male",
+    "growth": 1.74,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Хоакин Феникс",
+    "avatar": "31",
+    "original_name": "Joaquin Phoenix",
+    "birthday": "1974.10.28",
+    "gender": "male",
+    "growth": 1.73,
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Вигго Мортенсен",
+    "avatar": "32",
+    "original_name": "Viggo Mortensen",
+    "birthday": "1958.10.20",
+    "gender": "male",
+    "growth": 1.8,
+    "genres": [
+      "драма",
+      "триллер",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Орландо Блум",
+    "avatar": "33",
+    "original_name": "Orlando Bloom",
+    "birthday": "1977.01.13",
+    "gender": "male",
+    "growth": 1.8,
+    "genres": [
+      "драма",
+      "боевик",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Хьюго Уивинг",
+    "avatar": "34",
+    "original_name": "Hugo Weaving",
+    "birthday": "1960.04.04",
+    "gender": "male",
+    "growth": 1.9,
+    "genres": [
+      "драма",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Морган Фриман",
+    "avatar": "35",
+    "original_name": "Morgan Freeman",
+    "birthday": "1937.06.01",
+    "gender": "male",
+    "growth": 1.88,
+    "genres": [
+      "драма",
+      "триллер",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Лиам Нисон",
+    "avatar": "36",
+    "original_name": "Liam Neeson",
+    "birthday": "1952.06.07",
+    "gender": "male",
+    "growth": 1.92,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
   }
 ]
