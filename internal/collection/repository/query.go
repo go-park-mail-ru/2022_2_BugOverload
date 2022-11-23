@@ -68,7 +68,9 @@ SELECT c.collection_id,
        c.name,
        c.poster,
        c.count_films,
-       c.count_likes
+       c.count_likes,
+       c.create_time,
+       c.updated_at
 FROM collections c
          JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
 WHERE pc.fk_user_id = $1
@@ -82,7 +84,9 @@ SELECT c.collection_id,
        c.name,
        c.poster,
        c.count_films,
-       c.count_likes
+       c.count_likes,
+       c.create_time,
+       c.updated_at
 FROM collections c
          JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
 WHERE pc.fk_user_id = $1
