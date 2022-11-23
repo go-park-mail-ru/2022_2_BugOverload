@@ -80,6 +80,21 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 				query, values, err)
 		}
 
+		// Tag Description
+		rowTag := conn.QueryRowContext(ctx, getTagDescription, params.Key)
+		if rowTag.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Get Tag desctiption Err: params input: query - [%s], values - [%s]. Special Error [%s]",
+				getTagDescription, params.Key, err)
+		}
+
+		err = rowTag.Scan(&response.Description)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Get Tag desctiption Scan Err: params input: query - [%s], values - [%s]. Special Error [%s]",
+				getTagDescription, params.Key, err)
+		}
+
 		response.Name = params.Key
 
 		//  Genres

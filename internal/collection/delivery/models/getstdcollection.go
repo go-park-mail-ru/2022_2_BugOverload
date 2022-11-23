@@ -83,14 +83,16 @@ type FilmTagCollectionResponse struct {
 }
 
 type GetStdCollectionResponse struct {
-	Name  string                      `json:"name,omitempty" example:"Сейчас в кино"`
-	Films []FilmTagCollectionResponse `json:"films,omitempty"`
+	Name        string                      `json:"name,omitempty" example:"Сейчас в кино"`
+	Description string                      `json:"description,omitempty" example:"Фильмы, которые можно посмотреть в российском кинопрокате"`
+	Films       []FilmTagCollectionResponse `json:"films,omitempty"`
 }
 
 func NewStdCollectionResponse(collection *models.Collection) *GetStdCollectionResponse {
 	res := &GetStdCollectionResponse{
-		Name:  collection.Name,
-		Films: make([]FilmTagCollectionResponse, len(collection.Films)),
+		Name:        collection.Name,
+		Description: collection.Description,
+		Films:       make([]FilmTagCollectionResponse, len(collection.Films)),
 	}
 
 	for idx, value := range collection.Films {

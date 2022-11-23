@@ -99,9 +99,11 @@ CREATE TABLE IF NOT EXISTS companies
 -- Generator completed
 CREATE TABLE IF NOT EXISTS tags
 (
-    "tag_id" serial NOT NULL PRIMARY KEY,
-    "name"   text   NOT NULL UNIQUE,
-    CONSTRAINT "name_length" CHECK (LENGTH("name") <= 64)
+    "tag_id"      serial NOT NULL PRIMARY KEY,
+    "name"        text   NOT NULL UNIQUE,
+    CONSTRAINT "name_length" CHECK (LENGTH("name") <= 64),
+    "description" text   NOT NULL,
+    CONSTRAINT "short_description_length" CHECK (LENGTH("description") <= 300)
 );
 
 CREATE TYPE gender_enum AS ENUM ('male', 'female');
