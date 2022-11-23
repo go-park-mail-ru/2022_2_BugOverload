@@ -66,19 +66,19 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByTag", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionByTag), ctx, params)
 }
 
-// GetPremiersCollection mocks base method.
-func (m *MockCollectionService) GetPremiersCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+// GetPremieresCollection mocks base method.
+func (m *MockCollectionService) GetPremieresCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPremiersCollection", ctx, params)
+	ret := m.ctrl.Call(m, "GetPremieresCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetPremiersCollection indicates an expected call of GetPremiersCollection.
-func (mr *MockCollectionServiceMockRecorder) GetPremiersCollection(ctx, params interface{}) *gomock.Call {
+// GetPremieresCollection indicates an expected call of GetPremieresCollection.
+func (mr *MockCollectionServiceMockRecorder) GetPremieresCollection(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiersCollection", reflect.TypeOf((*MockCollectionService)(nil).GetPremiersCollection), ctx, params)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremieresCollection", reflect.TypeOf((*MockCollectionService)(nil).GetPremieresCollection), ctx, params)
 }
 
 // GetStdCollection mocks base method.
