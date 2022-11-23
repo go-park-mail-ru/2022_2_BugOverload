@@ -50,8 +50,8 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	userCollectionsHandler := handlersCollection.NewGetUserCollectionsHandler(collectionService)
 	res[pkg.UserCollectionsRequest] = userCollectionsHandler
 
-	premiersCollectionHandler := handlersCollection.NewPremiersCollectionHandler(collectionService)
-	res[pkg.PremiersCollectionRequest] = premiersCollectionHandler
+	premieresCollectionHandler := handlersCollection.NewPremieresCollectionHandler(collectionService)
+	res[pkg.PremieresCollectionRequest] = premieresCollectionHandler
 
 	// Films
 	filmsStorage := repoFilms.NewFilmPostgres(postgres)

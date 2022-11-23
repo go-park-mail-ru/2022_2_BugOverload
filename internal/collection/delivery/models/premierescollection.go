@@ -9,15 +9,16 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type PremiersCollectionRequest struct {
+type PremieresCollectionRequest struct {
 	CountFilms int
+	Delimiter  string
 }
 
-func NewPremiersCollectionRequest() *PremiersCollectionRequest {
-	return &PremiersCollectionRequest{}
+func NewPremieresCollectionRequest() *PremieresCollectionRequest {
+	return &PremieresCollectionRequest{}
 }
 
-func (p *PremiersCollectionRequest) Bind(r *http.Request) error {
+func (p *PremieresCollectionRequest) Bind(r *http.Request) error {
 	countFilms := r.FormValue("count_films")
 	if countFilms == "" {
 		return errors.ErrBadRequestParamsEmptyRequiredFields
@@ -33,12 +34,18 @@ func (p *PremiersCollectionRequest) Bind(r *http.Request) error {
 		return errors.ErrBadRequestParams
 	}
 
+	p.Delimiter = r.FormValue("delimiter")
+	if p.Delimiter == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
 	return nil
 }
 
-func (p *PremiersCollectionRequest) GetParams() *innerPKG.GetStdCollectionParams {
+func (p *PremieresCollectionRequest) GetParams() *innerPKG.GetStdCollectionParams {
 	return &innerPKG.GetStdCollectionParams{
 		CountFilms: p.CountFilms,
+		Delimiter:  p.Delimiter,
 	}
 }
 
@@ -47,7 +54,7 @@ type FilmPersonResponse struct {
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
-type PremiersCollectionFilm struct {
+type PremieresCollectionFilm struct {
 	ID              int     `json:"id,omitempty" example:"23"`
 	Name            string  `json:"name,omitempty" example:"Game of Thrones"`
 	ProdDate        string  `json:"prod_date,omitempty" example:"2014.01.13"`
@@ -61,17 +68,16 @@ type PremiersCollectionFilm struct {
 	Directors     []FilmPersonResponse `json:"directors,omitempty"`
 }
 
-type PremiersCollectionResponse struct {
-	Name        string                   `json:"name,omitempty" example:"Сейчас в кино"`
-	Description string                   `json:"description,omitempty" example:"Здесь вы можете посмотреть новинки кинопроката"`
-	Films       []PremiersCollectionFilm `json:"films,omitempty"`
+type PremieresCollectionResponse struct {
+	Name        string                    `json:"name,omitempty" example:"Сейчас в кино"`
+	Description string                    `json:"description,omitempty" example:"Здесь вы можете посмотреть новинки кинопроката"`
+	Films       []PremieresCollectionFilm `json:"films,omitempty"`
 }
 
-func NewPremiersCollectionResponse(collection *models.Collection) *PremiersCollectionResponse {
-	res := &PremiersCollectionResponse{
-		Name:        "Премьеры",
-		Description: "Здесь вы найдете список новинок российского кинопроката",
-		Films:       make([]PremiersCollectionFilm, len(collection.Films)),
+func NewPremieresCollectionResponse(collection *models.Collection) *PremieresCollectionResponse {
+	res := &PremieresCollectionResponse{
+		Name:  "Премьеры",
+		Films: make([]PremieresCollectionFilm, len(collection.Films)),
 	}
 
 	for idx := range collection.Films {

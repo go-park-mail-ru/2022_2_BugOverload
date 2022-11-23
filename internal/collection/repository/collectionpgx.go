@@ -20,7 +20,7 @@ type CollectionRepository interface {
 	GetCollectionByTag(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
 	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
-	GetPremiersCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -254,15 +254,15 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 	return response.Convert(), nil
 }
 
-// GetPremiersCollection it gives away only movies with prod_date > current from the repository.
-func (c *collectionPostgres) GetPremiersCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
+// GetPremieresCollection it gives away only movies with prod_date > current from the repository.
+func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
 
 	// Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = repository.GetNewFilmsBatch(ctx, conn, params.CountFilms)
+		response.Films, err = repository.GetNewFilmsBatch(ctx, conn, params.CountFilms, params.Delimiter)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 				"Film main info Err: params input: values - [%+v]. Special Error [%s]",

@@ -22,7 +22,7 @@ func NewRouter(handlers map[string]handler.Handler, mw *middleware.Middleware) *
 	// Collections
 	handlers[pkg.TagCollectionRequest].Configure(router, mw)
 	handlers[pkg.UserCollectionsRequest].Configure(router, mw)
-	handlers[pkg.PremiersCollectionRequest].Configure(router, mw)
+	handlers[pkg.PremieresCollectionRequest].Configure(router, mw)
 
 	// Films
 	handlers[pkg.FilmRequest].Configure(router, mw)

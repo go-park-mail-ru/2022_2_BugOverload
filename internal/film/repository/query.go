@@ -130,6 +130,7 @@ SELECT f.film_id,
 FROM films f
 WHERE f.prod_date > now()
   AND f.type = 'film'
-ORDER BY f.prod_date
-LIMIT $1`
+ORDER BY f.prod_date, f.film_id
+LIMIT $1
+OFFSET $2`
 )
