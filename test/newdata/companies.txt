@@ -2,8 +2,10 @@
 20th Century Fox Animation
 A24
 Amazon Prime Video
+Arclight Films
 Alcon Entertainment
 Amblin Entertainment
+Annapurna Pictures
 Bad Robot Productions
 BBC Films
 BBC Television Centre
@@ -17,6 +19,7 @@ DC Comics
 Decca Records
 DreamWorks Animation
 DreamWorks Pictures
+Egg Films
 EuropaCorp
 Focus Features
 Gaumont
@@ -34,10 +37,12 @@ Netflix
 New Line Cinema
 Nickelodeon Movies
 Original Film
+Paper Street Pictures
 Paramount Pictures
 Pathé
 Pixar Animation Studios
 Polydor Records
+R-Lines Production
 Regency Enterprises
 Relativity Media
 Screen Gems
@@ -51,6 +56,7 @@ Summit Entertainment
 The Weinstein Company
 Touchstone Pictures
 TriStar Pictures
+Troublemaker Studios
 United Artists
 Universal Music Records
 Universal Pictures
@@ -65,3 +71,6 @@ Warner Bros. Pictures
 Infinity Films
 Natrix Natrix
 Eurimages
+Yellow Bird
+Tempo Productions Limited
+308 Entertainment

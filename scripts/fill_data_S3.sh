@@ -15,6 +15,9 @@ aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket users
 # Создаем bucket для персон
 aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket persons
 
+# Создаем bucket для коллекций
+aws --endpoint-url="$LOCALSTACK_S3_URL" s3api create-bucket --bucket collections
+
 HOR='hor'
 VER='ver'
 DEFAULT='default'
@@ -22,6 +25,7 @@ USER_AVATAR='users_avatars'
 PERSON_AVATAR='persons_avatars'
 PERSON_IMAGES='persons_images/'
 FILM_IMAGES='films_images/'
+COLLECTION_POSTERS='collections_posters/'
 
 for file in $(find "$1" -type f -name "*"); do
   if [[ "$file" == *"$HOR"* ]]; then
