@@ -45,11 +45,13 @@ func (f *FilmRateDropRequest) GetFilm() *models.Film {
 }
 
 type FilmRateDropResponse struct {
-	CountRatings int `json:"count_ratings,omitempty" example:"12"`
+	Rating       float32 `json:"rating,omitempty" example:"9.2"`
+	CountRatings int     `json:"count_ratings,omitempty" example:"12"`
 }
 
 func NewFilmRateDropResponse(film *models.Film) *FilmRateDropResponse {
 	return &FilmRateDropResponse{
+		Rating:       film.Rating,
 		CountRatings: film.CountRatings,
 	}
 }

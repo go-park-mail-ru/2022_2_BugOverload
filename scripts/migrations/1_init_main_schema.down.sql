@@ -9,13 +9,13 @@ DROP TABLE IF EXISTS film_tags;
 
 DROP TABLE IF EXISTS film_persons;
 
-DROP TABLE IF EXISTS profile_ratings;
+DROP TABLE IF EXISTS user_ratings;
 
-DROP TABLE IF EXISTS profile_views_films;
+DROP TABLE IF EXISTS user_views_films;
 
-DROP TABLE IF EXISTS profile_reviews;
+DROP TABLE IF EXISTS user_reviews;
 
-DROP TABLE IF EXISTS profile_collections;
+DROP TABLE IF EXISTS user_collections;
 
 DROP TABLE IF EXISTS person_professions;
 
