@@ -15,7 +15,7 @@ count_reviews_likes = 3000
 max_likes_on_review = 20
 
 max_film_actors = 5
-max_film_persons = 2
+max_film_persons = 4
 max_films_in_tag = 20
 
 count_views = 600

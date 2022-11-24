@@ -72,11 +72,13 @@ func (f *FilmRateRequest) GetParams() *innerPKG.FilmRateParams {
 }
 
 type FilmRateResponse struct {
-	CountRatings int `json:"count_ratings,omitempty" example:"22"`
+	Rating       float32 `json:"rating,omitempty" example:"9.2"`
+	CountRatings int     `json:"count_ratings,omitempty" example:"22"`
 }
 
 func NewFilmRateResponse(film *models.Film) *FilmRateResponse {
 	return &FilmRateResponse{
+		Rating:       film.Rating,
 		CountRatings: film.CountRatings,
 	}
 }

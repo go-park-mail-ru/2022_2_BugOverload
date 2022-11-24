@@ -16,7 +16,7 @@ VALUES ('Избранное', 'Ваши сохранные фильмы', '1'), 
 RETURNING collection_id;`
 
 	linkUserDefCollections = `
-INSERT INTO profile_collections (fk_user_id, fk_collection_id)
+INSERT INTO user_collections (fk_user_id, fk_collection_id)
 VALUES ($1, $2), ($1, $3)`
 
 	getUserByEmail = `

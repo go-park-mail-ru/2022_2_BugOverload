@@ -46,9 +46,9 @@ SELECT r.name,
        u.avatar,
        u.count_reviews
 FROM reviews r
-         JOIN profile_reviews pr on r.review_id = pr.fk_review_id
-         JOIN users u on pr.fk_user_id = u.user_id
-WHERE pr.fk_film_id = $1
+         JOIN user_reviews ur on r.review_id = ur.fk_review_id
+         JOIN users u on ur.fk_user_id = u.user_id
+WHERE ur.fk_film_id = $1
 ORDER BY r.create_time DESC
 LIMIT $2 OFFSET $3`
 

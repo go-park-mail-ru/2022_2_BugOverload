@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS film_persons
 );
 
 -- Generator completed
-CREATE TABLE IF NOT EXISTS profile_ratings
+CREATE TABLE IF NOT EXISTS user_ratings
 (
     "fk_user_id"  integer  NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     "fk_film_id"  integer  NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS profile_ratings
 );
 
 -- Generator completed
-CREATE TABLE IF NOT EXISTS profile_views_films
+CREATE TABLE IF NOT EXISTS user_views_films
 (
     "fk_user_id"  integer NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     "fk_film_id"  integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS profile_views_films
 );
 
 -- Generator completed
-CREATE TABLE IF NOT EXISTS profile_reviews
+CREATE TABLE IF NOT EXISTS user_reviews
 (
     "fk_review_id" integer NOT NULL REFERENCES reviews (review_id) ON DELETE CASCADE,
     "fk_user_id"   integer NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS profile_reviews
 CREATE TYPE collection_user_type_relation_enum AS ENUM ('author', 'listener');
 
 -- Generator completed
-CREATE TABLE IF NOT EXISTS profile_collections
+CREATE TABLE IF NOT EXISTS user_collections
 (
     "fk_user_id"         integer                            NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     "fk_collection_id"   integer                            NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
