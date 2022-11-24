@@ -44,7 +44,7 @@ func (s *Server) Launch() error {
 	authService := serviceAuth.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	// GRPC in dev ---------------- WARNING
+	// GRPC in dev ---------------- WARNING timeout not work. How to solve it?
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(s.config.ServerGRPCImage.WorkTimeout)*time.Second)
 	defer cancel()
 
