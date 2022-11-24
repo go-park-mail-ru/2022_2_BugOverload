@@ -13,7 +13,7 @@ import (
 
 // @title MovieGate
 // @version 1.0
-// @description Server for MovieGate application.
+// @description ServerHTTP for MovieGate application.
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
@@ -42,12 +42,12 @@ func main() {
 		}
 	}(closeResource, logger)
 
-	server := server.New(config, logger)
+	server := server.NewServerHTTP(config, logger)
 
 	err = server.Launch()
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
-	logrus.Info("Server was stopped")
+	logrus.Info("ServerHTTP was stopped")
 }

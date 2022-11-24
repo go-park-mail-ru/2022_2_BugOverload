@@ -8,8 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // personHandler is the structure that handles the request for
@@ -51,17 +51,17 @@ func (h *personHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	person, err := h.personService.GetPersonByID(r.Context(), request.GetPerson(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewPersonResponse(&person)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

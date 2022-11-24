@@ -18,7 +18,7 @@ import (
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestTagCollectionHandler_Action_OK(t *testing.T) {
@@ -99,7 +99,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=1&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
@@ -138,7 +138,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -156,7 +156,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=asd&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}
 
@@ -185,7 +185,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -203,7 +203,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=-1&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
@@ -232,7 +232,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -250,7 +250,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Target(t *te
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=&key=popular&sort_param=date&count_films=-1&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -279,7 +279,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Target(t *te
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -297,7 +297,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Key(t *testi
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=&sort_param=date&count_films=-1&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -326,7 +326,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Key(t *testi
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -344,7 +344,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_SortParam(t 
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=&count_films=-1&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -373,7 +373,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_SortParam(t 
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -391,7 +391,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountFilms(t
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=asd&count_films=&delimiter=0", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -420,7 +420,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountFilms(t
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -438,7 +438,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Delinmeter(t
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=asd&count_films=12&delimiter=", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -467,7 +467,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Delinmeter(t
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

@@ -1,6 +1,8 @@
 package factory
 
 import (
+	"google.golang.org/grpc"
+
 	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
@@ -9,9 +11,8 @@ import (
 	handlersFilm "go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
 	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	handlersImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
-	repoImage "go-park-mail-ru/2022_2_BugOverload/internal/image/repository"
-	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	handlersPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/handlers"
 	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
 	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/person/service"
@@ -24,7 +25,7 @@ import (
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
 
-func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionService serviceSession.SessionService, authService serviceAuth.AuthService) map[string]handler.Handler {
+func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionService serviceSession.SessionService, authService serviceAuth.AuthService, con map[string]*grpc.ClientConn) map[string]handler.Handler {
 	res := make(map[string]handler.Handler)
 
 	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
@@ -69,9 +70,8 @@ func NewHandlersMap(config *pkg.Config, postgres *sqltools.Database, sessionServ
 	res[pkg.ReviewsFilmRequest] = reviewsHandler
 
 	// Images
-	is := repoImage.NewImageS3(config, postgres)
 
-	imageService := serviceImage.NewImageService(is)
+	imageService := client.NewImageServiceGRPSClient(con["1"])
 
 	downloadImageHandler := handlersImage.NewGetImageHandler(imageService)
 	res[pkg.DownloadImageRequest] = downloadImageHandler

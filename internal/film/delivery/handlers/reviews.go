@@ -8,8 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // reviewLikeHandler is the structure that handles the request for
@@ -51,17 +51,17 @@ func (h *reviewsHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	reviews, err := h.reviewsService.GetReviewsByFilmID(r.Context(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewReviewsResponse(&reviews)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

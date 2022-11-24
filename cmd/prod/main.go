@@ -31,12 +31,12 @@ func main() {
 		}
 	}(closeResource, logger)
 
-	server := server.New(config, logger)
+	server := server.NewServerHTTP(config, logger)
 
 	err = server.Launch()
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
-	logrus.Info("Server was stopped")
+	logrus.Info("ServerHTTP was stopped")
 }

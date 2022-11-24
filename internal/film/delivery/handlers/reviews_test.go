@@ -16,7 +16,7 @@ import (
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestReviewsHandler_Action_OK(t *testing.T) {
@@ -97,7 +97,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
@@ -127,7 +127,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -149,7 +149,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "app")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrUnsupportedMediaType.Error(),
 	}
 
@@ -173,7 +173,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -195,7 +195,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -219,7 +219,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -241,7 +241,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -265,7 +265,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -287,7 +287,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}
 
@@ -311,7 +311,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -333,7 +333,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
@@ -357,7 +357,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -379,7 +379,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}
 
@@ -403,7 +403,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -425,7 +425,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
@@ -449,7 +449,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -471,7 +471,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 	r = mux.SetURLVars(r, vars)
 	r.Header.Set("Content-Type", "")
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -495,7 +495,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

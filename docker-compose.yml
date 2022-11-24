@@ -9,10 +9,6 @@ services:
     image: andeo1812/golang_web_light:latest
     command: make -C project debug-mode
     environment:
-      AWS_PROFILE: "${AWS_PROFILE}"
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_REGION: "${AWS_REGION}"
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -28,6 +24,36 @@ services:
     depends_on:
       - localstack
       - main_db
+
+
+  image:
+    container_name: "image"
+    networks:
+      - localstack-net
+      - postgres-net
+    image: andeo1812/golang_web_light:latest
+    command: make -C project image-service-launch
+    environment:
+      AWS_PROFILE: "${AWS_PROFILE}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "${AWS_REGION}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - .:/project
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "8089:8089"
+    depends_on:
+      - localstack
+      - main_db
+
 
   localstack:
     hostname: localstack

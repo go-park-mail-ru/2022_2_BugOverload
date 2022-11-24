@@ -9,8 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -48,7 +48,7 @@ func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware
 func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
@@ -56,17 +56,17 @@ func (h *filmRateDropHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	film, errService := h.userService.FilmRateDrop(r.Context(), &user, request.GetParams())
 	if errService != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, errService)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errService)
 		return
 	}
 
 	response := models.NewFilmRateDropResponse(&film)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

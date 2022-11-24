@@ -1,11 +1,14 @@
 package server
 
 import (
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
@@ -22,7 +25,7 @@ type Server struct {
 	logger *logrus.Logger
 }
 
-func New(config *innerPKG.Config, logger *logrus.Logger) *Server {
+func NewServerHTTP(config *innerPKG.Config, logger *logrus.Logger) *Server {
 	return &Server{
 		config: config,
 		logger: logger,
@@ -41,7 +44,19 @@ func (s *Server) Launch() error {
 	authService := serviceAuth.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	handlers := factory.NewHandlersMap(s.config, postgres, sessionService, authService)
+	grpcConn, err := grpc.Dial(
+		s.config.URls.ImageServiceURL,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		log.Fatalf("cant connect to grpc")
+	}
+	defer grpcConn.Close()
+
+	res := make(map[string]*grpc.ClientConn)
+	res["1"] = grpcConn
+
+	handlers := factory.NewHandlersMap(s.config, postgres, sessionService, authService, res)
 
 	mw := middleware.NewMiddleware(s.logger, sessionService, &s.config.Cors)
 
@@ -56,17 +71,17 @@ func (s *Server) Launch() error {
 
 	routerCORS := mw.SetCORSMiddleware(router)
 
-	logrus.Info("starting server at " + s.config.Server.BindHTTPAddr)
+	logrus.Info("starting server at " + s.config.ServerHTTP.BindHTTPAddr)
 
 	server := http.Server{
-		Addr:         s.config.Server.BindHTTPAddr,
+		Addr:         s.config.ServerHTTP.BindHTTPAddr,
 		Handler:      routerCORS,
-		ReadTimeout:  time.Duration(s.config.Server.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(s.config.Server.WriteTimeout) * time.Second,
+		ReadTimeout:  time.Duration(s.config.ServerHTTP.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(s.config.ServerHTTP.WriteTimeout) * time.Second,
 	}
 
-	if s.config.Server.Protocol == innerPKG.HTTPS {
-		err := server.ListenAndServeTLS(s.config.Server.FileTLSCertificate, s.config.Server.FileTLSKey)
+	if s.config.ServerHTTP.Protocol == innerPKG.HTTPS {
+		err = server.ListenAndServeTLS(s.config.ServerHTTP.FileTLSCertificate, s.config.ServerHTTP.FileTLSKey)
 		if err != nil {
 			logrus.Error(err)
 			return err
@@ -75,7 +90,7 @@ func (s *Server) Launch() error {
 		return nil
 	}
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil {
 		logrus.Error(err)
 		return err

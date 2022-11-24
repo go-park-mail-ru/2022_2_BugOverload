@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package image;
+option go_package = ".;image";
+
+message Image {
+  string Key = 1;
+  string Object = 2;
+  bytes Bytes = 3;
+}
+
+message Nothing {
+  bool dummy = 1;
+}
+
+service ImageService {
+  rpc GetImage(Image) returns (Image) {}
+  rpc UpdateImage(Image) returns (Nothing) {}
+}

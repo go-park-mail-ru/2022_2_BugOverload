@@ -1,4 +1,4 @@
-package httpwrapper
+package wrapper
 
 import (
 	"net/http"

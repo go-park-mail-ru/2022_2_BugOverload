@@ -1,12 +1,21 @@
 package pkg
 
-type Server struct {
+type ServerHTTP struct {
 	BindHTTPAddr       string `toml:"bind_addr_http"`
 	ReadTimeout        int    `toml:"read_timeout"`
 	WriteTimeout       int    `toml:"write_timeout"`
 	Protocol           string `toml:"protocol"`
 	FileTLSCertificate string `toml:"tls_certificate_file"`
 	FileTLSKey         string `toml:"tls_key_file"`
+}
+
+type ServerGRPC struct {
+	BindHTTPAddr      string `toml:"bind_addr_http"`
+	ConnectionTimeout int    `toml:"connection_timeout"`
+}
+
+type URls struct {
+	ImageServiceURL string `toml:"image_service"`
 }
 
 type Cors struct {
@@ -31,11 +40,13 @@ type S3 struct {
 }
 
 type Config struct {
-	Server  Server  `toml:"server"`
-	Cors    Cors    `toml:"cors"`
-	S3      S3      `toml:"S3"`
-	Context Context `toml:"context"`
-	Logger  Logger  `toml:"logger"`
+	ServerHTTP ServerHTTP `toml:"server_http"`
+	ServerGRPC ServerGRPC `toml:"server_grpc"`
+	Cors       Cors       `toml:"cors"`
+	S3         S3         `toml:"S3"`
+	Context    Context    `toml:"context"`
+	Logger     Logger     `toml:"logger"`
+	URls       URls       `toml:"URLs"`
 }
 
 func NewConfig() *Config {

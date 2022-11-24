@@ -1,0 +1,6 @@
+[server_grpc]
+bind_addr_http = ":8089"
+connection_timeout = 10
+
+[S3]
+endpoint = "http://localstack:4566"

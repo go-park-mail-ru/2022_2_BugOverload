@@ -18,7 +18,7 @@ import (
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestRecommendationHandler_Action_OK(t *testing.T) {
@@ -83,7 +83,7 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrWorkDatabase.Error(),
 	}
 
@@ -116,7 +116,7 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

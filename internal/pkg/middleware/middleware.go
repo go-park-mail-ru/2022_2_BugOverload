@@ -13,8 +13,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -86,12 +86,12 @@ func (m *Middleware) SetSizeRequest(h http.Handler) http.Handler {
 
 		length, err := strconv.Atoi(strLength)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrConvertLength)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrConvertLength)
 			return
 		}
 
 		if length > pkg.BufSizeRequest {
-			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrBigRequest)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrBigRequest)
 			return
 		}
 
@@ -103,7 +103,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 			return
 		}
 
@@ -111,7 +111,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, err)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
 		}
 
@@ -128,7 +128,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 			return
 		}
 
@@ -136,7 +136,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, err)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
 		}
 
@@ -144,7 +144,7 @@ func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		_, err = security.CheckCsrfToken(&currentSession, token)
 		if err != nil {
-			httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrCsrfTokenInvalid)
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrCsrfTokenInvalid)
 			return
 		}
 

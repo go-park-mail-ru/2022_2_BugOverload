@@ -11,8 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // getUserCollectionsHandler is the structure that handles the request for movies in cinemas.
@@ -55,7 +55,7 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Midd
 func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
@@ -63,17 +63,17 @@ func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Reques
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	collection, err := h.collectionService.GetUserCollections(r.Context(), &user, request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewShortFilmCollectionResponse(collection)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

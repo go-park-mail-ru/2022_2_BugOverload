@@ -10,8 +10,8 @@ import (
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -48,7 +48,7 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(pkg.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
@@ -58,7 +58,7 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	badSession, err := h.sessionService.DeleteSession(r.Context(), requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
@@ -71,5 +71,5 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, badCookie)
 
-	httpwrapper.NoBody(w, http.StatusNoContent)
+	wrapper.NoBody(w, http.StatusNoContent)
 }

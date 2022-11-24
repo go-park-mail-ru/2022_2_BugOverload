@@ -1,4 +1,4 @@
-package httpwrapper
+package wrapper
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someStruct interface{}) {
 	out, err := json.Marshal(someStruct)
 	if err != nil {
-		DefaultHandlerError(ctx, w, errors.ErrJSONUnexpectedEnd)
+		DefaultHandlerHTTPError(ctx, w, errors.ErrJSONUnexpectedEnd)
 		return
 	}
 
@@ -23,7 +23,7 @@ func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someSt
 
 	_, err = w.Write(out)
 	if err != nil {
-		DefaultHandlerError(ctx, w, err)
+		DefaultHandlerHTTPError(ctx, w, err)
 		return
 	}
 }
@@ -36,7 +36,7 @@ func ResponseImage(ctx context.Context, w http.ResponseWriter, statusCode int, i
 
 	_, err := w.Write(image)
 	if err != nil {
-		DefaultHandlerError(ctx, w, err)
+		DefaultHandlerHTTPError(ctx, w, err)
 		return
 	}
 }

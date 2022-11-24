@@ -8,8 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/models"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // getImageHandler is the structure that handles the request for auth.
@@ -52,15 +52,15 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	getImage, err := h.imageService.GetImage(r.Context(), request.GetImage())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
 		return
 	}
 
-	httpwrapper.ResponseImage(r.Context(), w, http.StatusOK, getImage.Bytes)
+	wrapper.ResponseImage(r.Context(), w, http.StatusOK, getImage.Bytes)
 }

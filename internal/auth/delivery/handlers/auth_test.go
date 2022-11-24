@@ -19,7 +19,7 @@ import (
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockSessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service/mocks"
 )
 
@@ -104,7 +104,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNoCookie.Error(),
 	}
 
@@ -135,7 +135,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -154,7 +154,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNoCookie.Error(),
 	}
 
@@ -193,7 +193,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -212,7 +212,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrWorkDatabase.Error(),
 	}
 
@@ -260,7 +260,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -279,7 +279,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 
 	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrSessionNotFound.Error(),
 	}
 
@@ -323,7 +323,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

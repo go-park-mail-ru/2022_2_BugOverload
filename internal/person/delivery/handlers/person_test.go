@@ -16,7 +16,7 @@ import (
 	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/person/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestPersonHandler_Action_OK(t *testing.T) {
@@ -103,7 +103,7 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
@@ -132,7 +132,7 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -153,7 +153,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}
 
@@ -177,7 +177,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -198,7 +198,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms_Empty(t 
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -222,7 +222,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms_Empty(t 
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -243,7 +243,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}
 
@@ -267,7 +267,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -288,7 +288,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountImages_Empty(t
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParamsEmptyRequiredFields.Error(),
 	}
 
@@ -312,7 +312,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountImages_Empty(t
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -333,7 +333,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
@@ -357,7 +357,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -378,7 +378,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrBadRequestParams.Error(),
 	}
 
@@ -402,7 +402,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

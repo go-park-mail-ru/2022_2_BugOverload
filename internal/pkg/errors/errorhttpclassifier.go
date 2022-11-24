@@ -77,98 +77,92 @@ var (
 	ErrCollectionsNotFound = stdErrors.New("collections not found")
 )
 
-type ErrClassifier struct {
-	table map[error]int
+type ErrHTTPClassifier struct {
+	table map[string]int
 }
 
-func NewErrClassifier() ErrClassifier {
-	res := make(map[error]int)
+func NewErrHTTPClassifier() ErrHTTPClassifier {
+	res := make(map[string]int)
 
 	// Common delivery
-	res[ErrBadBodyRequest] = http.StatusBadRequest
-	res[ErrJSONUnexpectedEnd] = http.StatusBadRequest
-	res[ErrContentTypeUndefined] = http.StatusBadRequest
-	res[ErrUnsupportedMediaType] = http.StatusUnsupportedMediaType
-	res[ErrEmptyBody] = http.StatusBadRequest
-	res[ErrConvertQueryType] = http.StatusBadRequest
-	res[ErrQueryRequiredEmpty] = http.StatusBadRequest
-	res[ErrBadRequestParams] = http.StatusBadRequest
-	res[ErrBadRequestParamsEmptyRequiredFields] = http.StatusBadRequest
-	res[ErrBadRequestParams] = http.StatusBadRequest
+	res[ErrBadBodyRequest.Error()] = http.StatusBadRequest
+	res[ErrJSONUnexpectedEnd.Error()] = http.StatusBadRequest
+	res[ErrContentTypeUndefined.Error()] = http.StatusBadRequest
+	res[ErrUnsupportedMediaType.Error()] = http.StatusUnsupportedMediaType
+	res[ErrEmptyBody.Error()] = http.StatusBadRequest
+	res[ErrConvertQueryType.Error()] = http.StatusBadRequest
+	res[ErrQueryRequiredEmpty.Error()] = http.StatusBadRequest
+	res[ErrBadRequestParams.Error()] = http.StatusBadRequest
+	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = http.StatusBadRequest
+	res[ErrBadRequestParams.Error()] = http.StatusBadRequest
 
 	// Common repository
-	res[ErrNotFoundInDB] = http.StatusNotFound
-	res[ErrWorkDatabase] = http.StatusInternalServerError
-	res[ErrGetParamsConvert] = http.StatusInternalServerError
-	res[ErrUnsupportedSortParameter] = http.StatusBadRequest
+	res[ErrNotFoundInDB.Error()] = http.StatusNotFound
+	res[ErrWorkDatabase.Error()] = http.StatusInternalServerError
+	res[ErrGetParamsConvert.Error()] = http.StatusInternalServerError
+	res[ErrUnsupportedSortParameter.Error()] = http.StatusBadRequest
 
 	// Collection service
-	res[ErrNotFindSuchTarget] = http.StatusNotFound
-
-	// Collection service
-	res[ErrNotFindSuchTarget] = http.StatusNotFound
+	res[ErrNotFindSuchTarget.Error()] = http.StatusNotFound
 
 	// Auth delivery
-	res[ErrNoCookie] = http.StatusNotFound
+	res[ErrNoCookie.Error()] = http.StatusNotFound
 
 	// Auth repository
-	res[ErrUserExist] = http.StatusBadRequest
-	res[ErrUserNotExist] = http.StatusNotFound
+	res[ErrUserExist.Error()] = http.StatusBadRequest
+	res[ErrUserNotExist.Error()] = http.StatusNotFound
 
 	// Auth service
-	res[ErrInvalidNickname] = http.StatusBadRequest
-	res[ErrInvalidEmail] = http.StatusBadRequest
-	res[ErrInvalidPassword] = http.StatusBadRequest
-	res[ErrIncorrectPassword] = http.StatusForbidden
+	res[ErrInvalidNickname.Error()] = http.StatusBadRequest
+	res[ErrInvalidEmail.Error()] = http.StatusBadRequest
+	res[ErrInvalidPassword.Error()] = http.StatusBadRequest
+	res[ErrIncorrectPassword.Error()] = http.StatusForbidden
 
 	// Image delivery
-	res[ErrBigImage] = http.StatusBadRequest
-	res[ErrBadImageType] = http.StatusBadRequest
+	res[ErrBigImage.Error()] = http.StatusBadRequest
+	res[ErrBadImageType.Error()] = http.StatusBadRequest
 
 	// Image repository
-	res[ErrImage] = http.StatusInternalServerError
+	res[ErrImage.Error()] = http.StatusInternalServerError
 
 	// User delivery
-	res[ErrGetUserRequest] = http.StatusInternalServerError
-	res[ErrWrongValidPassword] = http.StatusForbidden
+	res[ErrGetUserRequest.Error()] = http.StatusInternalServerError
+	res[ErrWrongValidPassword.Error()] = http.StatusForbidden
 
 	// User service
-	res[ErrFilmRatingNotExist] = http.StatusNotFound
+	res[ErrFilmRatingNotExist.Error()] = http.StatusNotFound
 
 	// Middleware
-	res[ErrBigRequest] = http.StatusBadRequest
-	res[ErrConvertLength] = http.StatusBadRequest
+	res[ErrBigRequest.Error()] = http.StatusBadRequest
+	res[ErrConvertLength.Error()] = http.StatusBadRequest
 
 	// Security
-	res[ErrCsrfTokenCreate] = http.StatusInternalServerError
-	res[ErrCsrfTokenCheck] = http.StatusForbidden
-	res[ErrCsrfTokenCheckInternal] = http.StatusInternalServerError
-	res[ErrCsrfTokenExpired] = http.StatusForbidden
-	res[ErrCsrfTokenInvalid] = http.StatusForbidden
+	res[ErrCsrfTokenCreate.Error()] = http.StatusInternalServerError
+	res[ErrCsrfTokenCheck.Error()] = http.StatusForbidden
+	res[ErrCsrfTokenCheckInternal.Error()] = http.StatusInternalServerError
+	res[ErrCsrfTokenExpired.Error()] = http.StatusForbidden
+	res[ErrCsrfTokenInvalid.Error()] = http.StatusForbidden
 
 	// Not found
-	res[ErrGenreNotFound] = http.StatusNotFound
-	res[ErrTagNotFound] = http.StatusNotFound
-	res[ErrPersonNotFound] = http.StatusNotFound
-	res[ErrFilmNotFound] = http.StatusNotFound
-	res[ErrSessionNotFound] = http.StatusNotFound
-	res[ErrUserNotFound] = http.StatusNotFound
-	res[ErrImageNotFound] = http.StatusNotFound
-	res[ErrFilmsNotFound] = http.StatusNotFound
-	res[ErrCollectionsNotFound] = http.StatusNotFound
+	res[ErrGenreNotFound.Error()] = http.StatusNotFound
+	res[ErrTagNotFound.Error()] = http.StatusNotFound
+	res[ErrPersonNotFound.Error()] = http.StatusNotFound
+	res[ErrFilmNotFound.Error()] = http.StatusNotFound
+	res[ErrSessionNotFound.Error()] = http.StatusNotFound
+	res[ErrUserNotFound.Error()] = http.StatusNotFound
+	res[ErrImageNotFound.Error()] = http.StatusNotFound
+	res[ErrFilmsNotFound.Error()] = http.StatusNotFound
+	res[ErrCollectionsNotFound.Error()] = http.StatusNotFound
 
-	return ErrClassifier{
+	return ErrHTTPClassifier{
 		table: res,
 	}
 }
 
-var errCsf = NewErrClassifier()
+var errHTTPCsf = NewErrHTTPClassifier()
 
-func GetCode(err error) int {
-	code, exist := errCsf.table[err]
-	if !exist {
-		return http.StatusInternalServerError
-	}
+func GetErrorCodeHTTP(err error) (int, bool) {
+	code, exist := errHTTPCsf.table[err.Error()]
 
-	return code
+	return code, exist
 }

@@ -8,6 +8,8 @@ PKG = ./...
 
 SERVICE_MAIN = main
 
+MICROSERVICE_DIR=$(PWD)/internal
+
 # ENV
 create-env-lint:
 	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
@@ -33,6 +35,9 @@ check:
 debug-mode:
 	go run ./cmd/debug/main.go --config-path ./cmd/debug/configs/config.toml
 
+image-service-launch:
+	go run ./cmd/image/main.go --config-path ./cmd/image/configs/config.toml
+
 build:
 	go build cmd/debug/main.go ${TARGET}
 
@@ -48,11 +53,14 @@ get-stat-coverage:
 	go tool cover -func=c2.out
 	go tool cover -html c2.out -o coverage.html
 
-generate-api-doc:
+api-doc-generate:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
 
-generate-mocks:
+mocks-generate:
 	go generate ${PKG}
+
+proto-generate:
+	protoc --proto_path=${MICROSERVICE_DIR}/image/delivery/grpc/protobuf image.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/image/delivery/grpc/protobuf
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:
