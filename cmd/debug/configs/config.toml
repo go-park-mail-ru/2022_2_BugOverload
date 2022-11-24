@@ -1,11 +1,11 @@
 [server_http]
 bind_addr_http = ":8088"
-read_timeout = 10
-write_timeout = 10
+read_timeout = 8 #seconds
+write_timeout = 8 #seconds
 protocol = "http"
 
 [context]
-timeout = 10
+timeout = 8 #seconds
 
 [logger]
 log_level = "debug"
@@ -14,8 +14,9 @@ log_path = "logs/debug/"
 [S3]
 endpoint = "http://localstack:4566"
 
-[URLs]
-image_service = "image:8089"
+[server_grpc_image]
+URL = "image:8089"
+work_timeout = 3 #seconds
 
 [cors]
 methods = ["POST", "GET", "PUT"]

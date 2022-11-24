@@ -23,7 +23,7 @@ func NewReviewLikeHandler(fs serviceFilms.FilmsService) handler.Handler {
 	}
 }
 
-func (h *reviewLikeHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *reviewLikeHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("", h.Action).Methods(http.MethodGet)
 }
 

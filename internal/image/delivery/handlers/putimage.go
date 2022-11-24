@@ -27,7 +27,7 @@ func NewPutImageHandler(is serviceImage.ImageService) handler.Handler {
 	}
 }
 
-func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/image", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodPut).
 		Queries("object", "{object}")
@@ -75,7 +75,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		image.Key = strconv.Itoa(user.ID)
 	}
 
-	err = h.imageService.UpdateImage(r.Context(), image)
+	err = h.imageService.UpdateImage(pkg.GetDefInfoMicroService(r.Context()), image)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
 		return

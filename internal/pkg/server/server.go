@@ -1,7 +1,7 @@
 package server
 
 import (
-	"log"
+	"context"
 	"net/http"
 	"time"
 
@@ -40,16 +40,21 @@ func (s *Server) Launch() error {
 	authStorage := repoAuth.NewAuthDatabase(postgres)
 	sessionStorage := repoSession.NewSessionCache()
 
-	// Initiaalize services
+	// Initialize services
 	authService := serviceAuth.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	grpcConn, err := grpc.Dial(
-		s.config.URls.ImageServiceURL,
+	// GRPC in dev ---------------- WARNING
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(s.config.ServerGRPCImage.WorkTimeout)*time.Second)
+	defer cancel()
+
+	grpcConn, err := grpc.DialContext(ctx,
+		s.config.ServerGRPCImage.URL,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
 	)
 	if err != nil {
-		log.Fatalf("cant connect to grpc")
+		logrus.Fatal("cant connect to grpc ", err)
 	}
 	defer grpcConn.Close()
 
@@ -57,8 +62,9 @@ func (s *Server) Launch() error {
 	res["1"] = grpcConn
 
 	handlers := factory.NewHandlersMap(s.config, postgres, sessionService, authService, res)
+	// GRPC in dev ---------------- WARNING
 
-	mw := middleware.NewMiddleware(s.logger, sessionService, &s.config.Cors)
+	mw := middleware.NewHTTPMiddleware(s.logger, sessionService, &s.config.Cors)
 
 	router := NewRouter(handlers, mw)
 

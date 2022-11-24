@@ -27,7 +27,7 @@ func NewFilmRateDropHandler(us serviceUser.UserService) handler.Handler {
 	}
 }
 
-func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *filmRateDropHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id}/rate/drop", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodDelete)
 }
 

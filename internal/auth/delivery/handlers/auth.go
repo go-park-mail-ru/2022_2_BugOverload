@@ -32,7 +32,7 @@ func NewAuthHandler(as authService.AuthService, ss sessionService.SessionService
 	}
 }
 
-func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *authHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/auth", h.Action).Methods(http.MethodGet)
 }
 

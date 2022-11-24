@@ -27,7 +27,7 @@ func NewPutSettingsHandler(us serviceUser.UserService) handler.Handler {
 	}
 }
 
-func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *putSettingsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/user/settings", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodPut)
 }
 

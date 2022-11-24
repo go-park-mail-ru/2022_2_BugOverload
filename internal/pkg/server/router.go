@@ -10,7 +10,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
-func NewRouter(handlers map[string]handler.Handler, mw *middleware.Middleware) *mux.Router {
+func NewRouter(handlers map[string]handler.Handler, mw *middleware.HTTPMiddleware) *mux.Router {
 	router := mux.NewRouter()
 
 	// Auth

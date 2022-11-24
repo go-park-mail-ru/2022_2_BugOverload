@@ -27,7 +27,7 @@ func NewGetSettingsHandler(us serviceUser.UserService) handler.Handler {
 	}
 }
 
-func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/user/settings", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
 }
 

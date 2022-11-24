@@ -24,7 +24,7 @@ func NewUserProfileHandler(us serviceUserProfile.UserService) handler.Handler {
 	}
 }
 
-func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", h.Action).Methods(http.MethodGet)
 }
 

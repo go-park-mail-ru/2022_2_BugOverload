@@ -1,6 +1,10 @@
-[server_grpc]
+[server_grpc_image]
 bind_addr_http = ":8089"
-connection_timeout = 10
+connection_timeout = 10 #seconds
+
+[logger]
+log_level = "debug"
+log_path = "logs/image/debug/"
 
 [S3]
 endpoint = "http://localstack:4566"

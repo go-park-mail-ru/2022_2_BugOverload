@@ -30,7 +30,7 @@ func NewLoginHandler(as authService.AuthService, ss sessionService.SessionServic
 	}
 }
 
-func (h *loginHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *loginHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/auth/login", h.Action).Methods(http.MethodPost)
 }
 

@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -27,23 +29,34 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	logger, closeResource := pkg.NewLogger(&config.Logger)
+	defer func(closer func() error, log *logrus.Logger) {
+		err = closer()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(closeResource, logger)
+
+	md := middleware.NewGPRCMiddleware(logger)
+
 	postgres := sqltools.NewPostgresRepository()
 
 	is := repoImage.NewImageS3(config, postgres)
 
 	imageService := serviceImage.NewImageService(is)
 
-	grpc := grpc.NewServer(
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(md.LoggerInterceptor),
 		grpc.MaxRecvMsgSize(innerPKG.BufSizeRequest),
 		grpc.MaxSendMsgSize(innerPKG.BufSizeRequest),
-		grpc.ConnectionTimeout(time.Duration(config.ServerGRPC.ConnectionTimeout)*time.Second),
+		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCImage.ConnectionTimeout)*time.Second),
 	)
 
-	service := server.NewImageServiceGRPCServer(grpc, imageService)
+	service := server.NewImageServiceGRPCServer(grpcServer, imageService)
 
-	logrus.Info("starting server at " + config.ServerGRPC.BindHTTPAddr)
+	logrus.Info("starting server at " + config.ServerGRPCImage.BindHTTPAddr)
 
-	err = service.StartGRPCServer(config.ServerGRPC.BindHTTPAddr)
+	err = service.StartGRPCServer(config.ServerGRPCImage.BindHTTPAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}

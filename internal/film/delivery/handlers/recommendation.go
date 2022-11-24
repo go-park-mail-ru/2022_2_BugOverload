@@ -25,7 +25,7 @@ func NewRecommendationFilmHandler(fs serviceFilms.FilmsService) handler.Handler 
 	}
 }
 
-func (h *recommendationFilmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *recommendationFilmHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/recommendation", h.Action).Methods(http.MethodGet)
 }
 

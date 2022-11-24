@@ -25,7 +25,7 @@ func NewReviewsHandler(fs service.FilmsService) handler.Handler {
 	}
 }
 
-func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *reviewsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id:[0-9]+}/reviews", h.Action).
 		Methods(http.MethodGet).
 		Queries("count_reviews", "{count_reviews}", "offset", "{offset}")

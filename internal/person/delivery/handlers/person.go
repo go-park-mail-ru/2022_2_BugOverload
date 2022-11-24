@@ -25,7 +25,7 @@ func NewPersonHandler(fs service.PersonService) handler.Handler {
 	}
 }
 
-func (h *personHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *personHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/person/{id:[0-9]+}", h.Action).
 		Methods(http.MethodGet).
 		Queries("count_films", "{count_films}", "count_images", "{count_images}")

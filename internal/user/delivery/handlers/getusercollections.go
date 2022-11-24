@@ -24,7 +24,7 @@ func NewGetUserCollectionsHandler(uc service.CollectionService) handler.Handler 
 	}
 }
 
-func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/user/collections", h.Action).
 		Methods(http.MethodGet).
 		Queries(

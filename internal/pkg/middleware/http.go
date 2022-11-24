@@ -18,13 +18,13 @@ import (
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
-type Middleware struct {
+type HTTPMiddleware struct {
 	log     *logrus.Logger
 	session sessionService.SessionService
 	cors    cors.Cors
 }
 
-func NewMiddleware(log *logrus.Logger, session sessionService.SessionService, config *pkg.Cors) *Middleware {
+func NewHTTPMiddleware(log *logrus.Logger, session sessionService.SessionService, config *pkg.Cors) *HTTPMiddleware {
 	cors := cors.New(cors.Options{
 		AllowedMethods:   config.Methods,
 		AllowedOrigins:   config.Origins,
@@ -33,18 +33,18 @@ func NewMiddleware(log *logrus.Logger, session sessionService.SessionService, co
 		Debug:            config.Debug,
 	})
 
-	return &Middleware{
+	return &HTTPMiddleware{
 		session: session,
 		log:     log,
 		cors:    *cors,
 	}
 }
 
-func (m *Middleware) SetCORSMiddleware(h http.Handler) http.Handler {
+func (m *HTTPMiddleware) SetCORSMiddleware(h http.Handler) http.Handler {
 	return m.cors.Handler(h)
 }
 
-func (m *Middleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
+func (m *HTTPMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), pkg.LoggerKey, m.log)
 
@@ -52,22 +52,27 @@ func (m *Middleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-func (m *Middleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler {
+func (m *HTTPMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := r.Context().Value(pkg.LoggerKey).(*logrus.Logger)
 		if !ok {
 			logrus.Fatal("GetLoggerContext: err convert context -> *logrus.Logger")
 		}
 
+		requestID := uuid.NewV4().String()
+
 		start := time.Now()
+
 		upgradeLogger := logger.WithFields(logrus.Fields{
 			"url":         r.URL.Path,
 			"method":      r.Method,
 			"remote_addr": r.RemoteAddr,
-			"req_id":      uuid.NewV4(),
+			pkg.RequestID: requestID,
 		})
 
 		ctx := context.WithValue(r.Context(), pkg.LoggerKey, upgradeLogger)
+
+		ctx = context.WithValue(ctx, pkg.RequestIDKey, requestID)
 
 		h.ServeHTTP(w, r.WithContext(ctx))
 
@@ -76,7 +81,7 @@ func (m *Middleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler 
 	})
 }
 
-func (m *Middleware) SetSizeRequest(h http.Handler) http.Handler {
+func (m *HTTPMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		strLength := r.Header.Get("Content-Length")
 		if strLength == "" {
@@ -99,7 +104,7 @@ func (m *Middleware) SetSizeRequest(h http.Handler) http.Handler {
 	})
 }
 
-func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
+func (m *HTTPMiddleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(pkg.SessionCookieName)
 		if err != nil {
@@ -122,7 +127,7 @@ func (m *Middleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	})
 }
 
-func (m *Middleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
+func (m *HTTPMiddleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("X-Csrf-Token")
 

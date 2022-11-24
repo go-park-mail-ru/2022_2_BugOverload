@@ -24,7 +24,7 @@ func NewPremieresCollectionHandler(uc service.CollectionService) handler.Handler
 	}
 }
 
-func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/premieres", h.Action).
 		Methods(http.MethodGet).
 		Queries("count_films", "{count_films}", "delimiter", "{delimiter}")

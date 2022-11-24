@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -24,7 +25,7 @@ func NewGetImageHandler(is serviceImage.ImageService) handler.Handler {
 	}
 }
 
-func (h *getImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *getImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/image", h.Action).
 		Methods(http.MethodGet).
 		Queries("object", "{object}", "key", "{key}")
@@ -56,7 +57,7 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	getImage, err := h.imageService.GetImage(r.Context(), request.GetImage())
+	getImage, err := h.imageService.GetImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
 		return

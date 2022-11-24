@@ -25,7 +25,7 @@ func NewFilmHandler(fs serviceFilms.FilmsService) handler.Handler {
 	}
 }
 
-func (h *filmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *filmHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id:[0-9]+}", h.Action).
 		Methods(http.MethodGet).
 		Queries("count_images", "{count_images}")

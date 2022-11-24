@@ -11,5 +11,5 @@ import (
 // Handler is an interface for universal handlers.
 type Handler interface {
 	Action(http.ResponseWriter, *http.Request)
-	Configure(*mux.Router, *middleware.Middleware)
+	Configure(*mux.Router, *middleware.HTTPMiddleware)
 }

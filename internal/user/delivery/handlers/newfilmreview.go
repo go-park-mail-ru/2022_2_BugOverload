@@ -27,7 +27,7 @@ func NewFilmReviewHandler(us serviceUser.UserService) handler.Handler {
 	}
 }
 
-func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id}/review/new", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodPost)
 }
 
