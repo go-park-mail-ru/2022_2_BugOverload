@@ -195,7 +195,7 @@ func (u *userPostgres) FilmRateUpdate(ctx context.Context, user *models.User, pa
 
 		rowFilm := tx.QueryRowContext(ctx, getFilmRatingsCount, params.FilmID)
 		if rowFilm.Err() != nil {
-			return err
+			return rowFilm.Err()
 		}
 
 		err = rowFilm.Scan(&resultFilm.CountRatings)
@@ -287,7 +287,7 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 
 		rowFilm := tx.QueryRowContext(ctx, updateFilmCountRatingsDown, params.FilmID)
 		if rowFilm.Err() != nil {
-			return err
+			return rowFilm.Err()
 		}
 
 		err = rowFilm.Scan(&resultFilm.CountRatings)
