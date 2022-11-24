@@ -29,7 +29,7 @@ env:
 
 # Development
 check:
-	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
+	golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
 debug-mode:
