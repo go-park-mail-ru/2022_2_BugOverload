@@ -32,7 +32,7 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	authService := mockAuthService.NewMockAuthService(ctrl)
 	sessService := mockSessionService.NewMockSessionService(ctrl)
 
-	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
 	resAuth := modelsGlobal.User{
 		Nickname: "StepByyyy",
@@ -102,7 +102,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	authService := mockAuthService.NewMockAuthService(ctrl)
 	sessService := mockSessionService.NewMockSessionService(ctrl)
 
-	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNoCookie.Error(),
@@ -152,7 +152,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	authService := mockAuthService.NewMockAuthService(ctrl)
 	sessService := mockSessionService.NewMockSessionService(ctrl)
 
-	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNoCookie.Error(),
@@ -210,7 +210,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	authService := mockAuthService.NewMockAuthService(ctrl)
 	sessService := mockSessionService.NewMockSessionService(ctrl)
 
-	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrWorkDatabase.Error(),
@@ -277,7 +277,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	authService := mockAuthService.NewMockAuthService(ctrl)
 	sessService := mockSessionService.NewMockSessionService(ctrl)
 
-	r := httptest.NewRequest("GET", "/api/v1/auth", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrSessionNotFound.Error(),
