@@ -3,13 +3,13 @@ on: push
 jobs:
   check:
     runs-on: ubuntu-latest
-    container: andeo1812/golang_web
+    container: andeo1812/golang_web_light
     steps:
       - uses: actions/checkout@v2
       - run: make check
   build:
     runs-on: ubuntu-latest
-    container: andeo1812/golang_web
+    container: andeo1812/golang_web_light
     needs: [ check ]
     steps:
       - uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
           path: main
   tests:
     runs-on: ubuntu-latest
-    container: andeo1812/golang_web
+    container: andeo1812/golang_web_light
     needs: [ build ]
     steps:
       - uses: actions/checkout@v2
