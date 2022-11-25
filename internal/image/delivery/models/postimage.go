@@ -1,13 +1,13 @@
 package models
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -26,7 +26,7 @@ func (i *PostImageRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != pkg.ContentTypeWEBP || r.Header.Get("Content-Type") != pkg.ContentTypeJPEG {
+	if r.Header.Get("Content-Type") != constparams.ContentTypeWEBP || r.Header.Get("Content-Type") != constparams.ContentTypeJPEG {
 		return errors.ErrUnsupportedMediaType
 	}
 
@@ -48,7 +48,7 @@ func (i *PostImageRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	if len(body) > pkg.BufSizeImage {
+	if len(body) > constparams.BufSizeImage {
 		return errors.ErrBigImage
 	}
 

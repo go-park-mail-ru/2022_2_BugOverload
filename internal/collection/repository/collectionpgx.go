@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"strconv"
 	"time"
 
@@ -10,17 +11,16 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 // CollectionRepository provides the versatility of collection repositories.
 type CollectionRepository interface {
-	GetCollectionByTag(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
-	GetCollectionByGenre(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
-	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
-	GetPremieresCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error)
+	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
+	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
+	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -29,15 +29,15 @@ type collectionPostgres struct {
 	database *sqltools.Database
 }
 
-// NewCollectionCache is constructor for collectionPostgres.
-func NewCollectionCache(database *sqltools.Database) CollectionRepository {
+// NewCollectionPostgres is constructor for collectionPostgres.
+func NewCollectionPostgres(database *sqltools.Database) CollectionRepository {
 	return &collectionPostgres{
 		database,
 	}
 }
 
 // GetCollectionByTag it gives away movies by tag from the repository.
-func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -45,11 +45,11 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 	var values []interface{}
 
 	switch params.SortParam {
-	case innerPKG.CollectionSortParamDate:
+	case constparams.CollectionSortParamDate:
 		query = getFilmsByTagDate
 
 		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
-	case innerPKG.CollectionSortParamFilmRating:
+	case constparams.CollectionSortParamFilmRating:
 		query = getFilmsByTagRating
 
 		var delimiter float64
@@ -114,21 +114,21 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *inn
 }
 
 // GetUserCollections it gives away movies by genre from the repository.
-func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error) {
+func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error) {
 	response := make([]CollectionSQL, 0)
 
 	var query string
 
-	if params.Delimiter == innerPKG.UserCollectionsDelimiter {
-		params.Delimiter = time.Now().Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat)
+	if params.Delimiter == constparams.UserCollectionsDelimiter {
+		params.Delimiter = time.Now().Format(constparams.DateFormat + " " + constparams.TimeFormat)
 	}
 
 	values := []interface{}{user.ID, params.Delimiter, params.CountCollections}
 
 	switch params.SortParam {
-	case innerPKG.UserCollectionsSortParamCreateDate:
+	case constparams.UserCollectionsSortParamCreateDate:
 		query = getUserCollectionByCreateDate
-	case innerPKG.UserCollectionsSortParamUpdateDate:
+	case constparams.UserCollectionsSortParamUpdateDate:
 		query = getUserCollectionByUpdateDate
 	default:
 		return []models.Collection{}, errors.ErrUnsupportedSortParameter
@@ -192,7 +192,7 @@ func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *model
 }
 
 // GetCollectionByGenre it gives away movies by genre from the repository.
-func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -200,11 +200,11 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 	var values []interface{}
 
 	switch params.SortParam {
-	case innerPKG.CollectionSortParamDate:
+	case constparams.CollectionSortParamDate:
 		query = getFilmsByGenreDate
 
 		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
-	case innerPKG.CollectionSortParamFilmRating:
+	case constparams.CollectionSortParamFilmRating:
 		query = getFilmsByGenreRating
 
 		var delimiter float64
@@ -255,7 +255,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *i
 }
 
 // GetPremieresCollection it gives away only movies with prod_date > current from the repository.
-func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *innerPKG.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error

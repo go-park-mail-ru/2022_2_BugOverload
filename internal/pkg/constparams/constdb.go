@@ -1,4 +1,4 @@
-package pkg
+package constparams
 
 import "database/sql"
 

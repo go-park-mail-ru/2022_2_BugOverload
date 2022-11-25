@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 

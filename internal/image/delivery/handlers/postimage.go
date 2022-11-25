@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -56,7 +57,7 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

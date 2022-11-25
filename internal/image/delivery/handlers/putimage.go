@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 
@@ -58,7 +59,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
@@ -67,7 +68,7 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 	image := request.GetImage()
 
 	if !user.IsAdmin {
-		if image.Object != pkg.ImageObjectUserAvatar {
+		if image.Object != constparams.ImageObjectUserAvatar {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
 		}

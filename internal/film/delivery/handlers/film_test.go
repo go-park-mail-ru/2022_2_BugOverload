@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
@@ -96,7 +96,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 		Slogan:               "Победа или смерть",
 	}
 
-	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &pkg.GetFilmParams{
+	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
 		CountImages: 2,
 	}).Return(res, nil)
 
@@ -150,11 +150,11 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
-	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &pkg.GetFilmParams{
+	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
 		CountImages: 2,
 	}).Return(modelsGlobal.Film{}, errors.ErrNotFoundInDB)
 
@@ -212,7 +212,7 @@ func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	filmHandler.Action(w, r.WithContext(ctx))
 
@@ -262,7 +262,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	filmHandler.Action(w, r.WithContext(ctx))
 
@@ -312,7 +312,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountImages(t *testin
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	filmHandler.Action(w, r.WithContext(ctx))
 

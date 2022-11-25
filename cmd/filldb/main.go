@@ -13,7 +13,7 @@ func main() {
 	var configPath string
 	var dataPath string
 
-	flag.StringVar(&configPath, "config-path", "cmd/filldb/configs/config.toml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "cmd/filldb/configs/debug.toml", "path to config file")
 	flag.StringVar(&dataPath, "data-path", "test/newdata", "path to data files")
 
 	config := fillerdb.NewConfig()

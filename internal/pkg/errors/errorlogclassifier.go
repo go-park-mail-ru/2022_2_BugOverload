@@ -11,7 +11,7 @@ type ErrLogClassifier struct {
 const (
 	infoLogLevel  = "info"
 	errLogLevel   = "error"
-	debugLogLevel = "debug"
+	debugLogLevel = "api"
 )
 
 func NewErrLogClassifier() ErrLogClassifier {

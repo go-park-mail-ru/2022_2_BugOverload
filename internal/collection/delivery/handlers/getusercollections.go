@@ -2,7 +2,7 @@ package handlers
 
 import (
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 
@@ -53,7 +53,7 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTP
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/collections [GET]
 func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return

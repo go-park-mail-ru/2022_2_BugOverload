@@ -3,18 +3,18 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type PersonRepository interface {
-	GetPersonByID(ctx context.Context, person *models.Person, params *innerPKG.GetPersonParams) (models.Person, error)
+	GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error)
 }
 
 // personPostgres is implementation repository of Postgres corresponding to the PersonRepository interface.
@@ -29,7 +29,7 @@ func NewPersonPostgres(database *sqltools.Database) PersonRepository {
 	}
 }
 
-func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Person, params *innerPKG.GetPersonParams) (models.Person, error) {
+func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error) {
 	response := NewPersonSQL()
 
 	// Person - Main
@@ -53,7 +53,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		}
 
 		if !response.Avatar.Valid {
-			response.Avatar.String = innerPKG.DefPersonAvatar
+			response.Avatar.String = constparams.DefPersonAvatar
 		}
 
 		return nil

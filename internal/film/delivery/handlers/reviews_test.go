@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
@@ -47,7 +47,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 		},
 	}}
 
-	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetReviewsFilmParams{
 		CountReviews: 1,
 		Offset:       0,
 		FilmID:       1,
@@ -101,7 +101,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
-	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &pkg.GetReviewsFilmParams{
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetReviewsFilmParams{
 		CountReviews: 1,
 		Offset:       0,
 		FilmID:       1,

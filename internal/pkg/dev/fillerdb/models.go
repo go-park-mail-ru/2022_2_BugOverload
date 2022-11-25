@@ -2,10 +2,10 @@ package fillerdb
 
 import (
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"time"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
@@ -100,13 +100,13 @@ func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
 
 	var err error
 
-	if len(film.ProdDate) == len(innerPKG.OnlyDate) {
-		date, err = time.Parse(innerPKG.OnlyDate, film.ProdDate)
+	if len(film.ProdDate) == len(constparams.OnlyDate) {
+		date, err = time.Parse(constparams.OnlyDate, film.ProdDate)
 		if err != nil {
 			date = time.Time{}
 		}
 	} else {
-		date, err = time.Parse(innerPKG.DateFormat, film.ProdDate)
+		date, err = time.Parse(constparams.DateFormat, film.ProdDate)
 		if err != nil {
 			date = time.Time{}
 		}
@@ -131,7 +131,7 @@ func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
 		CurrencyBudget: sqltools.NewSQLNullString(film.CurrencyBudget),
 
 		CountSeasons: sqltools.NewSQLNullInt32(film.CountSeasons),
-		EndYear:      sqltools.NewSQLNNullDate(film.EndYear, innerPKG.OnlyDate),
+		EndYear:      sqltools.NewSQLNNullDate(film.EndYear, constparams.OnlyDate),
 		Type:         sqltools.NewSQLNullString(film.Type),
 	}
 }
@@ -160,7 +160,7 @@ func NewPersonSQLFillerOnPerson(person PersonFiller) PersonSQLFiller {
 
 	if person.Birthday != "" {
 		var err error
-		birthday, err = time.Parse(innerPKG.DateFormat, person.Birthday)
+		birthday, err = time.Parse(constparams.DateFormat, person.Birthday)
 		if err != nil {
 			birthday = time.Time{}
 		}
@@ -175,7 +175,7 @@ func NewPersonSQLFillerOnPerson(person PersonFiller) PersonSQLFiller {
 		Avatar:       sqltools.NewSQLNullString(person.Avatar),
 		OriginalName: sqltools.NewSQLNullString(person.OriginalName),
 		Gender:       sqltools.NewSQLNullString(person.Gender),
-		Death:        sqltools.NewSQLNNullDate(person.Death, innerPKG.DateFormat),
+		Death:        sqltools.NewSQLNNullDate(person.Death, constparams.DateFormat),
 	}
 }
 

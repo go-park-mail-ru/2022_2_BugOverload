@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 //go:generate mockgen -source filmservice.go -destination mocks/mockfilmservice.go -package mockFilmService
@@ -15,8 +15,8 @@ import (
 // FilmsService provides universal service for work with film.
 type FilmsService interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
-	GetFilmByID(ctx context.Context, film *models.Film, params *pkg.GetFilmParams) (models.Film, error)
-	GetReviewsByFilmID(ctx context.Context, params *pkg.GetReviewsFilmParams) ([]models.Review, error)
+	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
+	GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error)
 }
 
 // filmService is implementation for auth service corresponding to the FilmsService interface.
@@ -40,7 +40,7 @@ func (c *filmService) GetRecommendation(ctx context.Context) (models.Film, error
 	return film, nil
 }
 
-func (c *filmService) GetFilmByID(ctx context.Context, film *models.Film, params *pkg.GetFilmParams) (models.Film, error) {
+func (c *filmService) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
 	filmRepo, err := c.filmsRepo.GetFilmByID(ctx, film, params)
 	if err != nil {
 		return models.Film{}, stdErrors.Wrap(err, "GetFilmByID")
@@ -49,7 +49,7 @@ func (c *filmService) GetFilmByID(ctx context.Context, film *models.Film, params
 	return filmRepo, nil
 }
 
-func (c *filmService) GetReviewsByFilmID(ctx context.Context, params *pkg.GetReviewsFilmParams) ([]models.Review, error) {
+func (c *filmService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
 	reviews, err := c.filmsRepo.GetReviewsByFilmID(ctx, params)
 	if err != nil {
 		return []models.Review{}, stdErrors.Wrap(err, "GetReviewsByFilmID")

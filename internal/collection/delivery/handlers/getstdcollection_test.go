@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	mockCollectionService "go-park-mail-ru/2022_2_BugOverload/internal/collection/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
@@ -47,11 +47,11 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetStdCollectionParams{
+	collectionService.EXPECT().GetStdCollection(r.Context(), &constparams.GetStdCollectionParams{
 		Target:     "tag",
 		SortParam:  "date",
 		Key:        "popular",
@@ -106,11 +106,11 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetStdCollection(r.Context(), &pkg.GetStdCollectionParams{
+	collectionService.EXPECT().GetStdCollection(r.Context(), &constparams.GetStdCollectionParams{
 		Target:     "tag",
 		SortParam:  "date",
 		Key:        "popular",
@@ -169,7 +169,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -216,7 +216,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -263,7 +263,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Target(t *te
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -310,7 +310,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Key(t *testi
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -357,7 +357,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_SortParam(t 
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -404,7 +404,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountFilms(t
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
@@ -451,7 +451,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Delinmeter(t
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 

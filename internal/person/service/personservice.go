@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
@@ -14,7 +14,7 @@ import (
 
 // PersonService provides universal service for work with persons.
 type PersonService interface {
-	GetPersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error)
+	GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error)
 }
 
 // personService is implementation for users service corresponding to the PersonService interface.
@@ -30,7 +30,7 @@ func NewPersonService(pr repository.PersonRepository) PersonService {
 }
 
 // GetPersonByID is the service that accesses the interface PersonService.
-func (p *personService) GetPersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error) {
+func (p *personService) GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error) {
 	personRepo, err := p.personRepo.GetPersonByID(ctx, person, params)
 	if err != nil {
 		return models.Person{}, stdErrors.Wrap(err, "GetPersonByID")

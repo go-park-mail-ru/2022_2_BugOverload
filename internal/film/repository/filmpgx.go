@@ -3,19 +3,19 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
 type FilmRepository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
-	GetFilmByID(ctx context.Context, film *models.Film, params *innerPKG.GetFilmParams) (models.Film, error)
-	GetReviewsByFilmID(ctx context.Context, params *innerPKG.GetReviewsFilmParams) ([]models.Review, error)
+	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
+	GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error)
 }
 
 // filmPostgres is implementation repository of Postgres corresponding to the FilmRepository interface.
@@ -30,7 +30,7 @@ func NewFilmPostgres(database *sqltools.Database) FilmRepository {
 	}
 }
 
-func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, params *innerPKG.GetFilmParams) (models.Film, error) {
+func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
 	response := NewFilmSQL()
 
 	// Film - Main
@@ -65,10 +65,10 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		}
 
 		if !response.PosterHor.Valid {
-			response.PosterHor.String = innerPKG.DefFilmPosterHor
+			response.PosterHor.String = constparams.DefFilmPosterHor
 		}
 
-		if response.Type.String != innerPKG.DefTypeSerial {
+		if response.Type.String != constparams.DefTypeSerial {
 			return nil
 		}
 
@@ -183,19 +183,19 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 			}
 
 			switch professionID {
-			case innerPKG.Artist:
+			case constparams.Artist:
 				response.Artists = append(response.Artists, person)
-			case innerPKG.Director:
+			case constparams.Director:
 				response.Directors = append(response.Directors, person)
-			case innerPKG.Writer:
+			case constparams.Writer:
 				response.Writers = append(response.Writers, person)
-			case innerPKG.Producer:
+			case constparams.Producer:
 				response.Producers = append(response.Producers, person)
-			case innerPKG.Operator:
+			case constparams.Operator:
 				response.Operators = append(response.Operators, person)
-			case innerPKG.Montage:
+			case constparams.Montage:
 				response.Montage = append(response.Montage, person)
-			case innerPKG.Composer:
+			case constparams.Composer:
 				response.Composers = append(response.Composers, person)
 			}
 		}
@@ -241,7 +241,7 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 				getFilmRecommendation, err)
 		}
 
-		if response.Type.String != innerPKG.DefTypeSerial {
+		if response.Type.String != constparams.DefTypeSerial {
 			return nil
 		}
 
@@ -278,7 +278,7 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 	return response.Convert(), nil
 }
 
-func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.GetReviewsFilmParams) ([]models.Review, error) {
+func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
 	response := make([]ReviewSQL, 0)
 
 	// Reviews - Main
@@ -307,7 +307,7 @@ func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *innerPKG.
 			}
 
 			if !review.Author.Avatar.Valid {
-				review.Author.Avatar.String = innerPKG.DefPersonAvatar
+				review.Author.Avatar.String = constparams.DefPersonAvatar
 			}
 
 			response = append(response, review)

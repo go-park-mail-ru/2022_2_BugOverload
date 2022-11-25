@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -17,7 +18,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	mockAuthService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockSessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service/mocks"
@@ -51,10 +51,10 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	}, nil)
 
 	cookie := &http.Cookie{
-		Name:     pkg.SessionCookieName,
+		Name:     constparams.SessionCookieName,
 		Value:    "c9QuR4KQR4RkXi_rbATHWITwQGDG9r801tHIA_AHkDt2JNiVWU8Tjg==",
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
+		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
 	}
 
@@ -111,7 +111,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
@@ -161,13 +161,13 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
+		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
 	}
 
@@ -219,14 +219,14 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
+		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
 	}
 
@@ -286,14 +286,14 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
 	cookie := &http.Cookie{
 		Name:     "session_id",
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
+		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
 	}
 

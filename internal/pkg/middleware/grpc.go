@@ -2,13 +2,12 @@ package middleware
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"time"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 type GRPCMiddleware struct {
@@ -24,7 +23,7 @@ func NewGPRCMiddleware(log *logrus.Logger) *GRPCMiddleware {
 func (m *GRPCMiddleware) LoggerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	md, _ := metadata.FromIncomingContext(ctx)
 
-	requestID := md.Get(pkg.RequestID)
+	requestID := md.Get(constparams.RequestID)
 
 	start := time.Now()
 
@@ -32,7 +31,7 @@ func (m *GRPCMiddleware) LoggerInterceptor(ctx context.Context, req interface{},
 		"req_id": requestID[0],
 	})
 
-	ctx = context.WithValue(ctx, pkg.LoggerKey, upgradeLogger)
+	ctx = context.WithValue(ctx, constparams.LoggerKey, upgradeLogger)
 
 	reply, err := handler(ctx, req)
 

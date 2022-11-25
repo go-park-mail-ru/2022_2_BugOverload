@@ -1,7 +1,7 @@
 package models
 
 import (
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 

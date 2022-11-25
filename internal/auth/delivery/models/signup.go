@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"io"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -28,7 +28,7 @@ func (u *UserSignupRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
+	if r.Header.Get("Content-Type") != constparams.ContentTypeJSON {
 		return errors.ErrUnsupportedMediaType
 	}
 

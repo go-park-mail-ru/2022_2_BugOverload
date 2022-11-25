@@ -3,9 +3,9 @@ package wrapper
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -17,7 +17,7 @@ func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someSt
 		return
 	}
 
-	w.Header().Set("Content-Type", pkg.ContentTypeJSON)
+	w.Header().Set("Content-Type", constparams.ContentTypeJSON)
 
 	w.WriteHeader(statusCode)
 
@@ -30,7 +30,7 @@ func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someSt
 
 // ResponseImage is a function for giving any response with a body - image
 func ResponseImage(ctx context.Context, w http.ResponseWriter, statusCode int, image []byte) {
-	w.Header().Set("Content-Type", pkg.ContentTypeWEBP)
+	w.Header().Set("Content-Type", constparams.ContentTypeWEBP)
 
 	w.WriteHeader(statusCode)
 

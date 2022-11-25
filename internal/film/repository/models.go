@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"strconv"
 	"strings"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -36,7 +36,7 @@ func (r *ReviewSQL) Convert() models.Review {
 		Name:       r.Name,
 		Type:       r.Type,
 		Body:       r.Body,
-		CreateTime: r.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
+		CreateTime: r.CreateTime.Format(constparams.DateFormat + " " + constparams.TimeFormat),
 		CountLikes: int(r.CountLikes.Int32),
 		Author: models.User{
 			ID:           r.Author.ID,
@@ -112,7 +112,7 @@ func (f *FilmSQL) Convert() models.Film {
 	endYear := ""
 
 	if f.EndYear.Valid {
-		endYear = f.EndYear.Time.Format(innerPKG.OnlyDate)
+		endYear = f.EndYear.Time.Format(constparams.OnlyDate)
 	}
 
 	res := models.Film{
@@ -251,7 +251,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 				query, err)
 		}
 
-		if len(target[mapFilms[filmID]].Genres) < innerPKG.MaxCountAttrInCollection {
+		if len(target[mapFilms[filmID]].Genres) < constparams.MaxCountAttrInCollection {
 			target[mapFilms[filmID]].Genres = append(target[mapFilms[filmID]].Genres, genre.String)
 		}
 	}
@@ -305,7 +305,7 @@ func GetProdCountriesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn
 				query, err)
 		}
 
-		if len(target[mapFilms[filmID]].ProdCountries) < innerPKG.MaxCountAttrInCollection {
+		if len(target[mapFilms[filmID]].ProdCountries) < constparams.MaxCountAttrInCollection {
 			target[mapFilms[filmID]].ProdCountries = append(target[mapFilms[filmID]].ProdCountries, country.String)
 		}
 	}
@@ -370,7 +370,7 @@ func GetDirectorsBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([
 				query, err)
 		}
 
-		if len(target[mapFilms[filmID]].Directors) < innerPKG.MaxCountAttrInCollection {
+		if len(target[mapFilms[filmID]].Directors) < constparams.MaxCountAttrInCollection {
 			target[mapFilms[filmID]].Directors = append(target[mapFilms[filmID]].Directors,
 				FilmPersonSQL{ID: directorID, Name: directorName.String})
 		}
@@ -406,7 +406,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 		}
 
 		if !film.PosterVer.Valid {
-			film.PosterVer.String = innerPKG.DefFilmPosterVer
+			film.PosterVer.String = constparams.DefFilmPosterVer
 		}
 
 		res = append(res, film)
@@ -419,7 +419,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 	}
 
 	for idx := range res {
-		if res[idx].Type.String == innerPKG.DefTypeSerial {
+		if res[idx].Type.String == constparams.DefTypeSerial {
 			rowSerial := conn.QueryRowContext(ctx, getShortSerialByID, res[idx].ID)
 			if rowSerial.Err() != nil {
 				return []FilmSQL{}, rowSerial.Err()
@@ -461,7 +461,7 @@ func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]FilmS
 		}
 
 		if !film.PosterVer.Valid {
-			film.PosterVer.String = innerPKG.DefFilmPosterVer
+			film.PosterVer.String = constparams.DefFilmPosterVer
 		}
 
 		res = append(res, film)

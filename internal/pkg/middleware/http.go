@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 	"time"
@@ -46,7 +47,7 @@ func (m *HTTPMiddleware) SetCORSMiddleware(h http.Handler) http.Handler {
 
 func (m *HTTPMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), pkg.LoggerKey, m.log)
+		ctx := context.WithValue(r.Context(), constparams.LoggerKey, m.log)
 
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
@@ -54,7 +55,7 @@ func (m *HTTPMiddleware) SetDefaultLoggerMiddleware(h http.Handler) http.Handler
 
 func (m *HTTPMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := r.Context().Value(pkg.LoggerKey).(*logrus.Logger)
+		logger, ok := r.Context().Value(constparams.LoggerKey).(*logrus.Logger)
 		if !ok {
 			logrus.Fatal("GetLoggerContext: err convert context -> *logrus.Logger")
 		}
@@ -64,15 +65,15 @@ func (m *HTTPMiddleware) UpdateDefaultLoggerMiddleware(h http.Handler) http.Hand
 		start := time.Now()
 
 		upgradeLogger := logger.WithFields(logrus.Fields{
-			"url":         r.URL.Path,
-			"method":      r.Method,
-			"remote_addr": r.RemoteAddr,
-			pkg.RequestID: requestID,
+			"url":                 r.URL.Path,
+			"method":              r.Method,
+			"remote_addr":         r.RemoteAddr,
+			constparams.RequestID: requestID,
 		})
 
-		ctx := context.WithValue(r.Context(), pkg.LoggerKey, upgradeLogger)
+		ctx := context.WithValue(r.Context(), constparams.LoggerKey, upgradeLogger)
 
-		ctx = context.WithValue(ctx, pkg.RequestIDKey, requestID)
+		ctx = context.WithValue(ctx, constparams.RequestIDKey, requestID)
 
 		h.ServeHTTP(w, r.WithContext(ctx))
 
@@ -95,7 +96,7 @@ func (m *HTTPMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 			return
 		}
 
-		if length > pkg.BufSizeRequest {
+		if length > constparams.BufSizeRequest {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrBigRequest)
 			return
 		}
@@ -106,7 +107,7 @@ func (m *HTTPMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 
 func (m *HTTPMiddleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie(pkg.SessionCookieName)
+		cookie, err := r.Cookie(constparams.SessionCookieName)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 			return
@@ -120,7 +121,7 @@ func (m *HTTPMiddleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFun
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), pkg.CurrentUserKey, user)
+		ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
 		r = r.WithContext(ctx)
 
 		h.ServeHTTP(w, r)
@@ -131,7 +132,7 @@ func (m *HTTPMiddleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("X-Csrf-Token")
 
-		cookie, err := r.Cookie(pkg.SessionCookieName)
+		cookie, err := r.Cookie(constparams.SessionCookieName)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 			return

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"strconv"

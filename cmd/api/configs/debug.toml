@@ -9,7 +9,7 @@ timeout = 8 #seconds
 
 [logger]
 log_level = "debug"
-log_path = "logs/debug/"
+log_path = "logs/api/debug/"
 
 [S3]
 endpoint = "http://localstack:4566"

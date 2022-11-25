@@ -1,13 +1,13 @@
 package models
 
 import (
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )

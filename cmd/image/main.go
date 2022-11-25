@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
@@ -20,7 +21,9 @@ import (
 func main() {
 	var configPath string
 
-	flag.StringVar(&configPath, "config-path", "cmd/image/configs/config.toml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "cmd/image/configs/debug.toml", "path to config file")
+
+	flag.Parse()
 
 	config := innerPKG.NewConfig()
 
@@ -47,8 +50,8 @@ func main() {
 
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(md.LoggerInterceptor),
-		grpc.MaxRecvMsgSize(innerPKG.BufSizeRequest),
-		grpc.MaxSendMsgSize(innerPKG.BufSizeRequest),
+		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
+		grpc.MaxSendMsgSize(constparams.BufSizeRequest),
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCImage.ConnectionTimeout)*time.Second),
 	)
 

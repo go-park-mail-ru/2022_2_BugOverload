@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"time"
 
@@ -8,7 +9,6 @@ import (
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
@@ -78,18 +78,18 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-CSRF-TOKEN", token)
 
 	cookie := &http.Cookie{
-		Name:     pkg.SessionCookieName,
+		Name:     constparams.SessionCookieName,
 		Value:    newSession.ID,
-		Expires:  time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:     pkg.GlobalCookiePath,
+		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
 	}
 
 	cookieCSRF := &http.Cookie{
 		Name:    "CSRF-TOKEN",
 		Value:   token,
-		Expires: time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:    pkg.GlobalCookiePath,
+		Expires: time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:    constparams.GlobalCookiePath,
 	}
 
 	http.SetCookie(w, cookieCSRF)

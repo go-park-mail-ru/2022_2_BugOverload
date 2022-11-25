@@ -6,13 +6,13 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"time"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	commonPkg "go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -28,9 +28,9 @@ type TokenData struct {
 // init prepare secret
 func init() {
 	var err error
-	secret, err = commonPkg.GenerateRandomBytes(pkg.CsrfSecretLength)
+	secret, err = commonPkg.GenerateRandomBytes(constparams.CsrfSecretLength)
 	if err != nil {
-		secret = []byte(pkg.CsrfSecretDefault)
+		secret = []byte(constparams.CsrfSecretDefault)
 	}
 }
 

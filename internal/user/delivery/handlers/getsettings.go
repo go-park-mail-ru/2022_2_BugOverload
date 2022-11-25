@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -45,7 +45,7 @@ func (h *getSettingsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddlew
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/user/settings [GET]
 func (h *getSettingsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return

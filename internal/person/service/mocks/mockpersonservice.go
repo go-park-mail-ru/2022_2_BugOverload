@@ -7,7 +7,7 @@ package mockPersonService
 import (
 	context "context"
 	models "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	pkg "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	pkg "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"

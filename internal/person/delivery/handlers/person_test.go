@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +15,6 @@ import (
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/models"
 	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/person/service/mocks"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
@@ -55,7 +55,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 		Avatar: "12",
 	}
 
-	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &pkg.GetPersonParams{
+	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &constparams.GetPersonParams{
 		CountImages: 2,
 		CountFilms:  1,
 	}).Return(res, nil)
@@ -107,7 +107,7 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
-	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &pkg.GetPersonParams{
+	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &constparams.GetPersonParams{
 		CountImages: 2,
 		CountFilms:  1,
 	}).Return(modelsGlobal.Person{}, errors.ErrNotFoundInDB)

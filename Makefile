@@ -33,13 +33,13 @@ check:
 	go fmt ${PKG}
 
 debug-mode:
-	go run ./cmd/debug/main.go --config-path ./cmd/debug/configs/config.toml
+	go run ./cmd/api/main.go --config-path=./cmd/api/configs/debug.toml
 
 image-service-launch:
-	go run ./cmd/image/main.go --config-path ./cmd/image/configs/config.toml
+	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
-	go build cmd/debug/main.go ${TARGET}
+	go build cmd/api/main.go ${TARGET}
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -70,11 +70,11 @@ fill-S3-fast:
 	./scripts/fill_data_S3_fast.sh ${IMAGES} ${S3_ENDPOINT} &
 
 dev-fill-db:
-	go run ./cmd/filldb/main.go --config-path ./cmd/filldb/configs/config.toml --data-path ./test/newdata
+	go run ./cmd/filldb/main.go --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
 
 # production
 prod-mode:
-	go run ./cmd/prod/main.go --config-path ./cmd/prod/configs/config.toml
+	go run ./cmd/api/main.go --config-path=./cmd/api/configs/prod.toml
 
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566

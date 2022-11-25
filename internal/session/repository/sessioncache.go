@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	pkgInner "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"sync"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"

@@ -1,4 +1,4 @@
-package pkg
+package constparams
 
 const (
 	// Images params request

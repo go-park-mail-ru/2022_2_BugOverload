@@ -14,7 +14,7 @@ type Cors struct {
 	Origins     []string `toml:"urls"`
 	Headers     []string `toml:"headers"`
 	Credentials bool     `toml:"credentials"`
-	Debug       bool     `toml:"debug"`
+	Debug       bool     `toml:"api"`
 }
 
 type Context struct {

@@ -3,6 +3,7 @@ package repository
 import (
 	"bytes"
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -63,7 +64,7 @@ func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image)
 			image.Key, image.Object)
 	}
 
-	res := make([]byte, innerPKG.BufSizeImage)
+	res := make([]byte, constparams.BufSizeImage)
 
 	w := aws.NewWriteAtBuffer(res)
 

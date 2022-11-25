@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"time"
@@ -10,7 +11,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
@@ -50,7 +50,7 @@ func (h *authHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie(pkg.SessionCookieName)
+	cookie, err := r.Cookie(constparams.SessionCookieName)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 		return
@@ -84,8 +84,8 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	cookieCSRF := &http.Cookie{
 		Name:    "CSRF-TOKEN",
 		Value:   token,
-		Expires: time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:    pkg.GlobalCookiePath,
+		Expires: time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:    constparams.GlobalCookiePath,
 	}
 
 	http.SetCookie(w, cookieCSRF)
