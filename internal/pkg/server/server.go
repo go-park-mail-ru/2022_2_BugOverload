@@ -1,93 +1,34 @@
 package server
 
 import (
-	"context"
 	"net/http"
 	"time"
 
-	"github.com/NYTimes/gziphandler"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/factory"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 type Server struct {
-	config *innerPKG.Config
 	logger *logrus.Logger
 }
 
-func NewServerHTTP(config *innerPKG.Config, logger *logrus.Logger) *Server {
+func NewServerHTTP(logger *logrus.Logger) *Server {
 	return &Server{
-		config: config,
 		logger: logger,
 	}
 }
 
-func (s *Server) Launch() error {
-	// DB
-	postgres := sqltools.NewPostgresRepository()
-
-	// Initialize repos
-	authStorage := repoAuth.NewAuthDatabase(postgres)
-	sessionStorage := repoSession.NewSessionCache()
-
-	// Initialize services
-	authService := serviceAuth.NewAuthService(authStorage)
-	sessionService := serviceSession.NewSessionService(sessionStorage)
-
-	// GRPC in dev ---------------- WARNING timeout not work. How to solve it?
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(s.config.ServerGRPCImage.WorkTimeout)*time.Second)
-	defer cancel()
-
-	grpcConn, err := grpc.DialContext(ctx,
-		s.config.ServerGRPCImage.URL,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock(),
-	)
-	if err != nil {
-		logrus.Fatal("cant connect to grpc ", err)
-	}
-	defer grpcConn.Close()
-
-	res := make(map[string]*grpc.ClientConn)
-	res["1"] = grpcConn
-
-	handlers := factory.NewHandlersMap(s.config, postgres, sessionService, authService, res)
-	// GRPC in dev ---------------- WARNING
-
-	mw := middleware.NewHTTPMiddleware(s.logger, sessionService, &s.config.Cors)
-
-	router := NewRouter(handlers, mw)
-
-	router.Use(
-		mw.SetDefaultLoggerMiddleware,
-		mw.UpdateDefaultLoggerMiddleware,
-		mw.SetSizeRequest,
-		gziphandler.GzipHandler,
-	)
-
-	routerCORS := mw.SetCORSMiddleware(router)
-
-	logrus.Info("starting server at " + s.config.ServerHTTP.BindHTTPAddr)
-
+func (s *Server) Launch(config *innerPKG.Config, router http.Handler) error {
 	server := http.Server{
-		Addr:         s.config.ServerHTTP.BindHTTPAddr,
-		Handler:      routerCORS,
-		ReadTimeout:  time.Duration(s.config.ServerHTTP.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(s.config.ServerHTTP.WriteTimeout) * time.Second,
+		Addr:         config.ServerHTTP.BindHTTPAddr,
+		Handler:      router,
+		ReadTimeout:  time.Duration(config.ServerHTTP.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(config.ServerHTTP.WriteTimeout) * time.Second,
 	}
 
-	if s.config.ServerHTTP.Protocol == innerPKG.HTTPS {
-		err = server.ListenAndServeTLS(s.config.ServerHTTP.FileTLSCertificate, s.config.ServerHTTP.FileTLSKey)
+	if config.ServerHTTP.Protocol == innerPKG.HTTPS {
+		err := server.ListenAndServeTLS(config.ServerHTTP.FileTLSCertificate, config.ServerHTTP.FileTLSKey)
 		if err != nil {
 			logrus.Error(err)
 			return err
@@ -96,7 +37,7 @@ func (s *Server) Launch() error {
 		return nil
 	}
 
-	err = server.ListenAndServe()
+	err := server.ListenAndServe()
 	if err != nil {
 		logrus.Error(err)
 		return err
