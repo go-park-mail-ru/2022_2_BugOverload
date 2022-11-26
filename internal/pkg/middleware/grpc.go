@@ -14,7 +14,7 @@ type GRPCMiddleware struct {
 	log *logrus.Logger
 }
 
-func NewGPRCMiddleware(log *logrus.Logger) *GRPCMiddleware {
+func NewGRPCMiddleware(log *logrus.Logger) *GRPCMiddleware {
 	return &GRPCMiddleware{
 		log: log,
 	}

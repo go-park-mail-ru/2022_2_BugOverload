@@ -19,6 +19,7 @@ import (
 )
 
 func main() {
+	// Config
 	var configPath string
 
 	flag.StringVar(&configPath, "config-path", "cmd/image/configs/debug.toml", "path to config file")
@@ -32,6 +33,7 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	// Logger
 	logger, closeResource := pkg.NewLogger(&config.Logger)
 	defer func(closer func() error, log *logrus.Logger) {
 		err = closer()
@@ -40,14 +42,19 @@ func main() {
 		}
 	}(closeResource, logger)
 
-	md := middleware.NewGPRCMiddleware(logger)
+	// Middleware
+	md := middleware.NewGRPCMiddleware(logger)
 
+	// Connections
 	postgres := sqltools.NewPostgresRepository()
 
+	// Image repository
 	is := repoImage.NewImageS3(config, postgres)
 
+	// Image service
 	imageService := serviceImage.NewImageService(is)
 
+	// Server
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(md.LoggerInterceptor),
 		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
