@@ -3,6 +3,7 @@ package repository
 import (
 	"bytes"
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -59,11 +60,11 @@ func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image)
 	imageS3Pattern, err := NewImageS3Pattern(image)
 	if err != nil {
 		return models.Image{}, stdErrors.WithMessagef(err,
-			"Err: params input: image key - [%s], object - [%s], size image [%d]",
-			image.Key, image.Object, len(image.Bytes))
+			"Err: params input: image key - [%s], object - [%s]",
+			image.Key, image.Object)
 	}
 
-	res := make([]byte, innerPKG.BufSizeImage)
+	res := make([]byte, constparams.BufSizeImage)
 
 	w := aws.NewWriteAtBuffer(res)
 
@@ -88,8 +89,8 @@ func (i *imageS3WithPostgres) GetImage(ctx context.Context, image *models.Image)
 			}
 
 			return models.Image{}, stdErrors.WithMessagef(errOut,
-				"Err: params input: image key - [%s], object - [%s], size image [%d]. Special Error [%s]",
-				image.Key, image.Object, len(image.Bytes), err)
+				"Err: params input: image key - [%s], object - [%s]. Special Error [%s]",
+				image.Key, image.Object, err)
 		}
 	}
 

@@ -3,7 +3,7 @@ package models
 import (
 	"bytes"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
@@ -25,14 +25,14 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if !(strings.Contains(r.Header.Get("Content-Type"), pkg.ContentTypeMultipartFormData)) {
+	if !(strings.Contains(r.Header.Get("Content-Type"), constparams.ContentTypeMultipartFormData)) {
 		return errors.ErrUnsupportedMediaType
 	}
 
 	i.Key = r.FormValue("key")
 	i.Object = r.FormValue("object")
 
-	errParse := r.ParseMultipartForm(pkg.BufSizeImage)
+	errParse := r.ParseMultipartForm(constparams.BufSizeImage)
 	if errParse != nil {
 		return errors.ErrBigImage
 	}
@@ -52,7 +52,7 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 	}
 
 	contentType := http.DetectContentType(fileHeader)
-	if !(contentType == pkg.ContentTypeJPEG || contentType == pkg.ContentTypeWEBP || contentType == pkg.ContentTypePNG) {
+	if !(contentType == constparams.ContentTypeJPEG || contentType == constparams.ContentTypeWEBP || contentType == constparams.ContentTypePNG) {
 		return errors.ErrContentTypeUndefined
 	}
 

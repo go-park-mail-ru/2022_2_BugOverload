@@ -2,12 +2,12 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -26,7 +26,7 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != pkg.ContentTypeJSON {
+	if r.Header.Get("Content-Type") != constparams.ContentTypeJSON {
 		return errors.ErrUnsupportedMediaType
 	}
 
@@ -57,8 +57,8 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (u *UserPutSettingsRequest) GetParams() *pkg.ChangeUserSettings {
-	return &pkg.ChangeUserSettings{
+func (u *UserPutSettingsRequest) GetParams() *constparams.ChangeUserSettings {
+	return &constparams.ChangeUserSettings{
 		NewPassword: u.NewPassword,
 		CurPassword: u.CurPassword,
 		Nickname:    u.Nickname,

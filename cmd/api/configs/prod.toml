@@ -1,17 +1,17 @@
-[server]
+[server_http]
 bind_addr_http = "0.0.0.0:8088"
-read_timeout = 10
-write_timeout = 10
+read_timeout = 10 #seconds
+write_timeout = 10 #seconds
 protocol = "https"
 tls_certificate_file = "fullchain.pem"
 tls_key_file = "privkey.pem"
 
 [context]
-timeout = 10
+timeout = 10 #seconds
 
 [logger]
 log_level = "debug"
-log_path = "logs/prod/"
+log_path = "logs/api/prod"
 
 [S3]
 endpoint = "http://localstack:4566"

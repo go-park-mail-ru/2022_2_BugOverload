@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"time"
@@ -10,11 +11,10 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/models"
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -32,7 +32,7 @@ func NewAuthHandler(as authService.AuthService, ss sessionService.SessionService
 	}
 }
 
-func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *authHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/auth", h.Action).Methods(http.MethodGet)
 }
 
@@ -50,9 +50,9 @@ func (h *authHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth [GET]
 func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie(pkg.SessionCookieName)
+	cookie, err := r.Cookie(constparams.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrNoCookie)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrNoCookie)
 		return
 	}
 
@@ -62,20 +62,20 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.sessionService.GetUserBySession(r.Context(), requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	userAuth, err := h.authService.Auth(r.Context(), &user)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	requestSession.User = &user
 	token, err := security.CreateCsrfToken(&requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
@@ -84,13 +84,13 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	cookieCSRF := &http.Cookie{
 		Name:    "CSRF-TOKEN",
 		Value:   token,
-		Expires: time.Now().Add(pkg.TimeoutLiveCookie),
-		Path:    pkg.GlobalCookiePath,
+		Expires: time.Now().Add(constparams.TimeoutLiveCookie),
+		Path:    constparams.GlobalCookiePath,
 	}
 
 	http.SetCookie(w, cookieCSRF)
 
 	response := models.NewUserAuthResponse(&userAuth)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

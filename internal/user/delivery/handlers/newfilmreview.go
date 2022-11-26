@@ -1,16 +1,16 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -27,7 +27,7 @@ func NewFilmReviewHandler(us serviceUser.UserService) handler.Handler {
 	}
 }
 
-func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id}/review/new", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodPost)
 }
 
@@ -47,9 +47,9 @@ func (h *newFilmReviewHandler) Configure(r *mux.Router, mw *middleware.Middlewar
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/film/{id}/review/new [POST]
 func (h *newFilmReviewHandler) Action(w http.ResponseWriter, r *http.Request) {
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(r.Context(), w, errors.ErrGetUserRequest)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
@@ -57,17 +57,17 @@ func (h *newFilmReviewHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	err = h.userService.NewFilmReview(r.Context(), &user, request.GetReview(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewFilmReviewResponse(&user)
 
-	httpwrapper.Response(r.Context(), w, http.StatusCreated, response)
+	wrapper.Response(r.Context(), w, http.StatusCreated, response)
 }

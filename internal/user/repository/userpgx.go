@@ -3,12 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	filmRepo "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -19,19 +19,19 @@ type UserRepository interface {
 	GetUserProfileSettings(ctx context.Context, user *models.User) (models.User, error)
 
 	// FilmActivity
-	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error)
+	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *constparams.GetUserActivityOnFilmParams) (models.UserActivity, error)
 
 	// ChangeInfo
 	ChangeUserProfileNickname(ctx context.Context, user *models.User) error
 
 	// Film
 	FilmRatingExist(ctx context.Context, user *models.User, filmID int) (bool, error)
-	FilmRateUpdate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
-	FilmRateSet(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error)
-	FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error)
+	FilmRateUpdate(ctx context.Context, user *models.User, params *constparams.FilmRateParams) (models.Film, error)
+	FilmRateSet(ctx context.Context, user *models.User, params *constparams.FilmRateParams) (models.Film, error)
+	FilmRateDrop(ctx context.Context, user *models.User, params *constparams.FilmRateDropParams) (models.Film, error)
 
 	// Review
-	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
+	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *constparams.NewFilmReviewParams) error
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -67,7 +67,7 @@ func (u *userPostgres) GetUserProfileByID(ctx context.Context, user *models.User
 		}
 
 		if !response.Avatar.Valid {
-			response.Avatar.String = innerPKG.DefUserAvatar
+			response.Avatar.String = constparams.DefUserAvatar
 		}
 
 		return nil
@@ -130,7 +130,7 @@ func (u *userPostgres) GetUserProfileSettings(ctx context.Context, user *models.
 }
 
 func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *models.User) error {
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, updateUserSettingsNickname, user.Nickname, user.ID)
 		if err != nil {
 			return err
@@ -151,7 +151,7 @@ func (u *userPostgres) ChangeUserProfileNickname(ctx context.Context, user *mode
 func (u *userPostgres) FilmRatingExist(ctx context.Context, user *models.User, filmID int) (bool, error) {
 	response := false
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		rowExist := tx.QueryRowContext(ctx, checkUserRateExist, user.ID, filmID)
 		if rowExist.Err() != nil {
 			return rowExist.Err()
@@ -174,10 +174,10 @@ func (u *userPostgres) FilmRatingExist(ctx context.Context, user *models.User, f
 	return response, nil
 }
 
-func (u *userPostgres) FilmRateUpdate(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+func (u *userPostgres) FilmRateUpdate(ctx context.Context, user *models.User, params *constparams.FilmRateParams) (models.Film, error) {
 	resultFilm := filmRepo.NewFilmSQL()
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, updateUserRateFilm, user.ID, params.FilmID, params.Score)
 		if err != nil {
 			return err
@@ -215,10 +215,10 @@ func (u *userPostgres) FilmRateUpdate(ctx context.Context, user *models.User, pa
 	return resultFilm.Convert(), nil
 }
 
-func (u *userPostgres) FilmRateSet(ctx context.Context, user *models.User, params *innerPKG.FilmRateParams) (models.Film, error) {
+func (u *userPostgres) FilmRateSet(ctx context.Context, user *models.User, params *constparams.FilmRateParams) (models.Film, error) {
 	resultFilm := filmRepo.NewFilmSQL()
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, setUserRateFilm, user.ID, params.FilmID, params.Score)
 		if err != nil {
 			return err
@@ -261,10 +261,10 @@ func (u *userPostgres) FilmRateSet(ctx context.Context, user *models.User, param
 	return resultFilm.Convert(), nil
 }
 
-func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *innerPKG.FilmRateDropParams) (models.Film, error) {
+func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, params *constparams.FilmRateDropParams) (models.Film, error) {
 	resultFilm := filmRepo.NewFilmSQL()
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, deleteUserRateFilm, user.ID, params.FilmID)
 		if err != nil {
 			return err
@@ -307,8 +307,8 @@ func (u *userPostgres) FilmRateDrop(ctx context.Context, user *models.User, para
 	return resultFilm.Convert(), nil
 }
 
-func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error {
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *constparams.NewFilmReviewParams) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, u.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		row := tx.QueryRowContext(ctx, insertNewReview, review.Name, review.Type, review.Body)
 		if row.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
@@ -340,9 +340,9 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 		var targetCounterReviews string
 
 		switch review.Type {
-		case innerPKG.TypeReviewNegative:
+		case constparams.TypeReviewNegative:
 			targetCounterReviews = updateFilmCountReviewNegative
-		case innerPKG.TypeReviewNeutral:
+		case constparams.TypeReviewNeutral:
 			targetCounterReviews = updateFilmCountReviewNeutral
 		default:
 			targetCounterReviews = updateFilmCountReviewPositive
@@ -365,7 +365,7 @@ func (u *userPostgres) NewFilmReview(ctx context.Context, user *models.User, rev
 	return nil
 }
 
-func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error) {
+func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.User, params *constparams.GetUserActivityOnFilmParams) (models.UserActivity, error) {
 	response := NewUserActivitySQL()
 
 	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {

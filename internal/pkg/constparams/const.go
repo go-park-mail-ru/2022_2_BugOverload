@@ -1,7 +1,6 @@
-package pkg
+package constparams
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -32,18 +31,6 @@ const (
 	DateFormat = "2006.01.02"
 	TimeFormat = "15:04:05"
 )
-
-// TxDefaultOptions for Postgres
-var TxDefaultOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  true,
-}
-
-// TxInsertOptions for Postgres
-var TxInsertOptions = &sql.TxOptions{
-	Isolation: sql.LevelDefault,
-	ReadOnly:  false,
-}
 
 // Service
 const (
@@ -98,8 +85,15 @@ const (
 
 type ContextKeyType string
 
-// SessionKey LoggerKey for ctx
+// SessionKey for ctx in auth logic
 var SessionKey ContextKeyType = "cookie"
+
+const RequestID = "req-id"
+
+// RequestIDKey for ctx in global middleware
+var RequestIDKey ContextKeyType = RequestID
+
+// LoggerKey for ctx in global middleware
 var LoggerKey ContextKeyType = "logger"
 
 // CurrentUserKey is key for ctx in auth middleware

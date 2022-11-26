@@ -18,12 +18,7 @@ func NewLogger(config *pkg.Logger) (*logrus.Logger, func() error) {
 
 	logger := logrus.New()
 
-	location, err := time.LoadLocation("Europe/Moscow")
-	if err != nil {
-		logrus.Fatalf("err get time zone")
-	}
-
-	currentTime := time.Now().In(location)
+	currentTime := time.Now()
 
 	formatted := config.LogAddr + fmt.Sprintf("Date:%d.%02d.%02d__Time:%02d:%02d:%02d",
 		currentTime.Year(), currentTime.Month(), currentTime.Day(),

@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -77,8 +77,8 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 
 	var userID int
 
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password), innerPKG.DefUserAvatar)
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password), constparams.DefUserAvatar)
 		if rowUser.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s, %s, %s]. Special error: [%s]",
@@ -152,7 +152,7 @@ func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (model
 		}
 
 		if !userDB.avatar.Valid {
-			userDB.avatar.String = innerPKG.DefPersonAvatar
+			userDB.avatar.String = constparams.DefPersonAvatar
 		}
 
 		return nil
@@ -211,7 +211,7 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 }
 
 func (ad *AuthDatabase) UpdatePassword(ctx context.Context, user *models.User, password string) error {
-	errMain := sqltools.RunTxOnConn(ctx, innerPKG.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
+	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, updateUserPassword, []byte(password), user.ID)
 		if err != nil {
 			return err

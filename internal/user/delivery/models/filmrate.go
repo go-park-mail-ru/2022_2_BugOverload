@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"strconv"
@@ -10,7 +11,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -37,7 +37,7 @@ func (f *FilmRateRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != innerPKG.ContentTypeJSON {
+	if r.Header.Get("Content-Type") != constparams.ContentTypeJSON {
 		return errors.ErrUnsupportedMediaType
 	}
 
@@ -64,8 +64,8 @@ func (f *FilmRateRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (f *FilmRateRequest) GetParams() *innerPKG.FilmRateParams {
-	return &innerPKG.FilmRateParams{
+func (f *FilmRateRequest) GetParams() *constparams.FilmRateParams {
+	return &constparams.FilmRateParams{
 		FilmID: f.FilmID,
 		Score:  f.Score,
 	}

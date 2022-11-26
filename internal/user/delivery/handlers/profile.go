@@ -6,8 +6,8 @@ import (
 	"github.com/gorilla/mux"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
 	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 )
@@ -24,7 +24,7 @@ func NewUserProfileHandler(us serviceUserProfile.UserService) handler.Handler {
 	}
 }
 
-func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *userProfileHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/user/profile/{id:[0-9]+}", h.Action).Methods(http.MethodGet)
 }
 
@@ -46,17 +46,17 @@ func (h *userProfileHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	user, err := h.userProfileService.GetUserProfileByID(r.Context(), request.GetUser())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewUserProfileResponse(&user)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

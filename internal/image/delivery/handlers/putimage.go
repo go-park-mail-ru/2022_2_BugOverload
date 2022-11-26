@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 
@@ -11,8 +12,8 @@ import (
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // putImageHandler is the structure that handles the request for auth.
@@ -27,7 +28,7 @@ func NewPutImageHandler(is serviceImage.ImageService) handler.Handler {
 	}
 }
 
-func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *putImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/image", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodPut).
 		Queries("object", "{object}")
@@ -54,32 +55,32 @@ func (h *putImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	user, ok := r.Context().Value(pkg.CurrentUserKey).(mainModels.User)
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	image := request.GetImage()
 
 	if !user.IsAdmin {
-		if image.Object != pkg.ImageObjectUserAvatar {
-			httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		if image.Object != constparams.ImageObjectUserAvatar {
+			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
 		}
 
 		image.Key = strconv.Itoa(user.ID)
 	}
 
-	err = h.imageService.UpdateImage(r.Context(), image)
+	err = h.imageService.UpdateImage(pkg.GetDefInfoMicroService(r.Context()), image)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
 		return
 	}
 
-	httpwrapper.NoBody(w, http.StatusNoContent)
+	wrapper.NoBody(w, http.StatusNoContent)
 }

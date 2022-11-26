@@ -2,17 +2,16 @@ package errors
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 )
 
 func CreateLog(ctx context.Context, errFull error) {
 	errCause := stdErrors.Cause(errFull)
 
-	logger, ok := ctx.Value(pkg.LoggerKey).(*logrus.Entry)
+	logger, ok := ctx.Value(constparams.LoggerKey).(*logrus.Entry)
 	if !ok {
 		logrus.Infof("CreateLog: errFull convert context -> *logrus.Logger on errFull [%s]", errCause)
 		return

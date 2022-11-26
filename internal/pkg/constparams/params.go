@@ -1,4 +1,4 @@
-package pkg
+package constparams
 
 // GetPersonParams in struct for personHandler
 type GetPersonParams struct {

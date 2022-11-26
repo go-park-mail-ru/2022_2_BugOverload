@@ -1,4 +1,4 @@
-package httpwrapper
+package wrapper
 
 // ErrResponse is structure for giving answers with errors.
 type ErrResponse struct {

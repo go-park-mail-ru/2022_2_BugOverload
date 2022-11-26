@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,9 +17,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/film/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestRecommendationHandler_Action_OK(t *testing.T) {
@@ -83,14 +83,14 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 
-	expectedBody := httpwrapper.ErrResponse{
+	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrWorkDatabase.Error(),
 	}
 
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
-	ctx := context.WithValue(r.Context(), pkg.LoggerKey, logger)
+	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
 	r = r.WithContext(ctx)
 
@@ -116,7 +116,7 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	var actualBody httpwrapper.ErrResponse
+	var actualBody wrapper.ErrResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

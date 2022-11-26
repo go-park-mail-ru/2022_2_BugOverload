@@ -2,11 +2,11 @@ package security
 
 import (
 	"bytes"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 	"golang.org/x/crypto/argon2"
 
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 

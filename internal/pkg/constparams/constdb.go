@@ -1,4 +1,6 @@
-package pkg
+package constparams
+
+import "database/sql"
 
 // DB
 const (
@@ -158,3 +160,15 @@ func NewGenresMap() map[string]string {
 var GenresMap = NewGenresMap()
 
 var TagsMap = NewTagsMap()
+
+// TxDefaultOptions for Postgres
+var TxDefaultOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  true,
+}
+
+// TxInsertOptions for Postgres
+var TxInsertOptions = &sql.TxOptions{
+	Isolation: sql.LevelDefault,
+	ReadOnly:  false,
+}

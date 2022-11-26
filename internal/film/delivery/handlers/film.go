@@ -8,8 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/models"
 	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // filmHandler is the structure that handles the request for
@@ -25,7 +25,7 @@ func NewFilmHandler(fs serviceFilms.FilmsService) handler.Handler {
 	}
 }
 
-func (h *filmHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *filmHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/film/{id:[0-9]+}", h.Action).
 		Methods(http.MethodGet).
 		Queries("count_images", "{count_images}")
@@ -50,17 +50,17 @@ func (h *filmHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	film, err := h.filmService.GetFilmByID(r.Context(), request.GetFilm(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewFilmResponse(&film)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

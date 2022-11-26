@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -8,8 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/models"
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // getImageHandler is the structure that handles the request for auth.
@@ -24,7 +25,7 @@ func NewGetImageHandler(is serviceImage.ImageService) handler.Handler {
 	}
 }
 
-func (h *getImageHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *getImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/image", h.Action).
 		Methods(http.MethodGet).
 		Queries("object", "{object}", "key", "{key}")
@@ -52,15 +53,15 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	getImage, err := h.imageService.GetImage(r.Context(), request.GetImage())
+	getImage, err := h.imageService.GetImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
 		return
 	}
 
-	httpwrapper.ResponseImage(r.Context(), w, http.StatusOK, getImage.Bytes)
+	wrapper.ResponseImage(r.Context(), w, http.StatusOK, getImage.Bytes)
 }

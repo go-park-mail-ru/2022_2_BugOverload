@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"time"
 
@@ -8,10 +9,9 @@ import (
 
 	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
@@ -29,7 +29,7 @@ func NewLogoutHandler(as authService.AuthService, ss sessionService.SessionServi
 	}
 }
 
-func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodDelete)
 }
 
@@ -46,9 +46,9 @@ func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/auth/logout [DELETE]
 func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie(pkg.SessionCookieName)
+	cookie, err := r.Cookie(constparams.SessionCookieName)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
@@ -58,18 +58,18 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	badSession, err := h.sessionService.DeleteSession(r.Context(), requestSession)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	badCookie := &http.Cookie{
-		Name:     pkg.SessionCookieName,
+		Name:     constparams.SessionCookieName,
 		Value:    badSession.ID,
-		Expires:  time.Now().Add(-pkg.TimeoutLiveCookie),
+		Expires:  time.Now().Add(-constparams.TimeoutLiveCookie),
 		HttpOnly: true,
 	}
 
 	http.SetCookie(w, badCookie)
 
-	httpwrapper.NoBody(w, http.StatusNoContent)
+	wrapper.NoBody(w, http.StatusNoContent)
 }

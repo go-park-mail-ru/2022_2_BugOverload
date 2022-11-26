@@ -8,8 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/httpwrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 // getStdCollectionHandler is the structure that handles the request for movies in cinemas.
@@ -24,7 +24,7 @@ func NewStdCollectionHandler(uc service.CollectionService) handler.Handler {
 	}
 }
 
-func (h *getStdCollectionHandler) Configure(r *mux.Router, mw *middleware.Middleware) {
+func (h *getStdCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/collection", h.Action).
 		Methods(http.MethodGet).
 		Queries(
@@ -58,17 +58,17 @@ func (h *getStdCollectionHandler) Action(w http.ResponseWriter, r *http.Request)
 
 	err := request.Bind(r)
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	collection, err := h.collectionService.GetStdCollection(r.Context(), request.GetParams())
 	if err != nil {
-		httpwrapper.DefaultHandlerError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
 	response := models.NewStdCollectionResponse(&collection)
 
-	httpwrapper.Response(r.Context(), w, http.StatusOK, response)
+	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }
