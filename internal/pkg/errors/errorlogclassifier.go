@@ -5,7 +5,7 @@ import (
 )
 
 type ErrLogClassifier struct {
-	table map[error]string
+	table map[string]string
 }
 
 const (
@@ -15,73 +15,73 @@ const (
 )
 
 func NewErrLogClassifier() ErrLogClassifier {
-	res := make(map[error]string)
+	res := make(map[string]string)
 
 	// Common delivery
-	res[ErrBadBodyRequest] = infoLogLevel
-	res[ErrJSONUnexpectedEnd] = infoLogLevel
-	res[ErrContentTypeUndefined] = infoLogLevel
-	res[ErrUnsupportedMediaType] = infoLogLevel
-	res[ErrEmptyBody] = infoLogLevel
-	res[ErrConvertQueryType] = infoLogLevel
-	res[ErrQueryRequiredEmpty] = infoLogLevel
-	res[ErrBadRequestParams] = infoLogLevel
-	res[ErrBadRequestParamsEmptyRequiredFields] = infoLogLevel
-	res[ErrBadRequestParams] = infoLogLevel
+	res[ErrBadBodyRequest.Error()] = infoLogLevel
+	res[ErrJSONUnexpectedEnd.Error()] = infoLogLevel
+	res[ErrContentTypeUndefined.Error()] = infoLogLevel
+	res[ErrUnsupportedMediaType.Error()] = infoLogLevel
+	res[ErrEmptyBody.Error()] = infoLogLevel
+	res[ErrConvertQueryType.Error()] = infoLogLevel
+	res[ErrQueryRequiredEmpty.Error()] = infoLogLevel
+	res[ErrBadRequestParams.Error()] = infoLogLevel
+	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = infoLogLevel
+	res[ErrBadRequestParams.Error()] = infoLogLevel
 
 	// Common repository
-	res[ErrNotFoundInDB] = errLogLevel
-	res[ErrWorkDatabase] = errLogLevel
-	res[ErrGetParamsConvert] = errLogLevel
+	res[ErrNotFoundInDB.Error()] = errLogLevel
+	res[ErrWorkDatabase.Error()] = errLogLevel
+	res[ErrGetParamsConvert.Error()] = errLogLevel
 
 	// Auth delivery
-	res[ErrNoCookie] = infoLogLevel
+	res[ErrNoCookie.Error()] = infoLogLevel
 
 	// Auth repository
-	res[ErrUserExist] = errLogLevel
-	res[ErrUserNotExist] = errLogLevel
+	res[ErrUserExist.Error()] = errLogLevel
+	res[ErrUserNotExist.Error()] = errLogLevel
 
 	// Auth service
-	res[ErrInvalidNickname] = infoLogLevel
-	res[ErrInvalidEmail] = infoLogLevel
-	res[ErrInvalidPassword] = infoLogLevel
-	res[ErrIncorrectPassword] = infoLogLevel
+	res[ErrInvalidNickname.Error()] = infoLogLevel
+	res[ErrInvalidEmail.Error()] = infoLogLevel
+	res[ErrInvalidPassword.Error()] = infoLogLevel
+	res[ErrIncorrectPassword.Error()] = infoLogLevel
 
 	// Image delivery
-	res[ErrBigImage] = infoLogLevel
-	res[ErrBadImageType] = infoLogLevel
+	res[ErrBigImage.Error()] = infoLogLevel
+	res[ErrBadImageType.Error()] = infoLogLevel
 
 	// Image repository
-	res[ErrImage] = errLogLevel
+	res[ErrImage.Error()] = errLogLevel
 
 	// User delivery
-	res[ErrGetUserRequest] = infoLogLevel
-	res[ErrWrongValidPassword] = infoLogLevel
+	res[ErrGetUserRequest.Error()] = infoLogLevel
+	res[ErrWrongValidPassword.Error()] = infoLogLevel
 
 	// User service
-	res[ErrFilmRatingNotExist] = errLogLevel
+	res[ErrFilmRatingNotExist.Error()] = errLogLevel
 
 	// Middleware
-	res[ErrBigRequest] = infoLogLevel
-	res[ErrConvertLength] = infoLogLevel
+	res[ErrBigRequest.Error()] = infoLogLevel
+	res[ErrConvertLength.Error()] = infoLogLevel
 
 	// Security
-	res[ErrCsrfTokenCreate] = errLogLevel
-	res[ErrCsrfTokenCheck] = errLogLevel
-	res[ErrCsrfTokenCheckInternal] = errLogLevel
-	res[ErrCsrfTokenExpired] = errLogLevel
-	res[ErrCsrfTokenInvalid] = errLogLevel
+	res[ErrCsrfTokenCreate.Error()] = errLogLevel
+	res[ErrCsrfTokenCheck.Error()] = errLogLevel
+	res[ErrCsrfTokenCheckInternal.Error()] = errLogLevel
+	res[ErrCsrfTokenExpired.Error()] = errLogLevel
+	res[ErrCsrfTokenInvalid.Error()] = errLogLevel
 
 	// Not found
-	res[ErrGenreNotFound] = infoLogLevel
-	res[ErrTagNotFound] = infoLogLevel
-	res[ErrPersonNotFound] = infoLogLevel
-	res[ErrFilmNotFound] = infoLogLevel
-	res[ErrSessionNotFound] = infoLogLevel
-	res[ErrUserNotFound] = infoLogLevel
-	res[ErrImageNotFound] = infoLogLevel
-	res[ErrFilmsNotFound] = infoLogLevel
-	res[ErrCollectionsNotFound] = infoLogLevel
+	res[ErrGenreNotFound.Error()] = infoLogLevel
+	res[ErrTagNotFound.Error()] = infoLogLevel
+	res[ErrPersonNotFound.Error()] = infoLogLevel
+	res[ErrFilmNotFound.Error()] = infoLogLevel
+	res[ErrSessionNotFound.Error()] = infoLogLevel
+	res[ErrUserNotFound.Error()] = infoLogLevel
+	res[ErrImageNotFound.Error()] = infoLogLevel
+	res[ErrFilmsNotFound.Error()] = infoLogLevel
+	res[ErrCollectionsNotFound.Error()] = infoLogLevel
 
 	return ErrLogClassifier{
 		table: res,
@@ -89,7 +89,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 }
 
 func GetLogLevelErr(err error) (string, error) {
-	level, exist := errLogCsf.table[err]
+	level, exist := errLogCsf.table[err.Error()]
 	if !exist {
 		return "", stdErrors.New("error not found")
 	}
