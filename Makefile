@@ -6,7 +6,7 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./...
 
-SERVICE_MAIN = main
+SERVICE_DEV = dev
 
 MICROSERVICE_DIR=$(PWD)/internal
 
@@ -109,14 +109,14 @@ prod-deploy:
 	make prod-create-env
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 	sleep 2
-	make reboot-db-debug
+	docker-compose run dev make -C project reboot-db COUNT=3
 	sleep 30
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
 	docker-compose up -d
 	sleep 1
-	make reboot-db-debug
+	docker-compose run dev make -C project reboot-db COUNT=3
 	sleep 1
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
@@ -128,18 +128,18 @@ logs:
 	docker-compose logs -f
 
 reboot-db-debug:
-	docker-compose exec $(SERVICE_MAIN) make -C project  reboot-db COUNT=3
+	docker-compose exec $(SERVICE_DEV) make -C project  reboot-db COUNT=3
 
 main-debug-restart:
-	docker-compose restart $(SERVICE_MAIN)
+	docker-compose restart $(SERVICE_DEV)
 
 main-prod-restart:
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_MAIN)
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_DEV)
 
 # Example: make infro-command COMMAND=run-all-tests
 infro-command:
-	docker-compose exec $(SERVICE_MAIN) make -C project  ${COMMAND}
+	docker-compose exec $(SERVICE_DEV) make -C project  ${COMMAND}
 
 # Utils
 clear:
