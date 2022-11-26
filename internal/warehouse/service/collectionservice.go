@@ -90,7 +90,7 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *constp
 }
 
 // GetPremieresCollection is the service that accesses the interface Repository
-func (c collectionService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	collection, err := c.collectionRepo.GetPremieresCollection(ctx, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
