@@ -16,6 +16,8 @@ func main() {
 	flag.StringVar(&configPath, "config-path", "cmd/filldb/configs/debug.toml", "path to config file")
 	flag.StringVar(&dataPath, "data-path", "test/newdata", "path to data files")
 
+	flag.Parse()
+
 	config := fillerdb.NewConfig()
 
 	_, err := toml.DecodeFile(configPath, config)

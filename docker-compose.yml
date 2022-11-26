@@ -1,6 +1,31 @@
 version: "3.7"
 
 services:
+  dev:
+    container_name: "dev"
+    networks:
+      - localstack-net
+      - postgres-net
+    image: andeo1812/golang_web_light:latest
+    environment:
+      AWS_PROFILE: "${AWS_PROFILE}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - .:/project
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    depends_on:
+      - localstack
+      - main_db
+
+
   main:
     container_name: "main"
     networks:
@@ -24,15 +49,45 @@ services:
     depends_on:
       - localstack
       - main_db
+    restart: unless-stopped
 
+
+#  image:
+#    container_name: "image"
+#    networks:
+#      - localstack-net
+#      - postgres-net
+#    image: andeo1812/golang_web_light:latest
+#    command: make -C project image-service-launch
+#    environment:
+#      AWS_PROFILE: "${AWS_PROFILE}"
+#      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+#      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+#      AWS_REGION: "${AWS_REGION}"
+#      POSTGRES_DB: "${POSTGRES_DB}"
+#      POSTGRES_USER: "${POSTGRES_USER}"
+#      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+#      POSTGRES_PORT: "${POSTGRES_PORT}"
+#      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+#      POSTGRES_HOST: "${POSTGRES_HOST}"
+#    volumes:
+#      - .:/project
+#      - "/etc/timezone:/etc/timezone:ro"
+#      - "/etc/localtime:/etc/localtime:ro"
+#    ports:
+#      - "8089:8089"
+#    depends_on:
+#      - localstack
+#      - main_db
+#    restart: unless-stopped
 
   image:
     container_name: "image"
     networks:
       - localstack-net
       - postgres-net
-    image: andeo1812/golang_web_light:latest
-    command: make -C project image-service-launch
+    build: ./
+    command: sh -c "./app/image_bin -config-path=./app/configs/debug.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
@@ -45,9 +100,8 @@ services:
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
     volumes:
-      - .:/project
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
+      - ./logs/image:/logs/image
+      - ./cmd/image:/app
     ports:
       - "8089:8089"
     depends_on:
@@ -139,6 +193,7 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
+    restart: unless-stopped
 
 
   admin_db:
@@ -155,6 +210,7 @@ services:
     restart: unless-stopped
     depends_on:
       - main_db
+    restart: unless-stopped
 
 
   monitor_db:
@@ -173,6 +229,7 @@ services:
       - "9187:9187"
     depends_on:
       - main_db
+    restart: unless-stopped
 
 
 networks:
@@ -182,4 +239,4 @@ networks:
     name: localstack-net
   postgres-net:
     driver: bridge
-    name:   postgres-net
+    name: postgres-net

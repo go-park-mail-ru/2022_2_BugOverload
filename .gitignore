@@ -5,6 +5,7 @@ c.out
 c2.out
 cover
 cover2
+*_bin*
 
 docs/docs.go
 docs/swagger*

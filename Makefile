@@ -27,19 +27,19 @@ env:
 	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
 	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost
 
-# Development
+# Development -------------------------------------
 check:
 	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
-
-debug-mode:
-	go run ./cmd/api/main.go --config-path=./cmd/api/configs/debug.toml
 
 image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
-	go build cmd/api/main.go ${TARGET}
+	go build cmd/api/main.go
+	mv main cmd/api/api_bin
+	go build cmd/image/main.go
+	mv main cmd/image/image_bin
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -72,9 +72,32 @@ fill-S3-fast:
 dev-fill-db:
 	go run ./cmd/filldb/main.go --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
 
-# production
+# Migrations
+MIGRATIONS_DIR = scripts/migrations
+DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
+
+migrate-up:
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
+
+migrate-down:
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} down ${COUNT}
+
+migrate-force:
+	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} force ${COUNT}
+
+reboot-db:
+	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
+	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
+	make dev-fill-db
+# Development -------------------------------------
+
+# Launch App System -------------------------------------
+debug-mode:
+	go run ./cmd/api/main.go --config-path=./cmd/api/configs/debug.toml
+
 prod-mode:
 	go run ./cmd/api/main.go --config-path=./cmd/api/configs/prod.toml
+# Launch App System -------------------------------------
 
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
@@ -118,24 +141,6 @@ main-prod-restart:
 infro-command:
 	docker-compose exec $(SERVICE_MAIN) make -C project  ${COMMAND}
 
-# Migrations
-MIGRATIONS_DIR = scripts/migrations
-DB_URL := $(shell echo postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=$(POSTGRES_SSLMODE))
-
-migrate-up:
-	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} up ${COUNT}
-
-migrate-down:
-	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} down ${COUNT}
-
-migrate-force:
-	migrate -source file://${MIGRATIONS_DIR} -database ${DB_URL} force ${COUNT}
-
-reboot-db:
-	echo 'y' | migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} down
-	migrate -source file://${MIGRATIONS_DIR}  -database ${DB_URL} up ${COUNT}
-	make dev-fill-db
-
 # Utils
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem
@@ -146,3 +151,6 @@ open-last-log:
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
 	./scripts/set_format.sh ${TARGET} ${FORMAT}
+
+# Example launch service with command:
+# docker-compose run dev make -C project reboot-db COUNT=3
