@@ -3,7 +3,7 @@ package handlers
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/user/service"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"net/http"
 
 	"github.com/gorilla/mux"

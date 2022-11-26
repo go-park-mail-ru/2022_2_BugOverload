@@ -1,9 +1,9 @@
-package repository
+package collection
 
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"strconv"
 
 	stdErrors "github.com/pkg/errors"
@@ -14,8 +14,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
-// CollectionRepository provides the versatility of collection repositories.
-type CollectionRepository interface {
+// Repository provides the versatility of collection repositories.
+type Repository interface {
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
@@ -28,7 +28,7 @@ type collectionPostgres struct {
 }
 
 // NewCollectionPostgres is constructor for collectionPostgres.
-func NewCollectionPostgres(database *sqltools.Database) CollectionRepository {
+func NewCollectionPostgres(database *sqltools.Database) Repository {
 	return &collectionPostgres{
 		database,
 	}
@@ -66,7 +66,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 
 	//  Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
+		response.Films, err = film.GetShortFilmsBatch(ctx, conn, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
 				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
@@ -96,7 +96,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 		response.Name = params.Key
 
 		//  Genres
-		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)
+		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
@@ -144,7 +144,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 
 	//  Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = repository.GetShortFilmsBatch(ctx, conn, query, values...)
+		response.Films, err = film.GetShortFilmsBatch(ctx, conn, query, values...)
 		if stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
 				"Film main info Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
@@ -159,7 +159,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 		response.Name = params.Key
 
 		//  Genres
-		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)
+		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
@@ -182,24 +182,24 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 
 	// Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = repository.GetNewFilmsBatch(ctx, conn, params.CountFilms, params.Delimiter)
+		response.Films, err = film.GetNewFilmsBatch(ctx, conn, params.CountFilms, params.Delimiter)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 				"Film main info Err: params input: values - [%+v]. Special Error [%s]",
 				params, err)
 		}
 
-		response.Films, err = repository.GetGenresBatch(ctx, response.Films, conn)
+		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
 
-		response.Films, err = repository.GetProdCountriesBatch(ctx, response.Films, conn)
+		response.Films, err = film.GetProdCountriesBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
 
-		response.Films, err = repository.GetDirectorsBatch(ctx, response.Films, conn)
+		response.Films, err = film.GetDirectorsBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}

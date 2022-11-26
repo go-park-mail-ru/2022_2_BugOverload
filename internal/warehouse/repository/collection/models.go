@@ -1,15 +1,15 @@
-package repository
+package collection
 
 import (
 	"database/sql"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"time"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
-type CollectionSQL struct {
+type ModelSQL struct {
 	ID         int
 	Name       string
 	Time       string
@@ -21,14 +21,14 @@ type CollectionSQL struct {
 	CountLikes  sql.NullInt32
 	CountFilms  sql.NullInt32
 
-	Films []repository.FilmSQL
+	Films []film.ModelSQL
 }
 
-func NewCollectionSQL() CollectionSQL {
-	return CollectionSQL{}
+func NewCollectionSQL() ModelSQL {
+	return ModelSQL{}
 }
 
-func (c *CollectionSQL) Convert() models.Collection {
+func (c *ModelSQL) Convert() models.Collection {
 	res := models.Collection{
 		ID:         c.ID,
 		Name:       c.Name,

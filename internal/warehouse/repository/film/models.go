@@ -1,4 +1,4 @@
-package repository
+package film
 
 import (
 	"context"
@@ -47,19 +47,19 @@ func (r *ReviewSQL) Convert() models.Review {
 	}
 }
 
-type FilmActorSQL struct {
+type ModelActorSQL struct {
 	ID        int
 	Name      string
 	Avatar    sql.NullString
 	Character string
 }
 
-type FilmPersonSQL struct {
+type ModelPersonSQL struct {
 	ID   int    `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
-type FilmSQL struct {
+type ModelSQL struct {
 	ID          int
 	Name        string
 	ProdDate    string
@@ -94,21 +94,21 @@ type FilmSQL struct {
 	ProdCountries []string
 	Images        []string
 
-	Actors    []FilmActorSQL
-	Artists   []FilmPersonSQL
-	Directors []FilmPersonSQL
-	Writers   []FilmPersonSQL
-	Producers []FilmPersonSQL
-	Operators []FilmPersonSQL
-	Montage   []FilmPersonSQL
-	Composers []FilmPersonSQL
+	Actors    []ModelActorSQL
+	Artists   []ModelPersonSQL
+	Directors []ModelPersonSQL
+	Writers   []ModelPersonSQL
+	Producers []ModelPersonSQL
+	Operators []ModelPersonSQL
+	Montage   []ModelPersonSQL
+	Composers []ModelPersonSQL
 }
 
-func NewFilmSQL() FilmSQL {
-	return FilmSQL{}
+func NewFilmSQL() ModelSQL {
+	return ModelSQL{}
 }
 
-func (f *FilmSQL) Convert() models.Film {
+func (f *ModelSQL) Convert() models.Film {
 	endYear := ""
 
 	if f.EndYear.Valid {
@@ -217,7 +217,7 @@ WHERE f.film_id IN (`
 	getGenresFilmBatchEnd = `) ORDER BY f.film_id, fg.weight DESC`
 )
 
-func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+func GetGenresBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
 	setID := make([]string, len(target))
 
 	mapFilms := make(map[int]int, len(target))
@@ -234,7 +234,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, query)
 	if err != nil {
-		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
 			query, err)
 	}
@@ -246,7 +246,7 @@ func GetGenresBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]Fi
 
 		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
-			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
 				query, err)
 		}
@@ -271,7 +271,7 @@ WHERE f.film_id IN (`
 	getProdCountriesBatchEnd = `) ORDER BY f.film_id, fc.weight DESC`
 )
 
-func GetProdCountriesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+func GetProdCountriesBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
 	setID := make([]string, len(target))
 
 	mapFilms := make(map[int]int, len(target))
@@ -288,7 +288,7 @@ func GetProdCountriesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn
 
 	rowsFilmsProdCountries, err := conn.QueryContext(ctx, query)
 	if err != nil {
-		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
 			query, err)
 	}
@@ -300,7 +300,7 @@ func GetProdCountriesBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn
 
 		err = rowsFilmsProdCountries.Scan(&filmID, &country)
 		if err != nil {
-			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
 				query, err)
 		}
@@ -335,7 +335,7 @@ WHERE persons.person_id IN (
 	getDirectorsFilmBatchEnd = `) ORDER BY f.film_id`
 )
 
-func GetDirectorsBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([]FilmSQL, error) {
+func GetDirectorsBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
 	setID := make([]string, len(target))
 
 	mapFilms := make(map[int]int, len(target))
@@ -352,7 +352,7 @@ func GetDirectorsBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([
 
 	rowsFilmsDirectors, err := conn.QueryContext(ctx, query)
 	if err != nil {
-		return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",
 			query, err)
 	}
@@ -365,28 +365,28 @@ func GetDirectorsBatch(ctx context.Context, target []FilmSQL, conn *sql.Conn) ([
 
 		err = rowsFilmsDirectors.Scan(&filmID, &directorID, &directorName)
 		if err != nil {
-			return []FilmSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s]. Special Error [%s]",
 				query, err)
 		}
 
 		if len(target[mapFilms[filmID]].Directors) < constparams.MaxCountAttrInCollection {
 			target[mapFilms[filmID]].Directors = append(target[mapFilms[filmID]].Directors,
-				FilmPersonSQL{ID: directorID, Name: directorName.String})
+				ModelPersonSQL{ID: directorID, Name: directorName.String})
 		}
 	}
 
 	return target, nil
 }
 
-func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]FilmSQL, error) {
-	res := make([]FilmSQL, 0)
+func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args ...any) ([]ModelSQL, error) {
+	res := make([]ModelSQL, 0)
 
 	//  Тут какой то жесткий баг. sql.ErrNoRows не возвращается
 	rowsFilms, err := conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		logrus.Info("NeededCondition ", err)
-		return []FilmSQL{}, err
+		return []ModelSQL{}, err
 	}
 	defer rowsFilms.Close()
 
@@ -402,7 +402,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 			&film.Type,
 			&film.Rating)
 		if err != nil {
-			return []FilmSQL{}, err
+			return []ModelSQL{}, err
 		}
 
 		if !film.PosterVer.Valid {
@@ -415,19 +415,19 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 	//  Это какой то треш, запрос не отдает sql.ErrNoRows
 	if len(res) == 0 {
 		logrus.Info("BadCondition")
-		return []FilmSQL{}, sql.ErrNoRows
+		return []ModelSQL{}, sql.ErrNoRows
 	}
 
 	for idx := range res {
 		if res[idx].Type.String == constparams.DefTypeSerial {
 			rowSerial := conn.QueryRowContext(ctx, getShortSerialByID, res[idx].ID)
 			if rowSerial.Err() != nil {
-				return []FilmSQL{}, rowSerial.Err()
+				return []ModelSQL{}, rowSerial.Err()
 			}
 
 			err = rowSerial.Scan(&res[idx].EndYear)
 			if err != nil {
-				return []FilmSQL{}, err
+				return []ModelSQL{}, err
 			}
 		}
 	}
@@ -435,13 +435,13 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 	return res, nil
 }
 
-func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]FilmSQL, error) {
-	res := make([]FilmSQL, 0)
+func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
+	res := make([]ModelSQL, 0)
 
 	rowsFilms, err := conn.QueryContext(ctx, getNewFilms, args...)
 	if err != nil {
 		logrus.Info("NeededCondition ", err)
-		return []FilmSQL{}, err
+		return []ModelSQL{}, err
 	}
 	defer rowsFilms.Close()
 
@@ -457,7 +457,7 @@ func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]FilmS
 			&film.Duration,
 			&film.Description)
 		if err != nil {
-			return []FilmSQL{}, err
+			return []ModelSQL{}, err
 		}
 
 		if !film.PosterVer.Valid {
@@ -469,7 +469,7 @@ func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]FilmS
 
 	if len(res) == 0 {
 		logrus.Info("BadCondition")
-		return []FilmSQL{}, sql.ErrNoRows
+		return []ModelSQL{}, sql.ErrNoRows
 	}
 
 	return res, nil

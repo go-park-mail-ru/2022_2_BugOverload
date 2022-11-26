@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/repository"
-	filmRepo "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
 	"time"
 
 	stdErrors "github.com/pkg/errors"
@@ -13,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
+	filmRepo "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 )
 
 type UserRepository interface {
@@ -445,7 +445,7 @@ func (u *userPostgres) GetUserActivityOnFilm(ctx context.Context, user *models.U
 
 // GetUserCollections it gives away movies by genre from the repository.
 func (u *userPostgres) GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error) {
-	response := make([]repository.CollectionSQL, 0)
+	response := make([]collection.ModelSQL, 0)
 
 	var query string
 
@@ -480,7 +480,7 @@ func (u *userPostgres) GetUserCollections(ctx context.Context, user *models.User
 		defer rowsCollections.Close()
 
 		for rowsCollections.Next() {
-			collection := repository.NewCollectionSQL()
+			collection := collection.NewCollectionSQL()
 
 			err = rowsCollections.Scan(
 				&collection.ID,

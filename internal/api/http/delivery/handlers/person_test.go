@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
+	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
-	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/service/mocks"
 )
 
 func TestPersonHandler_Action_OK(t *testing.T) {

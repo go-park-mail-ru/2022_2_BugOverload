@@ -1,15 +1,15 @@
-package repository
+package person
 
 import (
 	"database/sql"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"time"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
-type PersonSQL struct {
+type ModelSQL struct {
 	ID       int
 	Name     string
 	Birthday time.Time
@@ -21,18 +21,18 @@ type PersonSQL struct {
 	OriginalName sql.NullString
 	Death        sql.NullTime
 
-	BestFilms []repository.FilmSQL
+	BestFilms []film.ModelSQL
 
 	Images      []string
 	Professions []string
 	Genres      []string
 }
 
-func NewPersonSQL() PersonSQL {
-	return PersonSQL{}
+func NewPersonSQL() ModelSQL {
+	return ModelSQL{}
 }
 
-func (p *PersonSQL) Convert() models.Person {
+func (p *ModelSQL) Convert() models.Person {
 	death := ""
 	if p.Death.Valid {
 		death = p.Death.Time.Format(innerPKG.DateFormat)

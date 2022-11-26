@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/user/service"
+	serviceUserProfile "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"net/http"
 
 	"github.com/gorilla/mux"

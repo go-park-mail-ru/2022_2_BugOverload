@@ -2,15 +2,17 @@ package service
 
 import (
 	"context"
-	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/user/user/repository"
 
 	stdErrors "github.com/pkg/errors"
 
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 )
+
+//go:generate mockgen -source userservice.go -destination mocks/mockuserservice.go -package mocUserService
 
 // UserService provides universal service for work with users.
 type UserService interface {

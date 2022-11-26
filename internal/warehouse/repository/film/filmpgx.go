@@ -1,4 +1,4 @@
-package repository
+package film
 
 import (
 	"context"
@@ -12,19 +12,19 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
-type FilmRepository interface {
+type Repository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
 	GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error)
 }
 
-// filmPostgres is implementation repository of Postgres corresponding to the FilmRepository interface.
+// filmPostgres is implementation repository of Postgres corresponding to the Repository interface.
 type filmPostgres struct {
 	database *sqltools.Database
 }
 
 // NewFilmPostgres is constructor for filmPostgres.
-func NewFilmPostgres(database *sqltools.Database) FilmRepository {
+func NewFilmPostgres(database *sqltools.Database) Repository {
 	return &filmPostgres{
 		database,
 	}
@@ -140,7 +140,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		defer rowsFilmActors.Close()
 
 		for rowsFilmActors.Next() {
-			var actor FilmActorSQL
+			var actor ModelActorSQL
 
 			err = rowsFilmActors.Scan(
 				&actor.ID,
@@ -171,7 +171,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 		defer rowsFilmPersons.Close()
 
 		for rowsFilmPersons.Next() {
-			var person FilmPersonSQL
+			var person ModelPersonSQL
 			var professionID int
 
 			err = rowsFilmPersons.Scan(

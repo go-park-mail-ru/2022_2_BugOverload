@@ -3,7 +3,7 @@ package fillerdb
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"time"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
@@ -148,7 +148,7 @@ type PersonSQLFiller struct {
 	OriginalName sql.NullString
 	Death        sql.NullTime
 
-	BestFilms []repository.FilmSQL
+	BestFilms []film.ModelSQL
 
 	Images      []string
 	Professions []string
@@ -189,7 +189,7 @@ type CollectionSQLFiller struct {
 	CountLikes  sql.NullInt32
 	CountFilms  sql.NullInt32
 
-	Films []repository.FilmSQL
+	Films []film.ModelSQL
 }
 
 func NewCollectionSQLFilmOnCollection(collection CollectionFiller) CollectionSQLFiller {

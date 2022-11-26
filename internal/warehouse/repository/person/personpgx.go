@@ -1,29 +1,29 @@
-package repository
+package person
 
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 )
 
-type PersonRepository interface {
+type Repository interface {
 	GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error)
 }
 
-// personPostgres is implementation repository of Postgres corresponding to the PersonRepository interface.
+// personPostgres is implementation repository of Postgres corresponding to the Repository interface.
 type personPostgres struct {
 	database *sqltools.Database
 }
 
 // NewPersonPostgres is constructor for personPostgres.
-func NewPersonPostgres(database *sqltools.Database) PersonRepository {
+func NewPersonPostgres(database *sqltools.Database) Repository {
 	return &personPostgres{
 		database,
 	}
@@ -75,14 +75,14 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	errQuery := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		var err error
 
-		response.BestFilms, err = repository.GetShortFilmsBatch(ctx, conn, getPersonBestFilms, person.ID, params.CountFilms)
+		response.BestFilms, err = film.GetShortFilmsBatch(ctx, conn, getPersonBestFilms, person.ID, params.CountFilms)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				getPersonBestFilms, person.ID, params.CountFilms, err)
 		}
 
-		response.BestFilms, err = repository.GetGenresBatch(ctx, response.BestFilms, conn)
+		response.BestFilms, err = film.GetGenresBatch(ctx, response.BestFilms, conn)
 		if err != nil {
 			return err
 		}

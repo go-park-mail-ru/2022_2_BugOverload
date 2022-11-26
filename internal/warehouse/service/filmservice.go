@@ -2,15 +2,15 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 )
 
-//go:generate mockgen -source filmservice.go -destination mocks/mockfilmservice.go -package mockFilmService
+//go:generate mockgen -source filmservice.go -destination mocks/mockfilmservice.go -package mockWarehouseService
 
 // FilmsService provides universal service for work with film.
 type FilmsService interface {
@@ -21,11 +21,11 @@ type FilmsService interface {
 
 // filmService is implementation for auth service corresponding to the FilmsService interface.
 type filmService struct {
-	filmsRepo repository.FilmRepository
+	filmsRepo film.Repository
 }
 
 // NewFilmService is constructor for filmService. Accepts FilmsRepository interfaces.
-func NewFilmService(cr repository.FilmRepository) FilmsService {
+func NewFilmService(cr film.Repository) FilmsService {
 	return &filmService{
 		filmsRepo: cr,
 	}

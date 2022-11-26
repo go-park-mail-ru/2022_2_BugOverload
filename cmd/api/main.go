@@ -7,14 +7,12 @@ import (
 	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
 	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/repository"
 	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service"
-	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/user/service"
-	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/repository"
-	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/service"
-	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/service"
-	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/repository"
-	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/service"
+	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
+	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
+	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
+	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
 	"net/http"
 
 	"github.com/BurntSushi/toml"
@@ -123,7 +121,7 @@ func main() {
 	filmsStorage := repoFilms.NewFilmPostgres(postgres)
 
 	// Films service
-	filmsService := serviceFilms.NewFilmService(filmsStorage)
+	filmsService := serviceCollection.NewFilmService(filmsStorage)
 
 	// Films delivery
 	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService)
@@ -182,7 +180,7 @@ func main() {
 	personRepo := repoPerson.NewPersonPostgres(postgres)
 
 	// Person service
-	personService := servicePerson.NewPersonService(personRepo)
+	personService := serviceCollection.NewPersonService(personRepo)
 
 	// service delivery
 	personHandler := handlers.NewPersonHandler(personService)

@@ -2,15 +2,15 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/repository"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
 )
 
-//go:generate mockgen -source personservice.go -destination mocks/mockpersonservice.go -package mockPersonService
+//go:generate mockgen -source personservice.go -destination mocks/mockpersonservice.go -package mockWarehouseService
 
 // PersonService provides universal service for work with persons.
 type PersonService interface {
@@ -19,11 +19,11 @@ type PersonService interface {
 
 // personService is implementation for users service corresponding to the PersonService interface.
 type personService struct {
-	personRepo repository.PersonRepository
+	personRepo person.Repository
 }
 
 // NewPersonService is constructor for personService.
-func NewPersonService(pr repository.PersonRepository) PersonService {
+func NewPersonService(pr person.Repository) PersonService {
 	return &personService{
 		personRepo: pr,
 	}

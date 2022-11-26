@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/service"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
 	"net/http"
 
 	"github.com/gorilla/mux"

@@ -2,16 +2,16 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/repository"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
 )
 
-//go:generate mockgen -source collectionservice.go -destination mocks/mockcollectionservice.go -package mockCollectionService
+//go:generate mockgen -source collectionservice.go -destination mocks/mockcollectionservice.go -package mockWarehouseService
 
 // CollectionService provides universal service for work with collection.
 type CollectionService interface {
@@ -23,18 +23,18 @@ type CollectionService interface {
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
 type collectionService struct {
-	collectionRepo repository.CollectionRepository
+	collectionRepo collection.Repository
 }
 
 // NewCollectionService is constructor for collectionService.
-// Accepts CollectionRepository interfaces.
-func NewCollectionService(cr repository.CollectionRepository) CollectionService {
+// Accepts Repository interfaces.
+func NewCollectionService(cr collection.Repository) CollectionService {
 	return &collectionService{
 		collectionRepo: cr,
 	}
 }
 
-// GetCollectionByTag is the service that accesses the interface CollectionRepository
+// GetCollectionByTag is the service that accesses the interface Repository
 func (c *collectionService) GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	var ok bool
 
@@ -51,7 +51,7 @@ func (c *collectionService) GetCollectionByTag(ctx context.Context, params *cons
 	return tagCollection, nil
 }
 
-// GetCollectionByGenre is the service that accesses the interface CollectionRepository
+// GetCollectionByGenre is the service that accesses the interface Repository
 func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	var ok bool
 
@@ -68,7 +68,7 @@ func (c *collectionService) GetCollectionByGenre(ctx context.Context, params *co
 	return collection, nil
 }
 
-// GetStdCollection is the service that accesses the interface CollectionRepository
+// GetStdCollection is the service that accesses the interface Repository
 func (c *collectionService) GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	var collection models.Collection
 	var err error
@@ -89,7 +89,7 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *constp
 	return collection, nil
 }
 
-// GetPremieresCollection is the service that accesses the interface CollectionRepository
+// GetPremieresCollection is the service that accesses the interface Repository
 func (c collectionService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	collection, err := c.collectionRepo.GetPremieresCollection(ctx, params)
 	if err != nil {
