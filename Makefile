@@ -36,9 +36,9 @@ image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
-	go build cmd/api/main.go
+	echo 'y' | go build cmd/api/main.go
 	mv main cmd/api/api_bin
-	go build cmd/image/main.go
+	echo 'y' | go build cmd/image/main.go
 	mv main cmd/image/image_bin
 
 run-all-tests:
@@ -61,7 +61,7 @@ mocks-generate:
 
 proto-generate:
 	protoc --proto_path=${MICROSERVICE_DIR}/image/delivery/grpc/protobuf image.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/image/delivery/grpc/protobuf
-	protoc --proto_path=${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf image.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf
+	protoc --proto_path=${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf warehouse.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:

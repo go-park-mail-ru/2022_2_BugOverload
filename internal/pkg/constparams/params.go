@@ -32,6 +32,7 @@ type GetReviewsFilmParams struct {
 // GetFilmParams in struct for filmHandler
 type GetFilmParams struct {
 	CountImages int
+	CountActors int
 }
 
 // ChangeUserSettings in struct for changeUserSettings

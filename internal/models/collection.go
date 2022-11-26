@@ -6,9 +6,12 @@ type Collection struct {
 	Description string `json:"description,omitempty"`
 	Poster      string `json:"poster,omitempty"`
 	Time        string `json:"time,omitempty"`
-	Films       []Film `json:"films,omitempty"`
-	CountLikes  int    `json:"count_likes,omitempty"`
-	CountFilms  int    `json:"count_films,omitempty"`
-	UpdateTime  string `json:"update_time,omitempty"`
-	CreateTime  string `json:"create_time,omitempty"`
+
+	CountLikes int `json:"count_likes,omitempty"`
+	CountFilms int `json:"count_films,omitempty"`
+
+	UpdateTime string `json:"update_time,omitempty"`
+	CreateTime string `json:"create_time,omitempty"`
+
+	Films []Film `json:"films,omitempty"`
 }
