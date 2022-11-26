@@ -24,6 +24,8 @@ type UserService interface {
 	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
 
 	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error)
+
+	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
@@ -145,4 +147,14 @@ func (u *userService) GetUserActivityOnFilm(ctx context.Context, user *models.Us
 	}
 
 	return userActivity, nil
+}
+
+// GetUserCollections is the service that accesses the interface CollectionRepository
+func (u *userService) GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error) {
+	collection, err := u.userRepo.GetUserCollections(ctx, user, params)
+	if err != nil {
+		return []models.Collection{}, stdErrors.Wrap(err, "GetUserCollections")
+	}
+
+	return collection, nil
 }

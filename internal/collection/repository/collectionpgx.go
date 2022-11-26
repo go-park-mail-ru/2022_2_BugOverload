@@ -3,14 +3,13 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"strconv"
-	"time"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -19,7 +18,6 @@ import (
 type CollectionRepository interface {
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
-	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 }
 
@@ -111,84 +109,6 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 	}
 
 	return response.Convert(), nil
-}
-
-// GetUserCollections it gives away movies by genre from the repository.
-func (c *collectionPostgres) GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error) {
-	response := make([]CollectionSQL, 0)
-
-	var query string
-
-	if params.Delimiter == constparams.UserCollectionsDelimiter {
-		params.Delimiter = time.Now().Format(constparams.DateFormat + " " + constparams.TimeFormat)
-	}
-
-	values := []interface{}{user.ID, params.Delimiter, params.CountCollections}
-
-	switch params.SortParam {
-	case constparams.UserCollectionsSortParamCreateDate:
-		query = getUserCollectionByCreateDate
-	case constparams.UserCollectionsSortParamUpdateDate:
-		query = getUserCollectionByUpdateDate
-	default:
-		return []models.Collection{}, errors.ErrUnsupportedSortParameter
-	}
-
-	//  Films - Main
-	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowsCollections, err := conn.QueryContext(ctx, query, values...)
-		if stdErrors.Is(err, sql.ErrNoRows) {
-			return stdErrors.WithMessagef(errors.ErrCollectionsNotFound,
-				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
-				query, values, err)
-		}
-		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
-				query, values, err)
-		}
-		defer rowsCollections.Close()
-
-		for rowsCollections.Next() {
-			collection := NewCollectionSQL()
-
-			err = rowsCollections.Scan(
-				&collection.ID,
-				&collection.Name,
-				&collection.Poster,
-				&collection.CountFilms,
-				&collection.CountLikes,
-				&collection.UpdateTime,
-				&collection.CreateTime)
-			if err != nil {
-				return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-					"Err Scan: params input: query - [%s], values - [%+v]. Special Error [%s]",
-					query, values, err)
-			}
-
-			response = append(response, collection)
-		}
-
-		if len(response) == 0 {
-			return stdErrors.WithMessagef(errors.ErrFilmsNotFound,
-				"Err: params input: query - [%s], values - [%+v]. Special Error [%s]",
-				query, values, err)
-		}
-
-		return nil
-	})
-
-	if errMain != nil {
-		return []models.Collection{}, errMain
-	}
-
-	res := make([]models.Collection, len(response))
-
-	for idx, value := range response {
-		res[idx] = value.Convert()
-	}
-
-	return res, nil
 }
 
 // GetCollectionByGenre it gives away movies by genre from the repository.

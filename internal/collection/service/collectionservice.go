@@ -18,7 +18,6 @@ type CollectionService interface {
 	GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
-	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 }
 
@@ -85,16 +84,6 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *constp
 
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetStdCollection")
-	}
-
-	return collection, nil
-}
-
-// GetUserCollections is the service that accesses the interface CollectionRepository
-func (c *collectionService) GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error) {
-	collection, err := c.collectionRepo.GetUserCollections(ctx, user, params)
-	if err != nil {
-		return []models.Collection{}, stdErrors.Wrap(err, "GetUserCollections")
 	}
 
 	return collection, nil

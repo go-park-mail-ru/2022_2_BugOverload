@@ -121,9 +121,6 @@ func main() {
 	stgCollectionHandler := handlersCollection.NewStdCollectionHandler(collectionService)
 	stgCollectionHandler.Configure(router, mw)
 
-	userCollectionsHandler := handlersCollection.NewGetUserCollectionsHandler(collectionService)
-	userCollectionsHandler.Configure(router, mw)
-
 	premieresCollectionHandler := handlersCollection.NewPremieresCollectionHandler(collectionService)
 	premieresCollectionHandler.Configure(router, mw)
 
@@ -182,6 +179,9 @@ func main() {
 
 	getUserActivityOnFilmHandler := handlersUser.NewGetActivityOnFilmHandler(userService)
 	getUserActivityOnFilmHandler.Configure(router, mw)
+
+	userCollectionsHandler := handlersUser.NewGetUserCollectionsHandler(userService)
+	userCollectionsHandler.Configure(router, mw)
 
 	// Person repository
 	personRepo := repoPerson.NewPersonPostgres(postgres)

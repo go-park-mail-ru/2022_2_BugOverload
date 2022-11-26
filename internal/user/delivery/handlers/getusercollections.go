@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/models"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
@@ -14,45 +17,49 @@ import (
 
 // getUserCollectionsHandler is the structure that handles the request for movies in cinemas.
 type getUserCollectionsHandler struct {
-	collectionService service.CollectionService
+	userService serviceUser.UserService
 }
 
 // NewGetUserCollectionsHandler is constructor for getUserCollectionsHandler in this pkg - in cinema.
-func NewGetUserCollectionsHandler(uc service.CollectionService) handler.Handler {
+func NewGetUserCollectionsHandler(uc serviceUser.UserService) handler.Handler {
 	return &getUserCollectionsHandler{
 		uc,
 	}
 }
 
 func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/user/collections", h.Action).
+	r.HandleFunc("/api/v1/user/collections", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodGet).
 		Queries(
 			"sort_param", "{sort_param}",
-			"count_collections", "{count_films}",
+			"count_collections", "{count_collections}",
 			"delimiter", "{delimiter}")
 }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Getter std collection (tag, genre)
-// @Description Films by genre or tag by DESC rating or DESC date. prod_company, prod_country also in the future.
+// @Summary Get user personal collections
+// @Description Collections by create time OR update time
 // @Description All fields required
 // @tags collection, completed
 // @Produce json
-// @Param target      query string true "genre, tag"
-// @Param key         query string true "for genre - comedy, tag - popular"
-// @Param sort_param  query string true "rating, date"
-// @Param count_films query int    true "count films"
-// @Param delimiter   query string true "last value while in is rating last returned film for rating OR offset for date"
-// @Success 200 {object} models.GetStdCollectionResponse "returns an array of movies"
+// @Param sort_param        query string true "create_time, update_time"
+// @Param count_collections query int    true "count collections"
+// @Param delimiter         query string true "last value while in is date last returned collection for create_time AND update_time for first for both is 'now'"
+// @Success 200 {array} models.ShortFilmCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
-// @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"
+// @Failure 404 "collection not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
-// @Router /api/v1/collection [GET]
+// @Router /api/v1/user/collections [GET]
 func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewGetStdCollectionRequest()
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
+	if !ok {
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
+		return
+	}
+
+	request := models.NewGetUserCollectionRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -60,13 +67,13 @@ func (h *getUserCollectionsHandler) Action(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	collection, err := h.collectionService.GetStdCollection(r.Context(), request.GetParams())
+	collection, err := h.userService.GetUserCollections(r.Context(), &user, request.GetParams())
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	response := models.NewStdCollectionResponse(&collection)
+	response := models.NewShortFilmCollectionResponse(collection)
 
 	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }
