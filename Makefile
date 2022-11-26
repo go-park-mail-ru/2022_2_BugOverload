@@ -109,14 +109,14 @@ prod-deploy:
 	make prod-create-env
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 	sleep 2
-	docker-compose run dev make -C project reboot-db COUNT=3
+	make reboot-db-debug
 	sleep 30
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
 	docker-compose up -d
 	sleep 1
-	docker-compose run dev make -C project reboot-db COUNT=3
+	make reboot-db-debug
 	sleep 1
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
@@ -124,26 +124,27 @@ stop:
 	docker-compose kill
 	docker-compose down
 
-logs:
-	docker-compose logs -f
-
 reboot-db-debug:
-	docker-compose exec $(SERVICE_DEV) make -C project  reboot-db COUNT=3
+	docker-compose run dev make -C project reboot-db COUNT=3
 
-main-debug-restart:
-	docker-compose restart $(SERVICE_DEV)
+debug-restart:
+	make build
+	docker-compose restart image
+	docker-compose restart api
 
-main-prod-restart:
+prod-restart:
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart $(SERVICE_DEV)
+	make build
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
 
 # Example: make infro-command COMMAND=run-all-tests
 infro-command:
-	docker-compose exec $(SERVICE_DEV) make -C project  ${COMMAND}
+	docker-compose exec $(SERVICE_DEV) make -C project ${COMMAND}
 
 # Utils
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem
+	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
 
 open-last-log:
 	./scripts/print_last_log.sh
@@ -151,6 +152,3 @@ open-last-log:
 # Example: make set-format TARGET=/home/andeo/Загрузки/images FORMAT=jpeg
 set-format:
 	./scripts/set_format.sh ${TARGET} ${FORMAT}
-
-# Example launch service with command:
-# docker-compose run dev make -C project reboot-db COUNT=3
