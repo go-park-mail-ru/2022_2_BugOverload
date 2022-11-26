@@ -2,6 +2,19 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/repository"
+	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/repository"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service"
+	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/user/repository"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/user/service"
+	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/repository"
+	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/collection/service"
+	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
+	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/service"
+	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/repository"
+	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/person/service"
 	"net/http"
 
 	"github.com/BurntSushi/toml"
@@ -11,28 +24,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	handlersAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	handlersCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/delivery/handlers"
-	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/repository"
-	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/collection/service"
-	handlersFilm "go-park-mail-ru/2022_2_BugOverload/internal/film/delivery/handlers"
-	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/film/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
-	handlersImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/handlers"
-	handlersPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/delivery/handlers"
-	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/person/repository"
-	servicePerson "go-park-mail-ru/2022_2_BugOverload/internal/person/service"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/session/repository"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
-	handlersUser "go-park-mail-ru/2022_2_BugOverload/internal/user/delivery/handlers"
-	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -99,16 +94,16 @@ func main() {
 	mw := middleware.NewHTTPMiddleware(logger, sessionService, &config.Cors)
 
 	// Auth delivery
-	authHandler := handlersAuth.NewAuthHandler(authService, sessionService)
+	authHandler := handlers.NewAuthHandler(authService, sessionService)
 	authHandler.Configure(router, mw)
 
-	logoutHandler := handlersAuth.NewLogoutHandler(authService, sessionService)
+	logoutHandler := handlers.NewLogoutHandler(authService, sessionService)
 	logoutHandler.Configure(router, mw)
 
-	loginHandler := handlersAuth.NewLoginHandler(authService, sessionService)
+	loginHandler := handlers.NewLoginHandler(authService, sessionService)
 	loginHandler.Configure(router, mw)
 
-	singUpHandler := handlersAuth.NewSingUpHandler(authService, sessionService)
+	singUpHandler := handlers.NewSingUpHandler(authService, sessionService)
 	singUpHandler.Configure(router, mw)
 
 	// Collections repository
@@ -118,10 +113,10 @@ func main() {
 	collectionService := serviceCollection.NewCollectionService(collectionStorage)
 
 	// Collections delivery
-	stgCollectionHandler := handlersCollection.NewStdCollectionHandler(collectionService)
+	stgCollectionHandler := handlers.NewStdCollectionHandler(collectionService)
 	stgCollectionHandler.Configure(router, mw)
 
-	premieresCollectionHandler := handlersCollection.NewPremieresCollectionHandler(collectionService)
+	premieresCollectionHandler := handlers.NewPremieresCollectionHandler(collectionService)
 	premieresCollectionHandler.Configure(router, mw)
 
 	// Films repository
@@ -131,25 +126,25 @@ func main() {
 	filmsService := serviceFilms.NewFilmService(filmsStorage)
 
 	// Films delivery
-	recommendationHandler := handlersFilm.NewRecommendationFilmHandler(filmsService)
+	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService)
 	recommendationHandler.Configure(router, mw)
 
-	filmHandler := handlersFilm.NewFilmHandler(filmsService)
+	filmHandler := handlers.NewFilmHandler(filmsService)
 	filmHandler.Configure(router, mw)
 
-	reviewsHandler := handlersFilm.NewReviewsHandler(filmsService)
+	reviewsHandler := handlers.NewReviewsHandler(filmsService)
 	reviewsHandler.Configure(router, mw)
 
 	// Images microservice
 	imageService := client.NewImageServiceGRPSClient(grpcConnImage)
 
-	downloadImageHandler := handlersImage.NewGetImageHandler(imageService)
+	downloadImageHandler := handlers.NewGetImageHandler(imageService)
 	downloadImageHandler.Configure(router, mw)
 
-	changeImageHandler := handlersImage.NewPutImageHandler(imageService)
+	changeImageHandler := handlers.NewPutImageHandler(imageService)
 	changeImageHandler.Configure(router, mw)
 
-	uploadImageHandler := handlersImage.NewPostImageHandler(imageService)
+	uploadImageHandler := handlers.NewPostImageHandler(imageService)
 	uploadImageHandler.Configure(router, mw)
 
 	// User repository
@@ -159,28 +154,28 @@ func main() {
 	userService := serviceUser.NewUserProfileService(userRepo, authService)
 
 	// User delivery
-	profileHandler := handlersUser.NewUserProfileHandler(userService)
+	profileHandler := handlers.NewUserProfileHandler(userService)
 	profileHandler.Configure(router, mw)
 
-	userSettingsHandler := handlersUser.NewGetSettingsHandler(userService)
+	userSettingsHandler := handlers.NewGetSettingsHandler(userService)
 	userSettingsHandler.Configure(router, mw)
 
-	changeUserSettingsHandler := handlersUser.NewPutSettingsHandler(userService)
+	changeUserSettingsHandler := handlers.NewPutSettingsHandler(userService)
 	changeUserSettingsHandler.Configure(router, mw)
 
-	filmRateHandler := handlersUser.NewFilmRateHandler(userService)
+	filmRateHandler := handlers.NewFilmRateHandler(userService)
 	filmRateHandler.Configure(router, mw)
 
-	filmRateDropHandler := handlersUser.NewFilmRateDropHandler(userService)
+	filmRateDropHandler := handlers.NewFilmRateDropHandler(userService)
 	filmRateDropHandler.Configure(router, mw)
 
-	newFilmReviewHandler := handlersUser.NewFilmReviewHandler(userService)
+	newFilmReviewHandler := handlers.NewFilmReviewHandler(userService)
 	newFilmReviewHandler.Configure(router, mw)
 
-	getUserActivityOnFilmHandler := handlersUser.NewGetActivityOnFilmHandler(userService)
+	getUserActivityOnFilmHandler := handlers.NewGetActivityOnFilmHandler(userService)
 	getUserActivityOnFilmHandler.Configure(router, mw)
 
-	userCollectionsHandler := handlersUser.NewGetUserCollectionsHandler(userService)
+	userCollectionsHandler := handlers.NewGetUserCollectionsHandler(userService)
 	userCollectionsHandler.Configure(router, mw)
 
 	// Person repository
@@ -190,7 +185,7 @@ func main() {
 	personService := servicePerson.NewPersonService(personRepo)
 
 	// service delivery
-	personHandler := handlersPerson.NewPersonHandler(personService)
+	personHandler := handlers.NewPersonHandler(personService)
 	personHandler.Configure(router, mw)
 
 	http.Handle("/", router)

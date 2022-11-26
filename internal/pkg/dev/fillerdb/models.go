@@ -3,9 +3,9 @@ package fillerdb
 import (
 	"database/sql"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/film/repository"
 	"time"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/film/repository"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
