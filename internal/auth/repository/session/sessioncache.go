@@ -1,4 +1,4 @@
-package repository
+package session
 
 import (
 	"context"
@@ -10,22 +10,22 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-// SessionRepository provides the versatility of session-related repositories.
+// Repository provides the versatility of session-related repositories.
 // Needed to work with stateful session pattern.
-type SessionRepository interface {
+type Repository interface {
 	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
 	DeleteSession(ctx context.Context, session models.Session) (models.Session, error)
 }
 
-// sessionCache is implementation repository of sessions in memory corresponding to the SessionRepository interface.
+// sessionCache is implementation repository of sessions in memory corresponding to the Repository interface.
 type sessionCache struct {
 	storageUserSession map[string]models.Session
 	mu                 *sync.RWMutex
 }
 
 // NewSessionCache is constructor for sessionCache.
-func NewSessionCache() SessionRepository {
+func NewSessionCache() Repository {
 	return &sessionCache{
 		make(map[string]models.Session),
 		&sync.RWMutex{},

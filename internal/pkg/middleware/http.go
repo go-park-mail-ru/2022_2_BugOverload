@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"context"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"

@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -15,8 +14,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
-	mockAuthService "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service/mocks"
-	mockSessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
+	mockAuthService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -30,7 +29,7 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	defer ctrl.Finish()
 
 	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockSessionService.NewMockSessionService(ctrl)
+	sessService := mockAuthService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -100,7 +99,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	defer ctrl.Finish()
 
 	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockSessionService.NewMockSessionService(ctrl)
+	sessService := mockAuthService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -150,7 +149,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	defer ctrl.Finish()
 
 	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockSessionService.NewMockSessionService(ctrl)
+	sessService := mockAuthService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -208,7 +207,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	defer ctrl.Finish()
 
 	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockSessionService.NewMockSessionService(ctrl)
+	sessService := mockAuthService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -275,7 +274,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	defer ctrl.Finish()
 
 	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockSessionService.NewMockSessionService(ctrl)
+	sessService := mockAuthService.NewMockSessionService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 

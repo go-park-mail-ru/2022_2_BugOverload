@@ -3,10 +3,9 @@ package main
 import (
 	"flag"
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/repository"
-	serviceAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/repository"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/auth"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/session"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
 	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
@@ -85,7 +84,7 @@ func main() {
 	sessionStorage := repoSession.NewSessionCache()
 
 	// Auth service
-	authService := serviceAuth.NewAuthService(authStorage)
+	authService := serviceSession.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
 	// Middleware

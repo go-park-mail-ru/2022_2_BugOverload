@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/repository"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/auth"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
@@ -25,11 +25,11 @@ type AuthService interface {
 
 // authService is implementation for users service corresponding to the AuthService interface.
 type authService struct {
-	authRepo repository.AuthRepository
+	authRepo auth.Repository
 }
 
-// NewAuthService is constructor for authService. Accepts AuthRepository interfaces.
-func NewAuthService(ur repository.AuthRepository) AuthService {
+// NewAuthService is constructor for authService. Accepts Repository interfaces.
+func NewAuthService(ur auth.Repository) AuthService {
 	return &authService{
 		authRepo: ur,
 	}
@@ -43,7 +43,7 @@ func (u *authService) Auth(ctx context.Context, user *models.User) (models.User,
 	return userRepo, nil
 }
 
-// Login is the service that accesses the interface AuthRepository.
+// Login is the service that accesses the interface Repository.
 // Validation: request password and password user from repository equal.
 func (u *authService) Login(ctx context.Context, user *models.User) (models.User, error) {
 	if err := ValidateEmail(user.Email); err != nil {
@@ -65,7 +65,7 @@ func (u *authService) Login(ctx context.Context, user *models.User) (models.User
 	return userRepo, nil
 }
 
-// Signup is the service that accesses the interface AuthRepository
+// Signup is the service that accesses the interface Repository
 func (u *authService) Signup(ctx context.Context, user *models.User) (models.User, error) {
 	if err := ValidateNickname(user.Email); err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")

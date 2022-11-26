@@ -1,4 +1,4 @@
-package repository
+package auth
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
-// AuthRepository provides the versatility of users repositories.
-type AuthRepository interface {
+// Repository provides the versatility of users repositories.
+type Repository interface {
 	GetUserByEmail(ctx context.Context, email string) (models.User, error)
 	GetUserByID(ctx context.Context, userID int) (models.User, error)
 	CreateUser(ctx context.Context, user *models.User) (models.User, error)
@@ -21,20 +21,20 @@ type AuthRepository interface {
 	CheckExistUserByEmail(ctx context.Context, email string) (bool, error)
 }
 
-// AuthDatabase is implementation repository of users to the AuthRepository interface.
-type AuthDatabase struct {
+// Postgres is implementation repository of users to the Repository interface.
+type Postgres struct {
 	database *sqltools.Database
 }
 
-// NewAuthDatabase is constructor for AuthDatabase. Accepts only sqltools.Database.
-func NewAuthDatabase(database *sqltools.Database) AuthRepository {
-	return &AuthDatabase{
+// NewAuthDatabase is constructor for Postgres. Accepts only sqltools.Database.
+func NewAuthDatabase(database *sqltools.Database) Repository {
+	return &Postgres{
 		database,
 	}
 }
 
 // CheckExistUserByEmail is a check for the existence of such a user by email.
-func (ad *AuthDatabase) CheckExistUserByEmail(ctx context.Context, email string) (bool, error) {
+func (ad *Postgres) CheckExistUserByEmail(ctx context.Context, email string) (bool, error) {
 	response := false
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		row := conn.QueryRowContext(ctx, checkExist, email)
@@ -66,7 +66,7 @@ func (ad *AuthDatabase) CheckExistUserByEmail(ctx context.Context, email string)
 }
 
 // CreateUser is creates a new user and set default avatar.
-func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
+func (ad *Postgres) CreateUser(ctx context.Context, user *models.User) (models.User, error) {
 	exist, err := ad.CheckExistUserByEmail(ctx, user.Email)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "CreateUser falls on check exist")
@@ -132,7 +132,7 @@ func (ad *AuthDatabase) CreateUser(ctx context.Context, user *models.User) (mode
 }
 
 // GetUserByEmail is returns all user attributes by part user attributes.
-func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
+func (ad *Postgres) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
 	userDB := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
@@ -174,7 +174,7 @@ func (ad *AuthDatabase) GetUserByEmail(ctx context.Context, email string) (model
 }
 
 // GetUserByID is returns all user attributes by part user attributes.
-func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.User, error) {
+func (ad *Postgres) GetUserByID(ctx context.Context, userID int) (models.User, error) {
 	userDB := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
@@ -210,7 +210,7 @@ func (ad *AuthDatabase) GetUserByID(ctx context.Context, userID int) (models.Use
 	return userDB.Convert(), nil
 }
 
-func (ad *AuthDatabase) UpdatePassword(ctx context.Context, user *models.User, password string) error {
+func (ad *Postgres) UpdatePassword(ctx context.Context, user *models.User, password string) error {
 	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, updateUserPassword, []byte(password), user.ID)
 		if err != nil {

@@ -2,8 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/auth/service"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/session/service"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"time"
@@ -18,12 +17,12 @@ import (
 
 // loginHandler is the structure that handles the request for auth.
 type loginHandler struct {
-	authService    authService.AuthService
+	authService    sessionService.AuthService
 	sessionService sessionService.SessionService
 }
 
 // NewLoginHandler is constructor for loginHandler in this pkg - auth.
-func NewLoginHandler(as authService.AuthService, ss sessionService.SessionService) handler.Handler {
+func NewLoginHandler(as sessionService.AuthService, ss sessionService.SessionService) handler.Handler {
 	return &loginHandler{
 		as,
 		ss,

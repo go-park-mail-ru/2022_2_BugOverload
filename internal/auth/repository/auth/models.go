@@ -1,4 +1,4 @@
-package repository
+package auth
 
 import (
 	"database/sql"
