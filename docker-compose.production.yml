@@ -1,13 +1,62 @@
 version: "3.7"
 
 services:
-  main:
-    container_name: "main"
+  dev:
+    container_name: "dev"
     networks:
       - localstack-net
       - postgres-net
     image: andeo1812/golang_web_light:latest
-    command: make -C project prod-mode
+    environment:
+      AWS_PROFILE: "${AWS_PROFILE}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - .:/project
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    depends_on:
+      - api
+
+
+  api:
+    container_name: "api"
+    networks:
+      - localstack-net
+      - postgres-net
+    build: ./
+    command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - ./logs/api:/logs/api
+      - ./cmd/api:/app
+    ports:
+      - "8088:8088"
+    depends_on:
+      - localstack
+      - main_db
+      - image
+    restart: unless-stopped
+
+  image:
+    container_name: "image"
+    networks:
+      - localstack-net
+      - postgres-net
+    build: ./
+    command: sh -c "./app/image_bin -config-path=./app/configs/prod.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
@@ -20,11 +69,10 @@ services:
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
     volumes:
-      - .:/project
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
+      - ./logs/image:/logs/image
+      - ./cmd/image:/app
     ports:
-      - "8088:8088"
+      - "8089:8089"
     depends_on:
       - localstack
       - main_db
@@ -114,6 +162,7 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
+    restart: unless-stopped
 
 
   admin_db:
@@ -148,6 +197,7 @@ services:
       - "9187:9187"
     depends_on:
       - main_db
+    restart: unless-stopped
 
 
 networks:
@@ -157,4 +207,4 @@ networks:
     name: localstack-net
   postgres-net:
     driver: bridge
-    name:   postgres-net
+    name: postgres-net
