@@ -107,6 +107,7 @@ prod-create-env:
 
 prod-deploy:
 	make prod-create-env
+	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 	sleep 2
 	make reboot-db-debug
@@ -114,6 +115,7 @@ prod-deploy:
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
+	make infro-build
 	docker-compose up -d
 	sleep 1
 	make reboot-db-debug
@@ -127,6 +129,9 @@ stop:
 reboot-db-debug:
 	docker-compose run dev make -C project reboot-db COUNT=3
 
+infro-build:
+	docker-compose run dev make -C project build
+
 debug-restart:
 	make build
 	docker-compose restart image
@@ -134,7 +139,7 @@ debug-restart:
 
 prod-restart:
 	make prod-create-env
-	make build
+	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
 
