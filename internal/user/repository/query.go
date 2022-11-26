@@ -26,19 +26,19 @@ SELECT c.collection_id,
        c.name,
        EXISTS(SELECT 1 FROM collections_films cf WHERE cf.fk_collection_id IN (c.collection_id) AND cf.fk_film_id = $2)
 FROM collections c
-         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
-WHERE pc.fk_user_id = $1`
+         JOIN user_collections uc on c.collection_id = uc.fk_collection_id
+WHERE uc.fk_user_id = $1`
 
 	getUserCountReviews = `SELECT count_reviews FROM users WHERE user_id = $1`
 
-	getUserRatingOnFilm = `SELECT score, create_date FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
+	getUserRatingOnFilm = `SELECT score, create_date FROM user_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
 
 	updateUserSettingsNickname = `UPDATE users SET nickname = $1 WHERE user_id = $2`
 
-	checkRateExist = `SELECT EXISTS(SELECT 1 FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2)`
+	checkUserRateExist = `SELECT EXISTS(SELECT 1 FROM user_ratings WHERE fk_user_id = $1 AND fk_film_id = $2)`
 
-	updateRateFilm = `
-UPDATE profile_ratings
+	updateUserRateFilm = `
+UPDATE user_ratings
 SET score = $3, create_date = now()
 WHERE fk_user_id = $1 AND fk_film_id = $2`
 
@@ -46,15 +46,25 @@ WHERE fk_user_id = $1 AND fk_film_id = $2`
 SELECT count_ratings FROM films
 WHERE film_id = $1`
 
-	setRateFilm = `
-INSERT INTO profile_ratings(fk_user_id, fk_film_id, score)
+	setUserRateFilm = `
+INSERT INTO user_ratings(fk_user_id, fk_film_id, score)
 VALUES ($1, $2, $3)`
 
-	deleteRateFilm = `DELETE FROM profile_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
+	deleteUserRateFilm = `DELETE FROM user_ratings WHERE fk_user_id = $1 AND fk_film_id = $2`
+
+	updateFilmRating = `
+UPDATE films
+SET rating = (
+    SELECT cast(sum(score) as real) / cast(count(score) as real)
+    FROM user_ratings ur
+    WHERE ur.fk_film_id = $1
+)
+WHERE film_id = $1
+RETURNING rating`
 
 	insertNewReview = `INSERT INTO reviews (name, type, body) VALUES ($1, $2, $3) RETURNING review_id`
 
-	linkNewReviewAuthor = `INSERT INTO profile_reviews (fk_review_id, fk_user_id, fk_film_id) VALUES ($1, $2, $3)`
+	linkNewReviewAuthor = `INSERT INTO user_reviews (fk_review_id, fk_user_id, fk_film_id) VALUES ($1, $2, $3)`
 
 	updateAuthorCountReviews = `
 UPDATE users

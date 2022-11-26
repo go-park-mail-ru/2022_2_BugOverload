@@ -72,9 +72,9 @@ SELECT c.collection_id,
        c.create_time,
        c.updated_at
 FROM collections c
-         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
-WHERE pc.fk_user_id = $1
-  AND pc.user_type_relation = 'author'
+         JOIN user_collections uc on c.collection_id = uc.fk_collection_id
+WHERE uc.fk_user_id = $1
+  AND uc.user_type_relation = 'author'
   AND c.create_time < $2
 ORDER BY c.create_time DESC
 LIMIT $3`
@@ -88,9 +88,9 @@ SELECT c.collection_id,
        c.create_time,
        c.updated_at
 FROM collections c
-         JOIN profile_collections pc on c.collection_id = pc.fk_collection_id
-WHERE pc.fk_user_id = $1
-  AND pc.user_type_relation = 'author'
+         JOIN user_collections uc on c.collection_id = uc.fk_collection_id
+WHERE uc.fk_user_id = $1
+  AND uc.user_type_relation = 'author'
   AND c.updated_at < $2
 ORDER BY c.updated_at DESC
 LIMIT $3`

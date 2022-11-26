@@ -23,41 +23,41 @@ VALUES`
 
 	insertUsers = `INSERT INTO users(nickname, email, password) VALUES`
 
-	insertProfileViews   = `INSERT INTO profile_views_films(fk_user_id, fk_film_id, create_date) VALUES`
-	insertProfileRatings = `INSERT INTO profile_ratings(fk_user_id, fk_film_id, score, create_date) VALUES`
+	insertProfileViews   = `INSERT INTO user_views_films(fk_user_id, fk_film_id, create_date) VALUES`
+	insertProfileRatings = `INSERT INTO user_ratings(fk_user_id, fk_film_id, score, create_date) VALUES`
 
 	insertReviews = `INSERT INTO reviews(name, type, create_time, body) VALUES`
 
 	insertReviewsLikes = `INSERT INTO reviews_likes(fk_review_id, fk_user_id, create_date) VALUES`
 
-	insertFilmsReviews = `INSERT INTO profile_reviews(fk_review_id, fk_user_id, fk_film_id) VALUES`
+	insertFilmsReviews = `INSERT INTO user_reviews(fk_review_id, fk_user_id, fk_film_id) VALUES`
 
 	insertFilmsPersons = `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
 
 	updateFilms = `
 UPDATE films f
 SET (rating, count_ratings) =
-        (SELECT SUM(pr.score) / CAST(COUNT(*) AS float) AS rating,
+        (SELECT SUM(ur.score) / CAST(COUNT(*) AS float) AS rating,
                 COALESCE(COUNT(*), 0)
-         FROM profile_ratings pr
+         FROM user_ratings ur
          WHERE f.film_id = fk_film_id
-         GROUP BY pr.fk_film_id),
+         GROUP BY ur.fk_film_id),
     count_negative_reviews =
         (SELECT COUNT(*)
-         FROM profile_reviews
-                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         FROM user_reviews
+                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
          WHERE f.film_id = fk_film_id
            AND r.type = 'negative'),
     count_neutral_reviews  =
         (SELECT COALESCE(COUNT(*), 0)
-         FROM profile_reviews
-                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         FROM user_reviews
+                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
          WHERE f.film_id = fk_film_id
            AND r.type = 'neutral'),
     count_positive_reviews =
         (SELECT COALESCE(COUNT(*), 0)
-         FROM profile_reviews
-                  JOIN reviews r on profile_reviews.fk_review_id = r.review_id
+         FROM user_reviews
+                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
          WHERE f.film_id = fk_film_id
            AND r.type = 'positive'),
     count_actors           =
@@ -77,24 +77,24 @@ SET count_films = (SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER (
 	updateProfiles = `
 UPDATE users p
 SET count_views_films= COALESCE((SELECT COUNT(*) count
-         FROM profile_views_films pvf
-         WHERE p.user_id = pvf.fk_user_id
-         GROUP BY pvf.fk_user_id), 0),
+         FROM user_views_films uvf
+         WHERE p.user_id = uvf.fk_user_id
+         GROUP BY uvf.fk_user_id), 0),
     count_reviews=
         COALESCE((SELECT COUNT(*)
-         FROM profile_reviews pr
-         WHERE p.user_id = pr.fk_user_id
-         GROUP BY pr.fk_user_id), 0),
+         FROM user_reviews ur
+         WHERE p.user_id = ur.fk_user_id
+         GROUP BY ur.fk_user_id), 0),
     count_ratings=
         COALESCE((SELECT COUNT(*)
-         FROM profile_ratings pr
-         WHERE p.user_id = pr.fk_user_id
-         GROUP BY pr.fk_user_id), 0),
+         FROM user_ratings ur
+         WHERE p.user_id = ur.fk_user_id
+         GROUP BY ur.fk_user_id), 0),
     count_collections=
         COALESCE((SELECT COUNT(*)
-         FROM profile_collections pc
-         WHERE p.user_id = pc.fk_user_id
-         GROUP BY pc.fk_user_id), 0)`
+         FROM user_collections uc
+         WHERE p.user_id = uc.fk_user_id
+         GROUP BY uc.fk_user_id), 0)`
 
 	updateReviews = `
 UPDATE reviews r
@@ -104,5 +104,5 @@ SET count_likes = COALESCE((SELECT COUNT(*)
                    GROUP BY rl.fk_review_id), 0);`
 
 	insertCollections        = `INSERT INTO collections(name, description, poster, create_time) VALUES`
-	insertProfileCollections = `INSERT INTO profile_collections(fk_collection_id, fk_user_id) VALUES`
+	insertProfileCollections = `INSERT INTO user_collections(fk_collection_id, fk_user_id) VALUES`
 )
