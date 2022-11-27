@@ -36,6 +36,8 @@ image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
+	rm -f cmd/image/image_bin
+	rm -f cmd/api/api_bin
 	go build cmd/api/main.go
 	mv main cmd/api/api_bin
 	go build cmd/image/main.go
@@ -120,7 +122,7 @@ debug-deploy:
 	sleep 1
 	make reboot-db-debug
 	sleep 1
-	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill

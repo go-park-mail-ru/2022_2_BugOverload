@@ -37,8 +37,8 @@ func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.HTT
 // @Description All fields required
 // @tags collection, completed
 // @Produce json
-// @Param count_films query int    true "count films"
-// @Param delimiter   query string true "offset"
+// @Param count_films query int true "count films"
+// @Param delimiter   query int true "offset"
 // @Success 200 {object} models.PremieresCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
