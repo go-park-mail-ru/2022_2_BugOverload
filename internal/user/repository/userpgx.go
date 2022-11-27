@@ -37,6 +37,12 @@ type UserRepository interface {
 
 	// Personal collections
 	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
+
+	// Update personal collections
+	CheckUserAccessToUpdateCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error)
+	CheckExistFilmInCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error)
+	AddFilmToCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error
+	DropFilmFromCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error
 }
 
 // userPostgres is implementation repository of Postgres corresponding to the UserRepository interface.
@@ -519,4 +525,134 @@ func (u *userPostgres) GetUserCollections(ctx context.Context, user *models.User
 	}
 
 	return res, nil
+}
+
+// CheckUserAccessToUpdateCollection check that user has author's access of params collection
+func (u *userPostgres) CheckUserAccessToUpdateCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error) {
+	var response bool
+
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, checkUserAccessToUpdateCollection, user.ID, params.CollectionID)
+		if row.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkUserAccessToUpdateCollection, user.ID, params.CollectionID, row.Err())
+		}
+
+		err := row.Scan(&response)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkUserAccessToUpdateCollection, user.ID, params.CollectionID, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return response, nil
+}
+
+// CheckExistFilmInCollection check that current film exist in collection
+func (u *userPostgres) CheckExistFilmInCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error) {
+	var response bool
+
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, checkFilmExistInCollection, params.CollectionID, params.FilmID)
+		if row.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkFilmExistInCollection, user.ID, params.CollectionID, row.Err())
+		}
+
+		err := row.Scan(&response)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkFilmExistInCollection, user.ID, params.CollectionID, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return response, nil
+}
+
+// AddFilmToCollection return nil if film added successfully, error otherwise
+func (u *userPostgres) AddFilmToCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error {
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		var filmExist bool
+		var err error
+
+		row := conn.QueryRowContext(ctx, checkFilmExist, params.FilmID)
+		if row.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], value - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, row.Err())
+		}
+		err = row.Scan(&filmExist)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], value - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, err)
+		}
+		if !filmExist {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, err)
+		}
+
+		_, err = conn.ExecContext(ctx, addFilmToCollection, params.CollectionID, params.FilmID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				addFilmToCollection, params.FilmID, params.CollectionID, err)
+		}
+
+		return nil
+	})
+	return errMain
+}
+
+// DropFilmFromCollection return nil if film removed successfully, error otherwise
+func (u *userPostgres) DropFilmFromCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error {
+	errMain := sqltools.RunQuery(ctx, u.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		var filmExist bool
+		var err error
+
+		row := conn.QueryRowContext(ctx, checkFilmExist, params.FilmID)
+		if row.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], value - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, row.Err())
+		}
+		err = row.Scan(&filmExist)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], value - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, err)
+		}
+		if !filmExist {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				checkFilmExist, params.FilmID, err)
+		}
+
+		_, err = conn.ExecContext(ctx, dropFilmFromCollection, params.CollectionID, params.FilmID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				addFilmToCollection, params.FilmID, params.CollectionID, err)
+		}
+
+		return nil
+	})
+	return errMain
 }

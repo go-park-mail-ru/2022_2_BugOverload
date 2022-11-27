@@ -176,6 +176,12 @@ func main() {
 	userCollectionsHandler := handlers.NewGetUserCollectionsHandler(userService)
 	userCollectionsHandler.Configure(router, mw)
 
+	addFilmToUserCollectionHandler := handlers.NewAddFilmToUserCollectionHandler(userService)
+	addFilmToUserCollectionHandler.Configure(router, mw)
+
+	dropFilmFromUserCollectionHandler := handlers.NewDropFilmFromUserCollectionHandler(userService)
+	dropFilmFromUserCollectionHandler.Configure(router, mw)
+
 	http.Handle("/", router)
 
 	// Set middleware

@@ -52,7 +52,10 @@ var (
 	ErrWrongValidPassword = stdErrors.New("bad pass")
 
 	// User service
-	ErrFilmRatingNotExist = stdErrors.New("film rating not exist")
+	ErrBadUserCollectionID      = stdErrors.New("this collection doesn't belong to current user")
+	ErrFilmExistInCollection    = stdErrors.New("such film exist in collection")
+	ErrFilmNotExistInCollection = stdErrors.New("such film not found in collection")
+	ErrFilmRatingNotExist       = stdErrors.New("film rating not exist")
 
 	// Middleware
 	ErrBigRequest    = stdErrors.New("big request")
@@ -130,6 +133,9 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrWrongValidPassword.Error()] = http.StatusForbidden
 
 	// User service
+	res[ErrBadUserCollectionID.Error()] = http.StatusForbidden
+	res[ErrFilmExistInCollection.Error()] = http.StatusBadRequest
+	res[ErrFilmNotExistInCollection.Error()] = http.StatusNotFound
 	res[ErrFilmRatingNotExist.Error()] = http.StatusNotFound
 
 	// Middleware

@@ -57,6 +57,9 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	res[ErrWrongValidPassword.Error()] = codes.PermissionDenied
 
 	// User service
+	res[ErrFilmExistInCollection.Error()] = codes.AlreadyExists
+	res[ErrFilmNotExistInCollection.Error()] = codes.NotFound
+	res[ErrBadUserCollectionID.Error()] = codes.PermissionDenied
 	res[ErrFilmRatingNotExist.Error()] = codes.NotFound
 
 	// Middleware
