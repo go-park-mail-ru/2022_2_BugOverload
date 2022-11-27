@@ -9,7 +9,6 @@ import (
 
 	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
@@ -68,7 +67,7 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.imageService.UpdateImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
+	err = h.imageService.UpdateImage(r.Context(), request.GetImage())
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

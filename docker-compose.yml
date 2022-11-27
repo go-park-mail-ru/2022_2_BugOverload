@@ -21,8 +21,6 @@ services:
       - .:/project
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-    depends_on:
-      - main_db
 
 
   api:
@@ -82,7 +80,6 @@ services:
   warehouse:
       container_name: "warehouse"
       networks:
-        - localstack-net
         - postgres-net
       build: ./
       command: sh -c "./app/warehouse_bin -config-path=./app/configs/debug.toml"
@@ -99,7 +96,6 @@ services:
       ports:
         - "8090:8090"
       depends_on:
-        - localstack
         - main_db
 
 

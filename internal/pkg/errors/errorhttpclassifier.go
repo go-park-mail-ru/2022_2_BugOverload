@@ -163,6 +163,9 @@ var errHTTPCsf = NewErrHTTPClassifier()
 
 func GetErrorCodeHTTP(err error) (int, bool) {
 	code, exist := errHTTPCsf.table[err.Error()]
+	if !exist {
+		return http.StatusInternalServerError, exist
+	}
 
 	return code, exist
 }

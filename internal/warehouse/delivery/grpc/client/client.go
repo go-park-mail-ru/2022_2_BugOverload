@@ -2,6 +2,8 @@ package client
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/models"
 
@@ -37,7 +39,7 @@ func NewWarehouseServiceGRPSClient(con *grpc.ClientConn) WarehouseService {
 }
 
 func (c WarehouseServiceGRPCClient) GetRecommendation(ctx context.Context) (modelsGlobal.Film, error) {
-	filmProtoResponse, err := c.warehouseClient.GetRecommendation(ctx, &proto.Nothing{})
+	filmProtoResponse, err := c.warehouseClient.GetRecommendation(pkg.GetDefInfoMicroService(ctx), &proto.Nothing{})
 	if err != nil {
 		return modelsGlobal.Film{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetRecommendation"))
 	}
@@ -46,7 +48,9 @@ func (c WarehouseServiceGRPCClient) GetRecommendation(ctx context.Context) (mode
 }
 
 func (c WarehouseServiceGRPCClient) GetFilmByID(ctx context.Context, film *modelsGlobal.Film, params *constparams.GetFilmParams) (modelsGlobal.Film, error) {
-	filmProtoResponse, err := c.warehouseClient.GetFilmByID(ctx, models.NewGetFilmParamsProto(film, params))
+	logrus.Info(film, params)
+
+	filmProtoResponse, err := c.warehouseClient.GetFilmByID(pkg.GetDefInfoMicroService(ctx), models.NewGetFilmParamsProto(film, params))
 	if err != nil {
 		return modelsGlobal.Film{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetFilmByID"))
 	}
@@ -55,7 +59,7 @@ func (c WarehouseServiceGRPCClient) GetFilmByID(ctx context.Context, film *model
 }
 
 func (c WarehouseServiceGRPCClient) GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]modelsGlobal.Review, error) {
-	reviewsProtoResponse, err := c.warehouseClient.GetReviewsByFilmID(ctx, models.NewGetFilmReviewsParamsProto(params))
+	reviewsProtoResponse, err := c.warehouseClient.GetReviewsByFilmID(pkg.GetDefInfoMicroService(ctx), models.NewGetFilmReviewsParamsProto(params))
 	if err != nil {
 		return []modelsGlobal.Review{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetReviewsByFilmID"))
 	}
@@ -64,7 +68,7 @@ func (c WarehouseServiceGRPCClient) GetReviewsByFilmID(ctx context.Context, para
 }
 
 func (c WarehouseServiceGRPCClient) GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error) {
-	collectionProtoResponse, err := c.warehouseClient.GetStdCollection(ctx, models.NewGetStdCollectionParamsProto(params))
+	collectionProtoResponse, err := c.warehouseClient.GetStdCollection(pkg.GetDefInfoMicroService(ctx), models.NewGetStdCollectionParamsProto(params))
 	if err != nil {
 		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetStdCollection"))
 	}
@@ -73,7 +77,7 @@ func (c WarehouseServiceGRPCClient) GetStdCollection(ctx context.Context, params
 }
 
 func (c WarehouseServiceGRPCClient) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error) {
-	collectionProtoResponse, err := c.warehouseClient.GetPremieresCollection(ctx, models.NewGetStdCollectionParamsProto(params))
+	collectionProtoResponse, err := c.warehouseClient.GetPremieresCollection(pkg.GetDefInfoMicroService(ctx), models.NewGetStdCollectionParamsProto(params))
 	if err != nil {
 		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetPremieresCollection"))
 	}
@@ -82,7 +86,7 @@ func (c WarehouseServiceGRPCClient) GetPremieresCollection(ctx context.Context, 
 }
 
 func (c WarehouseServiceGRPCClient) GetPersonByID(ctx context.Context, person *modelsGlobal.Person, params *constparams.GetPersonParams) (modelsGlobal.Person, error) {
-	personProtoResponse, err := c.warehouseClient.GetPersonByID(ctx, models.NewGetPersonParamsProto(person, params))
+	personProtoResponse, err := c.warehouseClient.GetPersonByID(pkg.GetDefInfoMicroService(ctx), models.NewGetPersonParamsProto(person, params))
 	if err != nil {
 		return modelsGlobal.Person{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetPersonByID"))
 	}

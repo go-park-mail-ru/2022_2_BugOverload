@@ -93,18 +93,22 @@ func NewFilmProto(film *models.Film) *proto.Film {
 	actors := make([]*proto.FilmActor, len(film.Actors))
 
 	for idx, val := range film.Actors {
-		actors[idx].ID = uint32(val.ID)
-		actors[idx].Name = val.Name
-		actors[idx].Avatar = val.Avatar
-		actors[idx].Character = val.Character
+		actors[idx] = &proto.FilmActor{
+			ID:        uint32(val.ID),
+			Name:      val.Name,
+			Avatar:    val.Avatar,
+			Character: val.Character,
+		}
 	}
 
 	fillPersons := func(someStruct []models.FilmPerson) []*proto.FilmPerson {
 		persons := make([]*proto.FilmPerson, len(someStruct))
 
 		for idx, val := range someStruct {
-			persons[idx].ID = uint32(val.ID)
-			persons[idx].Name = val.Name
+			persons[idx] = &proto.FilmPerson{
+				ID:   uint32(val.ID),
+				Name: val.Name,
+			}
 		}
 
 		return persons

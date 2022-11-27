@@ -37,11 +37,11 @@ image-service-launch:
 
 build:
 	echo 'y' | go build cmd/api/main.go
-	mv main cmd/api/api_bin
+	echo 'y' | mv main cmd/api/api_bin
 	echo 'y' | go build cmd/image/main.go
-	mv main cmd/image/image_bin
+	echo 'y' | mv main cmd/image/image_bin
 	echo 'y' | go build cmd/warehouse/main.go
-	mv main cmd/warehouse/warehouse_bin
+	echo 'y' | mv main cmd/warehouse/warehouse_bin
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -138,6 +138,7 @@ infro-build:
 debug-restart:
 	make build
 	docker-compose restart image
+	docker-compose restart warehouse
 	docker-compose restart api
 
 prod-restart:

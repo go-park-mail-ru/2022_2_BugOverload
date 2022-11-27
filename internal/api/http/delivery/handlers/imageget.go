@@ -2,12 +2,11 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	serviceImage "go-park-mail-ru/2022_2_BugOverload/internal/image/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
@@ -15,13 +14,13 @@ import (
 
 // getImageHandler is the structure that handles the request for auth.
 type getImageHandler struct {
-	imageService serviceImage.ImageService
+	imageService client.ImageService
 }
 
 // NewGetImageHandler is constructor for getImageHandler in this pkg - auth.
-func NewGetImageHandler(is serviceImage.ImageService) handler.Handler {
+func NewGetImageHandler(service client.ImageService) handler.Handler {
 	return &getImageHandler{
-		is,
+		service,
 	}
 }
 
@@ -57,7 +56,7 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	getImage, err := h.imageService.GetImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
+	getImage, err := h.imageService.GetImage(r.Context(), request.GetImage())
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
