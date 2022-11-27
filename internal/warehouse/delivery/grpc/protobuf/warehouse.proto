@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package warehouse;
+option go_package = ".;warehouse";
+
+// User
+message User {
+  uint32 ID = 1;
+  string Nickname = 2;
+  string Email = 3;
+  string Password = 4;
+  bool IsAdmin = 5;
+  string Avatar = 6;
+  string JoinedDate = 7;
+  uint32 CountViewsFilms = 8;
+  uint32 CountCollections = 9;
+  uint32 CountReviews = 10;
+  uint32 CountRatings = 11;
+}
+
+// Film
+message FilmActor {
+  uint32 ID = 1;
+  string Name = 2;
+  string Avatar = 3;
+  string Character = 4;
+}
+
+message FilmPerson {
+  uint32 ID = 1;
+  string Name = 2;
+}
+
+message Film {
+  uint32 ID = 1;
+  string Name = 2;
+  string OriginalName = 3;
+  string ProdDate = 4;
+  string Slogan = 5;
+  string ShortDescription = 6;
+  string Description = 7;
+  string AgeLimit = 8;
+  uint32 DurationMinutes = 9;
+  string PosterHor = 10;
+  string PosterVer = 11;
+
+  uint32 BoxOfficeDollars = 12;
+  uint32 Budget = 13;
+  string CurrencyBudget = 14;
+
+  uint32 CountSeasons = 15;
+  string EndYear = 16;
+  string Type = 17;
+
+  float Rating = 18;
+  uint32 CountRatings = 19;
+  uint32 CountActors = 20;
+  uint32 CountNegativeReviews = 21;
+  uint32 CountNeutralReviews = 22;
+  uint32 CountPositiveReviews = 23;
+
+  repeated string Tags = 24;
+  repeated string Genres = 25;
+  repeated string ProdCompanies = 26;
+  repeated string ProdCountries = 27;
+
+  repeated FilmActor Actors = 28;
+  repeated FilmPerson Artists = 29;
+  repeated FilmPerson Directors = 30;
+  repeated FilmPerson Writers = 31;
+  repeated FilmPerson Producers = 32;
+  repeated FilmPerson Operators = 33;
+  repeated FilmPerson Montage = 34;
+  repeated FilmPerson Composers = 35;
+
+  repeated string Images = 36;
+}
+
+message GetFilmParams {
+  uint32 FilmID = 1;
+  uint32 CountImages = 2;
+  uint32 CountActors = 3;
+}
+
+message Review {
+  uint32 ID = 1;
+  string Name = 2;
+  string Type = 3;
+  string Body = 4;
+  uint32 CountLikes = 5;
+  string CreateTime = 6;
+  User Author = 7;
+}
+
+message Reviews {
+  repeated Review Reviews = 1;
+}
+
+message GetFilmReviewsParams {
+  uint32 FilmID = 1;
+  uint32 CountReviews = 2;
+  uint32 Offset = 3;
+}
+
+// Collection
+message Collection {
+  uint32 ID = 1;
+  string Name = 2;
+  string Description = 3;
+  string Poster = 4;
+  string Time = 5;
+  repeated Film Films = 6;
+  uint32 CountLikes = 7;
+  uint32 CountFilms = 8;
+  string UpdateTime = 9;
+  string CreateTime = 10;
+}
+
+message GetStdCollectionParams {
+  string Target = 1;
+  string Key = 2;
+  string SortParam = 3;
+  uint32 CountFilms = 4;
+  string Delimiter = 5;
+}
+
+// Person
+message Person {
+  uint32 ID = 1;
+  string Name = 2;
+  string OriginalName = 3;
+  string Birthday = 4;
+  string Avatar = 5;
+  string Death = 6;
+  float Growth = 7;
+  string Gender = 8;
+  uint32 CountFilms = 9;
+  repeated string Professions = 10;
+  repeated string Genres = 11;
+  repeated Film BestFilms = 12;
+  repeated string Images = 13;
+}
+
+message GetPersonParams {
+  uint32 PersonID = 1;
+  uint32 CountFilms = 2;
+  uint32 CountImages = 3;
+}
+
+message Nothing {
+  bool dummy = 1;
+}
+
+service WarehouseService {
+  // Film
+  rpc GetRecommendation(Nothing) returns (Film) {}
+  rpc GetFilmByID(GetFilmParams) returns (Film) {}
+  rpc GetReviewsByFilmID(GetFilmReviewsParams) returns (Reviews) {}
+
+  // Collection
+  rpc GetStdCollection(GetStdCollectionParams) returns (Collection) {}
+  rpc GetPremieresCollection(GetStdCollectionParams) returns (Collection) {}
+
+  // Person
+  rpc GetPersonByID(GetPersonParams) returns (Person) {}
+}

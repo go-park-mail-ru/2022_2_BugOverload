@@ -22,8 +22,8 @@ type GetUserCollectionsParams struct {
 	Delimiter        string
 }
 
-// GetReviewsFilmParams in struct for reviewHandler
-type GetReviewsFilmParams struct {
+// GetFilmReviewsParams in struct for reviewHandler
+type GetFilmReviewsParams struct {
 	FilmID       int
 	CountReviews int
 	Offset       int
@@ -32,6 +32,7 @@ type GetReviewsFilmParams struct {
 // GetFilmParams in struct for filmHandler
 type GetFilmParams struct {
 	CountImages int
+	CountActors int
 }
 
 // ChangeUserSettings in struct for changeUserSettings

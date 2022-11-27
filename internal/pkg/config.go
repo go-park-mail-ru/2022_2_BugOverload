@@ -38,12 +38,15 @@ type ServerGRPC struct {
 }
 
 type Config struct {
-	ServerHTTP      ServerHTTP `toml:"server_http"`
-	ServerGRPCImage ServerGRPC `toml:"server_grpc_image"`
-	Cors            Cors       `toml:"cors"`
-	S3              S3         `toml:"S3"`
-	Context         Context    `toml:"context"`
-	Logger          Logger     `toml:"logger"`
+	ServerHTTP          ServerHTTP `toml:"server_http_api"`
+	ServerGRPCImage     ServerGRPC `toml:"server_grpc_image"`
+	ServerGRPCWarehouse ServerGRPC `toml:"server_grpc_warehouse"`
+	ServerGRPCUser      ServerGRPC `toml:"server_grpc_user"`
+	ServerGRPCAuth      ServerGRPC `toml:"server_grpc_auth"`
+	Cors                Cors       `toml:"cors"`
+	S3                  S3         `toml:"S3"`
+	Context             Context    `toml:"context"`
+	Logger              Logger     `toml:"logger"`
 }
 
 func NewConfig() *Config {

@@ -9,6 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/models"
 	proto "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/protobuf"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 type ImageService interface {
@@ -27,18 +29,18 @@ func NewImageServiceGRPSClient(con *grpc.ClientConn) ImageService {
 }
 
 func (c *ImageServiceGRPCClient) GetImage(ctx context.Context, image *modelsGlobal.Image) (modelsGlobal.Image, error) {
-	imageProtoResponse, err := c.imageClient.GetImage(ctx, models.NewImageProto(image))
+	imageProtoResponse, err := c.imageClient.GetImage(pkg.GetDefInfoMicroService(ctx), models.NewImageProto(image))
 	if err != nil {
-		return modelsGlobal.Image{}, stdErrors.Wrap(err, "GetImage")
+		return modelsGlobal.Image{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetImage"))
 	}
 
 	return *models.NewImage(imageProtoResponse), nil
 }
 
 func (c *ImageServiceGRPCClient) UpdateImage(ctx context.Context, image *modelsGlobal.Image) error {
-	_, err := c.imageClient.UpdateImage(ctx, models.NewImageProto(image))
+	_, err := c.imageClient.UpdateImage(pkg.GetDefInfoMicroService(ctx), models.NewImageProto(image))
 	if err != nil {
-		return stdErrors.Wrap(err, "UpdateImage")
+		return wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "UpdateImage"))
 	}
 
 	return nil

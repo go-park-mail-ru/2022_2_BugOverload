@@ -2,15 +2,17 @@ package service
 
 import (
 	"context"
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 
 	stdErrors "github.com/pkg/errors"
 
-	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 )
+
+//go:generate mockgen -source userservice.go -destination mocks/mockuserservice.go -package mocUserService
 
 // UserService provides universal service for work with users.
 type UserService interface {
@@ -24,6 +26,8 @@ type UserService interface {
 	NewFilmReview(ctx context.Context, user *models.User, review *models.Review, params *innerPKG.NewFilmReviewParams) error
 
 	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error)
+
+	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
@@ -145,4 +149,14 @@ func (u *userService) GetUserActivityOnFilm(ctx context.Context, user *models.Us
 	}
 
 	return userActivity, nil
+}
+
+// GetUserCollections is the service that accesses the interface CollectionRepository
+func (u *userService) GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error) {
+	collection, err := u.userRepo.GetUserCollections(ctx, user, params)
+	if err != nil {
+		return []models.Collection{}, stdErrors.Wrap(err, "GetUserCollections")
+	}
+
+	return collection, nil
 }

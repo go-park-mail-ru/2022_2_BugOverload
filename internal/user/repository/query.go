@@ -107,4 +107,36 @@ UPDATE films
 SET count_ratings = count_ratings - 1
 WHERE film_id = $1
 RETURNING count_ratings`
+
+	getUserCollectionByCreateDate = `
+SELECT c.collection_id,
+       c.name,
+       c.poster,
+       c.count_films,
+       c.count_likes,
+       c.create_time,
+       c.updated_at
+FROM collections c
+         JOIN user_collections uc on c.collection_id = uc.fk_collection_id
+WHERE uc.fk_user_id = $1
+  AND uc.user_type_relation = 'author'
+  AND c.create_time < $2
+ORDER BY c.create_time DESC
+LIMIT $3`
+
+	getUserCollectionByUpdateDate = `
+SELECT c.collection_id,
+       c.name,
+       c.poster,
+       c.count_films,
+       c.count_likes,
+       c.create_time,
+       c.updated_at
+FROM collections c
+         JOIN user_collections uc on c.collection_id = uc.fk_collection_id
+WHERE uc.fk_user_id = $1
+  AND uc.user_type_relation = 'author'
+  AND c.updated_at < $2
+ORDER BY c.updated_at DESC
+LIMIT $3`
 )

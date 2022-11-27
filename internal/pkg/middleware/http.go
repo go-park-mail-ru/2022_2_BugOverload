@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
@@ -16,7 +17,6 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/session/service"
 )
 
 type HTTPMiddleware struct {

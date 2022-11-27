@@ -36,10 +36,13 @@ image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
+	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin
 	go build cmd/api/main.go
 	mv main cmd/api/api_bin
 	go build cmd/image/main.go
 	mv main cmd/image/image_bin
+	go build cmd/warehouse/main.go
+	mv main cmd/warehouse/warehouse_bin
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -61,13 +64,14 @@ mocks-generate:
 
 proto-generate:
 	protoc --proto_path=${MICROSERVICE_DIR}/image/delivery/grpc/protobuf image.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/image/delivery/grpc/protobuf
+	protoc --proto_path=${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf warehouse.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:
-	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT} &
+	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT}
 
 fill-S3-fast:
-	./scripts/fill_data_S3_fast.sh ${IMAGES} ${S3_ENDPOINT} &
+	./scripts/fill_data_S3_fast.sh ${IMAGES} ${S3_ENDPOINT}
 
 dev-fill-db:
 	go run ./cmd/filldb/main.go --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
@@ -115,11 +119,11 @@ prod-deploy:
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	make infro-build
-	docker-compose up -d
+	docker-compose up main_db admin_db monitor_db localstack -d
 	sleep 1
 	make reboot-db-debug
-	sleep 1
+	make infro-build
+	docker-compose up image warehouse api localstack -d
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
@@ -133,13 +137,19 @@ infro-build:
 	docker-compose run dev make -C project build
 
 debug-restart:
-	make build
 	docker-compose restart image
+	docker-compose restart warehouse
+	docker-compose restart api
+
+build-debug-restart:
+	make infro-build
+	docker-compose restart image
+	docker-compose restart warehouse
 	docker-compose restart api
 
 prod-restart:
 	make prod-create-env
-	make infro-build
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart warehouse
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
 

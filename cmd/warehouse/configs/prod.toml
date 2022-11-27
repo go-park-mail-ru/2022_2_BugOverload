@@ -1,0 +1,8 @@
+[server_grpc_warehouse]
+bind_addr_http = ":8090"
+connection_timeout = 10 #seconds
+
+[logger]
+log_level = "debug"
+log_path = "logs/warehouse/debug/"
+
