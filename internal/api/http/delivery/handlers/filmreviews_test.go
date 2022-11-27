@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +25,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=0", nil)
 	vars := make(map[string]string)
@@ -47,7 +47,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 		},
 	}}
 
-	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetReviewsFilmParams{
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetFilmReviewsParams{
 		CountReviews: 1,
 		Offset:       0,
 		FilmID:       1,
@@ -89,7 +89,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=0", nil)
 	vars := make(map[string]string)
@@ -101,7 +101,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
-	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetReviewsFilmParams{
+	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetFilmReviewsParams{
 		CountReviews: 1,
 		Offset:       0,
 		FilmID:       1,
@@ -141,7 +141,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
 	vars := make(map[string]string)
@@ -187,7 +187,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=&offset=0", nil)
 	vars := make(map[string]string)
@@ -233,7 +233,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=", nil)
 	vars := make(map[string]string)
@@ -279,7 +279,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=asd&offset=0", nil)
 	vars := make(map[string]string)
@@ -325,7 +325,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=-1&offset=0", nil)
 	vars := make(map[string]string)
@@ -371,7 +371,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=23&offset=asd", nil)
 	vars := make(map[string]string)
@@ -417,7 +417,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=-1", nil)
 	vars := make(map[string]string)
@@ -463,7 +463,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=", nil)
 	vars := make(map[string]string)

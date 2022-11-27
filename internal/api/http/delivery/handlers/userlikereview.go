@@ -13,11 +13,11 @@ import (
 // reviewLikeHandler is the structure that handles the request for
 // getting film by id.
 type reviewLikeHandler struct {
-	filmService serviceFilms.FilmsService
+	filmService serviceFilms.FilmService
 }
 
 // NewReviewLikeHandler is constructor for reviewLikeHandler in this pkg - film.
-func NewReviewLikeHandler(fs serviceFilms.FilmsService) handler.Handler {
+func NewReviewLikeHandler(fs serviceFilms.FilmService) handler.Handler {
 	return &reviewLikeHandler{
 		fs,
 	}

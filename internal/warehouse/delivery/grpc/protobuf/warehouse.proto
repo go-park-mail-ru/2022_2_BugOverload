@@ -76,7 +76,7 @@ message Film {
   repeated string Images = 36;
 }
 
-message GetFilmFilmParams {
+message GetFilmParams {
   uint32 FilmID = 1;
   uint32 CountImages = 2;
   uint32 CountActors = 3;
@@ -154,13 +154,11 @@ message Nothing {
 service WarehouseService {
   // Film
   rpc GetRecommendation(Nothing) returns (Film) {}
-  rpc GetFilmByID(GetFilmFilmParams) returns (Film) {}
+  rpc GetFilmByID(GetFilmParams) returns (Film) {}
   rpc GetReviewsByFilmID(GetFilmReviewsParams) returns (Reviews) {}
 
   // Collection
   rpc GetStdCollection(GetStdCollectionParams) returns (Collection) {}
-  rpc GetCollectionByTag(GetStdCollectionParams) returns (Collection) {}
-  rpc GetCollectionByGenre(GetStdCollectionParams) returns (Collection) {}
   rpc GetPremieresCollection(GetStdCollectionParams) returns (Collection) {}
 
   // Person

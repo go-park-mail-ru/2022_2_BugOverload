@@ -1,4 +1,4 @@
-[server_http]
+[server_http_api]
 bind_addr_http = ":8088"
 read_timeout = 8 #seconds
 write_timeout = 8 #seconds

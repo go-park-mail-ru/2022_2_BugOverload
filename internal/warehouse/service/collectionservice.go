@@ -43,12 +43,12 @@ func (c *collectionService) GetCollectionByTag(ctx context.Context, params *cons
 		return models.Collection{}, stdErrors.Wrap(errors.ErrTagNotFound, "GetCollectionByTag")
 	}
 
-	tagCollection, err := c.collectionRepo.GetCollectionByTag(ctx, params)
+	collection, err := c.collectionRepo.GetCollectionByTag(ctx, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionByTag")
 	}
 
-	return tagCollection, nil
+	return collection, nil
 }
 
 // GetCollectionByGenre is the service that accesses the interface Repository

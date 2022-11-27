@@ -37,12 +37,12 @@ func (s *ImageServiceGRPCServer) StartGRPCServer(listenURL string) error {
 }
 
 func (s *ImageServiceGRPCServer) GetImage(ctx context.Context, image *proto.Image) (*proto.Image, error) {
-	imageGo, err := s.imageManager.GetImage(ctx, models.NewImage(image))
+	imageRequest, err := s.imageManager.GetImage(ctx, models.NewImage(image))
 	if err != nil {
 		return &proto.Image{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}
 
-	return models.NewImageProto(&imageGo), nil
+	return models.NewImageProto(&imageRequest), nil
 }
 
 func (s *ImageServiceGRPCServer) UpdateImage(ctx context.Context, image *proto.Image) (*proto.Nothing, error) {

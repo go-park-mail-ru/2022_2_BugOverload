@@ -59,7 +59,7 @@ func (h *getImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	getImage, err := h.imageService.GetImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
 	if err != nil {
-		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 

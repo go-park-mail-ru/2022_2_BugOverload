@@ -12,20 +12,20 @@ import (
 
 //go:generate mockgen -source filmservice.go -destination mocks/mockfilmservice.go -package mockWarehouseService
 
-// FilmsService provides universal service for work with film.
-type FilmsService interface {
+// FilmService provides universal service for work with film.
+type FilmService interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
-	GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error)
+	GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]models.Review, error)
 }
 
-// filmService is implementation for auth service corresponding to the FilmsService interface.
+// filmService is implementation for auth service corresponding to the FilmService interface.
 type filmService struct {
 	filmsRepo film.Repository
 }
 
 // NewFilmService is constructor for filmService. Accepts FilmsRepository interfaces.
-func NewFilmService(cr film.Repository) FilmsService {
+func NewFilmService(cr film.Repository) FilmService {
 	return &filmService{
 		filmsRepo: cr,
 	}
@@ -49,7 +49,7 @@ func (c *filmService) GetFilmByID(ctx context.Context, film *models.Film, params
 	return filmRepo, nil
 }
 
-func (c *filmService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
+func (c *filmService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]models.Review, error) {
 	reviews, err := c.filmsRepo.GetReviewsByFilmID(ctx, params)
 	if err != nil {
 		return []models.Review{}, stdErrors.Wrap(err, "GetReviewsByFilmID")

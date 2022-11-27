@@ -3,8 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	mockCollectionService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -15,10 +13,12 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 )
 
 func TestTagCollectionHandler_Action_OK(t *testing.T) {
@@ -27,7 +27,7 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=1&delimiter=0", nil)
 
@@ -95,7 +95,7 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=1&delimiter=0", nil)
 
@@ -152,7 +152,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=asd&delimiter=0", nil)
 
@@ -199,7 +199,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=-1&delimiter=0", nil)
 
@@ -246,7 +246,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Target(t *te
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=&key=popular&sort_param=date&count_films=-1&delimiter=0", nil)
 
@@ -293,7 +293,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Key(t *testi
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=&sort_param=date&count_films=-1&delimiter=0", nil)
 
@@ -340,7 +340,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_SortParam(t 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=&count_films=-1&delimiter=0", nil)
 
@@ -387,7 +387,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountFilms(t
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=asd&count_films=&delimiter=0", nil)
 
@@ -434,7 +434,7 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Delinmeter(t
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockCollectionService.NewMockCollectionService(ctrl)
+	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=asd&key=asd&sort_param=asd&count_films=12&delimiter=", nil)
 

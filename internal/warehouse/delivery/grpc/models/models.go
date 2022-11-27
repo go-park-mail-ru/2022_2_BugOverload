@@ -2,6 +2,7 @@ package models
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	proto "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/protobuf"
 )
 
@@ -62,6 +63,18 @@ func NewReview(review *proto.Review) models.Review {
 		CountLikes: int(review.CountLikes),
 		CreateTime: review.CreateTime,
 		Author:     NewUser(review.Author),
+	}
+}
+
+func NewReviewsProto(reviews []models.Review) *proto.Reviews {
+	res := make([]*proto.Review, len(reviews))
+
+	for idx, value := range reviews {
+		res[idx] = NewReviewProto(&value)
+	}
+
+	return &proto.Reviews{
+		Reviews: res,
 	}
 }
 
@@ -214,9 +227,43 @@ func NewFilms(films []*proto.Film) []models.Film {
 	return res
 }
 
+func NewGetFilmParamsProto(film *models.Film, params *constparams.GetFilmParams) *proto.GetFilmParams {
+	return &proto.GetFilmParams{
+		FilmID:      uint32(film.ID),
+		CountImages: uint32(params.CountImages),
+		CountActors: uint32(params.CountActors),
+	}
+}
+
+func NewGetFilmParams(params *proto.GetFilmParams) (*models.Film, *constparams.GetFilmParams) {
+	return &models.Film{
+			ID: int(params.FilmID),
+		},
+		&constparams.GetFilmParams{
+			CountImages: int(params.CountImages),
+			CountActors: int(params.CountActors),
+		}
+}
+
+func NewGetFilmReviewsParamsProto(params *constparams.GetFilmReviewsParams) *proto.GetFilmReviewsParams {
+	return &proto.GetFilmReviewsParams{
+		FilmID:       uint32(params.FilmID),
+		CountReviews: uint32(params.CountReviews),
+		Offset:       uint32(params.Offset),
+	}
+}
+
+func NewGetFilmReviewsParams(params *proto.GetFilmReviewsParams) *constparams.GetFilmReviewsParams {
+	return &constparams.GetFilmReviewsParams{
+		FilmID:       int(params.FilmID),
+		CountReviews: int(params.CountReviews),
+		Offset:       int(params.Offset),
+	}
+}
+
 // Person
-func NewPersonProto(person *models.Person) proto.Person {
-	return proto.Person{
+func NewPersonProto(person *models.Person) *proto.Person {
+	return &proto.Person{
 		ID:           uint32(person.ID),
 		Name:         person.Name,
 		OriginalName: person.OriginalName,
@@ -251,9 +298,27 @@ func NewPerson(person *proto.Person) models.Person {
 	}
 }
 
+func NewGetPersonParamsProto(person *models.Person, params *constparams.GetPersonParams) *proto.GetPersonParams {
+	return &proto.GetPersonParams{
+		PersonID:    uint32(person.ID),
+		CountImages: uint32(params.CountImages),
+		CountFilms:  uint32(params.CountFilms),
+	}
+}
+
+func NewGetPersonParams(params *proto.GetPersonParams) (*models.Person, *constparams.GetPersonParams) {
+	return &models.Person{
+			ID: int(params.PersonID),
+		},
+		&constparams.GetPersonParams{
+			CountImages: int(params.CountImages),
+			CountFilms:  int(params.CountFilms),
+		}
+}
+
 // Collection
-func NewCollectionProto(collection *models.Collection) proto.Collection {
-	return proto.Collection{
+func NewCollectionProto(collection *models.Collection) *proto.Collection {
+	return &proto.Collection{
 		ID:          uint32(collection.ID),
 		Name:        collection.Name,
 		Description: collection.Description,
@@ -279,5 +344,25 @@ func NewCollection(collection *proto.Collection) models.Collection {
 		CountFilms:  int(collection.CountFilms),
 		CountLikes:  int(collection.CountLikes),
 		Films:       NewFilms(collection.Films),
+	}
+}
+
+func NewGetStdCollectionParamsProto(params *constparams.GetStdCollectionParams) *proto.GetStdCollectionParams {
+	return &proto.GetStdCollectionParams{
+		Target:     params.Target,
+		Key:        params.Key,
+		SortParam:  params.SortParam,
+		Delimiter:  params.Delimiter,
+		CountFilms: uint32(params.CountFilms),
+	}
+}
+
+func NewGetStdCollectionParams(params *proto.GetStdCollectionParams) *constparams.GetStdCollectionParams {
+	return &constparams.GetStdCollectionParams{
+		Target:     params.Target,
+		Key:        params.Key,
+		SortParam:  params.SortParam,
+		Delimiter:  params.Delimiter,
+		CountFilms: int(params.CountFilms),
 	}
 }

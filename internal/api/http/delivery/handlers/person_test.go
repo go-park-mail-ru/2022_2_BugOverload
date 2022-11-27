@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	mockPersonService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +25,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=2", nil)
 	vars := make(map[string]string)
@@ -96,7 +96,7 @@ func TestPersonHandler_Action_NotOKService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=2", nil)
 	vars := make(map[string]string)
@@ -146,7 +146,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms(t *testi
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=ds&count_images=2", nil)
 	vars := make(map[string]string)
@@ -191,7 +191,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountFilms_Empty(t 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=&count_images=2", nil)
 	vars := make(map[string]string)
@@ -236,7 +236,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_CountImages(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=dsd", nil)
 	vars := make(map[string]string)
@@ -281,7 +281,7 @@ func TestPersonHandler_Action_ErrBind_ErrConvertQuery_Params_CountImages_Empty(t
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=2&count_images=", nil)
 	vars := make(map[string]string)
@@ -326,7 +326,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountFilms(t *testing.T)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=-1&count_images=2", nil)
 	vars := make(map[string]string)
@@ -371,7 +371,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages(t *testing.T
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockPersonService.NewMockPersonService(ctrl)
+	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=-2", nil)
 	vars := make(map[string]string)

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,13 +14,13 @@ import (
 
 // premieresCollectionHandler is the structure that handles the request for movies in cinemas.
 type premieresCollectionHandler struct {
-	collectionService service.CollectionService
+	collectionService client.WarehouseService
 }
 
 // NewPremieresCollectionHandler is constructor for getStdCollectionHandler in this pkg - in cinema.
-func NewPremieresCollectionHandler(uc service.CollectionService) handler.Handler {
+func NewPremieresCollectionHandler(service client.WarehouseService) handler.Handler {
 	return &premieresCollectionHandler{
-		uc,
+		service,
 	}
 }
 

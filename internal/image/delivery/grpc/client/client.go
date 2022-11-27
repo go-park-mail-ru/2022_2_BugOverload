@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 
 	stdErrors "github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -29,7 +30,7 @@ func NewImageServiceGRPSClient(con *grpc.ClientConn) ImageService {
 func (c *ImageServiceGRPCClient) GetImage(ctx context.Context, image *modelsGlobal.Image) (modelsGlobal.Image, error) {
 	imageProtoResponse, err := c.imageClient.GetImage(ctx, models.NewImageProto(image))
 	if err != nil {
-		return modelsGlobal.Image{}, stdErrors.Wrap(err, "GetImage")
+		return modelsGlobal.Image{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetImage"))
 	}
 
 	return *models.NewImage(imageProtoResponse), nil
@@ -38,7 +39,7 @@ func (c *ImageServiceGRPCClient) GetImage(ctx context.Context, image *modelsGlob
 func (c *ImageServiceGRPCClient) UpdateImage(ctx context.Context, image *modelsGlobal.Image) error {
 	_, err := c.imageClient.UpdateImage(ctx, models.NewImageProto(image))
 	if err != nil {
-		return stdErrors.Wrap(err, "UpdateImage")
+		return wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "UpdateImage"))
 	}
 
 	return nil

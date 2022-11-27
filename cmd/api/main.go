@@ -2,16 +2,6 @@ package main
 
 import (
 	"flag"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/auth"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/session"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
-	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
-	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
-	repoFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
-	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
-	serviceCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
 	"net/http"
 
 	"github.com/BurntSushi/toml"
@@ -21,10 +11,17 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
+	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/auth"
+	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/session"
+	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	clientImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
+	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
+	clientWarehouse "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -75,6 +72,15 @@ func main() {
 		logrus.Fatal("cant connect to grpc ", err)
 	}
 	defer grpcConnImage.Close()
+	grpcConnWarehouse, err := grpc.Dial(
+		config.ServerGRPCWarehouse.URL,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
+	)
+	if err != nil {
+		logrus.Fatal("cant connect to grpc ", err)
+	}
+	defer grpcConnWarehouse.Close()
 
 	// Router
 	router := mux.NewRouter()
@@ -103,37 +109,32 @@ func main() {
 	singUpHandler := handlers.NewSingUpHandler(authService, sessionService)
 	singUpHandler.Configure(router, mw)
 
-	// Collections repository
-	collectionStorage := repoCollection.NewCollectionPostgres(postgres)
-
-	// Collections service
-	collectionService := serviceCollection.NewCollectionService(collectionStorage)
+	// Warehouse microservice
+	warehouseService := clientWarehouse.NewWarehouseServiceGRPSClient(grpcConnWarehouse)
 
 	// Collections delivery
-	stgCollectionHandler := handlers.NewStdCollectionHandler(collectionService)
+	stgCollectionHandler := handlers.NewStdCollectionHandler(warehouseService)
 	stgCollectionHandler.Configure(router, mw)
 
-	premieresCollectionHandler := handlers.NewPremieresCollectionHandler(collectionService)
+	premieresCollectionHandler := handlers.NewPremieresCollectionHandler(warehouseService)
 	premieresCollectionHandler.Configure(router, mw)
 
-	// Films repository
-	filmsStorage := repoFilms.NewFilmPostgres(postgres)
-
-	// Films service
-	filmsService := serviceCollection.NewFilmService(filmsStorage)
-
 	// Films delivery
-	recommendationHandler := handlers.NewRecommendationFilmHandler(filmsService)
+	recommendationHandler := handlers.NewRecommendationFilmHandler(warehouseService)
 	recommendationHandler.Configure(router, mw)
 
-	filmHandler := handlers.NewFilmHandler(filmsService)
+	filmHandler := handlers.NewFilmHandler(warehouseService)
 	filmHandler.Configure(router, mw)
 
-	reviewsHandler := handlers.NewReviewsHandler(filmsService)
+	reviewsHandler := handlers.NewReviewsHandler(warehouseService)
 	reviewsHandler.Configure(router, mw)
 
+	// Person delivery
+	personHandler := handlers.NewPersonHandler(warehouseService)
+	personHandler.Configure(router, mw)
+
 	// Images microservice
-	imageService := client.NewImageServiceGRPSClient(grpcConnImage)
+	imageService := clientImage.NewImageServiceGRPSClient(grpcConnImage)
 
 	downloadImageHandler := handlers.NewGetImageHandler(imageService)
 	downloadImageHandler.Configure(router, mw)
@@ -174,16 +175,6 @@ func main() {
 
 	userCollectionsHandler := handlers.NewGetUserCollectionsHandler(userService)
 	userCollectionsHandler.Configure(router, mw)
-
-	// Person repository
-	personRepo := repoPerson.NewPersonPostgres(postgres)
-
-	// Person service
-	personService := serviceCollection.NewPersonService(personRepo)
-
-	// service delivery
-	personHandler := handlers.NewPersonHandler(personService)
-	personHandler.Configure(router, mw)
 
 	http.Handle("/", router)
 

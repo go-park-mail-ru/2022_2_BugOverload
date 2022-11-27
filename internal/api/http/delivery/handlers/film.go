@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	serviceFilms "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,13 +15,13 @@ import (
 // filmHandler is the structure that handles the request for
 // getting film by id.
 type filmHandler struct {
-	filmService serviceFilms.FilmsService
+	filmService client.WarehouseService
 }
 
 // NewFilmHandler is constructor for filmHandler in this pkg - film.
-func NewFilmHandler(fs serviceFilms.FilmsService) handler.Handler {
+func NewFilmHandler(service client.WarehouseService) handler.Handler {
 	return &filmHandler{
-		fs,
+		service,
 	}
 }
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	mockFilmService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -27,7 +27,7 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 
@@ -79,7 +79,7 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockFilmService.NewMockFilmsService(ctrl)
+	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 

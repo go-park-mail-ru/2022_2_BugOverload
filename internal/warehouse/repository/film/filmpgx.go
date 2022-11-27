@@ -15,7 +15,7 @@ import (
 type Repository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
-	GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error)
+	GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]models.Review, error)
 }
 
 // filmPostgres is implementation repository of Postgres corresponding to the Repository interface.
@@ -278,7 +278,7 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 	return response.Convert(), nil
 }
 
-func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
+func (f *filmPostgres) GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]models.Review, error) {
 	response := make([]ReviewSQL, 0)
 
 	// Reviews - Main

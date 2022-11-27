@@ -70,7 +70,7 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	err = h.imageService.UpdateImage(pkg.GetDefInfoMicroService(r.Context()), request.GetImage())
 	if err != nil {
-		wrapper.DefaultHandlerHTTPError(r.Context(), w, wrapper.GRPCErrorConvert(err))
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 

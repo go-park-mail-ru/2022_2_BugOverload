@@ -13,31 +13,31 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockFilmsService is a mock of FilmsService interface.
-type MockFilmsService struct {
+// MockFilmService is a mock of FilmService interface.
+type MockFilmService struct {
 	ctrl     *gomock.Controller
-	recorder *MockFilmsServiceMockRecorder
+	recorder *MockFilmServiceMockRecorder
 }
 
-// MockFilmsServiceMockRecorder is the mock recorder for MockFilmsService.
-type MockFilmsServiceMockRecorder struct {
-	mock *MockFilmsService
+// MockFilmServiceMockRecorder is the mock recorder for MockFilmService.
+type MockFilmServiceMockRecorder struct {
+	mock *MockFilmService
 }
 
-// NewMockFilmsService creates a new mock instance.
-func NewMockFilmsService(ctrl *gomock.Controller) *MockFilmsService {
-	mock := &MockFilmsService{ctrl: ctrl}
-	mock.recorder = &MockFilmsServiceMockRecorder{mock}
+// NewMockFilmService creates a new mock instance.
+func NewMockFilmService(ctrl *gomock.Controller) *MockFilmService {
+	mock := &MockFilmService{ctrl: ctrl}
+	mock.recorder = &MockFilmServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFilmsService) EXPECT() *MockFilmsServiceMockRecorder {
+func (m *MockFilmService) EXPECT() *MockFilmServiceMockRecorder {
 	return m.recorder
 }
 
 // GetFilmByID mocks base method.
-func (m *MockFilmsService) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
+func (m *MockFilmService) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFilmByID", ctx, film, params)
 	ret0, _ := ret[0].(models.Film)
@@ -46,13 +46,13 @@ func (m *MockFilmsService) GetFilmByID(ctx context.Context, film *models.Film, p
 }
 
 // GetFilmByID indicates an expected call of GetFilmByID.
-func (mr *MockFilmsServiceMockRecorder) GetFilmByID(ctx, film, params interface{}) *gomock.Call {
+func (mr *MockFilmServiceMockRecorder) GetFilmByID(ctx, film, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilmByID", reflect.TypeOf((*MockFilmsService)(nil).GetFilmByID), ctx, film, params)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilmByID", reflect.TypeOf((*MockFilmService)(nil).GetFilmByID), ctx, film, params)
 }
 
 // GetRecommendation mocks base method.
-func (m *MockFilmsService) GetRecommendation(ctx context.Context) (models.Film, error) {
+func (m *MockFilmService) GetRecommendation(ctx context.Context) (models.Film, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRecommendation", ctx)
 	ret0, _ := ret[0].(models.Film)
@@ -61,13 +61,13 @@ func (m *MockFilmsService) GetRecommendation(ctx context.Context) (models.Film, 
 }
 
 // GetRecommendation indicates an expected call of GetRecommendation.
-func (mr *MockFilmsServiceMockRecorder) GetRecommendation(ctx interface{}) *gomock.Call {
+func (mr *MockFilmServiceMockRecorder) GetRecommendation(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecommendation", reflect.TypeOf((*MockFilmsService)(nil).GetRecommendation), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecommendation", reflect.TypeOf((*MockFilmService)(nil).GetRecommendation), ctx)
 }
 
 // GetReviewsByFilmID mocks base method.
-func (m *MockFilmsService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
+func (m *MockFilmService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]models.Review, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReviewsByFilmID", ctx, params)
 	ret0, _ := ret[0].([]models.Review)
@@ -76,7 +76,7 @@ func (m *MockFilmsService) GetReviewsByFilmID(ctx context.Context, params *const
 }
 
 // GetReviewsByFilmID indicates an expected call of GetReviewsByFilmID.
-func (mr *MockFilmsServiceMockRecorder) GetReviewsByFilmID(ctx, params interface{}) *gomock.Call {
+func (mr *MockFilmServiceMockRecorder) GetReviewsByFilmID(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewsByFilmID", reflect.TypeOf((*MockFilmsService)(nil).GetReviewsByFilmID), ctx, params)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewsByFilmID", reflect.TypeOf((*MockFilmService)(nil).GetReviewsByFilmID), ctx, params)
 }
