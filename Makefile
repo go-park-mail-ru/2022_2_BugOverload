@@ -36,12 +36,13 @@ image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
-	echo 'y' | go build cmd/api/main.go
-	echo 'y' | mv main cmd/api/api_bin
-	echo 'y' | go build cmd/image/main.go
-	echo 'y' | mv main cmd/image/image_bin
-	echo 'y' | go build cmd/warehouse/main.go
-	echo 'y' | mv main cmd/warehouse/warehouse_bin
+	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin
+	go build cmd/api/main.go
+	mw main cmd/api/api_bin
+	go build cmd/image/main.go
+	mw main cmd/image/image_bin
+	go build cmd/warehouse/main.go
+	mv main cmd/warehouse/warehouse_bin
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
