@@ -38,9 +38,9 @@ image-service-launch:
 build:
 	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin
 	go build cmd/api/main.go
-	mw main cmd/api/api_bin
+	mv main cmd/api/api_bin
 	go build cmd/image/main.go
-	mw main cmd/image/image_bin
+	mv main cmd/image/image_bin
 	go build cmd/warehouse/main.go
 	mv main cmd/warehouse/warehouse_bin
 
