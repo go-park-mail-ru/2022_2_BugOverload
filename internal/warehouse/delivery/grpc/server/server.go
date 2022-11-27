@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"net"
 
 	"google.golang.org/grpc"
@@ -51,8 +50,6 @@ func (s *WarehouseServiceGRPCServer) GetRecommendation(ctx context.Context, noth
 }
 
 func (s *WarehouseServiceGRPCServer) GetFilmByID(ctx context.Context, params *proto.GetFilmParams) (*proto.Film, error) {
-	logrus.Info(params)
-
 	filmRequest, paramsRequest := models.NewGetFilmParams(params)
 
 	film, err := s.filmManager.GetFilmByID(ctx, filmRequest, paramsRequest)

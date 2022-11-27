@@ -2,16 +2,15 @@ package client
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/models"
 
 	stdErrors "github.com/pkg/errors"
 	"google.golang.org/grpc"
 
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/models"
 	proto "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/protobuf"
 )
 
@@ -48,8 +47,6 @@ func (c WarehouseServiceGRPCClient) GetRecommendation(ctx context.Context) (mode
 }
 
 func (c WarehouseServiceGRPCClient) GetFilmByID(ctx context.Context, film *modelsGlobal.Film, params *constparams.GetFilmParams) (modelsGlobal.Film, error) {
-	logrus.Info(film, params)
-
 	filmProtoResponse, err := c.warehouseClient.GetFilmByID(pkg.GetDefInfoMicroService(ctx), models.NewGetFilmParamsProto(film, params))
 	if err != nil {
 		return modelsGlobal.Film{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetFilmByID"))
