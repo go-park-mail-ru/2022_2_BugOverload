@@ -26,7 +26,6 @@ services:
   api:
     container_name: "api"
     networks:
-      - localstack-net
       - postgres-net
     build: ./
     command: sh -c "./app/api_bin -config-path=./app/configs/debug.toml"
@@ -43,8 +42,6 @@ services:
     ports:
       - "8088:8088"
     depends_on:
-      - localstack
-      - main_db
       - image
       - warehouse
     restart: unless-stopped
@@ -78,25 +75,25 @@ services:
 
 
   warehouse:
-      container_name: "warehouse"
-      networks:
-        - postgres-net
-      build: ./
-      command: sh -c "./app/warehouse_bin -config-path=./app/configs/debug.toml"
-      environment:
-        POSTGRES_DB: "${POSTGRES_DB}"
-        POSTGRES_USER: "${POSTGRES_USER}"
-        POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-        POSTGRES_PORT: "${POSTGRES_PORT}"
-        POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
-        POSTGRES_HOST: "${POSTGRES_HOST}"
-      volumes:
-        - ./logs/warehouse:/logs/warehouse
-        - ./cmd/warehouse:/app
-      ports:
-        - "8090:8090"
-      depends_on:
-        - main_db
+    container_name: "warehouse"
+    networks:
+      - postgres-net
+    build: ./
+    command: sh -c "./app/warehouse_bin -config-path=./app/configs/debug.toml"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - ./logs/warehouse:/logs/warehouse
+      - ./cmd/warehouse:/app
+    ports:
+      - "8090:8090"
+    depends_on:
+      - main_db
 
 
   localstack:
