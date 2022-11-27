@@ -67,7 +67,7 @@ func (mr *MockWarehouseServiceMockRecorder) GetPersonByID(ctx, person, params in
 }
 
 // GetPremieresCollection mocks base method.
-func (m *MockWarehouseService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockWarehouseService) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPremieresCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)

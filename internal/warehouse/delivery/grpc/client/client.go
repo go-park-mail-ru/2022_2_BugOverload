@@ -22,7 +22,7 @@ type WarehouseService interface {
 	GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]modelsGlobal.Review, error)
 
 	GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error)
-	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (modelsGlobal.Collection, error)
 
 	GetPersonByID(ctx context.Context, person *modelsGlobal.Person, params *constparams.GetPersonParams) (modelsGlobal.Person, error)
 }
@@ -73,8 +73,8 @@ func (c WarehouseServiceGRPCClient) GetStdCollection(ctx context.Context, params
 	return models.NewCollection(collectionProtoResponse), nil
 }
 
-func (c WarehouseServiceGRPCClient) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error) {
-	collectionProtoResponse, err := c.warehouseClient.GetPremieresCollection(pkg.GetDefInfoMicroService(ctx), models.NewGetStdCollectionParamsProto(params))
+func (c WarehouseServiceGRPCClient) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (modelsGlobal.Collection, error) {
+	collectionProtoResponse, err := c.warehouseClient.GetPremieresCollection(pkg.GetDefInfoMicroService(ctx), models.NewPremiersCollectionParamsProto(params))
 	if err != nil {
 		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetPremieresCollection"))
 	}

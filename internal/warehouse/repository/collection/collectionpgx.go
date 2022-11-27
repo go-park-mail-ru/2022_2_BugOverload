@@ -18,7 +18,7 @@ import (
 type Repository interface {
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
-	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -175,7 +175,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 }
 
 // GetPremieresCollection it gives away only movies with prod_date > current from the repository.
-func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error

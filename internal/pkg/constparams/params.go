@@ -15,6 +15,12 @@ type GetStdCollectionParams struct {
 	Delimiter  string
 }
 
+// PremiersCollectionParams in struct for getStdCollectionHandler
+type PremiersCollectionParams struct {
+	CountFilms int
+	Delimiter  int
+}
+
 // GetUserCollectionsParams in struct for getUserCollectionHandler
 type GetUserCollectionsParams struct {
 	SortParam        string

@@ -124,6 +124,11 @@ message GetStdCollectionParams {
   string Delimiter = 5;
 }
 
+message PremiersCollectionParams {
+  uint32 CountFilms = 1;
+  uint32 Delimiter = 2;
+}
+
 // Person
 message Person {
   uint32 ID = 1;
@@ -159,7 +164,7 @@ service WarehouseService {
 
   // Collection
   rpc GetStdCollection(GetStdCollectionParams) returns (Collection) {}
-  rpc GetPremieresCollection(GetStdCollectionParams) returns (Collection) {}
+  rpc GetPremieresCollection(PremiersCollectionParams) returns (Collection) {}
 
   // Person
   rpc GetPersonByID(GetPersonParams) returns (Person) {}

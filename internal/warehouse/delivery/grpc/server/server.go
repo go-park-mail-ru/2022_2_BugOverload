@@ -78,8 +78,8 @@ func (s *WarehouseServiceGRPCServer) GetStdCollection(ctx context.Context, param
 	return models.NewCollectionProto(&collection), nil
 }
 
-func (s *WarehouseServiceGRPCServer) GetPremieresCollection(ctx context.Context, params *proto.GetStdCollectionParams) (*proto.Collection, error) {
-	collection, err := s.collectionManager.GetPremieresCollection(ctx, models.NewGetStdCollectionParams(params))
+func (s *WarehouseServiceGRPCServer) GetPremieresCollection(ctx context.Context, params *proto.PremiersCollectionParams) (*proto.Collection, error) {
+	collection, err := s.collectionManager.GetPremieresCollection(ctx, models.NewPremiersCollectionParams(params))
 	if err != nil {
 		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}
