@@ -7,7 +7,7 @@ package mockPersonService
 import (
 	context "context"
 	models "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	pkg "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	constparams "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -37,7 +37,7 @@ func (m *MockPersonService) EXPECT() *MockPersonServiceMockRecorder {
 }
 
 // GetPersonByID mocks base method.
-func (m *MockPersonService) GetPersonByID(ctx context.Context, person *models.Person, params *pkg.GetPersonParams) (models.Person, error) {
+func (m *MockPersonService) GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPersonByID", ctx, person, params)
 	ret0, _ := ret[0].(models.Person)

@@ -21,7 +21,13 @@ type PremiersCollectionParams struct {
 	Delimiter  int
 }
 
-// GetUserCollectionsParams in struct for getUserCollectionHandler
+// CollectionFilmsUpdateParams in struct for premieresCollectionHandler
+type CollectionFilmsUpdateParams struct {
+	CollectionID int
+	FilmID       int
+}
+
+// GetUserCollectionsParams in struct for addFilmHandler and dropFilmHandler
 type GetUserCollectionsParams struct {
 	SortParam        string
 	CountCollections int

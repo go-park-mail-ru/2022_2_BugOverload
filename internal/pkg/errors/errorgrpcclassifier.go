@@ -30,6 +30,8 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	res[ErrUnsupportedSortParameter.Error()] = codes.InvalidArgument
 
 	// Collection service
+	res[ErrFilmExistInCollection.Error()] = codes.AlreadyExists
+	res[ErrFilmNotExistInCollection.Error()] = codes.NotFound
 	res[ErrNotFindSuchTarget.Error()] = codes.NotFound
 
 	// Auth delivery

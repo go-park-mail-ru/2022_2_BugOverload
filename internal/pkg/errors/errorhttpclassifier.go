@@ -25,7 +25,9 @@ var (
 	ErrUnsupportedSortParameter = stdErrors.New("unsupported sort parameter")
 
 	// Collection service
-	ErrNotFindSuchTarget = stdErrors.New("not found such target")
+	ErrFilmExistInCollection    = stdErrors.New("such film exist in collection")
+	ErrFilmNotExistInCollection = stdErrors.New("such film not found in collection")
+	ErrNotFindSuchTarget        = stdErrors.New("not found such target")
 
 	// Auth delivery
 	ErrNoCookie = stdErrors.New("no such cookie")
@@ -103,6 +105,8 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrUnsupportedSortParameter.Error()] = http.StatusBadRequest
 
 	// Collection service
+	res[ErrFilmExistInCollection.Error()] = http.StatusBadRequest
+	res[ErrFilmNotExistInCollection.Error()] = http.StatusNotFound
 	res[ErrNotFindSuchTarget.Error()] = http.StatusNotFound
 
 	// Auth delivery

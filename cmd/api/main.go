@@ -127,6 +127,12 @@ func main() {
 	premieresCollectionHandler := handlersCollection.NewPremieresCollectionHandler(collectionService)
 	premieresCollectionHandler.Configure(router, mw)
 
+	addFilmToCollectionHandler := handlersCollection.NewAddFilmHandler(collectionService)
+	addFilmToCollectionHandler.Configure(router, mw)
+
+	dropFilmFromCollectionHandler := handlersCollection.NewDropFilmHandler(collectionService)
+	dropFilmFromCollectionHandler.Configure(router, mw)
+
 	// Films repository
 	filmsStorage := repoFilms.NewFilmPostgres(postgres)
 

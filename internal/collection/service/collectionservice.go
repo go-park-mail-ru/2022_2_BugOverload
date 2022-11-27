@@ -20,6 +20,8 @@ type CollectionService interface {
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
+	AddFilmToCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error
+	DropFilmFromCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -108,4 +110,36 @@ func (c collectionService) GetPremieresCollection(ctx context.Context, params *c
 	}
 
 	return collection, nil
+}
+
+func (c collectionService) AddFilmToCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	exist, err := c.collectionRepo.CheckExistFilmInCollection(ctx, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "AddFilmToCollection")
+	}
+	if exist {
+		return stdErrors.Wrap(errors.ErrFilmExistInCollection, "AddFilmToCollection")
+	}
+
+	err = c.collectionRepo.AddFilmToCollection(ctx, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "AddFilmToCollection")
+	}
+	return nil
+}
+
+func (c collectionService) DropFilmFromCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	exist, err := c.collectionRepo.CheckExistFilmInCollection(ctx, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "DropFilmFromCollection")
+	}
+	if !exist {
+		return stdErrors.Wrap(errors.ErrFilmNotExistInCollection, "DropFilmFromCollection")
+	}
+
+	err = c.collectionRepo.DropFilmFromCollection(ctx, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "DropFilmFromCollection")
+	}
+	return nil
 }

@@ -21,6 +21,10 @@ type CollectionRepository interface {
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
+
+	CheckExistFilmInCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) (bool, error)
+	AddFilmToCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error
+	DropFilmFromCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error
 }
 
 // collectionPostgres is implementation repository of collection
@@ -292,4 +296,55 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 	}
 
 	return response.Convert(), nil
+}
+
+// CheckExistFilmInCollection return true if film exist in collection, false otherwise
+func (c *collectionPostgres) CheckExistFilmInCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) (bool, error) {
+	var response bool
+
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, checkFilmExistInCollection, params.CollectionID, params.FilmID)
+		if row.Err() != nil {
+			return row.Err()
+		}
+
+		err := row.Scan(&response)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return response, nil
+}
+
+// AddFilmToCollection return nil if film added successfully, error otherwise
+func (c *collectionPostgres) AddFilmToCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		_, err := conn.ExecContext(ctx, addFilmToCollection, params.CollectionID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	return errMain
+}
+
+// DropFilmFromCollection return nil if film removed successfully, error otherwise
+func (c *collectionPostgres) DropFilmFromCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		_, err := conn.ExecContext(ctx, dropFilmFromCollection, params.CollectionID, params.FilmID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	return errMain
 }

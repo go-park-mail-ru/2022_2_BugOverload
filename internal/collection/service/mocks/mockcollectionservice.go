@@ -7,7 +7,7 @@ package mockCollectionService
 import (
 	context "context"
 	models "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	pkg "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	constparams "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,8 +36,36 @@ func (m *MockCollectionService) EXPECT() *MockCollectionServiceMockRecorder {
 	return m.recorder
 }
 
+// AddFilmToCollection mocks base method.
+func (m *MockCollectionService) AddFilmToCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddFilmToCollection", ctx, params)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddFilmToCollection indicates an expected call of AddFilmToCollection.
+func (mr *MockCollectionServiceMockRecorder) AddFilmToCollection(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFilmToCollection", reflect.TypeOf((*MockCollectionService)(nil).AddFilmToCollection), ctx, params)
+}
+
+// DropFilmFromCollection mocks base method.
+func (m *MockCollectionService) DropFilmFromCollection(ctx context.Context, params *constparams.CollectionFilmsUpdateParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DropFilmFromCollection", ctx, params)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DropFilmFromCollection indicates an expected call of DropFilmFromCollection.
+func (mr *MockCollectionServiceMockRecorder) DropFilmFromCollection(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropFilmFromCollection", reflect.TypeOf((*MockCollectionService)(nil).DropFilmFromCollection), ctx, params)
+}
+
 // GetCollectionByGenre mocks base method.
-func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCollectionByGenre", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -52,7 +80,7 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByGenre(ctx, params in
 }
 
 // GetCollectionByTag mocks base method.
-func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCollectionByTag", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -67,7 +95,7 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params inte
 }
 
 // GetPremieresCollection mocks base method.
-func (m *MockCollectionService) GetPremieresCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPremieresCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -82,7 +110,7 @@ func (mr *MockCollectionServiceMockRecorder) GetPremieresCollection(ctx, params 
 }
 
 // GetStdCollection mocks base method.
-func (m *MockCollectionService) GetStdCollection(ctx context.Context, params *pkg.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockCollectionService) GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetStdCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -97,7 +125,7 @@ func (mr *MockCollectionServiceMockRecorder) GetStdCollection(ctx, params interf
 }
 
 // GetUserCollections mocks base method.
-func (m *MockCollectionService) GetUserCollections(ctx context.Context, user *models.User, params *pkg.GetUserCollectionsParams) ([]models.Collection, error) {
+func (m *MockCollectionService) GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserCollections", ctx, user, params)
 	ret0, _ := ret[0].([]models.Collection)

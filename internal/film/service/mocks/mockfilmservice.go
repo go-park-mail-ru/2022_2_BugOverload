@@ -7,7 +7,7 @@ package mockFilmService
 import (
 	context "context"
 	models "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	pkg "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	constparams "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -37,7 +37,7 @@ func (m *MockFilmsService) EXPECT() *MockFilmsServiceMockRecorder {
 }
 
 // GetFilmByID mocks base method.
-func (m *MockFilmsService) GetFilmByID(ctx context.Context, film *models.Film, params *pkg.GetFilmParams) (models.Film, error) {
+func (m *MockFilmsService) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFilmByID", ctx, film, params)
 	ret0, _ := ret[0].(models.Film)
@@ -67,7 +67,7 @@ func (mr *MockFilmsServiceMockRecorder) GetRecommendation(ctx interface{}) *gomo
 }
 
 // GetReviewsByFilmID mocks base method.
-func (m *MockFilmsService) GetReviewsByFilmID(ctx context.Context, params *pkg.GetReviewsFilmParams) ([]models.Review, error) {
+func (m *MockFilmsService) GetReviewsByFilmID(ctx context.Context, params *constparams.GetReviewsFilmParams) ([]models.Review, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReviewsByFilmID", ctx, params)
 	ret0, _ := ret[0].([]models.Review)
