@@ -37,7 +37,7 @@ services:
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
     volumes:
-      - ./logs/api:/logs/api
+      - ./logs/api/prod:/logs/api/prod
       - ./cmd/api:/app
     ports:
       - "8088:8088"

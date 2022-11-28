@@ -18,16 +18,16 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res := make(map[string]string)
 
 	// Common delivery
-	res[ErrBadBodyRequest.Error()] = infoLogLevel
-	res[ErrJSONUnexpectedEnd.Error()] = infoLogLevel
-	res[ErrContentTypeUndefined.Error()] = infoLogLevel
-	res[ErrUnsupportedMediaType.Error()] = infoLogLevel
-	res[ErrEmptyBody.Error()] = infoLogLevel
-	res[ErrConvertQueryType.Error()] = infoLogLevel
-	res[ErrQueryRequiredEmpty.Error()] = infoLogLevel
-	res[ErrBadRequestParams.Error()] = infoLogLevel
-	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = infoLogLevel
-	res[ErrBadRequestParams.Error()] = infoLogLevel
+	res[ErrBadBodyRequest.Error()] = errLogLevel
+	res[ErrJSONUnexpectedEnd.Error()] = errLogLevel
+	res[ErrContentTypeUndefined.Error()] = errLogLevel
+	res[ErrUnsupportedMediaType.Error()] = errLogLevel
+	res[ErrEmptyBody.Error()] = errLogLevel
+	res[ErrConvertQueryType.Error()] = errLogLevel
+	res[ErrQueryRequiredEmpty.Error()] = errLogLevel
+	res[ErrBadRequestParams.Error()] = errLogLevel
+	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = errLogLevel
+	res[ErrBadRequestParams.Error()] = errLogLevel
 
 	// Common repository
 	res[ErrNotFoundInDB.Error()] = errLogLevel
@@ -38,28 +38,28 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrCollectionIsNotPublic.Error()] = errLogLevel
 
 	// Auth delivery
-	res[ErrNoCookie.Error()] = infoLogLevel
+	res[ErrNoCookie.Error()] = errLogLevel
 
 	// Auth repository
 	res[ErrUserExist.Error()] = errLogLevel
 	res[ErrUserNotExist.Error()] = errLogLevel
 
 	// Auth service
-	res[ErrInvalidNickname.Error()] = infoLogLevel
-	res[ErrInvalidEmail.Error()] = infoLogLevel
-	res[ErrInvalidPassword.Error()] = infoLogLevel
-	res[ErrIncorrectPassword.Error()] = infoLogLevel
+	res[ErrInvalidNickname.Error()] = errLogLevel
+	res[ErrInvalidEmail.Error()] = errLogLevel
+	res[ErrInvalidPassword.Error()] = errLogLevel
+	res[ErrIncorrectPassword.Error()] = errLogLevel
 
 	// Image delivery
-	res[ErrBigImage.Error()] = infoLogLevel
-	res[ErrBadImageType.Error()] = infoLogLevel
+	res[ErrBigImage.Error()] = errLogLevel
+	res[ErrBadImageType.Error()] = errLogLevel
 
 	// Image repository
 	res[ErrImage.Error()] = errLogLevel
 
 	// User delivery
-	res[ErrGetUserRequest.Error()] = infoLogLevel
-	res[ErrWrongValidPassword.Error()] = infoLogLevel
+	res[ErrGetUserRequest.Error()] = errLogLevel
+	res[ErrWrongValidPassword.Error()] = errLogLevel
 
 	// User service
 	res[ErrFilmExistInCollection.Error()] = errLogLevel
@@ -68,8 +68,8 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrFilmRatingNotExist.Error()] = errLogLevel
 
 	// Middleware
-	res[ErrBigRequest.Error()] = infoLogLevel
-	res[ErrConvertLength.Error()] = infoLogLevel
+	res[ErrBigRequest.Error()] = errLogLevel
+	res[ErrConvertLength.Error()] = errLogLevel
 
 	// Security
 	res[ErrCsrfTokenCreate.Error()] = errLogLevel
@@ -79,15 +79,15 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrCsrfTokenInvalid.Error()] = errLogLevel
 
 	// Not found
-	res[ErrGenreNotFound.Error()] = infoLogLevel
-	res[ErrTagNotFound.Error()] = infoLogLevel
-	res[ErrPersonNotFound.Error()] = infoLogLevel
-	res[ErrFilmNotFound.Error()] = infoLogLevel
-	res[ErrSessionNotFound.Error()] = infoLogLevel
-	res[ErrUserNotFound.Error()] = infoLogLevel
-	res[ErrImageNotFound.Error()] = infoLogLevel
-	res[ErrFilmsNotFound.Error()] = infoLogLevel
-	res[ErrCollectionsNotFound.Error()] = infoLogLevel
+	res[ErrGenreNotFound.Error()] = errLogLevel
+	res[ErrTagNotFound.Error()] = errLogLevel
+	res[ErrPersonNotFound.Error()] = errLogLevel
+	res[ErrFilmNotFound.Error()] = errLogLevel
+	res[ErrSessionNotFound.Error()] = errLogLevel
+	res[ErrUserNotFound.Error()] = errLogLevel
+	res[ErrImageNotFound.Error()] = errLogLevel
+	res[ErrFilmsNotFound.Error()] = errLogLevel
+	res[ErrCollectionsNotFound.Error()] = errLogLevel
 
 	return ErrLogClassifier{
 		table: res,
