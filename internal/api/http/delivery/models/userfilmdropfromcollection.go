@@ -15,7 +15,7 @@ import (
 
 type DropFilmFromUserCollectionRequest struct {
 	FilmID       int
-	CollectionID int `json:"idCollection,omitempty" example:"4"`
+	CollectionID int `json:"collection_id,omitempty" example:"4"`
 }
 
 func NewDropFilmRequest() *DropFilmFromUserCollectionRequest {

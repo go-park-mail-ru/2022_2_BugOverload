@@ -616,6 +616,13 @@ func (u *userPostgres) AddFilmToCollection(ctx context.Context, user *models.Use
 				addFilmToCollection, params.FilmID, params.CollectionID, err)
 		}
 
+		_, err = conn.ExecContext(ctx, updateCollectionFilmsCountUp, params.CollectionID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				updateCollectionFilmsCountUp, params.CollectionID, err)
+		}
+
 		return nil
 	})
 	return errMain
@@ -650,6 +657,13 @@ func (u *userPostgres) DropFilmFromCollection(ctx context.Context, user *models.
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
 				addFilmToCollection, params.FilmID, params.CollectionID, err)
+		}
+
+		_, err = conn.ExecContext(ctx, updateCollectionFilmsCountDown, params.CollectionID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				updateCollectionFilmsCountDown, params.CollectionID, err)
 		}
 
 		return nil

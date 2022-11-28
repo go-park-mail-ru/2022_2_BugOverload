@@ -147,7 +147,9 @@ SELECT EXISTS(
     SELECT 1 FROM user_collections
     WHERE fk_user_id = $1 AND fk_collection_id = $2 AND user_type_relation = 'author'
 )`
-	checkFilmExistInCollection = `SELECT EXISTS(SELECT 1 FROM collections_films WHERE fk_collection_id = $1 AND fk_film_id = $2)`
-	addFilmToCollection        = `INSERT INTO collections_films (fk_collection_id, fk_film_id) VALUES ($1, $2)`
-	dropFilmFromCollection     = `DELETE FROM collections_films WHERE fk_collection_id = $1 AND fk_film_id = $2`
+	checkFilmExistInCollection     = `SELECT EXISTS(SELECT 1 FROM collections_films WHERE fk_collection_id = $1 AND fk_film_id = $2)`
+	addFilmToCollection            = `INSERT INTO collections_films (fk_collection_id, fk_film_id) VALUES ($1, $2)`
+	dropFilmFromCollection         = `DELETE FROM collections_films WHERE fk_collection_id = $1 AND fk_film_id = $2`
+	updateCollectionFilmsCountUp   = `UPDATE collections SET count_films = count_films + 1 WHERE collection_id = $1;`
+	updateCollectionFilmsCountDown = `UPDATE collections SET count_films = count_films - 1 WHERE collection_id = $1;`
 )
