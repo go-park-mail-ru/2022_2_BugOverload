@@ -18,7 +18,7 @@ endpoint = "http://localstack:4566"
 
 [cors]
 methods = ["POST", "GET", "PUT", "DELETE"]
-urls = ["https://movie-gate.online", "http://localhost:8088", "https://localhost:8088"]
+urls = ["https://movie-gate.online", "http://localhost:8088", "https://localhost:8088", "http://localhost:3000", "https://localhost:3000"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = false
