@@ -66,6 +66,36 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByTag", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionByTag), ctx, params)
 }
 
+// GetCollectionFilmsAuthorized mocks base method.
+func (m *MockCollectionService) GetCollectionFilmsAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionFilmsAuthorized", ctx, user, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionFilmsAuthorized indicates an expected call of GetCollectionFilmsAuthorized.
+func (mr *MockCollectionServiceMockRecorder) GetCollectionFilmsAuthorized(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionFilmsAuthorized", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionFilmsAuthorized), ctx, user, params)
+}
+
+// GetCollectionFilmsNotAuthorized mocks base method.
+func (m *MockCollectionService) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionFilmsNotAuthorized", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionFilmsNotAuthorized indicates an expected call of GetCollectionFilmsNotAuthorized.
+func (mr *MockCollectionServiceMockRecorder) GetCollectionFilmsNotAuthorized(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionFilmsNotAuthorized", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionFilmsNotAuthorized), ctx, params)
+}
+
 // GetPremieresCollection mocks base method.
 func (m *MockCollectionService) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()

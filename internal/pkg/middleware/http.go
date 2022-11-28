@@ -105,7 +105,7 @@ func (m *HTTPMiddleware) SetSizeRequest(h http.Handler) http.Handler {
 	})
 }
 
-func (m *HTTPMiddleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
+func (m *HTTPMiddleware) NeedAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(constparams.SessionCookieName)
 		if err != nil {
@@ -118,6 +118,29 @@ func (m *HTTPMiddleware) CheckAuthMiddleware(h http.HandlerFunc) http.HandlerFun
 		user, err := m.session.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
+		r = r.WithContext(ctx)
+
+		h.ServeHTTP(w, r)
+	})
+}
+
+func (m *HTTPMiddleware) TryAuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie(constparams.SessionCookieName)
+		if err != nil {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		currentSession := models.Session{ID: cookie.Value}
+
+		user, err := m.session.GetUserBySession(r.Context(), currentSession)
+		if err != nil {
+			h.ServeHTTP(w, r)
 			return
 		}
 

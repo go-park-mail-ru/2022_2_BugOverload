@@ -25,7 +25,8 @@ var (
 	ErrUnsupportedSortParameter = stdErrors.New("unsupported sort parameter")
 
 	// Collection service
-	ErrNotFindSuchTarget = stdErrors.New("not found such target")
+	ErrNotFindSuchTarget     = stdErrors.New("not found such target")
+	ErrCollectionIsNotPublic = stdErrors.New("this collection is not public")
 
 	// Auth delivery
 	ErrNoCookie = stdErrors.New("no such cookie")
@@ -107,6 +108,7 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 
 	// Collection service
 	res[ErrNotFindSuchTarget.Error()] = http.StatusNotFound
+	res[ErrCollectionIsNotPublic.Error()] = http.StatusForbidden
 
 	// Auth delivery
 	res[ErrNoCookie.Error()] = http.StatusNotFound

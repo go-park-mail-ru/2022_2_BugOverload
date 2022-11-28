@@ -29,7 +29,7 @@ func NewLogoutHandler(as sessionService.AuthService, ss sessionService.SessionSe
 }
 
 func (h *logoutHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/auth/logout", mw.CheckAuthMiddleware(h.Action)).Methods(http.MethodDelete)
+	r.HandleFunc("/api/v1/auth/logout", mw.NeedAuthMiddleware(h.Action)).Methods(http.MethodDelete)
 }
 
 // Action is a method for initial validation of the request and data and

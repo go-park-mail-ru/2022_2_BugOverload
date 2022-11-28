@@ -34,6 +34,9 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrWorkDatabase.Error()] = errLogLevel
 	res[ErrGetParamsConvert.Error()] = errLogLevel
 
+	// Collection service
+	res[ErrCollectionIsNotPublic.Error()] = errLogLevel
+
 	// Auth delivery
 	res[ErrNoCookie.Error()] = infoLogLevel
 

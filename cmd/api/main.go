@@ -119,6 +119,9 @@ func main() {
 	premieresCollectionHandler := handlers.NewPremieresCollectionHandler(warehouseService)
 	premieresCollectionHandler.Configure(router, mw)
 
+	getCollectionFilmsHandler := handlers.NewGetCollectionFilmsHandler(warehouseService)
+	getCollectionFilmsHandler.Configure(router, mw)
+
 	// Films delivery
 	recommendationHandler := handlers.NewRecommendationFilmHandler(warehouseService)
 	recommendationHandler.Configure(router, mw)

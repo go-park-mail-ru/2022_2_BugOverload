@@ -9,6 +9,11 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+type AuthorSQL struct {
+	ID       int
+	Nickname sql.NullString
+}
+
 type ModelSQL struct {
 	ID         int
 	Name       string
@@ -22,6 +27,8 @@ type ModelSQL struct {
 	CountFilms  sql.NullInt32
 
 	Films []film.ModelSQL
+
+	Author AuthorSQL
 }
 
 func NewCollectionSQL() ModelSQL {
@@ -41,6 +48,11 @@ func (c *ModelSQL) Convert() models.Collection {
 		CountLikes:  int(c.CountLikes.Int32),
 		CountFilms:  int(c.CountFilms.Int32),
 		Films:       make([]models.Film, len(c.Films)),
+
+		Author: models.User{
+			ID:       c.Author.ID,
+			Nickname: c.Author.Nickname.String,
+		},
 	}
 
 	for idx := range res.Films {

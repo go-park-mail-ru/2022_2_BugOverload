@@ -29,7 +29,7 @@ func NewDropFilmFromUserCollectionHandler(us serviceUser.UserService) handler.Ha
 }
 
 func (h *dropFilmFromUserCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/film/{id:[0-9]+}/remove", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/film/{id:[0-9]+}/remove", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodDelete)
 }
 

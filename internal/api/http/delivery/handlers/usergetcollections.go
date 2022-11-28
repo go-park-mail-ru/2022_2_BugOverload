@@ -28,7 +28,7 @@ func NewGetUserCollectionsHandler(uc serviceUser.UserService) handler.Handler {
 }
 
 func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/user/collections", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/user/collections", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodGet).
 		Queries(
 			"sort_param", "{sort_param}",

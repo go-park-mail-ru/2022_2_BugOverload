@@ -30,6 +30,7 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	res[ErrUnsupportedSortParameter.Error()] = codes.InvalidArgument
 
 	// Collection service
+	res[ErrCollectionIsNotPublic.Error()] = codes.PermissionDenied
 	res[ErrNotFindSuchTarget.Error()] = codes.NotFound
 
 	// Auth delivery

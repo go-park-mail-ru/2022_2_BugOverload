@@ -114,6 +114,7 @@ message Collection {
   uint32 CountFilms = 8;
   string UpdateTime = 9;
   string CreateTime = 10;
+  User Author = 11;
 }
 
 message GetStdCollectionParams {
@@ -127,6 +128,17 @@ message GetStdCollectionParams {
 message PremiersCollectionParams {
   uint32 CountFilms = 1;
   uint32 Delimiter = 2;
+}
+
+message CollectionGetFilmsAuthParams {
+  uint32 CollectionID = 1;
+  string SortParam = 2;
+  User RequestedUser = 3;
+}
+
+message CollectionGetFilmsNotAuthParams {
+  uint32 CollectionID = 1;
+  string SortParam = 2;
 }
 
 // Person
@@ -165,6 +177,8 @@ service WarehouseService {
   // Collection
   rpc GetStdCollection(GetStdCollectionParams) returns (Collection) {}
   rpc GetPremieresCollection(PremiersCollectionParams) returns (Collection) {}
+  rpc GetCollectionFilmsAuthorized(CollectionGetFilmsAuthParams) returns (Collection) {}
+  rpc GetCollectionFilmsNotAuthorized(CollectionGetFilmsNotAuthParams) returns (Collection) {}
 
   // Person
   rpc GetPersonByID(GetPersonParams) returns (Person) {}

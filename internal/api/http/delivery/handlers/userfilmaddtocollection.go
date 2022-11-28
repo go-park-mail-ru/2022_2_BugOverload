@@ -29,7 +29,7 @@ func NewAddFilmToUserCollectionHandler(us serviceUser.UserService) handler.Handl
 }
 
 func (h *addFilmToUserCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/film/{id:[0-9]+}/save", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/film/{id:[0-9]+}/save", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodPost)
 }
 

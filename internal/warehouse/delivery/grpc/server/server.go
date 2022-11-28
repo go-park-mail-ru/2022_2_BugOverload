@@ -97,3 +97,22 @@ func (s *WarehouseServiceGRPCServer) GetPersonByID(ctx context.Context, params *
 
 	return models.NewPersonProto(&personRepo), nil
 }
+
+func (s *WarehouseServiceGRPCServer) GetCollectionFilmsAuthorized(ctx context.Context, params *proto.CollectionGetFilmsAuthParams) (*proto.Collection, error) {
+	user, requestParams := models.NewCollectionGetFilmsAuthParams(params)
+	collection, err := s.collectionManager.GetCollectionFilmsAuthorized(ctx, user, requestParams)
+	if err != nil {
+		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+
+	return models.NewCollectionProto(&collection), nil
+}
+
+func (s *WarehouseServiceGRPCServer) GetCollectionFilmsNotAuthorized(ctx context.Context, params *proto.CollectionGetFilmsNotAuthParams) (*proto.Collection, error) {
+	collection, err := s.collectionManager.GetCollectionFilmsNotAuthorized(ctx, models.NewCollectionGetFilmsNotAuthParams(params))
+	if err != nil {
+		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+
+	return models.NewCollectionProto(&collection), nil
+}

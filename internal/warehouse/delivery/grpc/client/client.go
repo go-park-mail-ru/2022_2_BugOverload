@@ -25,6 +25,9 @@ type WarehouseService interface {
 	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (modelsGlobal.Collection, error)
 
 	GetPersonByID(ctx context.Context, person *modelsGlobal.Person, params *constparams.GetPersonParams) (modelsGlobal.Person, error)
+
+	GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
+	GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
 }
 
 type WarehouseServiceGRPCClient struct {
@@ -89,4 +92,22 @@ func (c WarehouseServiceGRPCClient) GetPersonByID(ctx context.Context, person *m
 	}
 
 	return models.NewPerson(personProtoResponse), nil
+}
+
+func (c WarehouseServiceGRPCClient) GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
+	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsAuthParamsProto(user, params))
+	if err != nil {
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetStdCollection"))
+	}
+
+	return models.NewCollection(collectionProtoResponse), nil
+}
+
+func (c WarehouseServiceGRPCClient) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
+	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsNotAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsNotAuthParamsProto(params))
+	if err != nil {
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetStdCollection"))
+	}
+
+	return models.NewCollection(collectionProtoResponse), nil
 }
