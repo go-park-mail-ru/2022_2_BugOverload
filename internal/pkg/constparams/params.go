@@ -80,3 +80,8 @@ type NewFilmReviewParams struct {
 type GetUserActivityOnFilmParams struct {
 	FilmID int
 }
+
+// SearchParams is struct for searchHandler
+type SearchParams struct {
+	Query string
+}

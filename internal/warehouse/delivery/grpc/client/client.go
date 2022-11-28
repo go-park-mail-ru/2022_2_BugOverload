@@ -28,6 +28,8 @@ type WarehouseService interface {
 
 	GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
 	GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
+
+	Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.SearchResponse, error)
 }
 
 type WarehouseServiceGRPCClient struct {
@@ -97,7 +99,7 @@ func (c WarehouseServiceGRPCClient) GetPersonByID(ctx context.Context, person *m
 func (c WarehouseServiceGRPCClient) GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
 	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsAuthParamsProto(user, params))
 	if err != nil {
-		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetStdCollection"))
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionFilmsAuthorized"))
 	}
 
 	return models.NewCollection(collectionProtoResponse), nil
@@ -106,8 +108,16 @@ func (c WarehouseServiceGRPCClient) GetCollectionFilmsAuthorized(ctx context.Con
 func (c WarehouseServiceGRPCClient) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
 	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsNotAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsNotAuthParamsProto(params))
 	if err != nil {
-		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetStdCollection"))
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionFilmsNotAuthorized"))
 	}
 
 	return models.NewCollection(collectionProtoResponse), nil
+}
+
+func (c WarehouseServiceGRPCClient) Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.SearchResponse, error) {
+	searchProtoResponse, err := c.warehouseClient.Search(pkg.GetDefInfoMicroService(ctx), models.NewSearchParamsProto(params))
+	if err != nil {
+		return modelsGlobal.SearchResponse{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "Search"))
+	}
+	return models.NewSearchResponse(searchProtoResponse), nil
 }

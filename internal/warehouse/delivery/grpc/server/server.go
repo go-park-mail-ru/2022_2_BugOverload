@@ -18,14 +18,16 @@ type WarehouseServiceGRPCServer struct {
 	collectionManager service.CollectionService
 	filmManager       service.FilmService
 	personManager     service.PersonService
+	searchManager     service.SearchService
 }
 
-func NewWarehouseServiceGRPCServer(grpcServer *grpc.Server, cm service.CollectionService, fm service.FilmService, pm service.PersonService) *WarehouseServiceGRPCServer {
+func NewWarehouseServiceGRPCServer(grpcServer *grpc.Server, cm service.CollectionService, fm service.FilmService, pm service.PersonService, sm service.SearchService) *WarehouseServiceGRPCServer {
 	return &WarehouseServiceGRPCServer{
 		grpcServer:        grpcServer,
 		collectionManager: cm,
 		filmManager:       fm,
 		personManager:     pm,
+		searchManager:     sm,
 	}
 }
 
@@ -115,4 +117,12 @@ func (s *WarehouseServiceGRPCServer) GetCollectionFilmsNotAuthorized(ctx context
 	}
 
 	return models.NewCollectionProto(&collection), nil
+}
+
+func (s *WarehouseServiceGRPCServer) Search(ctx context.Context, params *proto.SearchParams) (*proto.SearchResponse, error) {
+	response, err := s.searchManager.Search(ctx, models.NewSearchParams(params))
+	if err != nil {
+		return &proto.SearchResponse{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+	return models.NewSearchResponseProto(&response), nil
 }

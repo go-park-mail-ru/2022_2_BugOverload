@@ -185,6 +185,10 @@ func main() {
 	dropFilmFromUserCollectionHandler := handlers.NewDropFilmFromUserCollectionHandler(userService)
 	dropFilmFromUserCollectionHandler.Configure(router, mw)
 
+	// Search delivery
+	searchHandler := handlers.NewSearchHandler(warehouseService)
+	searchHandler.Configure(router, mw)
+
 	http.Handle("/", router)
 
 	// Set middleware

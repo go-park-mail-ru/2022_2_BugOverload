@@ -168,6 +168,16 @@ message Nothing {
   bool dummy = 1;
 }
 
+message SearchParams {
+  string Query = 1;
+}
+
+message SearchResponse {
+  repeated Film Films = 1;
+  repeated Film Series = 2;
+  repeated Person Persons = 3;
+}
+
 service WarehouseService {
   // Film
   rpc GetRecommendation(Nothing) returns (Film) {}
@@ -182,4 +192,7 @@ service WarehouseService {
 
   // Person
   rpc GetPersonByID(GetPersonParams) returns (Person) {}
+
+  // Search
+  rpc Search(SearchParams) returns (SearchResponse) {}
 }

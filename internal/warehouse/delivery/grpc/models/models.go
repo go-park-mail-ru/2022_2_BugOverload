@@ -425,3 +425,39 @@ func NewCollectionGetFilmsNotAuthParamsProto(params *constparams.CollectionGetFi
 		SortParam:    params.SortParam,
 	}
 }
+
+func NewSearchParamsProto(params *constparams.SearchParams) *proto.SearchParams {
+	return &proto.SearchParams{
+		Query: params.Query,
+	}
+}
+
+func NewSearchParams(params *proto.SearchParams) *constparams.SearchParams {
+	return &constparams.SearchParams{
+		Query: params.Query,
+	}
+}
+
+func NewSearchResponseProto(response *models.SearchResponse) *proto.SearchResponse {
+	res := proto.SearchResponse{
+		Films:   NewFilmsProto(response.Films),
+		Series:  NewFilmsProto(response.Series),
+		Persons: make([]*proto.Person, len(response.Persons)),
+	}
+	for idx := range response.Persons {
+		res.Persons[idx] = NewPersonProto(&response.Persons[idx])
+	}
+	return &res
+}
+
+func NewSearchResponse(response *proto.SearchResponse) models.SearchResponse {
+	res := models.SearchResponse{
+		Films:   NewFilms(response.Films),
+		Series:  NewFilms(response.Series),
+		Persons: make([]models.Person, len(response.Persons)),
+	}
+	for idx := range response.Persons {
+		res.Persons[idx] = NewPerson(response.Persons[idx])
+	}
+	return res
+}

@@ -155,3 +155,18 @@ func (mr *MockWarehouseServiceMockRecorder) GetStdCollection(ctx, params interfa
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStdCollection", reflect.TypeOf((*MockWarehouseService)(nil).GetStdCollection), ctx, params)
 }
+
+// Search mocks base method.
+func (m *MockWarehouseService) Search(ctx context.Context, params *constparams.SearchParams) (models.SearchResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Search", ctx, params)
+	ret0, _ := ret[0].(models.SearchResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Search indicates an expected call of Search.
+func (mr *MockWarehouseServiceMockRecorder) Search(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockWarehouseService)(nil).Search), ctx, params)
+}
