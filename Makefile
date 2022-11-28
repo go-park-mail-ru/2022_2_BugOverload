@@ -57,7 +57,7 @@ get-stat-coverage:
 	go tool cover -html c2.out -o coverage.html
 
 api-doc-generate:
-	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
+	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/api/main.go -o docs
 
 mocks-generate:
 	go generate ${PKG}

@@ -37,6 +37,7 @@ func (h *searchHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) 
 // @Produce json
 // @Success 200 {object} models.SearchResponse "successfully search"
 // @Failure 400 "return error"
+// @Failure 404 "return error: not found"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/search [GET]

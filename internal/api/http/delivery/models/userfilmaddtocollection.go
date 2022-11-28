@@ -14,8 +14,8 @@ import (
 )
 
 type AddFilmToUserCollectionRequest struct {
-	FilmID       int
-	CollectionID int `json:"idCollection,omitempty" example:"4"`
+	FilmID       int `json:"-"`
+	CollectionID int `json:"collection_id,omitempty" example:"4"`
 }
 
 func NewAddFilmRequest() *AddFilmToUserCollectionRequest {
@@ -58,6 +58,9 @@ func (p *AddFilmToUserCollectionRequest) Bind(r *http.Request) error {
 	err = json.Unmarshal(body, p)
 	if err != nil {
 		return errors.ErrJSONUnexpectedEnd
+	}
+	if p.CollectionID <= 0 {
+		return errors.ErrBadRequestParams
 	}
 
 	return nil
