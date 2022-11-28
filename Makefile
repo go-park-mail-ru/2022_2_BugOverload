@@ -109,13 +109,14 @@ prod-create-env:
 	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem .
 	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem .
 
+# Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	make prod-create-env
-	make infro-build
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack
 	sleep 2
 	make reboot-db-debug
-	sleep 30
+	make infro-build
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse api
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
@@ -123,7 +124,7 @@ debug-deploy:
 	sleep 1
 	make reboot-db-debug
 	make infro-build
-	docker-compose up -d image warehouse api localstack
+	docker-compose up -d image warehouse api
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:

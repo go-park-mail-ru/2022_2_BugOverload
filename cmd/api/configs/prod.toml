@@ -13,8 +13,13 @@ timeout = 10 #seconds
 log_level = "debug"
 log_path = "logs/api/prod"
 
-[S3]
-endpoint = "http://localstack:4566"
+[server_grpc_image]
+URL = "image:8089"
+work_timeout = 3 #seconds
+
+[server_grpc_warehouse]
+URL = "warehouse:8090"
+work_timeout = 3 #seconds
 
 [cors]
 methods = ["POST", "GET", "PUT", "DELETE"]

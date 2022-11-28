@@ -4,5 +4,4 @@ connection_timeout = 10 #seconds
 
 [logger]
 log_level = "debug"
-log_path = "logs/warehouse/debug/"
-
+log_path = "logs/warehouse/prod/"

@@ -20,7 +20,7 @@ URL = "warehouse:8090"
 work_timeout = 3 #seconds
 
 [cors]
-methods = ["POST", "GET", "PUT"]
+methods = ["POST", "GET", "PUT", "DELETE"]
 urls = ["http://localhost:3000", "http://movie-gate.online"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
