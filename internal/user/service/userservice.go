@@ -171,7 +171,9 @@ func (u *userService) AddFilmToUserCollection(ctx context.Context, user *models.
 		return stdErrors.Wrap(err, "AddFilmToUserCollection")
 	}
 	if !isAuthor {
-		return stdErrors.Wrap(errors.ErrBadUserCollectionID, "AddFilmToUserCollection")
+		return stdErrors.WithMessagef(errors.ErrBadUserCollectionID,
+			"Err: params input: query - [%s], values - [%d, %d].",
+			"AddFilmToUserCollection", user.ID, params.CollectionID)
 	}
 
 	exist, err := u.userRepo.CheckExistFilmInCollection(ctx, user, params)
