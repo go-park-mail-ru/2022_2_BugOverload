@@ -150,6 +150,7 @@ build-debug-restart:
 
 prod-restart:
 	make prod-create-env
+	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart warehouse
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
