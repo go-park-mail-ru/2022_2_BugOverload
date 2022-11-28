@@ -28,7 +28,7 @@ services:
     networks:
       - postgres-net
     build: ./
-    command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
+    command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
