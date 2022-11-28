@@ -119,11 +119,11 @@ prod-deploy:
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up main_db admin_db monitor_db localstack -d
+	docker-compose up -d main_db admin_db monitor_db localstack
 	sleep 1
 	make reboot-db-debug
 	make infro-build
-	docker-compose up image warehouse api localstack -d
+	docker-compose up -d image warehouse api localstack
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:

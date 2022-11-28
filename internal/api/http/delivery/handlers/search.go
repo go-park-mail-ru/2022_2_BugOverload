@@ -55,5 +55,11 @@ func (h *searchHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	response, err = models.NewSearchResponse(response)
+	if err != nil {
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
+		return
+	}
+
 	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }
