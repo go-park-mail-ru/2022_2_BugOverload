@@ -132,10 +132,10 @@ stop:
 	docker-compose down
 
 reboot-db-debug:
-	docker-compose run dev make -C project reboot-db COUNT=3
+	docker-compose run --rm dev make -C project reboot-db COUNT=3
 
 infro-build:
-	docker-compose run dev make -C project build
+	docker-compose run --rm dev make -C project build
 
 debug-restart:
 	docker-compose restart image
