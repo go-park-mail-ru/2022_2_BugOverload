@@ -10,7 +10,8 @@ SELECT f.film_id,
        f.type,
        f.rating
 FROM films f
-WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'film'`
+WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'film'
+LIMIT 6`
 
 	searchSeriesByName = `
 SELECT f.film_id,
@@ -21,7 +22,8 @@ SELECT f.film_id,
        f.type,
        f.rating
 FROM films f
-WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'serial'`
+WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'serial'
+LIMIT 6`
 
 	searchPersonsByName = `
 SELECT
@@ -32,7 +34,8 @@ SELECT
     avatar,
     count_films
 FROM persons
-WHERE name ILIKE $1 OR original_name ILIKE $1`
+WHERE name ILIKE $1 OR original_name ILIKE $1
+LIMIT 6`
 
 	getPersonProfessions = `
 SELECT p.name
