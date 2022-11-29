@@ -64,4 +64,55 @@ LIMIT $2
 OFFSET $3`
 
 	getTagDescription = `SELECT description FROM tags WHERE name = $1`
+
+	checkUserIsCollectionAuthor = `
+SELECT EXISTS (
+    SELECT 1 FROM user_collections
+    WHERE fk_collection_id = $1
+      AND fk_user_id = $2
+      AND user_type_relation = 'author'
+)`
+	checkCollectionIsPublic = `SELECT is_public FROM collections WHERE collection_id = $1`
+
+	getCollectionFilmsByDate = `
+SELECT f.film_id,
+       f.name,
+       f.original_name,
+       extract(YEAR FROM f.prod_date),
+       f.poster_ver,
+       f.type,
+       f.rating
+FROM films f
+WHERE f.film_id IN (
+    SELECT cf.fk_film_id
+    FROM collections_films cf
+    WHERE fk_collection_id = $1
+)
+ORDER BY f.prod_date DESC`
+
+	getCollectionFilmsByRating = `
+SELECT f.film_id,
+       f.name,
+       f.original_name,
+       extract(YEAR FROM f.prod_date),
+       f.poster_ver,
+       f.type,
+       f.rating
+FROM films f
+WHERE f.film_id IN (
+    SELECT cf.fk_film_id
+    FROM collections_films cf
+    WHERE fk_collection_id = $1
+)
+ORDER BY f.rating DESC`
+
+	getCollectionShortInfo = `
+SELECT name, description
+FROM collections
+WHERE collection_id = $1`
+
+	getAuthorByID = `
+SELECT nickname
+FROM users
+WHERE user_id = $1`
 )

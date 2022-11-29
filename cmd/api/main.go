@@ -119,6 +119,9 @@ func main() {
 	premieresCollectionHandler := handlers.NewPremieresCollectionHandler(warehouseService)
 	premieresCollectionHandler.Configure(router, mw)
 
+	getCollectionFilmsHandler := handlers.NewGetCollectionHandler(warehouseService)
+	getCollectionFilmsHandler.Configure(router, mw)
+
 	// Films delivery
 	recommendationHandler := handlers.NewRecommendationFilmHandler(warehouseService)
 	recommendationHandler.Configure(router, mw)
@@ -175,6 +178,16 @@ func main() {
 
 	userCollectionsHandler := handlers.NewGetUserCollectionsHandler(userService)
 	userCollectionsHandler.Configure(router, mw)
+
+	addFilmToUserCollectionHandler := handlers.NewAddFilmToUserCollectionHandler(userService)
+	addFilmToUserCollectionHandler.Configure(router, mw)
+
+	dropFilmFromUserCollectionHandler := handlers.NewDropFilmFromUserCollectionHandler(userService)
+	dropFilmFromUserCollectionHandler.Configure(router, mw)
+
+	// Search delivery
+	searchHandler := handlers.NewSearchHandler(warehouseService)
+	searchHandler.Configure(router, mw)
 
 	http.Handle("/", router)
 

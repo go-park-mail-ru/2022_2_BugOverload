@@ -36,6 +36,20 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 	return m.recorder
 }
 
+// AddFilmToUserCollection mocks base method.
+func (m *MockUserService) AddFilmToUserCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddFilmToUserCollection", ctx, user, params)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddFilmToUserCollection indicates an expected call of AddFilmToUserCollection.
+func (mr *MockUserServiceMockRecorder) AddFilmToUserCollection(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFilmToUserCollection", reflect.TypeOf((*MockUserService)(nil).AddFilmToUserCollection), ctx, user, params)
+}
+
 // ChangeUserProfileSettings mocks base method.
 func (m *MockUserService) ChangeUserProfileSettings(ctx context.Context, user *models.User, params *constparams.ChangeUserSettings) error {
 	m.ctrl.T.Helper()
@@ -48,6 +62,20 @@ func (m *MockUserService) ChangeUserProfileSettings(ctx context.Context, user *m
 func (mr *MockUserServiceMockRecorder) ChangeUserProfileSettings(ctx, user, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeUserProfileSettings", reflect.TypeOf((*MockUserService)(nil).ChangeUserProfileSettings), ctx, user, params)
+}
+
+// DropFilmFromUserCollection mocks base method.
+func (m *MockUserService) DropFilmFromUserCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DropFilmFromUserCollection", ctx, user, params)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DropFilmFromUserCollection indicates an expected call of DropFilmFromUserCollection.
+func (mr *MockUserServiceMockRecorder) DropFilmFromUserCollection(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropFilmFromUserCollection", reflect.TypeOf((*MockUserService)(nil).DropFilmFromUserCollection), ctx, user, params)
 }
 
 // FilmRate mocks base method.

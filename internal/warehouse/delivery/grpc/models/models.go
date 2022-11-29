@@ -333,6 +333,10 @@ func NewCollectionProto(collection *models.Collection) *proto.Collection {
 		CountFilms:  uint32(collection.CountFilms),
 		CountLikes:  uint32(collection.CountLikes),
 		Films:       NewFilmsProto(collection.Films),
+		Author: &proto.User{
+			ID:       uint32(collection.Author.ID),
+			Nickname: collection.Author.Nickname,
+		},
 	}
 }
 
@@ -348,6 +352,10 @@ func NewCollection(collection *proto.Collection) models.Collection {
 		CountFilms:  int(collection.CountFilms),
 		CountLikes:  int(collection.CountLikes),
 		Films:       NewFilms(collection.Films),
+		Author: models.User{
+			ID:       int(collection.Author.ID),
+			Nickname: collection.Author.Nickname,
+		},
 	}
 }
 
@@ -369,4 +377,87 @@ func NewGetStdCollectionParams(params *proto.GetStdCollectionParams) *constparam
 		Delimiter:  params.Delimiter,
 		CountFilms: int(params.CountFilms),
 	}
+}
+
+func NewPremiersCollectionParamsProto(params *constparams.PremiersCollectionParams) *proto.PremiersCollectionParams {
+	return &proto.PremiersCollectionParams{
+		Delimiter:  uint32(params.Delimiter),
+		CountFilms: uint32(params.CountFilms),
+	}
+}
+
+func NewPremiersCollectionParams(params *proto.PremiersCollectionParams) *constparams.PremiersCollectionParams {
+	return &constparams.PremiersCollectionParams{
+		Delimiter:  int(params.Delimiter),
+		CountFilms: int(params.CountFilms),
+	}
+}
+
+func NewCollectionGetFilmsAuthParams(params *proto.CollectionGetFilmsAuthParams) (*models.User, *constparams.CollectionGetFilmsRequestParams) {
+	return &models.User{
+			ID: int(params.RequestedUser.ID),
+		}, &constparams.CollectionGetFilmsRequestParams{
+			CollectionID: int(params.CollectionID),
+			SortParam:    params.SortParam,
+		}
+}
+
+func NewCollectionGetFilmsAuthParamsProto(user *models.User, params *constparams.CollectionGetFilmsRequestParams) *proto.CollectionGetFilmsAuthParams {
+	return &proto.CollectionGetFilmsAuthParams{
+		CollectionID: uint32(params.CollectionID),
+		SortParam:    params.SortParam,
+		RequestedUser: &proto.User{
+			ID: uint32(user.ID),
+		},
+	}
+}
+
+func NewCollectionGetFilmsNotAuthParams(params *proto.CollectionGetFilmsNotAuthParams) *constparams.CollectionGetFilmsRequestParams {
+	return &constparams.CollectionGetFilmsRequestParams{
+		CollectionID: int(params.CollectionID),
+		SortParam:    params.SortParam,
+	}
+}
+
+func NewCollectionGetFilmsNotAuthParamsProto(params *constparams.CollectionGetFilmsRequestParams) *proto.CollectionGetFilmsNotAuthParams {
+	return &proto.CollectionGetFilmsNotAuthParams{
+		CollectionID: uint32(params.CollectionID),
+		SortParam:    params.SortParam,
+	}
+}
+
+func NewSearchParamsProto(params *constparams.SearchParams) *proto.SearchParams {
+	return &proto.SearchParams{
+		Query: params.Query,
+	}
+}
+
+func NewSearchParams(params *proto.SearchParams) *constparams.SearchParams {
+	return &constparams.SearchParams{
+		Query: params.Query,
+	}
+}
+
+func NewSearchResponseProto(response *models.Search) *proto.SearchResponse {
+	res := proto.SearchResponse{
+		Films:   NewFilmsProto(response.Films),
+		Series:  NewFilmsProto(response.Serials),
+		Persons: make([]*proto.Person, len(response.Persons)),
+	}
+	for idx := range response.Persons {
+		res.Persons[idx] = NewPersonProto(&response.Persons[idx])
+	}
+	return &res
+}
+
+func NewSearchResponse(response *proto.SearchResponse) models.Search {
+	res := models.Search{
+		Films:   NewFilms(response.Films),
+		Serials: NewFilms(response.Series),
+		Persons: make([]models.Person, len(response.Persons)),
+	}
+	for idx := range response.Persons {
+		res.Persons[idx] = NewPerson(response.Persons[idx])
+	}
+	return res
 }

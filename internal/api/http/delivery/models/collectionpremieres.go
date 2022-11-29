@@ -1,17 +1,17 @@
 package models
 
 import (
-	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
 type PremieresCollectionRequest struct {
 	CountFilms int
-	Delimiter  string
+	Delimiter  int
 }
 
 func NewPremieresCollectionRequest() *PremieresCollectionRequest {
@@ -34,16 +34,25 @@ func (p *PremieresCollectionRequest) Bind(r *http.Request) error {
 		return errors.ErrBadRequestParams
 	}
 
-	p.Delimiter = r.FormValue("delimiter")
-	if p.Delimiter == "" {
+	delimiter := r.FormValue("delimiter")
+	if delimiter == "" {
 		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	p.Delimiter, err = strconv.Atoi(delimiter)
+	if err != nil {
+		return errors.ErrConvertQueryType
+	}
+
+	if p.Delimiter < 0 {
+		return errors.ErrBadRequestParams
 	}
 
 	return nil
 }
 
-func (p *PremieresCollectionRequest) GetParams() *innerPKG.GetStdCollectionParams {
-	return &innerPKG.GetStdCollectionParams{
+func (p *PremieresCollectionRequest) GetParams() *innerPKG.PremiersCollectionParams {
+	return &innerPKG.PremiersCollectionParams{
 		CountFilms: p.CountFilms,
 		Delimiter:  p.Delimiter,
 	}
@@ -56,7 +65,7 @@ type FilmPersonPremiersResponse struct {
 
 type PremieresCollectionFilm struct {
 	ID              int     `json:"id,omitempty" example:"23"`
-	Name            string  `json:"name,omitempty" example:"Game of Thrones"`
+	Name            string  `json:"name,omitempty" example:"Игра престолов"`
 	ProdDate        string  `json:"prod_date,omitempty" example:"2014.01.13"`
 	PosterVer       string  `json:"poster_ver,omitempty" example:"{{key}}"`
 	Rating          float32 `json:"rating,omitempty" example:"9.2"`

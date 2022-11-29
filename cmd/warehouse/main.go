@@ -16,6 +16,7 @@ import (
 	repoCollection "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/collection"
 	repoFilm "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	repoPerson "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
+	repoSearch "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/search"
 	serviceWarehouse "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -68,6 +69,11 @@ func main() {
 	// Person service
 	personService := serviceWarehouse.NewPersonService(ps)
 
+	// Search repository
+	sr := repoSearch.NewSearchPostgres(postgres)
+	// Search service
+	searchService := serviceWarehouse.NewSearchService(sr)
+
 	// Server
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(md.LoggerInterceptor),
@@ -76,7 +82,7 @@ func main() {
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCWarehouse.ConnectionTimeout)*time.Second),
 	)
 
-	service := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService)
+	service := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	logrus.Info("starting server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
 

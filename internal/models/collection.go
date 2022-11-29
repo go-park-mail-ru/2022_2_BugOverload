@@ -14,4 +14,6 @@ type Collection struct {
 	CreateTime string `json:"create_time,omitempty"`
 
 	Films []Film `json:"films,omitempty"`
+
+	Author User `json:"author,omitempty"`
 }

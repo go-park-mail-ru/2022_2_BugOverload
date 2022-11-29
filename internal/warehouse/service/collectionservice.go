@@ -18,7 +18,9 @@ type CollectionService interface {
 	GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
-	GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
+	GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+	GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -90,8 +92,56 @@ func (c *collectionService) GetStdCollection(ctx context.Context, params *constp
 }
 
 // GetPremieresCollection is the service that accesses the interface Repository
-func (c *collectionService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
+func (c *collectionService) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	collection, err := c.collectionRepo.GetPremieresCollection(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
+	}
+
+	return collection, nil
+}
+
+func (c *collectionService) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	isAuthor, err := c.collectionRepo.CheckUserIsAuthor(ctx, user, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
+	}
+
+	var collection models.Collection
+
+	if isAuthor {
+		collection, err = c.collectionRepo.GetCollectionAuthorized(ctx, user, params)
+		if err != nil {
+			return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
+		}
+	} else {
+		isPublic, errAuthor := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+		if errAuthor != nil {
+			return models.Collection{}, stdErrors.Wrap(errAuthor, "GetPremieresCollection")
+		}
+		if !isPublic {
+			return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetPremieresCollection")
+		}
+
+		collection, err = c.collectionRepo.GetCollectionNotAuthorized(ctx, params)
+		if err != nil {
+			return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
+		}
+	}
+
+	return collection, nil
+}
+
+func (c *collectionService) GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	isPublic, errAuthor := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+	if errAuthor != nil {
+		return models.Collection{}, stdErrors.Wrap(errAuthor, "GetPremieresCollection")
+	}
+	if !isPublic {
+		return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetPremieresCollection")
+	}
+
+	collection, err := c.collectionRepo.GetCollectionNotAuthorized(ctx, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
 	}

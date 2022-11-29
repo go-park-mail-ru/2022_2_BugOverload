@@ -28,6 +28,9 @@ type UserService interface {
 	GetUserActivityOnFilm(ctx context.Context, user *models.User, params *innerPKG.GetUserActivityOnFilmParams) (models.UserActivity, error)
 
 	GetUserCollections(ctx context.Context, user *models.User, params *innerPKG.GetUserCollectionsParams) ([]models.Collection, error)
+
+	AddFilmToUserCollection(ctx context.Context, user *models.User, params *innerPKG.UserCollectionFilmsUpdateParams) error
+	DropFilmFromUserCollection(ctx context.Context, user *models.User, params *innerPKG.UserCollectionFilmsUpdateParams) error
 }
 
 // userService is implementation for users service corresponding to the UserService interface.
@@ -159,4 +162,56 @@ func (u *userService) GetUserCollections(ctx context.Context, user *models.User,
 	}
 
 	return collection, nil
+}
+
+// AddFilmToUserCollection is the service that try to add film to user collection
+func (u *userService) AddFilmToUserCollection(ctx context.Context, user *models.User, params *innerPKG.UserCollectionFilmsUpdateParams) error {
+	isAuthor, err := u.userRepo.CheckUserAccessToUpdateCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "AddFilmToUserCollection")
+	}
+	if !isAuthor {
+		return stdErrors.WithMessagef(errors.ErrBadUserCollectionID,
+			"Err: params input: query - [%s], values - [%d, %d].",
+			"AddFilmToUserCollection", user.ID, params.CollectionID)
+	}
+
+	exist, err := u.userRepo.CheckExistFilmInCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "AddFilmToUserCollection")
+	}
+	if exist {
+		return stdErrors.Wrap(errors.ErrFilmExistInCollection, "AddFilmToUserCollection")
+	}
+
+	err = u.userRepo.AddFilmToCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "AddFilmToUserCollection")
+	}
+	return nil
+}
+
+// DropFilmFromUserCollection is the service that try to remove film from user collection
+func (u *userService) DropFilmFromUserCollection(ctx context.Context, user *models.User, params *innerPKG.UserCollectionFilmsUpdateParams) error {
+	isAuthor, err := u.userRepo.CheckUserAccessToUpdateCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "DropFilmFromUserCollection")
+	}
+	if !isAuthor {
+		return stdErrors.Wrap(errors.ErrBadUserCollectionID, "DropFilmFromUserCollection")
+	}
+
+	exist, err := u.userRepo.CheckExistFilmInCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "DropFilmFromUserCollection")
+	}
+	if !exist {
+		return stdErrors.Wrap(errors.ErrFilmNotExistInCollection, "DropFilmFromUserCollection")
+	}
+
+	err = u.userRepo.DropFilmFromCollection(ctx, user, params)
+	if err != nil {
+		return stdErrors.Wrap(err, "DropFilmFromUserCollection")
+	}
+	return nil
 }

@@ -18,14 +18,16 @@ type WarehouseServiceGRPCServer struct {
 	collectionManager service.CollectionService
 	filmManager       service.FilmService
 	personManager     service.PersonService
+	searchManager     service.SearchService
 }
 
-func NewWarehouseServiceGRPCServer(grpcServer *grpc.Server, cm service.CollectionService, fm service.FilmService, pm service.PersonService) *WarehouseServiceGRPCServer {
+func NewWarehouseServiceGRPCServer(grpcServer *grpc.Server, cm service.CollectionService, fm service.FilmService, pm service.PersonService, sm service.SearchService) *WarehouseServiceGRPCServer {
 	return &WarehouseServiceGRPCServer{
 		grpcServer:        grpcServer,
 		collectionManager: cm,
 		filmManager:       fm,
 		personManager:     pm,
+		searchManager:     sm,
 	}
 }
 
@@ -78,8 +80,8 @@ func (s *WarehouseServiceGRPCServer) GetStdCollection(ctx context.Context, param
 	return models.NewCollectionProto(&collection), nil
 }
 
-func (s *WarehouseServiceGRPCServer) GetPremieresCollection(ctx context.Context, params *proto.GetStdCollectionParams) (*proto.Collection, error) {
-	collection, err := s.collectionManager.GetPremieresCollection(ctx, models.NewGetStdCollectionParams(params))
+func (s *WarehouseServiceGRPCServer) GetPremieresCollection(ctx context.Context, params *proto.PremiersCollectionParams) (*proto.Collection, error) {
+	collection, err := s.collectionManager.GetPremieresCollection(ctx, models.NewPremiersCollectionParams(params))
 	if err != nil {
 		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}
@@ -96,4 +98,31 @@ func (s *WarehouseServiceGRPCServer) GetPersonByID(ctx context.Context, params *
 	}
 
 	return models.NewPersonProto(&personRepo), nil
+}
+
+func (s *WarehouseServiceGRPCServer) GetCollectionFilmsAuthorized(ctx context.Context, params *proto.CollectionGetFilmsAuthParams) (*proto.Collection, error) {
+	user, requestParams := models.NewCollectionGetFilmsAuthParams(params)
+	collection, err := s.collectionManager.GetCollectionAuthorized(ctx, user, requestParams)
+	if err != nil {
+		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+
+	return models.NewCollectionProto(&collection), nil
+}
+
+func (s *WarehouseServiceGRPCServer) GetCollectionFilmsNotAuthorized(ctx context.Context, params *proto.CollectionGetFilmsNotAuthParams) (*proto.Collection, error) {
+	collection, err := s.collectionManager.GetCollectionNotAuthorized(ctx, models.NewCollectionGetFilmsNotAuthParams(params))
+	if err != nil {
+		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+
+	return models.NewCollectionProto(&collection), nil
+}
+
+func (s *WarehouseServiceGRPCServer) Search(ctx context.Context, params *proto.SearchParams) (*proto.SearchResponse, error) {
+	response, err := s.searchManager.Search(ctx, models.NewSearchParams(params))
+	if err != nil {
+		return &proto.SearchResponse{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+	return models.NewSearchResponseProto(&response), nil
 }

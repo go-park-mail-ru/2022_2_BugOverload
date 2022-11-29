@@ -3,8 +3,8 @@ bind_addr_http = "0.0.0.0:8088"
 read_timeout = 10 #seconds
 write_timeout = 10 #seconds
 protocol = "https"
-tls_certificate_file = "fullchain.pem"
-tls_key_file = "privkey.pem"
+tls_certificate_file = "./fullchain.pem"
+tls_key_file = "./privkey.pem"
 
 [context]
 timeout = 10 #seconds
@@ -13,12 +13,17 @@ timeout = 10 #seconds
 log_level = "debug"
 log_path = "logs/api/prod"
 
-[S3]
-endpoint = "http://localstack:4566"
+[server_grpc_image]
+URL = "image:8089"
+work_timeout = 3 #seconds
+
+[server_grpc_warehouse]
+URL = "warehouse:8090"
+work_timeout = 3 #seconds
 
 [cors]
 methods = ["POST", "GET", "PUT", "DELETE"]
-urls = ["https://movie-gate.online", "http://localhost:8088", "https://localhost:8088"]
+urls = ["https://movie-gate.online", "http://localhost:8088", "https://localhost:8088", "http://localhost:3000", "https://localhost:3000"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = false

@@ -57,7 +57,7 @@ get-stat-coverage:
 	go tool cover -html c2.out -o coverage.html
 
 api-doc-generate:
-	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/debug/main.go -o docs
+	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/api/main.go -o docs
 
 mocks-generate:
 	go generate ${PKG}
@@ -106,24 +106,25 @@ prod-mode:
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-create-env:
-	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem .
-	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem .
+	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem ./cmd/api/
+	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem ./cmd/api/
 
+# Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	make prod-create-env
-	make infro-build
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack
 	sleep 2
 	make reboot-db-debug
-	sleep 30
+	make infro-build
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse api
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up main_db admin_db monitor_db localstack -d
+	docker-compose up -d main_db admin_db monitor_db localstack
 	sleep 1
 	make reboot-db-debug
 	make infro-build
-	docker-compose up image warehouse api localstack -d
+	docker-compose up -d image warehouse api
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
@@ -131,10 +132,10 @@ stop:
 	docker-compose down
 
 reboot-db-debug:
-	docker-compose run dev make -C project reboot-db COUNT=3
+	docker-compose run --rm dev make -C project reboot-db COUNT=3
 
 infro-build:
-	docker-compose run dev make -C project build
+	docker-compose run --rm dev make -C project build
 
 debug-restart:
 	docker-compose restart image
@@ -149,6 +150,7 @@ build-debug-restart:
 
 prod-restart:
 	make prod-create-env
+	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart warehouse
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api

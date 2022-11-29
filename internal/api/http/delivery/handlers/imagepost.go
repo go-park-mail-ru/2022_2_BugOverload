@@ -27,7 +27,7 @@ func NewPostImageHandler(is serviceImage.ImageService) handler.Handler {
 }
 
 func (h *postImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/image", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/image", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodPost).
 		Queries("object", "{object}", "key", "{key}")
 }

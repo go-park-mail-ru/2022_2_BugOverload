@@ -25,7 +25,8 @@ var (
 	ErrUnsupportedSortParameter = stdErrors.New("unsupported sort parameter")
 
 	// Collection service
-	ErrNotFindSuchTarget = stdErrors.New("not found such target")
+	ErrNotFindSuchTarget     = stdErrors.New("not found such target")
+	ErrCollectionIsNotPublic = stdErrors.New("this collection is not public")
 
 	// Auth delivery
 	ErrNoCookie = stdErrors.New("no such cookie")
@@ -52,7 +53,10 @@ var (
 	ErrWrongValidPassword = stdErrors.New("bad pass")
 
 	// User service
-	ErrFilmRatingNotExist = stdErrors.New("film rating not exist")
+	ErrBadUserCollectionID      = stdErrors.New("this collection doesn't belong to current user")
+	ErrFilmExistInCollection    = stdErrors.New("such film exist in collection")
+	ErrFilmNotExistInCollection = stdErrors.New("such film not found in collection")
+	ErrFilmRatingNotExist       = stdErrors.New("film rating not exist")
 
 	// Middleware
 	ErrBigRequest    = stdErrors.New("big request")
@@ -104,6 +108,7 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 
 	// Collection service
 	res[ErrNotFindSuchTarget.Error()] = http.StatusNotFound
+	res[ErrCollectionIsNotPublic.Error()] = http.StatusForbidden
 
 	// Auth delivery
 	res[ErrNoCookie.Error()] = http.StatusNotFound
@@ -130,6 +135,9 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrWrongValidPassword.Error()] = http.StatusForbidden
 
 	// User service
+	res[ErrBadUserCollectionID.Error()] = http.StatusForbidden
+	res[ErrFilmExistInCollection.Error()] = http.StatusBadRequest
+	res[ErrFilmNotExistInCollection.Error()] = http.StatusNotFound
 	res[ErrFilmRatingNotExist.Error()] = http.StatusNotFound
 
 	// Middleware

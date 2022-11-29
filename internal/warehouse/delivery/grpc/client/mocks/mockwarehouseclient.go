@@ -36,6 +36,36 @@ func (m *MockWarehouseService) EXPECT() *MockWarehouseServiceMockRecorder {
 	return m.recorder
 }
 
+// GetCollectionFilmsAuthorized mocks base method.
+func (m *MockWarehouseService) GetCollectionFilmsAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionAuthorized", ctx, user, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionFilmsAuthorized indicates an expected call of GetCollectionFilmsAuthorized.
+func (mr *MockWarehouseServiceMockRecorder) GetCollectionFilmsAuthorized(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionAuthorized", reflect.TypeOf((*MockWarehouseService)(nil).GetCollectionFilmsAuthorized), ctx, user, params)
+}
+
+// GetCollectionFilmsNotAuthorized mocks base method.
+func (m *MockWarehouseService) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionNotAuthorized", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionFilmsNotAuthorized indicates an expected call of GetCollectionFilmsNotAuthorized.
+func (mr *MockWarehouseServiceMockRecorder) GetCollectionFilmsNotAuthorized(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionNotAuthorized", reflect.TypeOf((*MockWarehouseService)(nil).GetCollectionFilmsNotAuthorized), ctx, params)
+}
+
 // GetFilmByID mocks base method.
 func (m *MockWarehouseService) GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error) {
 	m.ctrl.T.Helper()
@@ -67,7 +97,7 @@ func (mr *MockWarehouseServiceMockRecorder) GetPersonByID(ctx, person, params in
 }
 
 // GetPremieresCollection mocks base method.
-func (m *MockWarehouseService) GetPremieresCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
+func (m *MockWarehouseService) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPremieresCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)
@@ -124,4 +154,19 @@ func (m *MockWarehouseService) GetStdCollection(ctx context.Context, params *con
 func (mr *MockWarehouseServiceMockRecorder) GetStdCollection(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStdCollection", reflect.TypeOf((*MockWarehouseService)(nil).GetStdCollection), ctx, params)
+}
+
+// Search mocks base method.
+func (m *MockWarehouseService) Search(ctx context.Context, params *constparams.SearchParams) (models.Search, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Search", ctx, params)
+	ret0, _ := ret[0].(models.Search)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Search indicates an expected call of Search.
+func (mr *MockWarehouseServiceMockRecorder) Search(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockWarehouseService)(nil).Search), ctx, params)
 }

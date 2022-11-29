@@ -28,7 +28,7 @@ func NewGetActivityOnFilmHandler(us serviceUser.UserService) handler.Handler {
 }
 
 func (h *getActivityOnFilmHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/film/{id:[0-9]+}/user_activity", mw.CheckAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/film/{id:[0-9]+}/user_activity", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).Methods(http.MethodGet)
 }
 
 // Action is a method for initial validation of the request and data and
