@@ -35,6 +35,7 @@ func (h *searchHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) 
 // @Description Getting film, serials and persons info. WARNING for films no fields end_year.
 // @tags search, completed
 // @Produce json
+// @Param q  query string true "search body"
 // @Success 200 {object} models.SearchResponse "successfully search"
 // @Failure 400 "return error"
 // @Failure 404 "return error: not found"

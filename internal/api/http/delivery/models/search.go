@@ -70,7 +70,7 @@ type SearchResponse struct {
 func newSearchFilmPersonsResponse(filmPersons []models.FilmPerson) []SearchFilmPersonResponse {
 	res := make([]SearchFilmPersonResponse, len(filmPersons))
 
-	for idx, val := range res {
+	for idx, val := range filmPersons {
 		res[idx].ID = val.ID
 		res[idx].Name = val.Name
 	}
