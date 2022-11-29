@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	authService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
 
 	stdErrors "github.com/pkg/errors"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -36,11 +36,11 @@ type UserService interface {
 // userService is implementation for users service corresponding to the UserService interface.
 type userService struct {
 	userRepo    repository.UserRepository
-	authService authService.AuthService
+	authService client.AuthService
 }
 
 // NewUserProfileService is constructor for userService. Accepts UserService interfaces.
-func NewUserProfileService(ur repository.UserRepository, as authService.AuthService) UserService {
+func NewUserProfileService(ur repository.UserRepository, as client.AuthService) UserService {
 	return &userService{
 		userRepo:    ur,
 		authService: as,
