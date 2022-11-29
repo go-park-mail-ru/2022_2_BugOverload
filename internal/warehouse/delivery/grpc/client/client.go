@@ -29,7 +29,7 @@ type WarehouseService interface {
 	GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
 	GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error)
 
-	Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.SearchResponse, error)
+	Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.Search, error)
 }
 
 type WarehouseServiceGRPCClient struct {
@@ -114,10 +114,10 @@ func (c WarehouseServiceGRPCClient) GetCollectionFilmsNotAuthorized(ctx context.
 	return models.NewCollection(collectionProtoResponse), nil
 }
 
-func (c WarehouseServiceGRPCClient) Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.SearchResponse, error) {
+func (c WarehouseServiceGRPCClient) Search(ctx context.Context, params *constparams.SearchParams) (modelsGlobal.Search, error) {
 	searchProtoResponse, err := c.warehouseClient.Search(pkg.GetDefInfoMicroService(ctx), models.NewSearchParamsProto(params))
 	if err != nil {
-		return modelsGlobal.SearchResponse{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "Search"))
+		return modelsGlobal.Search{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "Search"))
 	}
 	return models.NewSearchResponse(searchProtoResponse), nil
 }

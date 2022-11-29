@@ -31,9 +31,9 @@ func (h *searchHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) 
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Search films, series and persons
-// @Description Getting film, series and persons info
-// @tags search
+// @Summary Search films, serials and persons
+// @Description Getting film, serials and persons info. WARNING for films no fields end_year.
+// @tags search, completed
 // @Produce json
 // @Success 200 {object} models.SearchResponse "successfully search"
 // @Failure 400 "return error"
@@ -50,13 +50,13 @@ func (h *searchHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := h.searchService.Search(r.Context(), request.GetParams())
+	searchRes, err := h.searchService.Search(r.Context(), request.GetParams())
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
 	}
 
-	response, err = models.NewSearchResponse(response)
+	response, err := models.NewSearchResponse(searchRes)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

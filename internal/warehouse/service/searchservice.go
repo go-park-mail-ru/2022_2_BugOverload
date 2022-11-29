@@ -14,7 +14,7 @@ import (
 
 // SearchService provides universal service for work with search.
 type SearchService interface {
-	Search(ctx context.Context, params *constparams.SearchParams) (models.SearchResponse, error)
+	Search(ctx context.Context, params *constparams.SearchParams) (models.Search, error)
 }
 
 // searchService is implementation for users service corresponding to the SearchService interface.
@@ -29,25 +29,25 @@ func NewSearchService(sr search.Repository) SearchService {
 	}
 }
 
-func (s *searchService) Search(ctx context.Context, params *constparams.SearchParams) (models.SearchResponse, error) {
-	var searchResponseRepo models.SearchResponse
+func (s *searchService) Search(ctx context.Context, params *constparams.SearchParams) (models.Search, error) {
+	var searchResponseRepo models.Search
 	var err error
 
 	params.Query = "%" + params.Query + "%"
 
 	searchResponseRepo.Films, err = s.searchRepo.SearchFilms(ctx, params)
 	if err != nil {
-		return models.SearchResponse{}, stdErrors.Wrap(err, "SearchFilms")
+		return models.Search{}, stdErrors.Wrap(err, "SearchFilms")
 	}
 
-	searchResponseRepo.Series, err = s.searchRepo.SearchSeries(ctx, params)
+	searchResponseRepo.Serials, err = s.searchRepo.SearchSeries(ctx, params)
 	if err != nil {
-		return models.SearchResponse{}, stdErrors.Wrap(err, "SearchSeries")
+		return models.Search{}, stdErrors.Wrap(err, "SearchSeries")
 	}
 
 	searchResponseRepo.Persons, err = s.searchRepo.SearchPersons(ctx, params)
 	if err != nil {
-		return models.SearchResponse{}, stdErrors.Wrap(err, "SearchPersons")
+		return models.Search{}, stdErrors.Wrap(err, "SearchPersons")
 	}
 
 	return searchResponseRepo, nil

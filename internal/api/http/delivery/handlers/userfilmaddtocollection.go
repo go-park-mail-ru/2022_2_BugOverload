@@ -37,7 +37,7 @@ func (h *addFilmToUserCollectionHandler) Configure(r *mux.Router, mw *middleware
 // delivery of the data to the service at the business logic level.
 // @Summary Add film to user collection
 // @Description Add film to user collection. User should be author of collection.
-// @tags user
+// @tags user, completed
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param idCollection body models.AddFilmToUserCollectionRequest true "Request body for add film to user collection"

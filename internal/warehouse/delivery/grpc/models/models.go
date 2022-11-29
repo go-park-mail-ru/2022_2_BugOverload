@@ -438,10 +438,10 @@ func NewSearchParams(params *proto.SearchParams) *constparams.SearchParams {
 	}
 }
 
-func NewSearchResponseProto(response *models.SearchResponse) *proto.SearchResponse {
+func NewSearchResponseProto(response *models.Search) *proto.SearchResponse {
 	res := proto.SearchResponse{
 		Films:   NewFilmsProto(response.Films),
-		Series:  NewFilmsProto(response.Series),
+		Series:  NewFilmsProto(response.Serials),
 		Persons: make([]*proto.Person, len(response.Persons)),
 	}
 	for idx := range response.Persons {
@@ -450,10 +450,10 @@ func NewSearchResponseProto(response *models.SearchResponse) *proto.SearchRespon
 	return &res
 }
 
-func NewSearchResponse(response *proto.SearchResponse) models.SearchResponse {
-	res := models.SearchResponse{
+func NewSearchResponse(response *proto.SearchResponse) models.Search {
+	res := models.Search{
 		Films:   NewFilms(response.Films),
-		Series:  NewFilms(response.Series),
+		Serials: NewFilms(response.Series),
 		Persons: make([]models.Person, len(response.Persons)),
 	}
 	for idx := range response.Persons {

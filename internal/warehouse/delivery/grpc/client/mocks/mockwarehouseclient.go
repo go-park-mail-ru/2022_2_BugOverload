@@ -157,10 +157,10 @@ func (mr *MockWarehouseServiceMockRecorder) GetStdCollection(ctx, params interfa
 }
 
 // Search mocks base method.
-func (m *MockWarehouseService) Search(ctx context.Context, params *constparams.SearchParams) (models.SearchResponse, error) {
+func (m *MockWarehouseService) Search(ctx context.Context, params *constparams.SearchParams) (models.Search, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Search", ctx, params)
-	ret0, _ := ret[0].(models.SearchResponse)
+	ret0, _ := ret[0].(models.Search)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

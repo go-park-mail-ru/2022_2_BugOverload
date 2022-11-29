@@ -1,7 +1,7 @@
 package models
 
-type SearchResponse struct {
+type Search struct {
 	Films   []Film   `json:"films,omitempty"`
-	Series  []Film   `json:"series,omitempty"`
+	Serials []Film   `json:"serials,omitempty"`
 	Persons []Person `json:"persons,omitempty"`
 }

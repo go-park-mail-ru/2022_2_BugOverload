@@ -37,7 +37,7 @@ func (h *dropFilmFromUserCollectionHandler) Configure(r *mux.Router, mw *middlew
 // delivery of the data to the service at the business logic level.
 // @Summary Remove film from user collection
 // @Description Remove film from user collection. User should be author of collection.
-// @tags user
+// @tags user, completed
 // @Produce json
 // @Param   id    path  int    true "film id"
 // @Param idCollection body models.DropFilmFromUserCollectionRequest true "Request body for drop film from user collection"

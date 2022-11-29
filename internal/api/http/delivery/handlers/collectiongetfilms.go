@@ -34,11 +34,12 @@ func (h *getCollectionFilmsHandler) Configure(r *mux.Router, mw *middleware.HTTP
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Getter collection by ID
+// @Summary Getting collection by ID
 // @Description Films by ID by DESC rating or DESC date.
 // @Description All fields required
 // @tags collection, completed
 // @Produce json
+// @Param id  path int true "collection id"
 // @Param sort_param  query string true "rating, date"
 // @Success 200 {object} models.CollectionGetFilmsResponse "returns an array of movies"
 // @Failure 400 "return error"

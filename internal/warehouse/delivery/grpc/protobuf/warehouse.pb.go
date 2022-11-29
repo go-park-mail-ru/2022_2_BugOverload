@@ -1561,7 +1561,7 @@ type SearchResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Films   []*Film   `protobuf:"bytes,1,rep,name=Films,proto3" json:"Films,omitempty"`
-	Series  []*Film   `protobuf:"bytes,2,rep,name=Series,proto3" json:"Series,omitempty"`
+	Series  []*Film   `protobuf:"bytes,2,rep,name=Serials,proto3" json:"Serials,omitempty"`
 	Persons []*Person `protobuf:"bytes,3,rep,name=Persons,proto3" json:"Persons,omitempty"`
 }
 
@@ -1960,7 +1960,7 @@ var file_warehouse_proto_depIdxs = []int32{
 	0,  // 12: warehouse.CollectionGetFilmsAuthParams.RequestedUser:type_name -> warehouse.User
 	3,  // 13: warehouse.Person.BestFilms:type_name -> warehouse.Film
 	3,  // 14: warehouse.SearchResponse.Films:type_name -> warehouse.Film
-	3,  // 15: warehouse.SearchResponse.Series:type_name -> warehouse.Film
+	3,  // 15: warehouse.SearchResponse.Serials:type_name -> warehouse.Film
 	13, // 16: warehouse.SearchResponse.Persons:type_name -> warehouse.Person
 	15, // 17: warehouse.WarehouseService.GetRecommendation:input_type -> warehouse.Nothing
 	4,  // 18: warehouse.WarehouseService.GetFilmByID:input_type -> warehouse.GetFilmParams

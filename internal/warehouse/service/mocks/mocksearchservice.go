@@ -37,10 +37,10 @@ func (m *MockSearchService) EXPECT() *MockSearchServiceMockRecorder {
 }
 
 // Search mocks base method.
-func (m *MockSearchService) Search(ctx context.Context, params *constparams.SearchParams) (models.SearchResponse, error) {
+func (m *MockSearchService) Search(ctx context.Context, params *constparams.SearchParams) (models.Search, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Search", ctx, params)
-	ret0, _ := ret[0].(models.SearchResponse)
+	ret0, _ := ret[0].(models.Search)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

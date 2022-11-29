@@ -32,7 +32,7 @@ func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.HTT
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Getter premiers collection
+// @Summary Getting premiers collection
 // @Description Return films with production date > current date.
 // @Description All fields required
 // @tags collection, completed
