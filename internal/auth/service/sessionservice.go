@@ -14,9 +14,9 @@ import (
 
 // SessionService provides universal service for authorization. Needed for stateful session pattern.
 type SessionService interface {
-	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
+	GetUserBySession(ctx context.Context, session *models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
-	DeleteSession(ctx context.Context, session models.Session) (models.Session, error)
+	DeleteSession(ctx context.Context, session *models.Session) (models.Session, error)
 }
 
 // sessionService is implementation for auth service corresponding to the SessionService interface.
@@ -32,7 +32,7 @@ func NewSessionService(ar session.Repository) SessionService {
 }
 
 // GetUserBySession is the service that accesses the interface Repository
-func (a *sessionService) GetUserBySession(ctx context.Context, session models.Session) (models.User, error) {
+func (a *sessionService) GetUserBySession(ctx context.Context, session *models.Session) (models.User, error) {
 	user, err := a.sessionRepo.GetUserBySession(ctx, session)
 	if err != nil {
 		return models.User{}, errors.Wrap(err, "GetUserBySession")
@@ -56,7 +56,7 @@ func (a *sessionService) CreateSession(ctx context.Context, user *models.User) (
 }
 
 // DeleteSession is the service that accesses the interface Repository
-func (a *sessionService) DeleteSession(ctx context.Context, session models.Session) (models.Session, error) {
+func (a *sessionService) DeleteSession(ctx context.Context, session *models.Session) (models.Session, error) {
 	delSession, err := a.sessionRepo.DeleteSession(ctx, session)
 	if err != nil {
 		return models.Session{}, errors.Wrap(err, "DeleteSession")

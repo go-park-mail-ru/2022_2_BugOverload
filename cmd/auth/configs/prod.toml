@@ -1,0 +1,7 @@
+[server_grpc_auth]
+bind_addr_http = ":8091"
+connection_timeout = 10 #seconds
+
+[logger]
+log_level = "debug"
+log_path = "logs/auth/prod/"

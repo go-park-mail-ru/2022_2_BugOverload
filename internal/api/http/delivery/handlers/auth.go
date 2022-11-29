@@ -1,16 +1,16 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
@@ -19,15 +19,13 @@ import (
 
 // authHandler is the structure that handles the request for auth.
 type authHandler struct {
-	authService    sessionService.AuthService
-	sessionService sessionService.SessionService
+	authService client.AuthService
 }
 
 // NewAuthHandler is constructor for authHandler in this pkg - auth.
-func NewAuthHandler(as sessionService.AuthService, ss sessionService.SessionService) handler.Handler {
+func NewAuthHandler(as client.AuthService) handler.Handler {
 	return &authHandler{
 		as,
-		ss,
 	}
 }
 
@@ -55,11 +53,11 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestSession := mainModels.Session{
+	requestSession := &mainModels.Session{
 		ID: cookie.Value,
 	}
 
-	user, err := h.sessionService.GetUserBySession(r.Context(), requestSession)
+	user, err := h.authService.GetUserBySession(r.Context(), requestSession)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return
@@ -72,7 +70,7 @@ func (h *authHandler) Action(w http.ResponseWriter, r *http.Request) {
 	}
 
 	requestSession.User = &user
-	token, err := security.CreateCsrfToken(&requestSession)
+	token, err := security.CreateCsrfToken(requestSession)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

@@ -12,9 +12,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
-	repoAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/auth"
-	repoSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/repository/session"
-	serviceSession "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	clientAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	clientImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -81,32 +79,36 @@ func main() {
 		logrus.Fatal("cant connect to grpc ", err)
 	}
 	defer grpcConnWarehouse.Close()
+	grpcConnAuth, err := grpc.Dial(
+		config.ServerGRPCAuth.URL,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
+	)
+	if err != nil {
+		logrus.Fatal("cant connect to grpc ", err)
+	}
+	defer grpcConnAuth.Close()
 
 	// Router
 	router := mux.NewRouter()
 
-	// Auth repository
-	authStorage := repoAuth.NewAuthDatabase(postgres)
-	sessionStorage := repoSession.NewSessionCache()
-
-	// Auth service
-	authService := serviceSession.NewAuthService(authStorage)
-	sessionService := serviceSession.NewSessionService(sessionStorage)
+	// Auth
+	authService := clientAuth.NewAuthServiceGRPSClient(grpcConnAuth)
 
 	// Middleware
-	mw := middleware.NewHTTPMiddleware(logger, sessionService, &config.Cors)
+	mw := middleware.NewHTTPMiddleware(logger, authService, &config.Cors)
 
 	// Auth delivery
-	authHandler := handlers.NewAuthHandler(authService, sessionService)
+	authHandler := handlers.NewAuthHandler(authService)
 	authHandler.Configure(router, mw)
 
-	logoutHandler := handlers.NewLogoutHandler(authService, sessionService)
+	logoutHandler := handlers.NewLogoutHandler(authService)
 	logoutHandler.Configure(router, mw)
 
-	loginHandler := handlers.NewLoginHandler(authService, sessionService)
+	loginHandler := handlers.NewLoginHandler(authService)
 	loginHandler.Configure(router, mw)
 
-	singUpHandler := handlers.NewSingUpHandler(authService, sessionService)
+	singUpHandler := handlers.NewSingUpHandler(authService)
 	singUpHandler.Configure(router, mw)
 
 	// Warehouse microservice
@@ -201,7 +203,7 @@ func main() {
 
 	routerCORS := mw.SetCORSMiddleware(router)
 
-	logrus.Info("starting server at " + config.ServerHTTP.BindHTTPAddr + " on protocol " + config.ServerHTTP.Protocol)
+	logrus.Info("starting api server at " + config.ServerHTTP.BindHTTPAddr + " on protocol " + config.ServerHTTP.Protocol)
 
 	// Server
 	server := configPKG.NewServerHTTP(logger)
@@ -211,5 +213,5 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	logrus.Info("ServerHTTP was stopped")
+	logrus.Info("Server - api was stopped")
 }

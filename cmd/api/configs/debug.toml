@@ -19,6 +19,10 @@ work_timeout = 3 #seconds
 URL = "warehouse:8090"
 work_timeout = 3 #seconds
 
+[server_grpc_auth]
+URL = "auth:8091"
+work_timeout = 3 #seconds
+
 [cors]
 methods = ["POST", "GET", "PUT", "DELETE"]
 urls = ["http://localhost:3000", "http://movie-gate.online"]

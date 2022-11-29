@@ -84,7 +84,7 @@ func main() {
 
 	service := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
-	logrus.Info("starting server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
+	logrus.Info("starting warehouse server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
 
 	err = service.StartGRPCServer(config.ServerGRPCWarehouse.BindHTTPAddr)
 	if err != nil {

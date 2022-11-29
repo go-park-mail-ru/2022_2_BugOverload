@@ -95,6 +95,27 @@ services:
     depends_on:
       - main_db
 
+  auth:
+    container_name: "auth"
+    networks:
+      - postgres-net
+    build: ./
+    command: sh -c "./app/auth_bin -config-path=./app/configs/prod.toml"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - ./logs/auth:/logs/auth
+      - ./cmd/auth:/app
+    ports:
+      - "8091:8091"
+    depends_on:
+      - main_db
+
 
   localstack:
     hostname: localstack
