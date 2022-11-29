@@ -40,7 +40,7 @@ type SearchFilmResponse struct {
 	ID           int     `json:"id,omitempty" example:"23"`
 	Name         string  `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName string  `json:"original_name,omitempty" example:"Game of Thrones"`
-	ProdYear     string  `json:"prod_year ,omitempty" example:"2014.01.13"`
+	ProdYear     string  `json:"prod_year,omitempty" example:"2014.01.13"`
 	PosterVer    string  `json:"poster_ver,omitempty" example:"{{key}}"`
 	Rating       float32 `json:"rating,omitempty" example:"9.2"`
 
