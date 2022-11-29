@@ -14,19 +14,19 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client"
 )
 
-// getCollectionFilmsHandler is the structure that handles the request for movies in cinemas.
-type getCollectionFilmsHandler struct {
+// getCollectionHandler is the structure that handles the request for movies in cinemas.
+type getCollectionHandler struct {
 	collectionService client.WarehouseService
 }
 
-// NewGetCollectionFilmsHandler is constructor for getCollectionFilmsHandler in this pkg - in cinema.
-func NewGetCollectionFilmsHandler(service client.WarehouseService) handler.Handler {
-	return &getCollectionFilmsHandler{
+// NewGetCollectionHandler is constructor for getCollectionHandler in this pkg - in cinema.
+func NewGetCollectionHandler(service client.WarehouseService) handler.Handler {
+	return &getCollectionHandler{
 		service,
 	}
 }
 
-func (h *getCollectionFilmsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
+func (h *getCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
 	r.HandleFunc("/api/v1/collections/{id:[0-9]+}", mw.TryAuthMiddleware(h.Action)).
 		Methods(http.MethodGet).
 		Queries("sort_param", "{sort_param}")
@@ -41,17 +41,17 @@ func (h *getCollectionFilmsHandler) Configure(r *mux.Router, mw *middleware.HTTP
 // @Produce json
 // @Param id  path int true "collection id"
 // @Param sort_param  query string true "rating, date"
-// @Success 200 {object} models.CollectionGetFilmsResponse "returns an array of movies"
+// @Success 200 {object} models.CollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 403 "return error: this collection is not public"
 // @Failure 404 {object} httpmodels.ErrResponseCollectionNoSuchCollection "no such collection"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/collections/{id} [GET]
-func (h *getCollectionFilmsHandler) Action(w http.ResponseWriter, r *http.Request) {
+func (h *getCollectionHandler) Action(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 
-	request := models.NewCollectionGetFilmsRequest()
+	request := models.NewCollectionRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -75,7 +75,7 @@ func (h *getCollectionFilmsHandler) Action(w http.ResponseWriter, r *http.Reques
 		}
 	}
 
-	response := models.NewCollectionGetFilmsResponse(&collection)
+	response := models.NewCollectionResponse(&collection)
 
 	wrapper.Response(r.Context(), w, http.StatusOK, response)
 }

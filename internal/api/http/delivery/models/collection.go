@@ -1,40 +1,65 @@
 package models
 
 import (
+	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
-type filmInCollectionResponse struct {
-	ID        int      `json:"id,omitempty" example:"23"`
-	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
-	ProdYear  string   `json:"prod_year,omitempty" example:"2014"`
-	EndYear   string   `json:"end_year,omitempty" example:"2013"`
-	PosterVer string   `json:"poster_ver,omitempty" example:"{{key}}"`
-	Rating    float32  `json:"rating,omitempty" example:"7.9"`
-	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
+type CollectionRequest struct {
+	CollectionID int
+	SortParam    string
 }
 
-type FilmCollectionResponse struct {
-	Name        string                     `json:"name,omitempty" example:"Популярное"`
-	Description string                     `json:"description,omitempty"  example:"Лучшие фильмы на данный момент"`
-	Poster      string                     `json:"poster,omitempty" example:"42"`
-	Time        string                     `json:"time,omitempty" example:"2023.01.04 15:12:23'"`
-	CountLikes  int                        `json:"count_likes,omitempty" example:"502"`
-	Films       []filmInCollectionResponse `json:"film,omitempty"`
+func NewCollectionRequest() *CollectionRequest {
+	return &CollectionRequest{}
 }
 
-func NewFilmCollectionResponse(collection *models.Collection) *FilmCollectionResponse {
-	res := &FilmCollectionResponse{
+func (p *CollectionRequest) Bind(r *http.Request) error {
+	var err error
+	vars := mux.Vars(r)
+
+	p.CollectionID, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		return errors.ErrConvertQueryType
+	}
+
+	p.SortParam = r.FormValue("sort_param")
+	if p.SortParam == "" {
+		return errors.ErrBadRequestParamsEmptyRequiredFields
+	}
+
+	return nil
+}
+
+func (p *CollectionRequest) GetParams() *innerPKG.CollectionGetFilmsRequestParams {
+	return &innerPKG.CollectionGetFilmsRequestParams{
+		CollectionID: p.CollectionID,
+		SortParam:    p.SortParam,
+	}
+}
+
+type CollectionResponse struct {
+	Name        string                      `json:"name,omitempty" example:"Сейчас в кино"`
+	Description string                      `json:"description,omitempty" example:"Фильмы, которые можно посмотреть в российском кинопрокате"`
+	Films       []FilmTagCollectionResponse `json:"films,omitempty"`
+	IsAuthor    bool                        `json:"is_author,omitempty" example:"true"`
+}
+
+func NewCollectionResponse(collection *models.Collection) *CollectionResponse {
+	res := &CollectionResponse{
 		Name:        collection.Name,
 		Description: collection.Description,
-		Poster:      collection.Poster,
-		Time:        collection.Time,
-		CountLikes:  collection.CountLikes,
-		Films:       make([]filmInCollectionResponse, len(collection.Films)),
+		Films:       make([]FilmTagCollectionResponse, len(collection.Films)),
 	}
 
 	for idx, value := range collection.Films {
-		res.Films[idx] = filmInCollectionResponse{
+		res.Films[idx] = FilmTagCollectionResponse{
 			ID:        value.ID,
 			Name:      value.Name,
 			ProdYear:  value.ProdDate,
@@ -43,6 +68,10 @@ func NewFilmCollectionResponse(collection *models.Collection) *FilmCollectionRes
 			Rating:    value.Rating,
 			Genres:    value.Genres,
 		}
+	}
+
+	if collection.Author.ID != 0 {
+		res.IsAuthor = true
 	}
 
 	return res

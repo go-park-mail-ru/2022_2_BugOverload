@@ -99,7 +99,7 @@ func (c WarehouseServiceGRPCClient) GetPersonByID(ctx context.Context, person *m
 func (c WarehouseServiceGRPCClient) GetCollectionFilmsAuthorized(ctx context.Context, user *modelsGlobal.User, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
 	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsAuthParamsProto(user, params))
 	if err != nil {
-		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionFilmsAuthorized"))
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionAuthorized"))
 	}
 
 	return models.NewCollection(collectionProtoResponse), nil
@@ -108,7 +108,7 @@ func (c WarehouseServiceGRPCClient) GetCollectionFilmsAuthorized(ctx context.Con
 func (c WarehouseServiceGRPCClient) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (modelsGlobal.Collection, error) {
 	collectionProtoResponse, err := c.warehouseClient.GetCollectionFilmsNotAuthorized(pkg.GetDefInfoMicroService(ctx), models.NewCollectionGetFilmsNotAuthParamsProto(params))
 	if err != nil {
-		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionFilmsNotAuthorized"))
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetCollectionNotAuthorized"))
 	}
 
 	return models.NewCollection(collectionProtoResponse), nil

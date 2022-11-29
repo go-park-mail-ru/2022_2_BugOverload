@@ -1967,8 +1967,8 @@ var file_warehouse_proto_depIdxs = []int32{
 	7,  // 19: warehouse.WarehouseService.GetReviewsByFilmID:input_type -> warehouse.GetFilmReviewsParams
 	9,  // 20: warehouse.WarehouseService.GetStdCollection:input_type -> warehouse.GetStdCollectionParams
 	10, // 21: warehouse.WarehouseService.GetPremieresCollection:input_type -> warehouse.PremiersCollectionParams
-	11, // 22: warehouse.WarehouseService.GetCollectionFilmsAuthorized:input_type -> warehouse.CollectionGetFilmsAuthParams
-	12, // 23: warehouse.WarehouseService.GetCollectionFilmsNotAuthorized:input_type -> warehouse.CollectionGetFilmsNotAuthParams
+	11, // 22: warehouse.WarehouseService.GetCollectionAuthorized:input_type -> warehouse.CollectionGetFilmsAuthParams
+	12, // 23: warehouse.WarehouseService.GetCollectionNotAuthorized:input_type -> warehouse.CollectionGetFilmsNotAuthParams
 	14, // 24: warehouse.WarehouseService.GetPersonByID:input_type -> warehouse.GetPersonParams
 	16, // 25: warehouse.WarehouseService.Search:input_type -> warehouse.SearchParams
 	3,  // 26: warehouse.WarehouseService.GetRecommendation:output_type -> warehouse.Film
@@ -1976,8 +1976,8 @@ var file_warehouse_proto_depIdxs = []int32{
 	6,  // 28: warehouse.WarehouseService.GetReviewsByFilmID:output_type -> warehouse.Reviews
 	8,  // 29: warehouse.WarehouseService.GetStdCollection:output_type -> warehouse.Collection
 	8,  // 30: warehouse.WarehouseService.GetPremieresCollection:output_type -> warehouse.Collection
-	8,  // 31: warehouse.WarehouseService.GetCollectionFilmsAuthorized:output_type -> warehouse.Collection
-	8,  // 32: warehouse.WarehouseService.GetCollectionFilmsNotAuthorized:output_type -> warehouse.Collection
+	8,  // 31: warehouse.WarehouseService.GetCollectionAuthorized:output_type -> warehouse.Collection
+	8,  // 32: warehouse.WarehouseService.GetCollectionNotAuthorized:output_type -> warehouse.Collection
 	13, // 33: warehouse.WarehouseService.GetPersonByID:output_type -> warehouse.Person
 	17, // 34: warehouse.WarehouseService.Search:output_type -> warehouse.SearchResponse
 	26, // [26:35] is the sub-list for method output_type
@@ -2312,7 +2312,7 @@ func (c *warehouseServiceClient) GetPremieresCollection(ctx context.Context, in 
 
 func (c *warehouseServiceClient) GetCollectionFilmsAuthorized(ctx context.Context, in *CollectionGetFilmsAuthParams, opts ...grpc.CallOption) (*Collection, error) {
 	out := new(Collection)
-	err := c.cc.Invoke(ctx, "/warehouse.WarehouseService/GetCollectionFilmsAuthorized", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/warehouse.WarehouseService/GetCollectionAuthorized", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2321,7 +2321,7 @@ func (c *warehouseServiceClient) GetCollectionFilmsAuthorized(ctx context.Contex
 
 func (c *warehouseServiceClient) GetCollectionFilmsNotAuthorized(ctx context.Context, in *CollectionGetFilmsNotAuthParams, opts ...grpc.CallOption) (*Collection, error) {
 	out := new(Collection)
-	err := c.cc.Invoke(ctx, "/warehouse.WarehouseService/GetCollectionFilmsNotAuthorized", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/warehouse.WarehouseService/GetCollectionNotAuthorized", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2383,10 +2383,10 @@ func (*UnimplementedWarehouseServiceServer) GetPremieresCollection(context.Conte
 	return nil, status.Errorf(codes.Unimplemented, "method GetPremieresCollection not implemented")
 }
 func (*UnimplementedWarehouseServiceServer) GetCollectionFilmsAuthorized(context.Context, *CollectionGetFilmsAuthParams) (*Collection, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCollectionFilmsAuthorized not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method GetCollectionAuthorized not implemented")
 }
 func (*UnimplementedWarehouseServiceServer) GetCollectionFilmsNotAuthorized(context.Context, *CollectionGetFilmsNotAuthParams) (*Collection, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCollectionFilmsNotAuthorized not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method GetCollectionNotAuthorized not implemented")
 }
 func (*UnimplementedWarehouseServiceServer) GetPersonByID(context.Context, *GetPersonParams) (*Person, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPersonByID not implemented")
@@ -2499,7 +2499,7 @@ func _WarehouseService_GetCollectionFilmsAuthorized_Handler(srv interface{}, ctx
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/warehouse.WarehouseService/GetCollectionFilmsAuthorized",
+		FullMethod: "/warehouse.WarehouseService/GetCollectionAuthorized",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WarehouseServiceServer).GetCollectionFilmsAuthorized(ctx, req.(*CollectionGetFilmsAuthParams))
@@ -2517,7 +2517,7 @@ func _WarehouseService_GetCollectionFilmsNotAuthorized_Handler(srv interface{}, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/warehouse.WarehouseService/GetCollectionFilmsNotAuthorized",
+		FullMethod: "/warehouse.WarehouseService/GetCollectionNotAuthorized",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WarehouseServiceServer).GetCollectionFilmsNotAuthorized(ctx, req.(*CollectionGetFilmsNotAuthParams))
@@ -2586,11 +2586,11 @@ var _WarehouseService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _WarehouseService_GetPremieresCollection_Handler,
 		},
 		{
-			MethodName: "GetCollectionFilmsAuthorized",
+			MethodName: "GetCollectionAuthorized",
 			Handler:    _WarehouseService_GetCollectionFilmsAuthorized_Handler,
 		},
 		{
-			MethodName: "GetCollectionFilmsNotAuthorized",
+			MethodName: "GetCollectionNotAuthorized",
 			Handler:    _WarehouseService_GetCollectionFilmsNotAuthorized_Handler,
 		},
 		{

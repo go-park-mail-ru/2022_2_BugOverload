@@ -23,8 +23,8 @@ type Repository interface {
 	// GetUserCollections
 	CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	CheckCollectionIsPublic(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
-	GetCollectionFilmsAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
-	GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+	GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+	GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -277,7 +277,7 @@ func (c *collectionPostgres) CheckCollectionIsPublic(ctx context.Context, params
 }
 
 // GetCollectionFilmsAuthorized return collection by id with author
-func (c *collectionPostgres) GetCollectionFilmsAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -354,7 +354,7 @@ func (c *collectionPostgres) GetCollectionFilmsAuthorized(ctx context.Context, u
 }
 
 // GetCollectionFilmsNotAuthorized return collection by id
-func (c *collectionPostgres) GetCollectionFilmsNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+func (c *collectionPostgres) GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error

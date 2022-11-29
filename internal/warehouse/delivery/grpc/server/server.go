@@ -102,7 +102,7 @@ func (s *WarehouseServiceGRPCServer) GetPersonByID(ctx context.Context, params *
 
 func (s *WarehouseServiceGRPCServer) GetCollectionFilmsAuthorized(ctx context.Context, params *proto.CollectionGetFilmsAuthParams) (*proto.Collection, error) {
 	user, requestParams := models.NewCollectionGetFilmsAuthParams(params)
-	collection, err := s.collectionManager.GetCollectionFilmsAuthorized(ctx, user, requestParams)
+	collection, err := s.collectionManager.GetCollectionAuthorized(ctx, user, requestParams)
 	if err != nil {
 		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}
@@ -111,7 +111,7 @@ func (s *WarehouseServiceGRPCServer) GetCollectionFilmsAuthorized(ctx context.Co
 }
 
 func (s *WarehouseServiceGRPCServer) GetCollectionFilmsNotAuthorized(ctx context.Context, params *proto.CollectionGetFilmsNotAuthParams) (*proto.Collection, error) {
-	collection, err := s.collectionManager.GetCollectionFilmsNotAuthorized(ctx, models.NewCollectionGetFilmsNotAuthParams(params))
+	collection, err := s.collectionManager.GetCollectionNotAuthorized(ctx, models.NewCollectionGetFilmsNotAuthParams(params))
 	if err != nil {
 		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}

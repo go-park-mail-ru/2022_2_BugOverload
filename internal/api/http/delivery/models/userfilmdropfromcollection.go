@@ -14,7 +14,7 @@ import (
 )
 
 type DropFilmFromUserCollectionRequest struct {
-	FilmID       int
+	FilmID       int `json:"-"`
 	CollectionID int `json:"collection_id,omitempty" example:"4"`
 }
 
