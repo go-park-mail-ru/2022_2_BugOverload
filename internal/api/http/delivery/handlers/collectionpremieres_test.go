@@ -19,6 +19,9 @@ import (
 	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 )
 
+// Хуета в модели ответа выстреливает если нет стран (nil)
+// expected: &models.PremieresCollectionResponse{Name:"популярное", Description:"", Films:[]models.PremieresCollectionFilm{models.PremieresCollectionFilm{ID:123, Name:"Игра престолов", ProdDate:"2013", PosterVer:"123", Rating:7.12332, DurationMinutes:0, Description:"", Genres:[]string{"фэнтези", "приключения"}, ProdCountries:[]string{}, Directors:[]models.FilmPersonPremiersResponse(nil)}}}
+// actual  : &models.PremieresCollectionResponse{Name:"популярное", Description:"", Films:[]models.PremieresCollectionFilm{models.PremieresCollectionFilm{ID:123, Name:"Игра престолов", ProdDate:"2013", PosterVer:"123", Rating:7.12332, DurationMinutes:0, Description:"", Genres:[]string{"фэнтези", "приключения"}, ProdCountries:[]string(nil), Directors:[]models.FilmPersonPremiersResponse(nil)}}}
 func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	t.Parallel()
 
@@ -27,18 +30,19 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
-	r := httptest.NewRequest(http.MethodGet, "/api/v1/premieres&count_films=1&delimiter=1", nil)
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/premieres?count_films=1&delimiter=0", nil)
 
 	res := modelsGlobal.Collection{
 		Name: "популярное",
 		Films: []modelsGlobal.Film{{
-			Name:      "Игра престолов",
-			ProdDate:  "2013",
-			EndYear:   "2014",
-			ID:        123,
-			Rating:    7.12332,
-			PosterVer: "123",
-			Genres:    []string{"фэнтези", "приключения"},
+			Name:          "Игра престолов",
+			ProdDate:      "2013",
+			EndYear:       "2014",
+			ID:            123,
+			Rating:        7.12332,
+			PosterVer:     "123",
+			ProdCountries: []string{"США"},
+			Genres:        []string{"фэнтези", "приключения"},
 		}},
 	}
 
@@ -51,7 +55,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	collectionService.EXPECT().GetPremieresCollection(r.Context(), &constparams.PremiersCollectionParams{
 		CountFilms: 1,
-		Delimiter:  1,
+		Delimiter:  0,
 	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
@@ -63,7 +67,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode ")
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
 	// Check body
 	response := w.Result()
@@ -76,7 +80,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewPremieresCollectionResponse(&res)
 
-	var actualBody *models.GetStdCollectionResponse
+	var actualBody *models.PremieresCollectionResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
