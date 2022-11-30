@@ -98,53 +98,58 @@ func (c *collectionService) GetPremieresCollection(ctx context.Context, params *
 		return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
 	}
 
+	collection.Name = "Премьеры"
+
 	return collection, nil
 }
 
 func (c *collectionService) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	var collection models.Collection
+
 	isAuthor, err := c.collectionRepo.CheckUserIsAuthor(ctx, user, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
 	}
 
-	var collection models.Collection
-
-	if isAuthor {
-		collection, err = c.collectionRepo.GetCollectionAuthorized(ctx, user, params)
+	if !isAuthor {
+		var isPublic bool
+		isPublic, err = c.collectionRepo.CheckCollectionIsPublic(ctx, params)
 		if err != nil {
-			return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
-		}
-	} else {
-		isPublic, errAuthor := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
-		if errAuthor != nil {
-			return models.Collection{}, stdErrors.Wrap(errAuthor, "GetPremieresCollection")
+			return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
 		}
 		if !isPublic {
-			return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetPremieresCollection")
+			return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetCollectionAuthorized")
 		}
+	}
 
-		collection, err = c.collectionRepo.GetCollectionNotAuthorized(ctx, params)
-		if err != nil {
-			return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
-		}
+	collection, err = c.collectionRepo.GetCollection(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
+	}
+	if !isAuthor {
+		collection.Author.ID = 0
 	}
 
 	return collection, nil
 }
 
 func (c *collectionService) GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
-	isPublic, errAuthor := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
-	if errAuthor != nil {
-		return models.Collection{}, stdErrors.Wrap(errAuthor, "GetPremieresCollection")
+	var collection models.Collection
+
+	isPublic, err := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionNotAuthorized")
 	}
 	if !isPublic {
-		return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetPremieresCollection")
+		return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetCollectionNotAuthorized")
 	}
 
-	collection, err := c.collectionRepo.GetCollectionNotAuthorized(ctx, params)
+	collection, err = c.collectionRepo.GetCollection(ctx, params)
 	if err != nil {
-		return models.Collection{}, stdErrors.Wrap(err, "GetPremieresCollection")
+		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionNotAuthorized")
 	}
+
+	collection.Author.ID = 0
 
 	return collection, nil
 }

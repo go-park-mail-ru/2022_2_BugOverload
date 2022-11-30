@@ -85,7 +85,7 @@ type PremieresCollectionResponse struct {
 
 func NewPremieresCollectionResponse(collection *models.Collection) *PremieresCollectionResponse {
 	res := &PremieresCollectionResponse{
-		Name:  "Премьеры",
+		Name:  collection.Name,
 		Films: make([]PremieresCollectionFilm, len(collection.Films)),
 	}
 
