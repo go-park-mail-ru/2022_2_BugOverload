@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 
 	"github.com/BurntSushi/toml"
@@ -191,6 +193,12 @@ func main() {
 	searchHandler := handlers.NewSearchHandler(warehouseService)
 	searchHandler.Configure(router, mw)
 
+	// Metrics
+	prometheus.MustRegister(fooCount, hits)
+
+	router.HandleFunc("/metrics", promhttp.Handler().ServeHTTP)
+	// Metrics
+
 	http.Handle("/", router)
 
 	// Set middleware
@@ -215,3 +223,12 @@ func main() {
 
 	logrus.Info("Server - api was stopped")
 }
+
+var fooCount = prometheus.NewCounter(prometheus.CounterOpts{
+	Name: "foo_total",
+	Help: "Number of foo successfully processed.",
+})
+
+var hits = prometheus.NewCounterVec(prometheus.CounterOpts{
+	Name: "hits",
+}, []string{"status", "path"})
