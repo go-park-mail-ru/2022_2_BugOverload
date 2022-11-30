@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 20s
+  evaluation_interval: 20s
+
+scrape_configs:
+  - job_name: api
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'api:8088' ]
+
+  - job_name: image
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'image:8089' ]
+
+  - job_name: warehouse
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'warehouse:8090', 'auth:8091' ]
+
+  - job_name: auth
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'auth:8091' ]
+
+  - job_name: node
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'node_exporter:10002' ]
+
+  - job_name: main_db
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'monitor_db:10001' ]
+
+rule_files:
+  - 'rules.yml'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:10004']

@@ -25,7 +25,9 @@ env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo &&
 	export AWS_SECRET_ACCESS_KEY=bar && export POSTGRES_HOST=main_db &&
 	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
-	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost
+	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost &&
+	export GF_SECURITY_ADMIN_USER=mguser && export GF_SECURITY_ADMIN_PASSWORD=mgpass &&
+	export GRAFANA_URL=grafana && export PROMETHEUS_URL=http://localhost:9999/prometheus/ && export TARGET_MONITOR=etwcwvloiuygotvk
 
 # Development -------------------------------------
 check:
@@ -115,7 +117,7 @@ prod-create-env:
 # Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack prometheus node_exporter grafana
 	sleep 2
 	make reboot-db-debug
 	make infro-build
@@ -123,12 +125,12 @@ prod-deploy:
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up -d main_db admin_db monitor_db localstack
+	docker-compose up -d main_db admin_db monitor_db localstack prometheus node_exporter grafana alertmanager
 	sleep 1
-	make reboot-db-debug
-	make infro-build
+	# make reboot-db-debug
+	# make infro-build
 	docker-compose up -d image warehouse auth api
-	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+	# make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill

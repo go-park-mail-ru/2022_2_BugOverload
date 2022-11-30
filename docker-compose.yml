@@ -6,6 +6,7 @@ services:
     networks:
       - localstack-net
       - postgres-net
+      - monitoring-net
     image: lonkidely/golang_web_light:latest
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -27,7 +28,9 @@ services:
     container_name: "api"
     networks:
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/api_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -50,7 +53,9 @@ services:
     networks:
       - localstack-net
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/image_bin -config-path=./app/configs/debug.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -71,13 +76,16 @@ services:
     depends_on:
       - localstack
       - main_db
+      - prometheus
 
 
   warehouse:
     container_name: "warehouse"
     networks:
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/warehouse_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -93,13 +101,16 @@ services:
       - "8090:8090"
     depends_on:
       - main_db
+      - prometheus
 
 
   auth:
     container_name: "auth"
     networks:
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/auth_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -115,6 +126,7 @@ services:
       - "8091:8091"
     depends_on:
       - main_db
+      - prometheus
 
 
   localstack:
@@ -210,17 +222,36 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.admin"
       PGADMIN_DEFAULT_PASSWORD: "admin"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_SERVER_MODE: "True"
     ports:
-      - "5050:5050"
+      - "5050:80"
     depends_on:
       - main_db
+
+
+  prometheus:
+    container_name: "prometheus"
+    networks:
+      - monitoring-net
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    #      - '--web.external-url=${PROMETHEUS_URL}'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+    ports:
+      - "10000:9090"
+    depends_on:
+      - monitor_db
 
 
   monitor_db:
     container_name: "monitor_db"
     networks:
       - postgres-net
+      - monitoring-net
     image: prometheuscommunity/postgres-exporter:latest
     environment:
       DATA_SOURCE_URI: "main_db:5432/${POSTGRES_DB}?sslmode=disable"
@@ -230,9 +261,69 @@ services:
     volumes:
       - ./scripts/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     ports:
-      - "9187:9187"
+      - "10001:9187"
     depends_on:
       - main_db
+
+
+  node_exporter:
+    container_name: "node_exporter"
+    image: quay.io/prometheus/node-exporter:latest
+    networks:
+      - monitoring-net
+    user: root
+    privileged: true
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "10002:10002"
+    depends_on:
+      - prometheus
+
+
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana:latest
+    networks:
+      - monitoring-net
+    volumes:
+      - ./monitoring/grafana/data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      TZ: "Europe/Moscow"
+      GF_SECURITY_ADMIN_USER: '${GF_SECURITY_ADMIN_USER}'
+      GF_SECURITY_ADMIN_PASSWORD: '${GF_SECURITY_ADMIN_PASSWORD}'
+    ports:
+      - "10003:3000"
+    depends_on:
+      - prometheus
+      - node_exporter
+
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: "alertmanager"
+    networks:
+      - monitoring-net
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    #      - '--web.external-url=http://localhost:9093'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./monitoring/alertmanager:/etc/alertmanager
+    ports:
+      - '10004:9093'
+    depends_on:
+      - prometheus
 
 
 networks:
@@ -243,3 +334,6 @@ networks:
   postgres-net:
     driver: bridge
     name: postgres-net
+  monitoring-net:
+    driver: bridge
+    name: monitoring-net
