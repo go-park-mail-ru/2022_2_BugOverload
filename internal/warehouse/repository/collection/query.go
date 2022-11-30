@@ -111,6 +111,11 @@ SELECT name, description
 FROM collections
 WHERE collection_id = $1`
 
+	getAuthorID = `
+SELECT fk_user_id
+FROM user_collections
+WHERE fk_collection_id = $1`
+
 	getAuthorByID = `
 SELECT nickname
 FROM users
