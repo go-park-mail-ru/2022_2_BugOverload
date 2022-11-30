@@ -112,7 +112,8 @@ func (c *collectionService) GetCollectionAuthorized(ctx context.Context, user *m
 	}
 
 	if !isAuthor {
-		isPublic, err := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+		var isPublic bool
+		isPublic, err = c.collectionRepo.CheckCollectionIsPublic(ctx, params)
 		if err != nil {
 			return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
 		}
