@@ -94,7 +94,7 @@ func main() {
 	authService := clientAuth.NewAuthServiceGRPSClient(grpcConnAuth)
 
 	// Metrics
-	metrics := monitoring.NewPrometheusMetrics(config.Metrics.BindHTTPAddr)
+	metrics := monitoring.NewPrometheusMetrics(config.ServerHTTPApi.ServiceName)
 	err = metrics.SetupMonitoring()
 	if err != nil {
 		logger.Fatal(err)
@@ -201,6 +201,9 @@ func main() {
 
 	http.Handle("/", router)
 
+	// Metrics server
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Set middleware
 	router.Use(
 		mw.SetDefaultLoggerMiddleware,
@@ -212,7 +215,7 @@ func main() {
 
 	routerCORS := mw.SetCORSMiddleware(router)
 
-	logrus.Info(config.ServerHTTPApi.ServiceName + "starting server at " + config.ServerHTTPApi.BindHTTPAddr + " on protocol " + config.ServerHTTPApi.Protocol)
+	logrus.Info(config.ServerHTTPApi.ServiceName + "starting server at " + config.ServerHTTPApi.BindAddr + " on protocol " + config.ServerHTTPApi.Protocol)
 
 	// Server
 	server := configPKG.NewServerHTTP(logger)

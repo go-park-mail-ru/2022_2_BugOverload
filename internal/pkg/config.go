@@ -2,7 +2,7 @@ package pkg
 
 type ServerHTTP struct {
 	ServiceName        string `toml:"service_name"`
-	BindHTTPAddr       string `toml:"bind_addr_http"`
+	BindAddr           string `toml:"bind_addr_http"`
 	ReadTimeout        int    `toml:"read_timeout"`
 	WriteTimeout       int    `toml:"write_timeout"`
 	Protocol           string `toml:"protocol"`
@@ -37,7 +37,7 @@ type Metrics struct {
 
 type ServerGRPC struct {
 	ServiceName       string `toml:"service_name"`
-	BindHTTPAddr      string `toml:"bind_addr_http"`
+	BindAddr          string `toml:"bind_addr_http"`
 	ConnectionTimeout int    `toml:"connection_timeout"`
 	WorkTimeout       int    `toml:"work_timeout"`
 	URL               string `toml:"URL"`

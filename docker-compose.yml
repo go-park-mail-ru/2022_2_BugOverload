@@ -48,6 +48,8 @@ services:
     depends_on:
       - image
       - warehouse
+      - auth
+
 
   image:
     container_name: "image"
@@ -78,7 +80,6 @@ services:
     depends_on:
       - localstack
       - main_db
-      - prometheus
 
 
   warehouse:
@@ -104,7 +105,6 @@ services:
       - "9003:9003"
     depends_on:
       - main_db
-      - prometheus
 
 
   auth:
@@ -130,7 +130,6 @@ services:
       - "9004:9004"
     depends_on:
       - main_db
-      - prometheus
 
 
   localstack:
@@ -249,6 +248,10 @@ services:
       - "9090:9090"
     depends_on:
       - monitor_db
+      - api
+      - warehouse
+      - image
+      - auth
 
 
   monitor_db:
@@ -289,8 +292,6 @@ services:
       - /:/rootfs:ro
     ports:
       - "10002:10002"
-    depends_on:
-      - prometheus
 
 
   grafana:
@@ -308,7 +309,6 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
       - node_exporter
 
 
@@ -326,8 +326,6 @@ services:
       - ./monitoring/alertmanager:/etc/alertmanager
     ports:
       - '9093:9093'
-    depends_on:
-      - prometheus
 
 
 networks:

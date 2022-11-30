@@ -68,10 +68,12 @@ func (pm *Metrics) GetExecution() *prometheus.HistogramVec {
 	return pm.ExecutionTime
 }
 
-func CreateNewMonitoringRouter(addr string) {
+func CreateNewMonitoringServer(addr string) {
 	router := http.NewServeMux()
 
 	router.Handle("/metrics", promhttp.Handler())
+
+	logrus.Info("metrics starting server at " + addr)
 
 	err := http.ListenAndServe(addr, router)
 	if err != nil {

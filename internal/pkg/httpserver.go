@@ -20,7 +20,7 @@ func NewServerHTTP(logger *logrus.Logger) *Server {
 
 func (s *Server) Launch(config *Config, router http.Handler) error {
 	server := http.Server{
-		Addr:         config.ServerHTTPApi.BindHTTPAddr,
+		Addr:         config.ServerHTTPApi.BindAddr,
 		Handler:      router,
 		ReadTimeout:  time.Duration(config.ServerHTTPApi.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(config.ServerHTTPApi.WriteTimeout) * time.Second,

@@ -44,7 +44,7 @@ func main() {
 	}(closeResource, logger)
 
 	// Metrics
-	metrics := monitoring.NewPrometheusMetrics(config.Metrics.BindHTTPAddr)
+	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCImage.ServiceName)
 	err = metrics.SetupMonitoring()
 	if err != nil {
 		logger.Fatal(err)
@@ -62,9 +62,12 @@ func main() {
 	// Image service
 	imageService := serviceImage.NewImageService(is)
 
+	// Metrics server
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Server
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(md.LoggerInterceptor),
+		grpc.ChainUnaryInterceptor(md.LoggerInterceptor, md.MetricsInterceptor),
 		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
 		grpc.MaxSendMsgSize(constparams.BufSizeRequest),
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCImage.ConnectionTimeout)*time.Second),
@@ -72,9 +75,9 @@ func main() {
 
 	service := server.NewImageServiceGRPCServer(grpcServer, imageService)
 
-	logrus.Info(config.ServerGRPCImage.ServiceName + " starting server at " + config.ServerGRPCImage.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCImage.ServiceName + " starting server at " + config.ServerGRPCImage.BindAddr)
 
-	err = service.StartGRPCServer(config.ServerGRPCImage.BindHTTPAddr)
+	err = service.StartGRPCServer(config.ServerGRPCImage.BindAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}

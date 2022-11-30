@@ -117,20 +117,22 @@ prod-create-env:
 # Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack prometheus node_exporter grafana
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
-	make reboot-db-debug
+	make reboot-db-full
 	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse auth api
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up -d main_db admin_db monitor_db localstack prometheus node_exporter grafana alertmanager
+	docker-compose up -d main_db admin_db localstack
 	sleep 1
-	# make reboot-db-debug
-	# make infro-build
+	make reboot-db-full
+	make infro-build
 	docker-compose up -d image warehouse auth api
-	# make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
+	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill
@@ -138,6 +140,9 @@ stop:
 
 reboot-db-debug:
 	docker-compose run --rm $(SERVICE_DEV) make -C project reboot-db COUNT=3
+
+reboot-db-full:
+	docker-compose run --rm $(SERVICE_DEV) make -C project reboot-db
 
 infro-build:
 	docker-compose run --rm $(SERVICE_DEV) make -C project build
