@@ -4,6 +4,7 @@ import (
 	"flag"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
 
@@ -42,8 +43,15 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.Metrics.BindHTTPAddr)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -64,12 +72,10 @@ func main() {
 
 	service := server.NewImageServiceGRPCServer(grpcServer, imageService)
 
-	logrus.Info("starting image server at " + config.ServerGRPCImage.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCImage.ServiceName + " starting server at " + config.ServerGRPCImage.BindHTTPAddr)
 
 	err = service.StartGRPCServer(config.ServerGRPCImage.BindHTTPAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service image was stopped")
 }

@@ -1,6 +1,10 @@
 [server_grpc_image]
+service_name = "image"
 bind_addr_http = ":8089"
 connection_timeout = 10 #seconds
+
+[metrics]
+bind_addr_http = ":9002"
 
 [logger]
 log_level = "debug"

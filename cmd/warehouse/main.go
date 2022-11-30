@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -45,8 +46,15 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.Metrics.BindHTTPAddr)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -84,12 +92,10 @@ func main() {
 
 	service := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
-	logrus.Info("starting warehouse server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCWarehouse.ServiceName + " starting server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
 
 	err = service.StartGRPCServer(config.ServerGRPCWarehouse.BindHTTPAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service warehouse was stopped")
 }

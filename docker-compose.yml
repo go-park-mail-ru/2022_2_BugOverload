@@ -44,6 +44,7 @@ services:
       - ./cmd/api:/app
     ports:
       - "8088:8088"
+      - "9001:9001"
     depends_on:
       - image
       - warehouse
@@ -73,6 +74,7 @@ services:
       - ./cmd/image:/app
     ports:
       - "8089:8089"
+      - "9002:9002"
     depends_on:
       - localstack
       - main_db
@@ -99,6 +101,7 @@ services:
       - ./cmd/warehouse:/app
     ports:
       - "8090:8090"
+      - "9003:9003"
     depends_on:
       - main_db
       - prometheus
@@ -124,6 +127,7 @@ services:
       - ./cmd/auth:/app
     ports:
       - "8091:8091"
+      - "9004:9004"
     depends_on:
       - main_db
       - prometheus
@@ -242,7 +246,7 @@ services:
     volumes:
       - ./monitoring/prometheus:/etc/prometheus
     ports:
-      - "10000:9090"
+      - "9090:9090"
     depends_on:
       - monitor_db
 
@@ -261,7 +265,7 @@ services:
     volumes:
       - ./scripts/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     ports:
-      - "10001:9187"
+      - "9187:9187"
     depends_on:
       - main_db
 
@@ -302,7 +306,7 @@ services:
       GF_SECURITY_ADMIN_USER: '${GF_SECURITY_ADMIN_USER}'
       GF_SECURITY_ADMIN_PASSWORD: '${GF_SECURITY_ADMIN_PASSWORD}'
     ports:
-      - "10003:3000"
+      - "3000:3000"
     depends_on:
       - prometheus
       - node_exporter
@@ -321,7 +325,7 @@ services:
     volumes:
       - ./monitoring/alertmanager:/etc/alertmanager
     ports:
-      - '10004:9093'
+      - '9093:9093'
     depends_on:
       - prometheus
 

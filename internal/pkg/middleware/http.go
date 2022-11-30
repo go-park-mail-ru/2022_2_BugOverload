@@ -2,8 +2,6 @@ package middleware
 
 import (
 	"context"
-	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,21 +9,26 @@ import (
 	"github.com/rs/cors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"github.com/urfave/negroni"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 type HTTPMiddleware struct {
-	log  *logrus.Logger
-	auth client.AuthService
-	cors cors.Cors
+	log     *logrus.Logger
+	auth    client.AuthService
+	cors    cors.Cors
+	metrics monitoring.Monitoring
 }
 
-func NewHTTPMiddleware(log *logrus.Logger, auth client.AuthService, config *pkg.Cors) *HTTPMiddleware {
+func NewHTTPMiddleware(log *logrus.Logger, auth client.AuthService, config *pkg.Cors, metrics monitoring.Monitoring) *HTTPMiddleware {
 	cors := cors.New(cors.Options{
 		AllowedMethods:   config.Methods,
 		AllowedOrigins:   config.Origins,
@@ -35,9 +38,10 @@ func NewHTTPMiddleware(log *logrus.Logger, auth client.AuthService, config *pkg.
 	})
 
 	return &HTTPMiddleware{
-		auth: auth,
-		log:  log,
-		cors: *cors,
+		auth:    auth,
+		log:     log,
+		cors:    *cors,
+		metrics: metrics,
 	}
 }
 
@@ -178,5 +182,36 @@ func (m *HTTPMiddleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc 
 		}
 
 		h.ServeHTTP(w, r)
+	})
+}
+
+func (m *HTTPMiddleware) SetDefaultMetrics(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		wrappedWriter := negroni.NewResponseWriter(w)
+
+		start := time.Now()
+		h.ServeHTTP(wrappedWriter, r)
+
+		statusCode := wrappedWriter.Status()
+
+		m.metrics.GetExecution().
+			WithLabelValues(strconv.Itoa(statusCode), r.URL.String(), r.Method).
+			Observe(time.Since(start).Seconds())
+
+		m.metrics.GetRequestCounter().Inc()
+
+		if statusCode < constparams.MaxSuccessResponse {
+			m.metrics.GetSuccessHits().WithLabelValues(
+				strconv.Itoa(statusCode),
+				r.URL.String(),
+				r.Method,
+			).Inc()
+		} else {
+			m.metrics.GetErrorsHits().WithLabelValues(
+				strconv.Itoa(statusCode),
+				r.URL.String(),
+				r.Method,
+			).Inc()
+		}
 	})
 }

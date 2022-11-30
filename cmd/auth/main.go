@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -43,8 +44,15 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.Metrics.BindHTTPAddr)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -67,12 +75,10 @@ func main() {
 
 	service := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
-	logrus.Info("starting auth server at " + config.ServerGRPCAuth.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCAuth.ServiceName + " starting server at " + config.ServerGRPCAuth.BindHTTPAddr)
 
 	err = service.StartGRPCServer(config.ServerGRPCAuth.BindHTTPAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service auth was stopped")
 }

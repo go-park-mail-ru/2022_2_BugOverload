@@ -81,6 +81,9 @@ const (
 	// csrf
 	CsrfSecretDefault = "J25qeHRobmpkc2NyZmN0cmh0biEhIQ=="
 	CsrfSecretLength  = 32
+
+	// Metrics codes
+	MaxSuccessResponse = 300
 )
 
 type ContextKeyType string
