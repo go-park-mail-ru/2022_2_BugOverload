@@ -36,13 +36,15 @@ image-service-launch:
 	go run ./cmd/image/main.go --config-path=./cmd/image/configs/debug.toml
 
 build:
-	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin
+	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin cmd/auth/auth_bin
 	go build cmd/api/main.go
 	mv main cmd/api/api_bin
 	go build cmd/image/main.go
 	mv main cmd/image/image_bin
 	go build cmd/warehouse/main.go
 	mv main cmd/warehouse/warehouse_bin
+	go build cmd/auth/main.go
+	mv main cmd/auth/auth_bin
 
 run-all-tests:
 	go test -race ${PKG} -cover -coverpkg ${PKG}
@@ -65,6 +67,7 @@ mocks-generate:
 proto-generate:
 	protoc --proto_path=${MICROSERVICE_DIR}/image/delivery/grpc/protobuf image.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/image/delivery/grpc/protobuf
 	protoc --proto_path=${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf warehouse.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/warehouse/delivery/grpc/protobuf
+	protoc --proto_path=${MICROSERVICE_DIR}/auth/delivery/grpc/protobuf auth.proto --go_out=plugins=grpc:${MICROSERVICE_DIR}/auth/delivery/grpc/protobuf
 
 # Example: make fill-S3 IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:
@@ -116,7 +119,7 @@ prod-deploy:
 	sleep 2
 	make reboot-db-debug
 	make infro-build
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse api
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse auth api
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
@@ -124,7 +127,7 @@ debug-deploy:
 	sleep 1
 	make reboot-db-debug
 	make infro-build
-	docker-compose up -d image warehouse api
+	docker-compose up -d image warehouse auth api
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
@@ -132,32 +135,35 @@ stop:
 	docker-compose down
 
 reboot-db-debug:
-	docker-compose run --rm dev make -C project reboot-db COUNT=3
+	docker-compose run --rm $(SERVICE_DEV) make -C project reboot-db COUNT=3
 
 infro-build:
-	docker-compose run --rm dev make -C project build
+	docker-compose run --rm $(SERVICE_DEV) make -C project build
 
 debug-restart:
 	docker-compose restart image
 	docker-compose restart warehouse
+	docker-compose restart auth
 	docker-compose restart api
 
 build-debug-restart:
 	make infro-build
-	docker-compose restart image
-	docker-compose restart warehouse
-	docker-compose restart api
+	make debug-restart
 
 prod-restart:
 	make prod-create-env
-	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart warehouse
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart auth
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api
+
+build-prod-restart:
+	make infro-build
+	make prod-restart
 
 # Example: make infro-command COMMAND=run-all-tests
 infro-command:
-	docker-compose exec $(SERVICE_DEV) make -C project ${COMMAND}
+	docker-compose  run --rm $(SERVICE_DEV) make -C project ${COMMAND}
 
 # Utils
 clear:

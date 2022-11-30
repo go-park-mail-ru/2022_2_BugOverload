@@ -36,6 +36,21 @@ func (m *MockCollectionService) EXPECT() *MockCollectionServiceMockRecorder {
 	return m.recorder
 }
 
+// GetCollectionAuthorized mocks base method.
+func (m *MockCollectionService) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionAuthorized", ctx, user, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionAuthorized indicates an expected call of GetCollectionAuthorized.
+func (mr *MockCollectionServiceMockRecorder) GetCollectionAuthorized(ctx, user, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionAuthorized", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionAuthorized), ctx, user, params)
+}
+
 // GetCollectionByGenre mocks base method.
 func (m *MockCollectionService) GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
@@ -66,21 +81,6 @@ func (mr *MockCollectionServiceMockRecorder) GetCollectionByTag(ctx, params inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByTag", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionByTag), ctx, params)
 }
 
-// GetCollectionAuthorized mocks base method.
-func (m *MockCollectionService) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCollectionAuthorized", ctx, user, params)
-	ret0, _ := ret[0].(models.Collection)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCollectionFilmsAuthorized indicates an expected call of GetCollectionFilmsAuthorized.
-func (mr *MockCollectionServiceMockRecorder) GetCollectionFilmsAuthorized(ctx, user, params interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionAuthorized", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionAuthorized), ctx, user, params)
-}
-
 // GetCollectionNotAuthorized mocks base method.
 func (m *MockCollectionService) GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
@@ -90,8 +90,8 @@ func (m *MockCollectionService) GetCollectionNotAuthorized(ctx context.Context, 
 	return ret0, ret1
 }
 
-// GetCollectionFilmsNotAuthorized indicates an expected call of GetCollectionFilmsNotAuthorized.
-func (mr *MockCollectionServiceMockRecorder) GetCollectionFilmsNotAuthorized(ctx, params interface{}) *gomock.Call {
+// GetCollectionNotAuthorized indicates an expected call of GetCollectionNotAuthorized.
+func (mr *MockCollectionServiceMockRecorder) GetCollectionNotAuthorized(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionNotAuthorized", reflect.TypeOf((*MockCollectionService)(nil).GetCollectionNotAuthorized), ctx, params)
 }

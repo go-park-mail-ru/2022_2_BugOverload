@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package auth;
+option go_package = ".;auth";
+
+message User {
+  uint32 ID = 1;
+  string Nickname = 2;
+  string Email = 3;
+  bytes Password = 4;
+  string Avatar = 5;
+}
+
+
+message Session {
+  string ID = 1;
+  User user = 2;
+}
+
+message GetAccessParams {
+  string UserPassword = 1;
+  User User = 2;
+}
+
+message UpdatePasswordParams {
+  string UserPassword = 1;
+  string NewUserPassword = 2;
+  User User = 3;
+}
+
+message Nothing {
+  bool dummy = 1;
+}
+
+service AuthService {
+  // Auth
+  rpc Auth(User) returns (User) {}
+  rpc Login(User) returns (User) {}
+  rpc Signup(User) returns (User) {}
+  rpc GetAccess(GetAccessParams) returns (Nothing) {}
+  rpc UpdatePassword(UpdatePasswordParams) returns (Nothing) {}
+
+  // Session
+  rpc GetUserBySession(Session) returns (User) {}
+  rpc CreateSession(User) returns (Session) {}
+  rpc DeleteSession(Session) returns (Session) {}
+}
+

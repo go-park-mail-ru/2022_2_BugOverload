@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"time"
@@ -17,15 +17,13 @@ import (
 
 // signupHandler is the structure that handles the request for auth.
 type signupHandler struct {
-	authService    sessionService.AuthService
-	sessionService sessionService.SessionService
+	authService client.AuthService
 }
 
 // NewSingUpHandler is constructor for signupHandler in this pkg - auth.
-func NewSingUpHandler(as sessionService.AuthService, ss sessionService.SessionService) handler.Handler {
+func NewSingUpHandler(as client.AuthService) handler.Handler {
 	return &signupHandler{
 		as,
-		ss,
 	}
 }
 
@@ -62,7 +60,7 @@ func (h *signupHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newSession, err := h.sessionService.CreateSession(r.Context(), &user)
+	newSession, err := h.authService.CreateSession(r.Context(), &user)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

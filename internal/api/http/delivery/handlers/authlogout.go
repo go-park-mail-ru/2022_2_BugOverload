@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"time"
@@ -16,15 +16,13 @@ import (
 
 // logoutHandler is the structure that handles the request for auth.
 type logoutHandler struct {
-	authService    sessionService.AuthService
-	sessionService sessionService.SessionService
+	authService client.AuthService
 }
 
 // NewLogoutHandler is constructor for logoutHandler in this pkg - auth.
-func NewLogoutHandler(as sessionService.AuthService, ss sessionService.SessionService) handler.Handler {
+func NewLogoutHandler(as client.AuthService) handler.Handler {
 	return &logoutHandler{
 		as,
-		ss,
 	}
 }
 
@@ -51,11 +49,11 @@ func (h *logoutHandler) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestSession := mainModels.Session{
+	requestSession := &mainModels.Session{
 		ID: cookie.Value,
 	}
 
-	badSession, err := h.sessionService.DeleteSession(r.Context(), requestSession)
+	badSession, err := h.authService.DeleteSession(r.Context(), requestSession)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 		return

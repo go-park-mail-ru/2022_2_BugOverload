@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
-	mockAuthService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service/mocks"
+	mockAuthClient "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
@@ -28,26 +28,9 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockAuthService.NewMockSessionService(ctrl)
+	authService := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
-
-	resAuth := modelsGlobal.User{
-		Nickname: "StepByyyy",
-		Email:    "YasaPupkinEzji@top.world",
-		Avatar:   "avatar",
-	}
-
-	authService.EXPECT().Auth(r.Context(), &modelsGlobal.User{
-		ID: 1,
-	}).Return(resAuth, nil)
-
-	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{
-		ID: "c9QuR4KQR4RkXi_rbATHWITwQGDG9r801tHIA_AHkDt2JNiVWU8Tjg==",
-	}).Return(modelsGlobal.User{
-		ID: 1,
-	}, nil)
 
 	cookie := &http.Cookie{
 		Name:     constparams.SessionCookieName,
@@ -57,12 +40,28 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 		HttpOnly: true,
 	}
 
+	resAuth := modelsGlobal.User{
+		Nickname: "StepByyyy",
+		Email:    "YasaPupkinEzji@top.world",
+		Avatar:   "avatar",
+	}
+
+	authService.EXPECT().GetUserBySession(r.Context(), &modelsGlobal.Session{
+		ID: cookie.Value,
+	}).Return(modelsGlobal.User{
+		ID: 1,
+	}, nil)
+
+	authService.EXPECT().Auth(r.Context(), &modelsGlobal.User{
+		ID: 1,
+	}).Return(resAuth, nil)
+
 	r.AddCookie(cookie)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService, sessService)
+	authHandler := NewAuthHandler(authService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
@@ -98,8 +97,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockAuthService.NewMockSessionService(ctrl)
+	authService := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -117,7 +115,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService, sessService)
+	authHandler := NewAuthHandler(authService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
@@ -148,8 +146,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockAuthService.NewMockSessionService(ctrl)
+	authService := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -175,7 +172,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService, sessService)
+	authHandler := NewAuthHandler(authService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r)
@@ -206,8 +203,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockAuthService.NewMockSessionService(ctrl)
+	authService := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -231,7 +227,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 
 	r.AddCookie(cookie)
 
-	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{}).Return(modelsGlobal.User{
+	authService.EXPECT().GetUserBySession(r.Context(), &modelsGlobal.Session{}).Return(modelsGlobal.User{
 		ID: 1,
 	}, nil)
 
@@ -242,7 +238,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService, sessService)
+	authHandler := NewAuthHandler(authService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r.WithContext(ctx))
@@ -273,8 +269,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthService.NewMockAuthService(ctrl)
-	sessService := mockAuthService.NewMockSessionService(ctrl)
+	authService := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -294,18 +289,19 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 		Expires:  time.Now().Add(constparams.TimeoutLiveCookie),
 		Path:     constparams.GlobalCookiePath,
 		HttpOnly: true,
+		Value:    "cryptorand",
 	}
 
 	r.AddCookie(cookie)
 
-	sessService.EXPECT().GetUserBySession(r.Context(), modelsGlobal.Session{}).Return(modelsGlobal.User{
+	authService.EXPECT().GetUserBySession(r.Context(), &modelsGlobal.Session{ID: cookie.Value}).Return(modelsGlobal.User{
 		ID: 1,
 	}, errors.ErrSessionNotFound)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService, sessService)
+	authHandler := NewAuthHandler(authService)
 	authHandler.Configure(router, nil)
 
 	authHandler.Action(w, r.WithContext(ctx))

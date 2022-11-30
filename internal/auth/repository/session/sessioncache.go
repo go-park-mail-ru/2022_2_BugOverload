@@ -13,9 +13,9 @@ import (
 // Repository provides the versatility of session-related repositories.
 // Needed to work with stateful session pattern.
 type Repository interface {
-	GetUserBySession(ctx context.Context, session models.Session) (models.User, error)
+	GetUserBySession(ctx context.Context, session *models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
-	DeleteSession(ctx context.Context, session models.Session) (models.Session, error)
+	DeleteSession(ctx context.Context, session *models.Session) (models.Session, error)
 }
 
 // sessionCache is implementation repository of sessions in memory corresponding to the Repository interface.
@@ -42,7 +42,7 @@ func (cs *sessionCache) CheckExist(sessionID string) bool {
 }
 
 // GetUserBySession is returns all user attributes by name session.
-func (cs *sessionCache) GetUserBySession(ctx context.Context, session models.Session) (models.User, error) {
+func (cs *sessionCache) GetUserBySession(ctx context.Context, session *models.Session) (models.User, error) {
 	if !cs.CheckExist(session.ID) {
 		return models.User{}, errors.ErrSessionNotFound
 	}
@@ -75,7 +75,7 @@ func (cs *sessionCache) CreateSession(ctx context.Context, user *models.User) (m
 // DeleteSession is takes the cookie by name, rolls back the time in it so that it becomes
 // irrelevant (it is necessary that the browser deletes the cookie on its side) returns
 // the cookie with the new date, and the repository deletes the cookie itself and the connection with the user.
-func (cs *sessionCache) DeleteSession(ctx context.Context, session models.Session) (models.Session, error) {
+func (cs *sessionCache) DeleteSession(ctx context.Context, session *models.Session) (models.Session, error) {
 	if !cs.CheckExist(session.ID) {
 		return models.Session{}, errors.ErrSessionNotFound
 	}

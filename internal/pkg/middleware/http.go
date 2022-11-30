@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"context"
-	sessionService "go-park-mail-ru/2022_2_BugOverload/internal/auth/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 	"strconv"
@@ -20,12 +20,12 @@ import (
 )
 
 type HTTPMiddleware struct {
-	log     *logrus.Logger
-	session sessionService.SessionService
-	cors    cors.Cors
+	log  *logrus.Logger
+	auth client.AuthService
+	cors cors.Cors
 }
 
-func NewHTTPMiddleware(log *logrus.Logger, session sessionService.SessionService, config *pkg.Cors) *HTTPMiddleware {
+func NewHTTPMiddleware(log *logrus.Logger, auth client.AuthService, config *pkg.Cors) *HTTPMiddleware {
 	cors := cors.New(cors.Options{
 		AllowedMethods:   config.Methods,
 		AllowedOrigins:   config.Origins,
@@ -35,9 +35,9 @@ func NewHTTPMiddleware(log *logrus.Logger, session sessionService.SessionService
 	})
 
 	return &HTTPMiddleware{
-		session: session,
-		log:     log,
-		cors:    *cors,
+		auth: auth,
+		log:  log,
+		cors: *cors,
 	}
 }
 
@@ -113,9 +113,9 @@ func (m *HTTPMiddleware) NeedAuthMiddleware(h http.HandlerFunc) http.HandlerFunc
 			return
 		}
 
-		currentSession := models.Session{ID: cookie.Value}
+		currentSession := &models.Session{ID: cookie.Value}
 
-		user, err := m.session.GetUserBySession(r.Context(), currentSession)
+		user, err := m.auth.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
@@ -136,9 +136,9 @@ func (m *HTTPMiddleware) TryAuthMiddleware(h http.HandlerFunc) http.HandlerFunc 
 			return
 		}
 
-		currentSession := models.Session{ID: cookie.Value}
+		currentSession := &models.Session{ID: cookie.Value}
 
-		user, err := m.session.GetUserBySession(r.Context(), currentSession)
+		user, err := m.auth.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
 			h.ServeHTTP(w, r)
 			return
@@ -161,9 +161,9 @@ func (m *HTTPMiddleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc 
 			return
 		}
 
-		currentSession := models.Session{ID: cookie.Value}
+		currentSession := &models.Session{ID: cookie.Value}
 
-		user, err := m.session.GetUserBySession(r.Context(), currentSession)
+		user, err := m.auth.GetUserBySession(r.Context(), currentSession)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
 			return
@@ -171,7 +171,7 @@ func (m *HTTPMiddleware) SetCsrfMiddleware(h http.HandlerFunc) http.HandlerFunc 
 
 		currentSession.User = &user
 
-		_, err = security.CheckCsrfToken(&currentSession, token)
+		_, err = security.CheckCsrfToken(currentSession, token)
 		if err != nil {
 			wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrCsrfTokenInvalid)
 			return

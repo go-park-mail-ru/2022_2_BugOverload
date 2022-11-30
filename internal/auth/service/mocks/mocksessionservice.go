@@ -51,7 +51,7 @@ func (mr *MockSessionServiceMockRecorder) CreateSession(ctx, user interface{}) *
 }
 
 // DeleteSession mocks base method.
-func (m *MockSessionService) DeleteSession(ctx context.Context, session models.Session) (models.Session, error) {
+func (m *MockSessionService) DeleteSession(ctx context.Context, session *models.Session) (models.Session, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteSession", ctx, session)
 	ret0, _ := ret[0].(models.Session)
@@ -66,7 +66,7 @@ func (mr *MockSessionServiceMockRecorder) DeleteSession(ctx, session interface{}
 }
 
 // GetUserBySession mocks base method.
-func (m *MockSessionService) GetUserBySession(ctx context.Context, session models.Session) (models.User, error) {
+func (m *MockSessionService) GetUserBySession(ctx context.Context, session *models.Session) (models.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserBySession", ctx, session)
 	ret0, _ := ret[0].(models.User)

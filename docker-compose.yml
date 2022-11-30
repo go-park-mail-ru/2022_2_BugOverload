@@ -44,7 +44,6 @@ services:
     depends_on:
       - image
       - warehouse
-    restart: unless-stopped
 
   image:
     container_name: "image"
@@ -96,13 +95,34 @@ services:
       - main_db
 
 
+  auth:
+    container_name: "auth"
+    networks:
+      - postgres-net
+    build: ./
+    command: sh -c "./app/auth_bin -config-path=./app/configs/debug.toml"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    volumes:
+      - ./logs/auth:/logs/auth
+      - ./cmd/auth:/app
+    ports:
+      - "8091:8091"
+    depends_on:
+      - main_db
+
+
   localstack:
     hostname: localstack
     networks:
       - localstack-net
     container_name: "localstack"
     image: localstack/localstack:latest
-    restart: unless-stopped
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -180,7 +200,6 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
-    restart: unless-stopped
 
 
   admin_db:
@@ -194,7 +213,6 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "5050:5050"
-    restart: unless-stopped
     depends_on:
       - main_db
 
@@ -215,7 +233,6 @@ services:
       - "9187:9187"
     depends_on:
       - main_db
-    restart: unless-stopped
 
 
 networks:

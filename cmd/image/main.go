@@ -64,7 +64,7 @@ func main() {
 
 	service := server.NewImageServiceGRPCServer(grpcServer, imageService)
 
-	logrus.Info("starting server at " + config.ServerGRPCImage.BindHTTPAddr)
+	logrus.Info("starting image server at " + config.ServerGRPCImage.BindHTTPAddr)
 
 	err = service.StartGRPCServer(config.ServerGRPCImage.BindHTTPAddr)
 	if err != nil {
