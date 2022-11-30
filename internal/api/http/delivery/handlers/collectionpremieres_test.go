@@ -62,14 +62,13 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
+	// Check code
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode ")
 
 	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
-
-	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode ")
 	require.Nil(t, err, "io.ReadAll must be success")
 
 	err = response.Body.Close()
