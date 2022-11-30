@@ -21,6 +21,7 @@ type Repository interface {
 	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
 
 	// GetUserCollections
+	CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	CheckCollectionIsPublic(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	GetCollection(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
 }
@@ -216,6 +217,35 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 	}
 
 	return response.Convert(), nil
+}
+
+// CheckUserIsAuthor returns true if user is author of collection, false otherwise
+func (c *collectionPostgres) CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error) {
+	var response bool
+
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		row := conn.QueryRowContext(ctx, checkUserIsCollectionAuthor, params.CollectionID, user.ID)
+		if row.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkUserIsCollectionAuthor, user.ID, params.CollectionID, row.Err())
+		}
+
+		err := row.Scan(&response)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				checkUserIsCollectionAuthor, user.ID, params.CollectionID, err)
+		}
+
+		return nil
+	})
+
+	if errMain != nil {
+		return false, errMain
+	}
+
+	return response, nil
 }
 
 // CheckCollectionIsPublic return true if collection has field is_public=true, false otherwise

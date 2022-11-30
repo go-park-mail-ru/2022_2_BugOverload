@@ -106,17 +106,27 @@ func (c *collectionService) GetPremieresCollection(ctx context.Context, params *
 func (c *collectionService) GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
 	var collection models.Collection
 
-	isPublic, err := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+	isAuthor, err := c.collectionRepo.CheckUserIsAuthor(ctx, user, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
 	}
-	if !isPublic {
-		return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetCollectionAuthorized")
+
+	if !isAuthor {
+		isPublic, err := c.collectionRepo.CheckCollectionIsPublic(ctx, params)
+		if err != nil {
+			return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
+		}
+		if !isPublic {
+			return models.Collection{}, stdErrors.Wrap(errors.ErrCollectionIsNotPublic, "GetCollectionAuthorized")
+		}
 	}
 
 	collection, err = c.collectionRepo.GetCollection(ctx, params)
 	if err != nil {
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
+	}
+	if !isAuthor {
+		collection.Author.ID = 0
 	}
 
 	return collection, nil
