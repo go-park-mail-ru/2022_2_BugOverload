@@ -27,28 +27,27 @@ func TestAuthSignUpHandler_Action_OK(t *testing.T) {
 
 	mcPostBody := map[string]string{
 		"nickname": "StepByyyy",
-		"email": "YasaPupkinEzji@top.world",
+		"email":    "YasaPupkinEzji@top.world",
 		"password": "Widget Adapter",
 	}
-    body, _ := json.Marshal(mcPostBody)
+	body, _ := json.Marshal(mcPostBody)
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/auth/login", bytes.NewReader(body))
 
 	r.Header.Set("Content-Type", "application/json")
 
-
 	resSignup := modelsGlobal.User{
-		Email: "YasaPupkinEzji@top.world",
+		Email:    "YasaPupkinEzji@top.world",
 		Nickname: "StepByyyy",
-		Avatar: "123",
+		Avatar:   "123",
 	}
 
 	resSession := modelsGlobal.Session{
-		ID: "1",
+		ID:   "1",
 		User: &resSignup,
 	}
 
 	authService.EXPECT().Signup(r.Context(), &modelsGlobal.User{
-		Email: "YasaPupkinEzji@top.world",
+		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 		Nickname: "StepByyyy",
 	}).Return(resSignup, nil)

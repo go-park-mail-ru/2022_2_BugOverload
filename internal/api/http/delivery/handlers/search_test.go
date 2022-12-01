@@ -31,14 +31,14 @@ func TestSearchHandlerPremiere_Action_OK(t *testing.T) {
 
 	res := modelsGlobal.Search{ //
 		Persons: []modelsGlobal.Person{{
-			ID: 1,
+			ID:           1,
 			Name:         "Шон Коннери",
 			OriginalName: "Sean Connery",
 			Professions:  []string{"актер", "продюсер", "режиссер"},
 			CountFilms:   218,
 			Birthday:     "1930.08.25",
 			Death:        "2020.10.31",
-			Avatar: "12",
+			Avatar:       "12",
 		}},
 
 		Serials: []modelsGlobal.Film{{
@@ -50,7 +50,7 @@ func TestSearchHandlerPremiere_Action_OK(t *testing.T) {
 			PosterVer:     "123",
 			ProdCountries: []string{"США"},
 			Genres:        []string{"фэнтези", "приключения"},
-			Directors: []modelsGlobal.FilmPerson{{ID: 1, Name: "qqq"}},
+			Directors:     []modelsGlobal.FilmPerson{{ID: 1, Name: "qqq"}},
 		}},
 
 		Films: []modelsGlobal.Film{{
@@ -62,7 +62,7 @@ func TestSearchHandlerPremiere_Action_OK(t *testing.T) {
 			PosterVer:     "123",
 			ProdCountries: []string{"США"},
 			Genres:        []string{"фэнтези", "приключения"},
-			Directors: []modelsGlobal.FilmPerson{{ID: 1, Name: "qqq"}},
+			Directors:     []modelsGlobal.FilmPerson{{ID: 1, Name: "qqq"}},
 		}},
 	}
 

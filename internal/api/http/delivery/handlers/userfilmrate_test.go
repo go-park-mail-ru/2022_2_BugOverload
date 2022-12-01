@@ -30,7 +30,7 @@ func TestUserFilmRateHandler_Action_OK(t *testing.T) {
 	mcPostBody := map[string]int{
 		"score": 6,
 	}
-    body, _ := json.Marshal(mcPostBody)
+	body, _ := json.Marshal(mcPostBody)
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate", bytes.NewReader(body))
 	vars := make(map[string]string)
 	vars["id"] = "1"
@@ -47,14 +47,13 @@ func TestUserFilmRateHandler_Action_OK(t *testing.T) {
 
 	resRate := modelsGlobal.Film{
 		CountRatings: 12,
-		Rating: 6,
+		Rating:       6,
 	}
 
 	rateService.EXPECT().FilmRate(r.Context(), &user, &constparams.FilmRateParams{
 		FilmID: 1,
 		Score:  6,
 	}).Return(resRate, nil)
-
 
 	w := httptest.NewRecorder()
 
