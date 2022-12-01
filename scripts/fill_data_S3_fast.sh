@@ -58,20 +58,24 @@ for file in $(find "$1" -type f -name "*"); do
     continue
   fi
 
-  if [[ "$file" == *"$PERSON_IMAGES"* ]]; then
-    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$PERSON_IMAGES}" &
-
-    continue
-  fi
-
   if [[ "$file" == *"$FILM_IMAGES"* ]]; then
     aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$FILM_IMAGES}" &
 
     continue
   fi
 
+
   if [[ "$file" == *"$COLLECTION_POSTERS"* ]]; then
     aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://collections/posters/ &
+
+    continue
+  fi
+done
+
+for file in $(find "$1" -type f -name "*"); do
+
+  if [[ "$file" == *"$PERSON_IMAGES"* ]]; then
+    aws --endpoint-url="$LOCALSTACK_S3_URL" s3 cp "$file" s3://persons/images/"${file##*$PERSON_IMAGES}"
 
     continue
   fi
