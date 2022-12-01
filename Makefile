@@ -4,7 +4,7 @@ all: check build run-tests
 
 LINTERS_CONFIG = ./configs/.golangci.yml
 
-PKG = ./...
+PKG = ./internal/... ./pkg/...
 
 SERVICE_DEV = dev
 
@@ -31,7 +31,7 @@ env:
 
 # Development -------------------------------------
 check:
-	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
+	${GOPATH}/bin/golangci-lint run ${PKG} --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
 image-service-launch:
