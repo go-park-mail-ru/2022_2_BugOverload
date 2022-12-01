@@ -215,7 +215,7 @@ func main() {
 
 	routerCORS := mw.SetCORSMiddleware(router)
 
-	logrus.Info(config.ServerHTTPApi.ServiceName + "starting server at " + config.ServerHTTPApi.BindAddr + " on protocol " + config.ServerHTTPApi.Protocol)
+	logrus.Info(config.ServerHTTPApi.ServiceName + " starting server at " + config.ServerHTTPApi.BindAddr + " on protocol " + config.ServerHTTPApi.Protocol)
 
 	// Server
 	server := configPKG.NewServerHTTP(logger)
