@@ -179,7 +179,7 @@ infro-command:
 
 # Utils
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin monitoring/grafana/data
+	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
 
 open-last-log:
 	./scripts/print_last_log.sh
