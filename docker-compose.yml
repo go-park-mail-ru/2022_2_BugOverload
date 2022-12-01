@@ -312,7 +312,7 @@ services:
     depends_on:
       - node_exporter
       - prometheus
-    user: "1000"
+    user: "104:107"
 
 
   alertmanager:
