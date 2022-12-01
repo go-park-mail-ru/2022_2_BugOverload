@@ -119,6 +119,7 @@ prod-create-env:
 
 # Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
+	make clear
 	make prod-create-env
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
@@ -129,6 +130,7 @@ prod-deploy:
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
+	make clear
 	docker-compose up -d main_db admin_db localstack
 	sleep 1
 	make reboot-db-full
