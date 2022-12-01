@@ -6,6 +6,8 @@ LINTERS_CONFIG = ./configs/.golangci.yml
 
 PKG = ./internal/... ./pkg/...
 
+PKG_INTERNAL = ./internal/...
+
 SERVICE_DEV = dev
 
 MICROSERVICE_DIR=$(PWD)/internal
@@ -49,13 +51,13 @@ build:
 	mv main cmd/auth/auth_bin
 
 run-all-tests:
-	go test -race ${PKG} -cover -coverpkg ${PKG}
+	go test -race ${PKG_INTERNAL} -cover -coverpkg ${PKG_INTERNAL}
 
 run-tests:
-	go test -race ${PKG} -cover -coverpkg $(PKG)
+	go test -race ${PKG_INTERNAL} -cover -coverpkg $(PKG_INTERNAL)
 
 get-stat-coverage:
-	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
+	go test -race -coverpkg=${PKG_INTERNAL} -coverprofile=c.out ${PKG_INTERNAL}
 	cat c.out | fgrep -v "easyjson" | fgrep -v "mock" | fgrep -v "dev" | fgrep -v "test.go" | fgrep -v "docs" |  fgrep -v "testing.go" | fgrep -v ".pb.go" | fgrep -v "config" > c2.out
 	go tool cover -func=c2.out
 	go tool cover -html c2.out -o coverage.html
