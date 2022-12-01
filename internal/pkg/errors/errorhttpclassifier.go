@@ -79,6 +79,7 @@ var (
 	ErrUserNotFound        = stdErrors.New("user not found")
 	ErrFilmsNotFound       = stdErrors.New("films not found")
 	ErrCollectionsNotFound = stdErrors.New("collections not found")
+	ErrCollectionNotFound  = stdErrors.New("such collection doesn't exist")
 )
 
 type ErrHTTPClassifier struct {
@@ -161,6 +162,7 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrImageNotFound.Error()] = http.StatusNotFound
 	res[ErrFilmsNotFound.Error()] = http.StatusNotFound
 	res[ErrCollectionsNotFound.Error()] = http.StatusNotFound
+	res[ErrCollectionNotFound.Error()] = http.StatusNotFound
 
 	return ErrHTTPClassifier{
 		table: res,

@@ -84,6 +84,7 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	res[ErrImageNotFound.Error()] = codes.NotFound
 	res[ErrFilmsNotFound.Error()] = codes.NotFound
 	res[ErrCollectionsNotFound.Error()] = codes.NotFound
+	res[ErrCollectionNotFound.Error()] = codes.NotFound
 
 	return ErrGRPCClassifier{
 		table: res,

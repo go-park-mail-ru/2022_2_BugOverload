@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -16,6 +15,7 @@ import (
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -44,7 +44,6 @@ func main() {
 		}
 	}(closeResource, logger)
 
-	// Metrics
 	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCAuth.ServiceName)
 	err = metrics.SetupMonitoring()
 	if err != nil {
@@ -65,7 +64,6 @@ func main() {
 	authService := serviceSession.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
-	// Metrics server
 	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
 
 	// Server

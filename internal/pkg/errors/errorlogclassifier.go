@@ -88,6 +88,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrImageNotFound.Error()] = errLogLevel
 	res[ErrFilmsNotFound.Error()] = errLogLevel
 	res[ErrCollectionsNotFound.Error()] = errLogLevel
+	res[ErrCollectionNotFound.Error()] = errLogLevel
 
 	return ErrLogClassifier{
 		table: res,
