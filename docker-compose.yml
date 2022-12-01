@@ -30,7 +30,8 @@ services:
       - postgres-net
       - monitoring-net
     build:
-      dockerfile: ./docker/microservice.Dockerfile
+      context: ./docker
+      dockerfile: microservice.Dockerfile
     command: sh -c "./app/api_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -58,7 +59,8 @@ services:
       - postgres-net
       - monitoring-net
     build:
-      dockerfile: ./docker/microservice.Dockerfile
+      context: ./docker
+      dockerfile: microservice.Dockerfile
     command: sh -c "./app/image_bin -config-path=./app/configs/debug.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -88,7 +90,8 @@ services:
       - postgres-net
       - monitoring-net
     build:
-      dockerfile: ./docker/microservice.Dockerfile
+      context: ./docker
+      dockerfile: microservice.Dockerfile
     command: sh -c "./app/warehouse_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -113,7 +116,8 @@ services:
       - postgres-net
       - monitoring-net
     build:
-      dockerfile: ./docker/microservice.Dockerfile
+      context: ./docker
+      dockerfile: microservice.Dockerfile
     command: sh -c "./app/auth_bin -config-path=./app/configs/debug.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
