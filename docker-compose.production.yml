@@ -6,6 +6,7 @@ services:
     networks:
       - localstack-net
       - postgres-net
+      - monitoring-net
     image: lonkidely/golang_web_light:latest
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -27,8 +28,10 @@ services:
     container_name: "api"
     networks:
       - postgres-net
-    build: ./
-    command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
+    command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -37,13 +40,15 @@ services:
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
     volumes:
-      - ./logs/api/prod:/logs/api/prod
+      - ./logs/api:/logs/api
       - ./cmd/api:/app
     ports:
       - "8088:8088"
+      - "9001:9001"
     depends_on:
       - image
       - warehouse
+      - auth
 
 
   image:
@@ -51,7 +56,9 @@ services:
     networks:
       - localstack-net
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/image_bin -config-path=./app/configs/prod.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
@@ -69,6 +76,7 @@ services:
       - ./cmd/image:/app
     ports:
       - "8089:8089"
+      - "9002:9002"
     depends_on:
       - localstack
       - main_db
@@ -78,7 +86,9 @@ services:
     container_name: "warehouse"
     networks:
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/warehouse_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -92,14 +102,18 @@ services:
       - ./cmd/warehouse:/app
     ports:
       - "8090:8090"
+      - "9003:9003"
     depends_on:
       - main_db
+
 
   auth:
     container_name: "auth"
     networks:
       - postgres-net
-    build: ./
+      - monitoring-net
+    build:
+      dockerfile: ./docker/microservice.Dockerfile
     command: sh -c "./app/auth_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -113,6 +127,7 @@ services:
       - ./cmd/auth:/app
     ports:
       - "8091:8091"
+      - "9004:9004"
     depends_on:
       - main_db
 
@@ -210,17 +225,40 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.admin"
       PGADMIN_DEFAULT_PASSWORD: "admin"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_SERVER_MODE: "True"
     ports:
-      - "5050:5050"
+      - "5050:80"
     depends_on:
       - main_db
+
+
+  prometheus:
+    container_name: "prometheus"
+    networks:
+      - monitoring-net
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    #      - '--web.external-url=${PROMETHEUS_URL}'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - monitor_db
+      - api
+      - warehouse
+      - image
+      - auth
 
 
   monitor_db:
     container_name: "monitor_db"
     networks:
       - postgres-net
+      - monitoring-net
     image: prometheuscommunity/postgres-exporter:latest
     environment:
       DATA_SOURCE_URI: "main_db:5432/${POSTGRES_DB}?sslmode=disable"
@@ -235,6 +273,64 @@ services:
       - main_db
 
 
+  node_exporter:
+    container_name: "node_exporter"
+    image: quay.io/prometheus/node-exporter:latest
+    networks:
+      - monitoring-net
+    user: root
+    privileged: true
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "9100:9100"
+
+
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana:latest
+    networks:
+      - monitoring-net
+    volumes:
+      - ./monitoring/grafana/data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      TZ: "Europe/Moscow"
+      GF_SECURITY_ADMIN_USER: '${GF_SECURITY_ADMIN_USER}'
+      GF_SECURITY_ADMIN_PASSWORD: '${GF_SECURITY_ADMIN_PASSWORD}'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource,vonage-status-panel'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - node_exporter
+      - prometheus
+    user: "104:107"
+
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: "alertmanager"
+    networks:
+      - monitoring-net
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    #      - '--web.external-url=http://localhost:9093'
+    environment:
+      TZ: "Europe/Moscow"
+    volumes:
+      - ./monitoring/alertmanager:/etc/alertmanager
+    ports:
+      - '9093:9093'
+
+
 networks:
   localstack-net:
     external: false
@@ -243,3 +339,6 @@ networks:
   postgres-net:
     driver: bridge
     name: postgres-net
+  monitoring-net:
+    driver: bridge
+    name: monitoring-net
