@@ -122,7 +122,7 @@ prod-deploy:
 	make reboot-db-full
 	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse auth api
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
+	# docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
@@ -132,7 +132,7 @@ debug-deploy:
 	make infro-build
 	docker-compose up -d image warehouse auth api
 	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
-	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+	# make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
 	docker-compose kill
