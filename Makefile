@@ -110,6 +110,7 @@ prod-mode:
 	go run ./cmd/api/main.go --config-path=./cmd/api/configs/prod.toml
 # Launch App System -------------------------------------
 
+
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-create-env:
