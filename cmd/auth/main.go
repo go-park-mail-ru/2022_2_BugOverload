@@ -24,7 +24,7 @@ func main() {
 	// Config
 	var configPath string
 
-	flag.StringVar(&configPath, "config-path", "cmd/image/configs/debug.toml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "cmd/auth/configs/debug.toml", "path to config file")
 
 	flag.Parse()
 
@@ -45,7 +45,7 @@ func main() {
 	}(closeResource, logger)
 
 	// Metrics
-	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCAuth.BindAddr)
+	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCAuth.ServiceName)
 	err = metrics.SetupMonitoring()
 	if err != nil {
 		logger.Fatal(err)

@@ -15,7 +15,7 @@ docs/swagger*
 logs/
 *.log
 
-data
+monitoring/grafana/data/*
 pgdata
 pgadmin
 
