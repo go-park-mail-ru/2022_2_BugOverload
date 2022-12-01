@@ -32,7 +32,7 @@ services:
     build:
       context: ./docker
       dockerfile: microservice.Dockerfile
-    command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
+    command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -61,7 +61,7 @@ services:
     build:
       context: ./docker
       dockerfile: microservice.Dockerfile
-    command: sh -c "./app/image_bin -config-path=./app/configs/prod.toml"
+    command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
     environment:
       AWS_PROFILE: "${AWS_PROFILE}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
