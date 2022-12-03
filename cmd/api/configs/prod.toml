@@ -15,7 +15,7 @@ timeout = 10 #seconds
 
 [logger]
 log_level = "debug"
-log_path = "logs/api/prod"
+log_path = "logs/api/prod/"
 
 [server_grpc_image]
 URL = "image:8089"
