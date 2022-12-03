@@ -20,6 +20,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate mockgen -source imageS3.go -destination mocks/mockimagerepository.go -package mockImageRepository
+
 // ImageRepository provides the versatility of images repositories.
 type ImageRepository interface {
 	GetImage(ctx context.Context, image *models.Image) (models.Image, error)

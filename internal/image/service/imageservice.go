@@ -9,6 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+//go:generate mockgen -source imageservice.go -destination mocks/mockimageservice.go -package mockImageService
+
 // ImageService provides universal service for work with images.
 type ImageService interface {
 	GetImage(ctx context.Context, image *models.Image) (models.Image, error)
