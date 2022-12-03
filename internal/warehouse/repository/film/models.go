@@ -206,7 +206,7 @@ func (f *ModelSQL) Convert() models.Film {
 }
 
 const (
-	getGenresFilmBatchBegin = `
+	GetGenresFilmBatchBegin = `
 SELECT f.film_id,
        g.name
 FROM genres g
@@ -214,7 +214,7 @@ FROM genres g
          JOIN films f ON fg.fk_film_id = f.film_id
 WHERE f.film_id IN (`
 
-	getGenresFilmBatchEnd = `) ORDER BY f.film_id, fg.weight DESC`
+	GetGenresFilmBatchEnd = `) ORDER BY f.film_id, fg.weight DESC`
 )
 
 func GetGenresBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
@@ -230,12 +230,12 @@ func GetGenresBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]M
 
 	setIDRes := strings.Join(setID, ",")
 
-	query := getGenresFilmBatchBegin + setIDRes + getGenresFilmBatchEnd
+	query := GetGenresFilmBatchBegin + setIDRes + GetGenresFilmBatchEnd
 
 	rowsFilmsGenres, err := conn.QueryContext(ctx, query)
 	if err != nil {
 		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Err: params input: query - [%s]. Special Error [%s]",
+			"GetGenresBatch: Err: params input: query - [%s]. Special Error [%s]",
 			query, err)
 	}
 	defer rowsFilmsGenres.Close()
@@ -247,7 +247,7 @@ func GetGenresBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]M
 		err = rowsFilmsGenres.Scan(&filmID, &genre)
 		if err != nil {
 			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				"GetGenresBatch: Err: Scan: params input: query - [%s]. Special Error [%s]",
 				query, err)
 		}
 
@@ -420,7 +420,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 
 	for idx := range res {
 		if res[idx].Type.String == constparams.DefTypeSerial {
-			rowSerial := conn.QueryRowContext(ctx, getShortSerialByID, res[idx].ID)
+			rowSerial := conn.QueryRowContext(ctx, GetShortSerialByID, res[idx].ID)
 			if rowSerial.Err() != nil {
 				return []ModelSQL{}, rowSerial.Err()
 			}

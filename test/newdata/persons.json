@@ -5,7 +5,7 @@
     "original_name": "Tilda Swinton",
     "birthday": "1960.11.05",
     "gender": "female",
-    "growth": 1.79,
+    "growth_meters": 1.79,
     "genres": [
       "драма",
       "комедия",
@@ -31,7 +31,7 @@
     "birthday": "1930.08.25",
     "gender": "male",
     "death": "2020.10.31",
-    "growth": 1.9,
+    "growth_meters": 1.9,
     "genres": [
       "драма",
       "боевик",
@@ -56,7 +56,7 @@
     "original_name": "Uma Thurman",
     "birthday": "1970.04.29",
     "gender": "female",
-    "growth": 1.81,
+    "growth_meters": 1.81,
     "genres": [
       "драма",
       "комедия",
@@ -82,7 +82,7 @@
     "original_name": "Peter Dinklage",
     "birthday": "1969.06.11",
     "gender": "male",
-    "growth": 1.31,
+    "growth_meters": 1.31,
     "genres": [
       "комедия",
       "драма",
@@ -105,7 +105,7 @@
     "original_name": "Anthony Hopkins",
     "birthday": "1937.12.31",
     "gender": "male",
-    "growth": 1.75,
+    "growth_meters": 1.75,
     "genres": [
       "драма",
       "триллер",
@@ -133,7 +133,7 @@
     "original_name": "Al Pacino",
     "birthday": "1940.04.25",
     "gender": "male",
-    "growth": 1.68,
+    "growth_meters": 1.68,
     "genres": [
       "драма",
       "криминал",
@@ -160,7 +160,7 @@
     "original_name": "Christian Bale",
     "birthday": "1974.01.30",
     "gender": "male",
-    "growth": 1.83,
+    "growth_meters": 1.83,
     "genres": [
       "драма",
       "боевик",
@@ -189,7 +189,7 @@
     "original_name": "Brad Pitt",
     "birthday": "1963.12.18",
     "gender": "male",
-    "growth": 1.8,
+    "growth_meters": 1.8,
     "genres": [
       "драма",
       "комедия",
@@ -217,7 +217,7 @@
     "original_name": "Tom Holland",
     "birthday": "1996.06.01",
     "gender": "male",
-    "growth": 1.68,
+    "growth_meters": 1.68,
     "genres": [
       "боевик",
       "приключения",
@@ -243,7 +243,7 @@
     "original_name": "Ryan Reynolds",
     "birthday": "1976.11.23",
     "gender": "male",
-    "growth": 1.88,
+    "growth_meters": 1.88,
     "genres": [
       "комедия",
       "короткометражка",
@@ -268,7 +268,7 @@
     "original_name": "Jason Statham",
     "birthday": "1967.07.26",
     "gender": "male",
-    "growth": 1.78,
+    "growth_meters": 1.78,
     "genres": [
       "боевик",
       "криминал",
@@ -292,7 +292,7 @@
     "original_name": "Vin Diesel",
     "birthday": "1967.07.18",
     "gender": "male",
-    "growth": 1.8,
+    "growth_meters": 1.8,
     "genres": [
       "боевик",
       "приключения",
@@ -318,7 +318,7 @@
     "original_name": "Scarlett Johansson",
     "birthday": "1984.11.22",
     "gender": "female",
-    "growth": 1.6,
+    "growth_meters": 1.6,
     "genres": [
       "драма",
       "комедия",
@@ -345,7 +345,7 @@
     "original_name": "Edward Norton",
     "birthday": "1969.08.18",
     "gender": "male",
-    "growth": 1.83,
+    "growth_meters": 1.83,
     "genres": [
       "драма",
       "комедия",
@@ -373,7 +373,7 @@
     "original_name": "Cillian Murphy",
     "birthday": "1976.05.25",
     "gender": "male",
-    "growth": 1.72,
+    "growth_meters": 1.72,
     "genres": [
       "драма",
       "короткометражка",
@@ -398,7 +398,7 @@
     "original_name": "Natalie Portman",
     "birthday": "1981.06.09",
     "gender": "female",
-    "growth": 1.6,
+    "growth_meters": 1.6,
     "genres": [
       "драма",
       "комедия",
@@ -424,7 +424,7 @@
     "original_name": "Daniel Radcliffe",
     "birthday": "1989.07.23",
     "gender": "male",
-    "growth": 1.65,
+    "growth_meters": 1.65,
     "genres": [
       "комедия",
       "драма",
@@ -448,7 +448,7 @@
     "original_name": "Emma Watson",
     "birthday": "1990.04.15",
     "gender": "female",
-    "growth": 1.65,
+    "growth_meters": 1.65,
     "genres": [
       "фэнтези",
       "приключения"
@@ -471,7 +471,7 @@
     "original_name": "Alan Rickman",
     "birthday": "1946.02.21",
     "gender": "male",
-    "growth": 1.85,
+    "growth_meters": 1.85,
     "genres": [
       "драма",
       "комедия",
@@ -498,7 +498,7 @@
     "original_name": "Vinnie Jones",
     "birthday": "1965.01.05",
     "gender": "male",
-    "growth": 1.85,
+    "growth_meters": 1.85,
     "genres": [
       "боевик",
       "триллер",
@@ -521,7 +521,7 @@
     "original_name": "Mark Ruffalo",
     "birthday": "1967.11.22",
     "gender": "male",
-    "growth": 1.73,
+    "growth_meters": 1.73,
     "genres": [
       "драма",
       "комедия",
@@ -548,7 +548,7 @@
     "original_name": "Ben Kingsley",
     "birthday": "1943.12.31",
     "gender": "male",
-    "growth": 1.72,
+    "growth_meters": 1.72,
     "genres": [
       "драма",
       "триллер",
@@ -571,7 +571,7 @@
     "original_name": "Johnny Depp",
     "birthday": "1963.06.09",
     "gender": "male",
-    "growth": 1.78,
+    "growth_meters": 1.78,
     "genres": [
       "драма",
       "комедия"
@@ -597,7 +597,7 @@
     "original_name": "Keira Knightley",
     "birthday": "1985.03.26",
     "gender": "female",
-    "growth": 1.7,
+    "growth_meters": 1.7,
     "genres": [
       "драма",
       "мелодрама",
@@ -622,7 +622,7 @@
     "original_name": "Leonardo DiCaprio",
     "birthday": "1974.11.11",
     "gender": "male",
-    "growth": 1.83,
+    "growth_meters": 1.83,
     "genres": [
       "драма",
       "документальный",
@@ -648,7 +648,7 @@
     "original_name": "Joseph Gordon-Levitt",
     "birthday": "1981.02.17",
     "gender": "male",
-    "growth": 1.76,
+    "growth_meters": 1.76,
     "genres": [
       "драма",
       "комедия",
@@ -676,7 +676,7 @@
     "original_name": "Matthew McConaughey",
     "birthday": "1969.11.04",
     "gender": "male",
-    "growth": 1.82,
+    "growth_meters": 1.82,
     "genres": [
       "комедия",
       "драма",
@@ -703,7 +703,7 @@
     "original_name": "Anne Hathaway",
     "birthday": "1982.11.12",
     "gender": "female",
-    "growth": 1.73,
+    "growth_meters": 1.73,
     "genres": [
       "драма",
       "комедия",
@@ -727,7 +727,7 @@
     "original_name": "Michael Caine",
     "birthday": "1933.03.14",
     "gender": "male",
-    "growth": 1.88,
+    "growth_meters": 1.88,
     "genres": [
       "драма",
       "триллер",
@@ -751,7 +751,7 @@
     "original_name": "Gary Oldman",
     "birthday": "1958.03.21",
     "gender": "male",
-    "growth": 1.74,
+    "growth_meters": 1.74,
     "genres": [
       "драма",
       "триллер",
@@ -776,7 +776,7 @@
     "original_name": "Joaquin Phoenix",
     "birthday": "1974.10.28",
     "gender": "male",
-    "growth": 1.73,
+    "growth_meters": 1.73,
     "genres": [
       "драма",
       "криминал",
@@ -802,7 +802,7 @@
     "original_name": "Viggo Mortensen",
     "birthday": "1958.10.20",
     "gender": "male",
-    "growth": 1.8,
+    "growth_meters": 1.8,
     "genres": [
       "драма",
       "триллер",
@@ -829,7 +829,7 @@
     "original_name": "Orlando Bloom",
     "birthday": "1977.01.13",
     "gender": "male",
-    "growth": 1.8,
+    "growth_meters": 1.8,
     "genres": [
       "драма",
       "боевик",
@@ -854,7 +854,7 @@
     "original_name": "Hugo Weaving",
     "birthday": "1960.04.04",
     "gender": "male",
-    "growth": 1.9,
+    "growth_meters": 1.9,
     "genres": [
       "драма",
       "комедия"
@@ -875,7 +875,7 @@
     "original_name": "Morgan Freeman",
     "birthday": "1937.06.01",
     "gender": "male",
-    "growth": 1.88,
+    "growth_meters": 1.88,
     "genres": [
       "драма",
       "триллер",
@@ -901,7 +901,7 @@
     "original_name": "Liam Neeson",
     "birthday": "1952.06.07",
     "gender": "male",
-    "growth": 1.92,
+    "growth_meters": 1.92,
     "genres": [
       "драма",
       "триллер",

@@ -37,7 +37,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 		OriginalName: "Sean Connery",
 		Professions:  []string{"актер", "продюсер", "режиссер"},
 		Images:       []string{"1", "2"},
-		Growth:       1.9,
+		GrowthMeters: 1.9,
 		Genres:       []string{"драма", "боевик", "триллер"},
 		Gender:       "male",
 		CountFilms:   218,

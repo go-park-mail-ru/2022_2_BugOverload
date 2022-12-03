@@ -87,7 +87,7 @@ type PersonResponse struct {
 	OriginalName string                 `json:"original_name,omitempty" example:"Sean Connery"`
 	Birthday     string                 `json:"birthday,omitempty" example:"1930.08.25"`
 	Death        string                 `json:"death,omitempty" example:"2020.10.31"`
-	Growth       float32                `json:"growth,omitempty" example:"1.9"`
+	GrowthMeters float32                `json:"growth_meters,omitempty" example:"1.9"`
 	Gender       string                 `json:"gender,omitempty" example:"male"`
 	Avatar       string                 `json:"avatar,omitempty" example:"4526"`
 	CountFilms   int                    `json:"count_films,omitempty" example:"218"`
@@ -104,7 +104,7 @@ func NewPersonResponse(person *models.Person) *PersonResponse {
 		Birthday:     person.Birthday,
 		OriginalName: person.OriginalName,
 		Death:        person.Death,
-		Growth:       person.Growth,
+		GrowthMeters: person.GrowthMeters,
 		Gender:       person.Gender,
 		CountFilms:   person.CountFilms,
 		Professions:  person.Professions,

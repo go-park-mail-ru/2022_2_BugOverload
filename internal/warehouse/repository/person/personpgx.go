@@ -34,7 +34,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 
 	// Person - Main
 	errMain := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowPerson := conn.QueryRowContext(ctx, getPersonByID, person.ID)
+		rowPerson := conn.QueryRowContext(ctx, GetPersonByID, person.ID)
 		if rowPerson.Err() != nil {
 			return rowPerson.Err()
 		}
@@ -42,7 +42,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 		err := rowPerson.Scan(
 			&response.Name,
 			&response.Birthday,
-			&response.Growth,
+			&response.GrowthMeters,
 			&response.OriginalName,
 			&response.Avatar,
 			&response.Death,
@@ -60,14 +60,14 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	})
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.Person{}, stdErrors.WithMessagef(errors.ErrPersonNotFound,
-			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPersonByID, person.ID, errMain)
+			"Person main info: Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			GetPersonByID, person.ID, errMain)
 	}
 
 	if errMain != nil {
 		return models.Person{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
-			"Person main info Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-			getPersonByID, person.ID, errMain)
+			"Person main info: Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+			GetPersonByID, person.ID, errMain)
 	}
 
 	// Parts
@@ -75,11 +75,11 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	errQuery := sqltools.RunQuery(ctx, p.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		var err error
 
-		response.BestFilms, err = film.GetShortFilmsBatch(ctx, conn, getPersonBestFilms, person.ID, params.CountFilms)
+		response.BestFilms, err = film.GetShortFilmsBatch(ctx, conn, GetPersonBestFilms, person.ID, params.CountFilms)
 		if err != nil && !stdErrors.Is(err, sql.ErrNoRows) {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
-				getPersonBestFilms, person.ID, params.CountFilms, err)
+				"Films: Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
+				GetPersonBestFilms, person.ID, params.CountFilms, err)
 		}
 
 		response.BestFilms, err = film.GetGenresBatch(ctx, response.BestFilms, conn)
@@ -94,21 +94,21 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 	}
 
 	//  Images
-	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonImages, person.ID, params.CountImages)
+	response.Images, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, GetPersonImages, person.ID, params.CountImages)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, stdErrors.Wrap(errQuery, "Images").Error())
 	}
 
 	// Professions
-	response.Professions, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonProfessions, person.ID)
+	response.Professions, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, GetPersonProfessions, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, stdErrors.Wrap(errQuery, "Professions").Error())
 	}
 
 	// Genres
-	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, getPersonGenres, person.ID)
+	response.Genres, errQuery = sqltools.GetSimpleAttrOnConn(ctx, p.database.Connection, GetPersonGenres, person.ID)
 	if errQuery != nil && !stdErrors.Is(errQuery, sql.ErrNoRows) {
-		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, errQuery.Error())
+		return models.Person{}, stdErrors.WithMessage(errors.ErrWorkDatabase, stdErrors.Wrap(errQuery, "Genres").Error())
 	}
 
 	return response.Convert(), nil

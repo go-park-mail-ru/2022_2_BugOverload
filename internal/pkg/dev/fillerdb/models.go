@@ -23,7 +23,7 @@ type PersonFiller struct {
 	Birthday     string   `json:"birthday,omitempty"`
 	Avatar       string   `json:"avatar,omitempty"`
 	Death        string   `json:"death,omitempty"`
-	Growth       float32  `json:"growth,omitempty"`
+	GrowthMeters float32  `json:"growth_meters,omitempty"`
 	Gender       string   `json:"gender,omitempty"`
 	Professions  []string `json:"professions,omitempty"`
 	Genres       []string `json:"genres,omitempty"`
@@ -170,7 +170,7 @@ func NewPersonSQLFillerOnPerson(person PersonFiller) PersonSQLFiller {
 		ID:       person.ID,
 		Name:     person.Name,
 		Birthday: birthday,
-		Growth:   person.Growth,
+		Growth:   person.GrowthMeters,
 
 		Avatar:       sqltools.NewSQLNullString(person.Avatar),
 		OriginalName: sqltools.NewSQLNullString(person.OriginalName),

@@ -245,18 +245,18 @@ func (f *filmPostgres) GetRecommendation(ctx context.Context) (models.Film, erro
 			return nil
 		}
 
-		rowSerial := conn.QueryRowContext(ctx, getShortSerialByID, response.ID)
+		rowSerial := conn.QueryRowContext(ctx, GetShortSerialByID, response.ID)
 		if rowSerial.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getShortSerialByID, response.ID, rowSerial.Err())
+				GetShortSerialByID, response.ID, rowSerial.Err())
 		}
 
 		err = rowSerial.Scan(&response.EndYear)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 				"Err Scan: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getShortSerialByID, response.ID, rowSerial.Err())
+				GetShortSerialByID, response.ID, rowSerial.Err())
 		}
 
 		return nil

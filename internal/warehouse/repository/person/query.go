@@ -1,7 +1,7 @@
 package person
 
 const (
-	getPersonByID = `SELECT 
+	GetPersonByID = `SELECT 
     name, 
     birthday, 
     growth_meters, 
@@ -13,7 +13,7 @@ const (
 	FROM persons
 	WHERE person_id = $1`
 
-	getPersonBestFilms = `SELECT 
+	GetPersonBestFilms = `SELECT 
     	f.film_id, 
     	f.name, 
     	f.original_name, 
@@ -28,16 +28,16 @@ const (
 		GROUP BY f.film_id
 		LIMIT $2`
 
-	getPersonImages = `SELECT image_key  FROM person_images WHERE person_id = $1 ORDER BY weight DESC LIMIT $2`
+	GetPersonImages = `SELECT image_key FROM person_images WHERE person_id = $1 ORDER BY weight DESC LIMIT $2`
 
-	getPersonProfessions = `
+	GetPersonProfessions = `
 SELECT p.name
 FROM professions p
          JOIN person_professions pp on p.profession_id = pp.fk_profession_id
 WHERE pp.fk_person_id = $1
 ORDER BY pp.weight DESC`
 
-	getPersonGenres = `
+	GetPersonGenres = `
 SELECT g.name
 FROM genres g
          JOIN person_genres pg on g.genre_id = pg.fk_genre_id
