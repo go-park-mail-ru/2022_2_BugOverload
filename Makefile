@@ -4,7 +4,9 @@ all: check build run-tests
 
 LINTERS_CONFIG = ./configs/.golangci.yml
 
-PKG = ./...
+PKG = ./internal/... ./pkg/...
+
+PKG_INTERNAL = ./internal/...
 
 SERVICE_DEV = dev
 
@@ -25,11 +27,13 @@ env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo &&
 	export AWS_SECRET_ACCESS_KEY=bar && export POSTGRES_HOST=main_db &&
 	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
-	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost
+	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost &&
+	export GF_SECURITY_ADMIN_USER=mguser && export GF_SECURITY_ADMIN_PASSWORD=mgpass &&
+	export GRAFANA_URL=grafana && export PROMETHEUS_URL=http://localhost:9999/prometheus/ && export TARGET_MONITOR=etwcwvloiuygotvk
 
 # Development -------------------------------------
 check:
-	${GOPATH}/bin/golangci-lint run --config=${LINTERS_CONFIG}
+	${GOPATH}/bin/golangci-lint run ${PKG} --config=${LINTERS_CONFIG}
 	go fmt ${PKG}
 
 image-service-launch:
@@ -47,13 +51,13 @@ build:
 	mv main cmd/auth/auth_bin
 
 run-all-tests:
-	go test -race ${PKG} -cover -coverpkg ${PKG}
+	go test -race ${PKG_INTERNAL} -cover -coverpkg ${PKG_INTERNAL}
 
 run-tests:
-	go test -race ${PKG} -cover -coverpkg $(PKG)
+	go test -race ${PKG_INTERNAL} -cover -coverpkg $(PKG_INTERNAL)
 
 get-stat-coverage:
-	go test -race -coverpkg=${PKG} -coverprofile=c.out ${PKG}
+	go test -race -coverpkg=${PKG_INTERNAL} -coverprofile=c.out ${PKG_INTERNAL}
 	cat c.out | fgrep -v "easyjson" | fgrep -v "mock" | fgrep -v "dev" | fgrep -v "test.go" | fgrep -v "docs" |  fgrep -v "testing.go" | fgrep -v ".pb.go" | fgrep -v "config" > c2.out
 	go tool cover -func=c2.out
 	go tool cover -html c2.out -o coverage.html
@@ -106,6 +110,7 @@ prod-mode:
 	go run ./cmd/api/main.go --config-path=./cmd/api/configs/prod.toml
 # Launch App System -------------------------------------
 
+
 # infrastructure
 # Example: make prod-deploy IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 prod-create-env:
@@ -114,20 +119,24 @@ prod-create-env:
 
 # Example: make prod-deploy IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 prod-deploy:
+	make clear
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db monitor_db localstack
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
-	make reboot-db-debug
+	make reboot-db-full
 	make infro-build
 	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d image warehouse auth api
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
 
 debug-deploy:
-	docker-compose up -d main_db admin_db monitor_db localstack
+	make clear
+	docker-compose up -d main_db admin_db localstack
 	sleep 1
-	make reboot-db-debug
+	make reboot-db-full
 	make infro-build
 	docker-compose up -d image warehouse auth api
+	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 stop:
@@ -136,6 +145,9 @@ stop:
 
 reboot-db-debug:
 	docker-compose run --rm $(SERVICE_DEV) make -C project reboot-db COUNT=3
+
+reboot-db-full:
+	docker-compose run --rm $(SERVICE_DEV) make -C project reboot-db
 
 infro-build:
 	docker-compose run --rm $(SERVICE_DEV) make -C project build

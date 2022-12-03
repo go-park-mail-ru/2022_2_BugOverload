@@ -4,6 +4,7 @@ import (
 	"flag"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 	"time"
 
@@ -42,8 +43,15 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCImage.ServiceName)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -54,9 +62,12 @@ func main() {
 	// Image service
 	imageService := serviceImage.NewImageService(is)
 
+	// Metrics server
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Server
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(md.LoggerInterceptor),
+		grpc.ChainUnaryInterceptor(md.LoggerInterceptor, md.MetricsInterceptor),
 		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
 		grpc.MaxSendMsgSize(constparams.BufSizeRequest),
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCImage.ConnectionTimeout)*time.Second),
@@ -64,12 +75,10 @@ func main() {
 
 	service := server.NewImageServiceGRPCServer(grpcServer, imageService)
 
-	logrus.Info("starting image server at " + config.ServerGRPCImage.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCImage.ServiceName + " starting server at " + config.ServerGRPCImage.BindAddr)
 
-	err = service.StartGRPCServer(config.ServerGRPCImage.BindHTTPAddr)
+	err = service.StartGRPCServer(config.ServerGRPCImage.BindAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service image was stopped")
 }

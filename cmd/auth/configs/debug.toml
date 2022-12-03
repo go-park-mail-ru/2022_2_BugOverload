@@ -1,6 +1,10 @@
 [server_grpc_auth]
+service_name = "auth"
 bind_addr_http = ":8091"
 connection_timeout = 10 #seconds
+
+[metrics]
+bind_addr_http = ":9004"
 
 [logger]
 log_level = "debug"

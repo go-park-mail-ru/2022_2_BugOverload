@@ -10,12 +10,14 @@ cover2
 docs/docs.go
 docs/swagger*
 
+data
+
 #*mock*
 
 logs/
 *.log
 
-data
+monitoring/grafana/data/*
 pgdata
 pgadmin
 

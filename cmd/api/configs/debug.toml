@@ -1,8 +1,12 @@
 [server_http_api]
+service_name = "api"
 bind_addr_http = ":8088"
 read_timeout = 8 #seconds
 write_timeout = 8 #seconds
 protocol = "http"
+
+[metrics]
+bind_addr_http = ":9001"
 
 [context]
 timeout = 8 #seconds

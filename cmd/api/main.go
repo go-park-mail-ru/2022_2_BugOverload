@@ -16,6 +16,7 @@ import (
 	clientImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	repoUser "go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 	serviceUser "go-park-mail-ru/2022_2_BugOverload/internal/user/service"
@@ -25,7 +26,7 @@ import (
 
 // @title MovieGate
 // @version 1.0
-// @description ServerHTTP for MovieGate application.
+// @description ServerHTTPApi for MovieGate application.
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
@@ -89,14 +90,21 @@ func main() {
 	}
 	defer grpcConnAuth.Close()
 
-	// Router
-	router := mux.NewRouter()
-
 	// Auth
 	authService := clientAuth.NewAuthServiceGRPSClient(grpcConnAuth)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.ServerHTTPApi.ServiceName)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	mw := middleware.NewHTTPMiddleware(logger, authService, &config.Cors)
+	mw := middleware.NewHTTPMiddleware(logger, authService, &config.Cors, metrics)
+
+	// Router
+	router := mux.NewRouter()
 
 	// Auth delivery
 	authHandler := handlers.NewAuthHandler(authService)
@@ -193,17 +201,21 @@ func main() {
 
 	http.Handle("/", router)
 
+	// Metrics server
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Set middleware
 	router.Use(
 		mw.SetDefaultLoggerMiddleware,
 		mw.UpdateDefaultLoggerMiddleware,
 		mw.SetSizeRequest,
+		mw.SetDefaultMetrics,
 		gziphandler.GzipHandler,
 	)
 
 	routerCORS := mw.SetCORSMiddleware(router)
 
-	logrus.Info("starting api server at " + config.ServerHTTP.BindHTTPAddr + " on protocol " + config.ServerHTTP.Protocol)
+	logrus.Info(config.ServerHTTPApi.ServiceName + " starting server at " + config.ServerHTTPApi.BindAddr + " on protocol " + config.ServerHTTPApi.Protocol)
 
 	// Server
 	server := configPKG.NewServerHTTP(logger)
@@ -212,6 +224,4 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("Server - api was stopped")
 }

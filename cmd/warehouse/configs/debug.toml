@@ -1,6 +1,10 @@
 [server_grpc_warehouse]
+service_name = "warehouse"
 bind_addr_http = ":8090"
 connection_timeout = 10 #seconds
+
+[metrics]
+bind_addr_http = ":9003"
 
 [logger]
 log_level = "debug"

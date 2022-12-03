@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -45,8 +46,15 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	// Metrics
+	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCWarehouse.ServiceName)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -71,12 +79,16 @@ func main() {
 
 	// Search repository
 	sr := repoSearch.NewSearchPostgres(postgres)
+
 	// Search service
 	searchService := serviceWarehouse.NewSearchService(sr)
 
+	// Metrics server
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Server
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(md.LoggerInterceptor),
+		grpc.ChainUnaryInterceptor(md.LoggerInterceptor, md.MetricsInterceptor),
 		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
 		grpc.MaxSendMsgSize(constparams.BufSizeRequest),
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCWarehouse.ConnectionTimeout)*time.Second),
@@ -84,12 +96,10 @@ func main() {
 
 	service := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
-	logrus.Info("starting warehouse server at " + config.ServerGRPCWarehouse.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCWarehouse.ServiceName + " starting server at " + config.ServerGRPCWarehouse.BindAddr)
 
-	err = service.StartGRPCServer(config.ServerGRPCWarehouse.BindHTTPAddr)
+	err = service.StartGRPCServer(config.ServerGRPCWarehouse.BindAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service warehouse was stopped")
 }

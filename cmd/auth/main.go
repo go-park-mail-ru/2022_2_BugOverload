@@ -15,6 +15,7 @@ import (
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
@@ -23,7 +24,7 @@ func main() {
 	// Config
 	var configPath string
 
-	flag.StringVar(&configPath, "config-path", "cmd/image/configs/debug.toml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "cmd/auth/configs/debug.toml", "path to config file")
 
 	flag.Parse()
 
@@ -43,8 +44,14 @@ func main() {
 		}
 	}(closeResource, logger)
 
+	metrics := monitoring.NewPrometheusMetrics(config.ServerGRPCAuth.ServiceName)
+	err = metrics.SetupMonitoring()
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Middleware
-	md := middleware.NewGRPCMiddleware(logger)
+	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
 	postgres := sqltools.NewPostgresRepository()
@@ -57,9 +64,11 @@ func main() {
 	authService := serviceSession.NewAuthService(authStorage)
 	sessionService := serviceSession.NewSessionService(sessionStorage)
 
+	go monitoring.CreateNewMonitoringServer(config.Metrics.BindHTTPAddr)
+
 	// Server
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(md.LoggerInterceptor),
+		grpc.ChainUnaryInterceptor(md.LoggerInterceptor, md.MetricsInterceptor),
 		grpc.MaxRecvMsgSize(constparams.BufSizeRequest),
 		grpc.MaxSendMsgSize(constparams.BufSizeRequest),
 		grpc.ConnectionTimeout(time.Duration(config.ServerGRPCAuth.ConnectionTimeout)*time.Second),
@@ -67,12 +76,10 @@ func main() {
 
 	service := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
-	logrus.Info("starting auth server at " + config.ServerGRPCAuth.BindHTTPAddr)
+	logrus.Info(config.ServerGRPCAuth.ServiceName + " starting server at " + config.ServerGRPCAuth.BindAddr)
 
-	err = service.StartGRPCServer(config.ServerGRPCAuth.BindHTTPAddr)
+	err = service.StartGRPCServer(config.ServerGRPCAuth.BindAddr)
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	logrus.Info("ServerGRPS - service auth was stopped")
 }
