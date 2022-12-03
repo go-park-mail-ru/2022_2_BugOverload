@@ -36,7 +36,7 @@ func TestImageServiceServer_GetImage_OK(t *testing.T) {
 		Object: "collection_poster",
 	}
 
-	returnService := models.Image{
+	outputService := models.Image{
 		Bytes: []byte("some image"),
 	}
 
@@ -53,7 +53,7 @@ func TestImageServiceServer_GetImage_OK(t *testing.T) {
 	ctx := context.TODO()
 
 	// Settings mock
-	service.EXPECT().GetImage(ctx, inputService).Return(returnService, nil)
+	service.EXPECT().GetImage(ctx, inputService).Return(outputService, nil)
 
 	// Init
 	grpcServer := grpc.NewServer()
@@ -85,7 +85,7 @@ func TestImageServiceServer_GetImage_NOT_OK(t *testing.T) {
 		Object: "collection_poster",
 	}
 
-	returnServiceErr := errors.ErrImageNotFound
+	outputServiceErr := errors.ErrImageNotFound
 
 	input := &proto.Image{
 		Key:    "2",
@@ -105,7 +105,7 @@ func TestImageServiceServer_GetImage_NOT_OK(t *testing.T) {
 	ctx = context.WithValue(ctx, constparams.RequestIDKey, requestID)
 
 	// Settings mock
-	service.EXPECT().GetImage(ctx, inputService).Return(models.Image{}, returnServiceErr)
+	service.EXPECT().GetImage(ctx, inputService).Return(models.Image{}, outputServiceErr)
 
 	// Init
 	grpcServer := grpc.NewServer()
@@ -185,7 +185,7 @@ func TestImageServiceServer_UpdateImage_NOT_OK(t *testing.T) {
 		Bytes:  []byte("some image"),
 	}
 
-	returnServiceErr := errors.ErrWorkDatabase
+	outputServiceErr := errors.ErrWorkDatabase
 
 	input := &proto.Image{
 		Key:    "2",
@@ -206,7 +206,7 @@ func TestImageServiceServer_UpdateImage_NOT_OK(t *testing.T) {
 	ctx = context.WithValue(ctx, constparams.RequestIDKey, requestID)
 
 	// Settings mock
-	service.EXPECT().UpdateImage(ctx, inputService).Return(returnServiceErr)
+	service.EXPECT().UpdateImage(ctx, inputService).Return(outputServiceErr)
 
 	// Init
 	grpcServer := grpc.NewServer()

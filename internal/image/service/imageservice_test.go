@@ -23,28 +23,32 @@ func TestImageService_GetImage_OK(t *testing.T) {
 
 	repository := mockImageRepository.NewMockImageRepository(ctrl)
 
-	// Create required setup for handling
-	expected := models.Image{
+	// Data
+	input := &models.Image{
 		Key:    "2",
 		Object: "collection_poster",
-		Bytes:  []byte("image"),
 	}
 
+	output := models.Image{
+		Bytes: []byte("some image"),
+	}
+
+	// Create required setup for handling
 	ctx := context.TODO()
 
 	// Settings mock
-	repository.EXPECT().GetImage(ctx, &expected).Return(expected, nil)
+	repository.EXPECT().GetImage(ctx, input).Return(output, nil)
 
 	// Action
 	service := service.NewImageService(repository)
 
-	actual, err := service.GetImage(ctx, &expected)
+	actual, err := service.GetImage(ctx, input)
 
 	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
 	// Check result handling
-	require.Equal(t, expected, actual)
+	require.Equal(t, output, actual)
 }
 
 func TestImageService_GetImage_NOT_OK(t *testing.T) {
@@ -56,18 +60,24 @@ func TestImageService_GetImage_NOT_OK(t *testing.T) {
 
 	repository := mockImageRepository.NewMockImageRepository(ctrl)
 
-	// Create required setup for handling
-	ctx := context.TODO()
+	// Data
+	input := &models.Image{
+		Key:    "2",
+		Object: "collection_poster",
+	}
 
 	errReturn := stdErrors.New("Some error")
 
+	// Create required setup for handling
+	ctx := context.TODO()
+
 	// Settings mock
-	repository.EXPECT().GetImage(ctx, &models.Image{}).Return(models.Image{}, errReturn)
+	repository.EXPECT().GetImage(ctx, input).Return(models.Image{}, errReturn)
 
 	// Action
 	service := service.NewImageService(repository)
 
-	_, errActual := service.GetImage(ctx, &models.Image{})
+	_, errActual := service.GetImage(ctx, input)
 
 	// Check success
 	require.NotNil(t, errActual, "Handling must be error")
@@ -115,10 +125,11 @@ func TestImageService_UpdateImage_NOT_OK(t *testing.T) {
 
 	repository := mockImageRepository.NewMockImageRepository(ctrl)
 
+	// Data
+	errReturn := stdErrors.New("Some error")
+
 	// Create required setup for handling
 	ctx := context.TODO()
-
-	errReturn := stdErrors.New("Some error")
 
 	// Settings mock
 	repository.EXPECT().UpdateImage(ctx, &models.Image{}).Return(errReturn)
