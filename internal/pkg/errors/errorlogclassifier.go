@@ -43,6 +43,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	// Auth repository
 	res[ErrUserExist.Error()] = errLogLevel
 	res[ErrUserNotExist.Error()] = errLogLevel
+	res[ErrCreateSession.Error()] = errLogLevel
 
 	// Auth service
 	res[ErrInvalidNickname.Error()] = errLogLevel

@@ -13,6 +13,8 @@ import (
 )
 
 // Repository provides the versatility of users repositories.
+//
+//go:generate mockgen -source authpgx.go -destination mocks/mockauthrepository.go -package mockAuthRepository
 type Repository interface {
 	GetUserByEmail(ctx context.Context, email string) (models.User, error)
 	GetUserByID(ctx context.Context, userID int) (models.User, error)

@@ -1,7 +1,8 @@
-package server
+package server_test
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/server"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -55,7 +56,7 @@ func TestAuthServiceGRPCServer_Auth_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.Auth(ctx, input)
@@ -104,7 +105,7 @@ func TestAuthServiceGRPCServer_Auth_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.Auth(ctx, input)
@@ -153,7 +154,7 @@ func TestAuthServiceGRPCServer_Login_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.Login(ctx, input)
@@ -203,7 +204,7 @@ func TestAuthServiceGRPCServer_Login_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.Login(ctx, input)
@@ -253,7 +254,7 @@ func TestAuthServiceGRPCServer_Signup_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.Signup(ctx, input)
@@ -303,7 +304,7 @@ func TestAuthServiceGRPCServer_Signup_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.Signup(ctx, input)
@@ -343,7 +344,7 @@ func TestAuthServiceGRPCServer_GetAccess_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, err := authServer.GetAccess(ctx, input)
@@ -390,7 +391,7 @@ func TestAuthServiceGRPCServer_GetAccess_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.GetAccess(ctx, input)
@@ -431,7 +432,7 @@ func TestAuthServiceGRPCServer_UpdatePassword_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, err := authServer.UpdatePassword(ctx, input)
@@ -479,7 +480,7 @@ func TestAuthServiceGRPCServer_UpdatePassword_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.UpdatePassword(ctx, input)
@@ -530,7 +531,7 @@ func TestAuthServiceGRPCServer_GetUserBySession_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.GetUserBySession(ctx, input)
@@ -582,7 +583,7 @@ func TestAuthServiceGRPCServer_GetUserBySession_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.GetUserBySession(ctx, input)
@@ -632,7 +633,7 @@ func TestAuthServiceGRPCServer_CreateSession_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.CreateSession(ctx, input)
@@ -681,7 +682,7 @@ func TestAuthServiceGRPCServer_CreateSession_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.CreateSession(ctx, input)
@@ -732,7 +733,7 @@ func TestAuthServiceGRPCServer_DeleteSession_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	actual, err := authServer.DeleteSession(ctx, input)
@@ -784,7 +785,7 @@ func TestAuthServiceGRPCServer_DeleteSession_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	authServer := NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
+	authServer := server.NewAuthServiceGRPCServer(grpcServer, authService, sessionService)
 
 	// Action
 	_, actualErr := authServer.DeleteSession(ctx, input)

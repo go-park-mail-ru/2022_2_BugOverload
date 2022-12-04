@@ -1,21 +1,24 @@
-package server
+package server_test
 
 import (
 	"context"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	protoModels "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/models"
 	proto "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/protobuf"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/server"
 	mockWarehouseService "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/service/mocks"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"testing"
 )
 
 // Handler OK, NOT OK workflow in tests
@@ -50,7 +53,7 @@ func TestWarehouseServiceGRPCServer_GetRecommendation_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetRecommendation(ctx, input)
@@ -97,7 +100,7 @@ func TestWarehouseServiceGRPCServer_GetRecommendation_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetRecommendation(ctx, input)
@@ -150,7 +153,7 @@ func TestWarehouseServiceGRPCServer_GetFilmByID_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetFilmByID(ctx, input)
@@ -205,7 +208,7 @@ func TestWarehouseServiceGRPCServer_GetFilmByID_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetFilmByID(ctx, input)
@@ -257,7 +260,7 @@ func TestWarehouseServiceGRPCServer_GetReviewsByFilmID_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetReviewsByFilmID(ctx, input)
@@ -310,7 +313,7 @@ func TestWarehouseServiceGRPCServer_GetReviewsByFilmID_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetReviewsByFilmID(ctx, input)
@@ -363,7 +366,7 @@ func TestWarehouseServiceGRPCServer_GetStdCollection_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetStdCollection(ctx, input)
@@ -414,7 +417,7 @@ func TestWarehouseServiceGRPCServer_GetStdCollection_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetStdCollection(ctx, input)
@@ -464,7 +467,7 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetPremieresCollection(ctx, input)
@@ -516,7 +519,7 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_NOT_OK(t *testing.T) 
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetPremieresCollection(ctx, input)
@@ -568,7 +571,7 @@ func TestWarehouseServiceGRPCServer_GetPersonByID_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetPersonByID(ctx, input)
@@ -623,7 +626,7 @@ func TestWarehouseServiceGRPCServer_GetPersonByID_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetPersonByID(ctx, input)
@@ -676,7 +679,7 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsAuthorized_OK(t *testing.T
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetCollectionFilmsAuthorized(ctx, input)
@@ -731,7 +734,7 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsAuthorized_NOT_OK(t *testi
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetCollectionFilmsAuthorized(ctx, input)
@@ -781,7 +784,7 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsNotAuthorized_OK(t *testin
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.GetCollectionFilmsNotAuthorized(ctx, input)
@@ -833,7 +836,7 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsNotAuthorized_NOT_OK(t *te
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.GetCollectionFilmsNotAuthorized(ctx, input)
@@ -882,7 +885,7 @@ func TestWarehouseServiceGRPCServer_Search_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	actual, err := warehouseServer.Search(ctx, input)
@@ -933,7 +936,7 @@ func TestWarehouseServiceGRPCServer_Search_NOT_OK(t *testing.T) {
 	// Init
 	grpcServer := grpc.NewServer()
 
-	warehouseServer := NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
 
 	// Action
 	_, actualErr := warehouseServer.Search(ctx, input)
