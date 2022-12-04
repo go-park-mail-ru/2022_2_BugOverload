@@ -443,7 +443,7 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_OK(t *testing.T) {
 	searchService := mockWarehouseService.NewMockSearchService(ctrl)
 
 	// Data
-	inputService := &constparams.PremiersCollectionParams{
+	inputService := &constparams.GetPremiersCollectionParams{
 		CountFilms: 10,
 		Delimiter:  0,
 	}
@@ -492,7 +492,7 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_NOT_OK(t *testing.T) 
 	searchService := mockWarehouseService.NewMockSearchService(ctrl)
 
 	// Data
-	inputService := &constparams.PremiersCollectionParams{
+	inputService := &constparams.GetPremiersCollectionParams{
 		CountFilms: 10,
 		Delimiter:  0,
 	}

@@ -464,7 +464,7 @@ func TestCollectionService_GetPremieresCollection_OK(t *testing.T) {
 	repository := mockCollectionRepository.NewMockRepository(ctrl)
 
 	// Data
-	inputParams := &constparams.PremiersCollectionParams{
+	inputParams := &constparams.GetPremiersCollectionParams{
 		CountFilms: 10,
 		Delimiter:  0,
 	}
@@ -502,7 +502,7 @@ func TestCollectionService_GetPremieresCollection_NOT_OK(t *testing.T) {
 	repository := mockCollectionRepository.NewMockRepository(ctrl)
 
 	// Data
-	inputParams := &constparams.PremiersCollectionParams{
+	inputParams := &constparams.GetPremiersCollectionParams{
 		CountFilms: 10,
 		Delimiter:  0,
 	}

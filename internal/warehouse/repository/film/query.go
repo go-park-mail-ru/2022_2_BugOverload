@@ -119,7 +119,7 @@ WHERE f.poster_hor IS NOT NULL AND f.film_id BETWEEN 27 AND 29
 ORDER BY random()
 LIMIT 1`
 
-	getNewFilms = `
+	GetNewFilms = `
 SELECT f.film_id,
        f.name,
        to_char(f.prod_date, 'YYYY.MM.DD'),

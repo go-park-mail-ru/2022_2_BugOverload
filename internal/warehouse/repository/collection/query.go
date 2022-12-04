@@ -32,7 +32,7 @@ ORDER BY f.prod_date DESC
 LIMIT $2
 OFFSET $3`
 
-	getFilmsByGenreRating = `
+	GetFilmsByGenreRating = `
 SELECT f.film_id,
        f.name,
        f.original_name,
@@ -47,7 +47,7 @@ WHERE g.name = $1 AND f.rating < $2
 ORDER BY f.rating DESC
 LIMIT $3`
 
-	getFilmsByGenreDate = `
+	GetFilmsByGenreDate = `
 SELECT f.film_id,
        f.name,
        f.original_name,
