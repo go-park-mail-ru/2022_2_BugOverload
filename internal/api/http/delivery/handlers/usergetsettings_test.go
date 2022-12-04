@@ -27,9 +27,6 @@ func TestUserGetSettingsHandler_Action_OK(t *testing.T) {
 	service := mockUserService.NewMockUserService(ctrl)
 
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/settings", nil)
-	vars := make(map[string]string)
-	vars["id"] = "1"
-	r = mux.SetURLVars(r, vars)
 
 	r.Header.Set("Content-Type", "application/json")
 
