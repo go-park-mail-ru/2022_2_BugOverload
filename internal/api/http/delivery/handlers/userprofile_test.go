@@ -20,7 +20,7 @@ import (
 	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
-func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
+func TestUserProfileHandler_Action_OK(t *testing.T) {
 	// Init mock
 	t.Parallel()
 
@@ -30,36 +30,36 @@ func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
 	rateService := mockUserService.NewMockUserService(ctrl)
 
 	// Data
-	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
-	vars := make(map[string]string)
-	vars["id"] = "1"
-	r = mux.SetURLVars(r, vars)
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/profile/1", nil)
 
 	r.Header.Set("Content-Type", "application/json")
 
 	// Create required setup for handling
 	user := modelsGlobal.User{
-		ID: 1,
+		ID: 0,
+	}
+
+	resUser := modelsGlobal.User{
+		ID:               0,
+		Nickname:         "Mike",
+		Avatar:           "201",
+		CountCollections: 2,
+		CountReviews:     3,
+		CountRatings:     1,
+		JoinedDate:       "2022.12.02",
 	}
 
 	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
 	r = r.WithContext(ctx)
 
-	resRate := modelsGlobal.Film{
-		CountRatings: 12,
-		Rating:       6,
-	}
-
 	// Settings mock
-	rateService.EXPECT().FilmRateDrop(r.Context(), &user, &constparams.FilmRateDropParams{
-		FilmID: 1,
-	}).Return(resRate, nil)
+	rateService.EXPECT().GetUserProfileByID(r.Context(), &user).Return(resUser, nil)
 
 	// Init
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	handler := NewFilmRateDropHandler(rateService)
+	handler := NewUserProfileHandler(rateService)
 	handler.Configure(router, nil)
 
 	// Check result
@@ -77,17 +77,17 @@ func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	expectedBody := models.NewFilmRateDropResponse(&resRate)
+	expectedBody := models.NewUserProfileResponse(&resUser)
 
-	var actualBody *models.FilmRateDropResponse
+	var actualBody models.UserProfileResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
-func TestUserFilmRateDropHandler_Action_NotOK(t *testing.T) {
+func TestUserProfileHandler_Action_NotOK(t *testing.T) {
 	// Init mock
 	t.Parallel()
 
@@ -97,40 +97,40 @@ func TestUserFilmRateDropHandler_Action_NotOK(t *testing.T) {
 	rateService := mockUserService.NewMockUserService(ctrl)
 
 	// Data
-	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
-	vars := make(map[string]string)
-	vars["id"] = "1"
-	r = mux.SetURLVars(r, vars)
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/profile/1", nil)
 
 	r.Header.Set("Content-Type", "application/json")
 
 	// Create required setup for handling
 	user := modelsGlobal.User{
-		ID: 1,
+		ID: 0,
 	}
 
-	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
-	r = r.WithContext(ctx)
+	resUser := modelsGlobal.User{
+		ID:               0,
+		Nickname:         "Mike",
+		Avatar:           "201",
+		CountCollections: 2,
+		CountReviews:     3,
+		CountRatings:     1,
+		JoinedDate:       "2022.12.02",
+	}
 
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
-	resRate := modelsGlobal.Film{
-		CountRatings: 12,
-		Rating:       6,
-	}
+	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
+	r = r.WithContext(ctx)
 
 	// Settings mock
-	rateService.EXPECT().FilmRateDrop(r.Context(), &user, &constparams.FilmRateDropParams{
-		FilmID: 1,
-	}).Return(resRate, errors.ErrNotFoundInDB)
+	rateService.EXPECT().GetUserProfileByID(r.Context(), &user).Return(resUser, errors.ErrNotFoundInDB)
 
 	// Init
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	handler := NewFilmRateDropHandler(rateService)
+	handler := NewUserProfileHandler(rateService)
 	handler.Configure(router, nil)
 
 	// Check result
@@ -138,62 +138,6 @@ func TestUserFilmRateDropHandler_Action_NotOK(t *testing.T) {
 
 	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code)
-
-	// Check body
-	response := w.Result()
-
-	body, err := io.ReadAll(response.Body)
-	require.Nil(t, err, "io.ReadAll must be success")
-
-	err = response.Body.Close()
-	require.Nil(t, err, "Body.Close must be success")
-
-	var actualBody wrapper.ErrResponse
-
-	err = json.Unmarshal(body, &actualBody)
-	require.Nil(t, err, "json.Unmarshal must be success")
-
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
-}
-
-func TestUserFilmRateDropHandler_Action_InvParam(t *testing.T) {
-	// Init mock
-	t.Parallel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	rateService := mockUserService.NewMockUserService(ctrl)
-
-	// Data
-	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
-
-	r.Header.Set("Content-Type", "application/json")
-
-	// Create required setup for handling
-	user := modelsGlobal.User{
-		ID: 1,
-	}
-
-	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
-	r = r.WithContext(ctx)
-
-	expectedBody := wrapper.ErrResponse{
-		ErrMassage: errors.ErrConvertQueryType.Error(),
-	}
-
-	// Init
-	w := httptest.NewRecorder()
-
-	router := mux.NewRouter()
-	handler := NewFilmRateDropHandler(rateService)
-	handler.Configure(router, nil)
-
-	// Check result
-	handler.Action(w, r)
-
-	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code)
 
 	// Check body
 	response := w.Result()
