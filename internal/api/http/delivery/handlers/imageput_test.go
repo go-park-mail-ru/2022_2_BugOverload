@@ -18,11 +18,18 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 )
 
-// --c833dba25c1bac4ac0a91d0ce81b3a873fa0a49fe912808474b9bd718ab9\r\n
-//Content-Disposition: form-data; name=\"object\"; filename=\"some\"\r\n
-//Content-Type: application/octet-stream\r\n\r\n
-//some image\r\n
-//--c833dba25c1bac4ac0a91d0ce81b3a873fa0a49fe912808474b9bd718ab9--\r\n
+// Multipart body
+// Content-Type: multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW
+//
+//    -----WebKitFormBoundary7MA4YWxkTrZu0gW
+//    Content-Disposition: form-data; name=”file”; filename=”captcha”
+//    Content-Type:
+//
+//    -----WebKitFormBoundary7MA4YWxkTrZu0gW
+//    Content-Disposition: form-data; name=”action”
+//
+//    submit
+//    -----WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 func TestPutImageHandler_Action_OK(t *testing.T) {
 	// Init mock
