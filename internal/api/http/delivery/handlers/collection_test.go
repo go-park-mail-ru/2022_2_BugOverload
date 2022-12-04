@@ -3,19 +3,21 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/require"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestCollectionHandler_Action_OK(t *testing.T) {
@@ -75,7 +77,7 @@ func TestCollectionHandler_Action_OK(t *testing.T) {
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	//Check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -132,7 +134,7 @@ func TestCollectionHandler_Action_BindError(t *testing.T) {
 	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	//Check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -201,7 +203,7 @@ func TestCollectionHandler_Action_ServiceAuthorizedError(t *testing.T) {
 	// Check code
 	require.Equal(t, http.StatusForbidden, w.Code)
 
-	//Check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -262,7 +264,7 @@ func TestCollectionHandler_Action_ServiceNotAuthorizedError(t *testing.T) {
 	// Check code
 	require.Equal(t, http.StatusForbidden, w.Code)
 
-	//Check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

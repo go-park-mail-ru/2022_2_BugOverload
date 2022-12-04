@@ -220,13 +220,6 @@ func TestUserGetActivityOnFilmHandler_Action_ServiceError(t *testing.T) {
 	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
 	r = r.WithContext(ctx)
 
-	var userColections []modelsGlobal.NodeInUserCollection
-	userColections = append(userColections, modelsGlobal.NodeInUserCollection{
-		ID:     401,
-		Name:   "Избранное",
-		IsUsed: true,
-	})
-
 	expectedErr := errors.ErrUserNotFound
 
 	// Settings mock

@@ -3,9 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	stdErrors "github.com/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,11 +11,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	stdErrors "github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	mockAuthClient "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
 func TestAuthLogoutHandler_Action_OK(t *testing.T) {
