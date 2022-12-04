@@ -379,3 +379,211 @@ func TestAuthService_GetAccess_Password_NOT_OK(t *testing.T) {
 	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
+
+func TestAuthService_Signup_NicknameValidate_NOT_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	input := &models.User{
+		ID: 0,
+	}
+
+	expectedErr := errors.ErrInvalidNickname
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	_, actualErr := authService.Signup(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}
+
+func TestAuthService_Signup_EmailValidate_NOT_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	input := &models.User{
+		ID:       0,
+		Nickname: "testnickname123",
+		Email:    "invalidmail@@liast.ruz",
+	}
+
+	expectedErr := errors.ErrInvalidEmail
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	_, actualErr := authService.Signup(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}
+
+func TestAuthService_Signup_PasswordValidate_NOT_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	input := &models.User{
+		ID:       0,
+		Nickname: "testnickname123",
+		Email:    "validmail@mail.ru",
+		Password: "123",
+	}
+
+	expectedErr := errors.ErrInvalidPassword
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	_, actualErr := authService.Signup(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}
+
+func TestAuthService_Signup_CheckExistErr(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	input := &models.User{
+		ID:       0,
+		Nickname: "testnickname123",
+		Email:    "validmail@mail.ru",
+		Password: "correctpassword123",
+	}
+
+	expectedErr := errors.ErrWorkDatabase
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	repository.EXPECT().CheckExistUserByEmail(ctx, input.Email).Return(false, expectedErr)
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	_, actualErr := authService.Signup(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}
+
+func TestAuthService_Signup_UserExist(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	input := &models.User{
+		ID:       0,
+		Nickname: "testnickname123",
+		Email:    "validmail@mail.ru",
+		Password: "correctpassword123",
+	}
+
+	expectedErr := errors.ErrUserExist
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	repository.EXPECT().CheckExistUserByEmail(ctx, input.Email).Return(true, nil)
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	_, actualErr := authService.Signup(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}
+
+func TestAuthService_UpdatePassword_AccessErr(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockAuthRepository.NewMockRepository(ctrl)
+
+	// Data
+	inputOldPassword := "testpassword123"
+	inputNewPassword := "testpassword"
+	input := &models.User{
+		ID: 0,
+	}
+
+	expectedErr := errors.ErrUserNotFound
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	repository.EXPECT().GetUserByID(ctx, input.ID).Return(models.User{}, expectedErr)
+
+	// Action
+	authService := service.NewAuthService(repository)
+
+	actualErr := authService.UpdatePassword(ctx, input, inputOldPassword, inputNewPassword)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}

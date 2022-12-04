@@ -77,12 +77,6 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 		return models.User{}, stdErrors.Wrap(err, "Signup")
 	}
 
-	hashedPassword, err := security.HashPassword(user.Password)
-	if err != nil {
-		return models.User{}, stdErrors.Wrap(err, "Signup")
-	}
-	user.Password = hashedPassword
-
 	exist, err := u.authRepo.CheckExistUserByEmail(ctx, user.Email)
 	if err != nil {
 		return models.User{}, stdErrors.Wrap(err, "Signup")
@@ -90,6 +84,12 @@ func (u *authService) Signup(ctx context.Context, user *models.User) (models.Use
 	if exist {
 		return models.User{}, errors.ErrUserExist
 	}
+
+	hashedPassword, err := security.HashPassword(user.Password)
+	if err != nil {
+		return models.User{}, stdErrors.Wrap(err, "Signup")
+	}
+	user.Password = hashedPassword
 
 	userDB, err := u.authRepo.CreateUser(ctx, user)
 	if err != nil {
