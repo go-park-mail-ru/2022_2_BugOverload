@@ -12,7 +12,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/user/repository"
 )
 
-//go:generate mockgen -source userservice.go -destination mocks/mockuserservice.go -package mocUserService
+//go:generate mockgen -source userservice.go -destination mocks/mockuserservice.go -package mockUserService
 
 // UserService provides universal service for work with users.
 type UserService interface {

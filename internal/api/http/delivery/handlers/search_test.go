@@ -25,7 +25,7 @@ func TestSearchHandlerPremiere_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	searchService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/search?q=abc", nil) //
 
@@ -73,14 +73,14 @@ func TestSearchHandlerPremiere_Action_OK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	searchService.EXPECT().Search(r.Context(), &constparams.SearchParams{ //
+	service.EXPECT().Search(r.Context(), &constparams.SearchParams{ //
 		Query: "abc", //
 	}).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	handler := NewSearchHandler(searchService) //
+	handler := NewSearchHandler(service) //
 	handler.Configure(router, nil)
 
 	handler.Action(w, r)

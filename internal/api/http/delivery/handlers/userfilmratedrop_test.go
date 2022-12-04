@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"io"
@@ -19,25 +18,24 @@ import (
 	mocUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
-func TestUserFilmRateHandler_Action_OK(t *testing.T) {
+func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
+	// Init mock
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	service := mocUserService.NewMockUserService(ctrl)
+	rateService := mocUserService.NewMockUserService(ctrl)
 
-	mcPostBody := map[string]int{
-		"score": 6,
-	}
-	body, _ := json.Marshal(mcPostBody)
-	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate", bytes.NewReader(body))
+	// Data
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
 
 	r.Header.Set("Content-Type", "application/json")
 
+	// Create required setup for handling
 	user := modelsGlobal.User{
 		ID: 1,
 	}
@@ -50,17 +48,19 @@ func TestUserFilmRateHandler_Action_OK(t *testing.T) {
 		Rating:       6,
 	}
 
-	service.EXPECT().FilmRate(r.Context(), &user, &constparams.FilmRateParams{
+	// Settings mock
+	rateService.EXPECT().FilmRateDrop(r.Context(), &user, &constparams.FilmRateDropParams{
 		FilmID: 1,
-		Score:  6,
 	}).Return(resRate, nil)
 
+	// Init
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	handler := NewFilmRateHandler(service)
+	handler := NewFilmRateDropHandler(rateService)
 	handler.Configure(router, nil)
 
+	// Check result
 	handler.Action(w, r)
 
 	// Check code
@@ -75,9 +75,9 @@ func TestUserFilmRateHandler_Action_OK(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	expectedBody := models.NewFilmRateResponse(&resRate)
+	expectedBody := models.NewFilmRateDropResponse(&resRate)
 
-	var actualBody *models.FilmRateResponse
+	var actualBody *models.FilmRateDropResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")

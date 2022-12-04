@@ -149,7 +149,7 @@ message Person {
   string Birthday = 4;
   string Avatar = 5;
   string Death = 6;
-  float Growth = 7;
+  float GrowthMeters = 7;
   string Gender = 8;
   uint32 CountFilms = 9;
   repeated string Professions = 10;

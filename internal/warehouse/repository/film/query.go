@@ -30,7 +30,7 @@ SELECT count_seasons,
 FROM serials
 WHERE film_id = $1`
 
-	getShortSerialByID = `
+	GetShortSerialByID = `
 SELECT end_year
 FROM serials
 WHERE film_id = $1`

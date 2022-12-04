@@ -131,13 +131,15 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 }
 
 func TestFilmHandler_Action_NotOKService(t *testing.T) {
+	// Init mock
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
+	// Data
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=2", nil)
 	vars := make(map[string]string)
 	vars["id"] = "1"
@@ -147,6 +149,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 		ErrMassage: errors.ErrNotFoundInDB.Error(),
 	}
 
+	// Create required setup for handling
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
@@ -154,17 +157,20 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
+	// Settings mock
+	service.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
 		CountImages: 2,
 	}).Return(modelsGlobal.Film{}, errors.ErrNotFoundInDB)
 
+	// Init
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewFilmHandler(filmService)
-	filmHandler.Configure(router, nil)
+	handler := NewFilmHandler(service)
+	handler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	// Check result
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")

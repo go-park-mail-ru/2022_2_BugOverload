@@ -22,7 +22,7 @@ func TestAuthLogoutHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthClient.NewMockAuthService(ctrl)
+	service := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodDelete, "/api/v1/auth/logout", nil)
 	cookie := &http.Cookie{
@@ -38,15 +38,15 @@ func TestAuthLogoutHandler_Action_OK(t *testing.T) {
 		ID: cookie.Value,
 	}
 
-	authService.EXPECT().DeleteSession(r.Context(), &session)
+	service.EXPECT().DeleteSession(r.Context(), &session)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	loginHandler := NewLogoutHandler(authService)
-	loginHandler.Configure(router, nil)
+	handler := NewLogoutHandler(service)
+	handler.Configure(router, nil)
 
-	loginHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusNoContent, w.Code)

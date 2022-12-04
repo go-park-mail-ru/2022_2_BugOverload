@@ -25,7 +25,7 @@ func TestCollectionHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/collection?target=tag&key=popular&sort_param=date&count_films=1&delimiter=0", nil)
 
@@ -49,7 +49,7 @@ func TestCollectionHandler_Action_OK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetStdCollection(r.Context(), &constparams.GetStdCollectionParams{
+	service.EXPECT().GetStdCollection(r.Context(), &constparams.GetStdCollectionParams{
 		Target:     "tag",
 		SortParam:  "date",
 		Key:        "popular",
@@ -60,10 +60,10 @@ func TestCollectionHandler_Action_OK(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	tagCollectionHandler := NewStdCollectionHandler(collectionService)
-	tagCollectionHandler.Configure(router, nil)
+	handler := NewStdCollectionHandler(service)
+	handler.Configure(router, nil)
 
-	tagCollectionHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")

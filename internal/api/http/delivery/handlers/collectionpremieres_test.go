@@ -28,7 +28,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	collectionService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/premieres?count_films=1&delimiter=0", nil)
 
@@ -53,7 +53,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	collectionService.EXPECT().GetPremieresCollection(r.Context(), &constparams.PremiersCollectionParams{
+	service.EXPECT().GetPremieresCollection(r.Context(), &constparams.PremiersCollectionParams{
 		CountFilms: 1,
 		Delimiter:  0,
 	}).Return(res, nil)
@@ -61,7 +61,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	handler := NewPremieresCollectionHandler(collectionService)
+	handler := NewPremieresCollectionHandler(service)
 	handler.Configure(router, nil)
 
 	handler.Action(w, r)

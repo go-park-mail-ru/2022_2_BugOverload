@@ -25,7 +25,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1/reviews?count_reviews=1&offset=0", nil)
 	vars := make(map[string]string)
@@ -47,7 +47,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 		},
 	}}
 
-	filmService.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetFilmReviewsParams{
+	service.EXPECT().GetReviewsByFilmID(r.Context(), &constparams.GetFilmReviewsParams{
 		CountReviews: 1,
 		Offset:       0,
 		FilmID:       1,
@@ -56,10 +56,10 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	reviewsHandler := NewReviewsHandler(filmService)
-	reviewsHandler.Configure(router, nil)
+	handler := NewReviewsHandler(service)
+	handler.Configure(router, nil)
 
-	reviewsHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")

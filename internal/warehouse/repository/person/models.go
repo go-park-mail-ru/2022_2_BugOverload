@@ -10,10 +10,10 @@ import (
 )
 
 type ModelSQL struct {
-	ID       int
-	Name     string
-	Birthday time.Time
-	Growth   float32
+	ID           int
+	Name         string
+	Birthday     time.Time
+	GrowthMeters float32
 
 	Avatar       sql.NullString
 	Gender       sql.NullString
@@ -39,10 +39,10 @@ func (p *ModelSQL) Convert() models.Person {
 	}
 
 	res := models.Person{
-		ID:       p.ID,
-		Name:     p.Name,
-		Birthday: p.Birthday.Format(innerPKG.DateFormat),
-		Growth:   p.Growth,
+		ID:           p.ID,
+		Name:         p.Name,
+		Birthday:     p.Birthday.Format(innerPKG.DateFormat),
+		GrowthMeters: p.GrowthMeters,
 
 		Avatar:       p.Avatar.String,
 		Gender:       p.Gender.String,

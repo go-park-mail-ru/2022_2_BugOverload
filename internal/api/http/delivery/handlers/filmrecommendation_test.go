@@ -27,7 +27,7 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/recommendation", nil)
 
@@ -41,15 +41,15 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 		Genres:    []string{"фэнтези", "приключения"},
 	}
 
-	filmService.EXPECT().GetRecommendation(r.Context()).Return(res, nil)
+	service.EXPECT().GetRecommendation(r.Context()).Return(res, nil)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	recommendationHandler := NewRecommendationFilmHandler(filmService)
-	recommendationHandler.Configure(router, nil)
+	handler := NewRecommendationFilmHandler(service)
+	handler.Configure(router, nil)
 
-	recommendationHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")

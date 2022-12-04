@@ -13,6 +13,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
 
+//go:generate mockgen -source client.go -destination mocks/mockimageclient.go -package mockImageClient
+
 type ImageService interface {
 	GetImage(ctx context.Context, image *modelsGlobal.Image) (modelsGlobal.Image, error)
 	UpdateImage(ctx context.Context, image *modelsGlobal.Image) error
