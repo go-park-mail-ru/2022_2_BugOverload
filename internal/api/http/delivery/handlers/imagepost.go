@@ -49,7 +49,7 @@ func (h *postImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddlewar
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/image [POST]
 func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewPutImageRequest()
+	request := models.NewPostImageRequest()
 
 	err := request.Bind(r)
 	if err != nil {
