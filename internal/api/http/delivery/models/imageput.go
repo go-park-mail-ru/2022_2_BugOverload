@@ -51,13 +51,15 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 		return errors.ErrBadBodyRequest
 	}
 
-	contentType := http.DetectContentType(fileHeader)
+	contentType := multipartFileHeader.Header.Get("Content-type")
 	if !(contentType == constparams.ContentTypeJPEG || contentType == constparams.ContentTypeWEBP || contentType == constparams.ContentTypePNG) {
 		return errors.ErrContentTypeUndefined
 	}
 
 	body := bytes.NewBuffer(nil)
-	if _, errCopy := io.Copy(body, file); errCopy != nil {
+
+	_, errCopy := io.Copy(body, file)
+	if errCopy != nil {
 		return errors.ErrBadBodyRequest
 	}
 

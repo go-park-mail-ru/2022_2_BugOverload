@@ -153,10 +153,10 @@ infro-build:
 	docker-compose run --rm $(SERVICE_DEV) make -C project build
 
 debug-restart:
-	docker-compose restart image --no-recreate
-	docker-compose restart warehouse --no-recreate
-	docker-compose restart auth --no-recreate
-	docker-compose restart api --no-recreate
+	docker-compose restart arehouse
+	docker-compose restart image
+	docker-compose restart auth
+	docker-compose restart api
 
 build-debug-restart:
 	make infro-build
@@ -164,10 +164,10 @@ build-debug-restart:
 
 prod-restart:
 	make prod-create-env
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart warehouse --no-recreate
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart image --no-recreate
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart auth --no-recreate
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml restart api --no-recreate
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-recreate warehouse
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-recreate imagee
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-recreate auth
+	docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d --no-recreate api
 
 build-prod-restart:
 	make infro-build

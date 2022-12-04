@@ -23,7 +23,7 @@ func TestAuthLoginHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthClient.NewMockAuthService(ctrl)
+	service := mockAuthClient.NewMockAuthService(ctrl)
 
 	mcPostBody := map[string]string{
 		"email":    "YasaPupkinEzji@top.world",
@@ -45,20 +45,20 @@ func TestAuthLoginHandler_Action_OK(t *testing.T) {
 		User: &resLogin,
 	}
 
-	authService.EXPECT().Login(r.Context(), &modelsGlobal.User{
+	service.EXPECT().Login(r.Context(), &modelsGlobal.User{
 		Email:    "YasaPupkinEzji@top.world",
 		Password: "Widget Adapter",
 	}).Return(resLogin, nil)
 
-	authService.EXPECT().CreateSession(r.Context(), &resLogin).Return(resSession, nil)
+	service.EXPECT().CreateSession(r.Context(), &resLogin).Return(resSession, nil)
 
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	loginHandler := NewLoginHandler(authService)
-	loginHandler.Configure(router, nil)
+	handler := NewLoginHandler(service)
+	handler.Configure(router, nil)
 
-	loginHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code)

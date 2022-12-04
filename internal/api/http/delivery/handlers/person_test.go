@@ -25,7 +25,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	personService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/person/1?count_films=1&count_images=2", nil)
 	vars := make(map[string]string)
@@ -55,7 +55,7 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 		Avatar: "12",
 	}
 
-	personService.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &constparams.GetPersonParams{
+	service.EXPECT().GetPersonByID(r.Context(), &modelsGlobal.Person{ID: 1}, &constparams.GetPersonParams{
 		CountImages: 2,
 		CountFilms:  1,
 	}).Return(res, nil)
@@ -63,10 +63,10 @@ func TestPersonHandler_Action_OK(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewPersonHandler(personService)
-	filmHandler.Configure(router, nil)
+	handler := NewPersonHandler(service)
+	handler.Configure(router, nil)
 
-	filmHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")

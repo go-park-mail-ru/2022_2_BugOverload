@@ -137,7 +137,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	filmService := mockWarehouseClient.NewMockWarehouseService(ctrl)
+	service := mockWarehouseClient.NewMockWarehouseService(ctrl)
 
 	// Data
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/film/1?count_images=2", nil)
@@ -158,7 +158,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	r = r.WithContext(ctx)
 
 	// Settings mock
-	filmService.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
+	service.EXPECT().GetFilmByID(r.Context(), &modelsGlobal.Film{ID: 1}, &constparams.GetFilmParams{
 		CountImages: 2,
 	}).Return(modelsGlobal.Film{}, errors.ErrNotFoundInDB)
 
@@ -166,11 +166,11 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewFilmHandler(filmService)
-	filmHandler.Configure(router, nil)
+	handler := NewFilmHandler(service)
+	handler.Configure(router, nil)
 
 	// Check result
-	filmHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")

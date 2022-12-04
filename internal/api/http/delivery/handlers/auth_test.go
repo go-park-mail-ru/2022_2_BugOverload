@@ -28,7 +28,7 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	authService := mockAuthClient.NewMockAuthService(ctrl)
+	service := mockAuthClient.NewMockAuthService(ctrl)
 
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/auth", nil)
 
@@ -46,13 +46,13 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 		Avatar:   "avatar",
 	}
 
-	authService.EXPECT().GetUserBySession(r.Context(), &modelsGlobal.Session{
+	service.EXPECT().GetUserBySession(r.Context(), &modelsGlobal.Session{
 		ID: cookie.Value,
 	}).Return(modelsGlobal.User{
 		ID: 1,
 	}, nil)
 
-	authService.EXPECT().Auth(r.Context(), &modelsGlobal.User{
+	service.EXPECT().Auth(r.Context(), &modelsGlobal.User{
 		ID: 1,
 	}).Return(resAuth, nil)
 
@@ -61,10 +61,10 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	authHandler := NewAuthHandler(authService)
-	authHandler.Configure(router, nil)
+	handler := NewAuthHandler(service)
+	handler.Configure(router, nil)
 
-	authHandler.Action(w, r)
+	handler.Action(w, r)
 
 	// Check code
 	require.Equal(t, http.StatusOK, w.Code)
