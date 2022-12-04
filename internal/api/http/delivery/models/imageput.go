@@ -50,7 +50,9 @@ func (i *PutImageRequest) Bind(r *http.Request) error {
 	if _, errSeek := file.Seek(0, io.SeekStart); errSeek != nil {
 		return errors.ErrBadBodyRequest
 	}
+	http.DetectContentType
 
+	// contentType := http.DetectContentType(fileHeader) more complicated way (ignoring Headers multipart value)
 	contentType := multipartFileHeader.Header.Get("Content-type")
 	if !(contentType == constparams.ContentTypeJPEG || contentType == constparams.ContentTypeWEBP || contentType == constparams.ContentTypePNG) {
 		return errors.ErrContentTypeUndefined
