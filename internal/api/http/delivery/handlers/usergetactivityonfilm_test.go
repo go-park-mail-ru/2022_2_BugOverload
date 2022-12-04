@@ -32,8 +32,6 @@ func TestUserGetActivityOnFilmHandler_Action_OK(t *testing.T) {
 	vars := make(map[string]string)
 	vars["id"] = "1"
 	r = mux.SetURLVars(r, vars)
-	
-	r.Header.Set("Content-Type", "application/json")
 
 	// Create required setup for handling
 	user := modelsGlobal.User{
@@ -43,22 +41,22 @@ func TestUserGetActivityOnFilmHandler_Action_OK(t *testing.T) {
 	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
 	r = r.WithContext(ctx)
 
-	var uesrColections [] modelsGlobal.NodeInUserCollection
+	var uesrColections []modelsGlobal.NodeInUserCollection
 	uesrColections = append(uesrColections, modelsGlobal.NodeInUserCollection{
-		ID: 401,
-		Name: "Избранное",
+		ID:     401,
+		Name:   "Избранное",
 		IsUsed: true,
 	})
 
 	userCollections := modelsGlobal.UserActivity{
 		CountReviews: 44,
-		Rating: 5,
-		DateRating: "2022.12.29",
-		Collections: uesrColections,
+		Rating:       5,
+		DateRating:   "2022.12.29",
+		Collections:  uesrColections,
 	}
 
 	// Settings mock
-	userActivityService.EXPECT().GetUserActivityOnFilm(r.Context(), user, constparams.GetUserActivityOnFilmParams{
+	userActivityService.EXPECT().GetUserActivityOnFilm(r.Context(), &user, &constparams.GetUserActivityOnFilmParams{
 		FilmID: 1,
 	}).Return(userCollections, nil)
 
@@ -86,10 +84,10 @@ func TestUserGetActivityOnFilmHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewGetUserActivityOnFilmResponse(&userCollections)
 
-	var actualBody []models.ShortFilmCollectionResponse
+	var actualBody models.GetUserActivityOnFilmResponse
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, *expectedBody, actualBody, "Wrong body")
 }
