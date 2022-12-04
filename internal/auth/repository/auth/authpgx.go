@@ -39,7 +39,7 @@ func NewAuthDatabase(database *sqltools.Database) Repository {
 func (ad *Postgres) CheckExistUserByEmail(ctx context.Context, email string) (bool, error) {
 	response := false
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		row := conn.QueryRowContext(ctx, checkExist, email)
+		row := conn.QueryRowContext(ctx, CheckExist, email)
 		if row.Err() != nil {
 			return row.Err()
 		}
@@ -55,13 +55,13 @@ func (ad *Postgres) CheckExistUserByEmail(ctx context.Context, email string) (bo
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return false, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
-			checkExist, email, errMain)
+			CheckExist, email, errMain)
 	}
 
 	if errMain != nil {
 		return false, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], email - [%s]. Special error [%s]",
-			checkExist, email, errMain)
+			CheckExist, email, errMain)
 	}
 
 	return response, nil
@@ -80,25 +80,25 @@ func (ad *Postgres) CreateUser(ctx context.Context, user *models.User) (models.U
 	var userID int
 
 	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		rowUser := tx.QueryRowContext(ctx, createUser, user.Email, user.Nickname, []byte(user.Password), constparams.DefUserAvatar)
+		rowUser := tx.QueryRowContext(ctx, CreateUser, user.Email, user.Nickname, []byte(user.Password), constparams.DefUserAvatar)
 		if rowUser.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%s, %s, %s]. Special error: [%s]",
-				createUser, user.Email, user.Nickname, user.Password, rowUser.Err())
+				CreateUser, user.Email, user.Nickname, user.Password, rowUser.Err())
 		}
 
 		err = rowUser.Scan(&userID)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err Scan: params input: query - [%s], values - [%s, %s, %s]. Special error: [%s]",
-				createUser, user.Email, user.Nickname, user.Password, rowUser.Err())
+				CreateUser, user.Email, user.Nickname, user.Password, rowUser.Err())
 		}
 
-		rowsCollections, errCollections := tx.QueryContext(ctx, createDefCollections)
+		rowsCollections, errCollections := tx.QueryContext(ctx, CreateDefCollections)
 		if errCollections != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s]. Special error: [%s]",
-				createDefCollections, errCollections)
+				CreateDefCollections, errCollections)
 		}
 		defer rowsCollections.Close()
 
@@ -110,17 +110,17 @@ func (ad *Postgres) CreateUser(ctx context.Context, user *models.User) (models.U
 			if err != nil {
 				return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 					"Err: params input: query - [%s]. Special error: [%s]",
-					createDefCollections, errCollections)
+					CreateDefCollections, errCollections)
 			}
 
 			ids = append(ids, colID)
 		}
 
-		_, err = tx.ExecContext(ctx, linkUserDefCollections, userID, ids[0], ids[1])
+		_, err = tx.ExecContext(ctx, LinkUserDefCollections, userID, ids[0], ids[1])
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values -[%d, %d, %d]. Special error: [%s]",
-				linkUserDefCollections, userID, ids[0], ids[1], errCollections)
+				LinkUserDefCollections, userID, ids[0], ids[1], errCollections)
 		}
 
 		return nil
@@ -138,7 +138,7 @@ func (ad *Postgres) GetUserByEmail(ctx context.Context, email string) (models.Us
 	userDB := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowUser := conn.QueryRowContext(ctx, getUserByEmail, email)
+		rowUser := conn.QueryRowContext(ctx, GetUserByEmail, email)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
@@ -163,13 +163,13 @@ func (ad *Postgres) GetUserByEmail(ctx context.Context, email string) (models.Us
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], values - [%s]. Special error - [%s]",
-			getUserByEmail, email, errMain)
+			GetUserByEmail, email, errMain)
 	}
 
 	if errMain != nil {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%s]. Special error - [%s]",
-			getUserByEmail, email, errMain)
+			GetUserByEmail, email, errMain)
 	}
 
 	return userDB.Convert(), nil
@@ -180,7 +180,7 @@ func (ad *Postgres) GetUserByID(ctx context.Context, userID int) (models.User, e
 	userDB := NewUserSQL()
 
 	errMain := sqltools.RunQuery(ctx, ad.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowUser := conn.QueryRowContext(ctx, getUserByID, userID)
+		rowUser := conn.QueryRowContext(ctx, GetUserByID, userID)
 		if rowUser.Err() != nil {
 			return rowUser.Err()
 		}
@@ -200,13 +200,13 @@ func (ad *Postgres) GetUserByID(ctx context.Context, userID int) (models.User, e
 	if stdErrors.Is(errMain, sql.ErrNoRows) {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrUserNotFound,
 			"Err: params input: query - [%s], values - [%d]. Special error - [%s]",
-			getUserByID, userID, errMain)
+			GetUserByID, userID, errMain)
 	}
 
 	if errMain != nil {
 		return models.User{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%d]. Special error - [%s]",
-			getUserByID, userID, errMain)
+			GetUserByID, userID, errMain)
 	}
 
 	return userDB.Convert(), nil
@@ -214,7 +214,7 @@ func (ad *Postgres) GetUserByID(ctx context.Context, userID int) (models.User, e
 
 func (ad *Postgres) UpdatePassword(ctx context.Context, user *models.User, password string) error {
 	errMain := sqltools.RunTxOnConn(ctx, constparams.TxInsertOptions, ad.database.Connection, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, updateUserPassword, []byte(password), user.ID)
+		_, err := tx.ExecContext(ctx, UpdateUserPassword, []byte(password), user.ID)
 		if err != nil {
 			return err
 		}
@@ -224,7 +224,7 @@ func (ad *Postgres) UpdatePassword(ctx context.Context, user *models.User, passw
 	if errMain != nil {
 		return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s], values - [%s, %d]. Special Error [%s]",
-			updateUserPassword, user.Password, user.ID, errMain)
+			UpdateUserPassword, user.Password, user.ID, errMain)
 	}
 
 	return nil
