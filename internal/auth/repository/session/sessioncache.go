@@ -12,6 +12,8 @@ import (
 
 // Repository provides the versatility of session-related repositories.
 // Needed to work with stateful session pattern.
+//
+//go:generate mockgen -source sessioncache.go -destination mocks/mocksessionrepository.go -package mockSessionRepository
 type Repository interface {
 	GetUserBySession(ctx context.Context, session *models.Session) (models.User, error)
 	CreateSession(ctx context.Context, user *models.User) (models.Session, error)
@@ -60,7 +62,11 @@ func (cs *sessionCache) CreateSession(ctx context.Context, user *models.User) (m
 	cs.mu.Lock()
 	defer cs.mu.Unlock()
 
-	newSessionID, _ := pkg.CryptoRandString(pkgInner.CookieValueLength)
+	newSessionID, err := pkg.CryptoRandString(pkgInner.CookieValueLength)
+
+	if err != nil {
+		return models.Session{}, errors.ErrCreateSession
+	}
 
 	newSession := models.Session{
 		ID:   newSessionID,

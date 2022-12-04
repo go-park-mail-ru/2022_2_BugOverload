@@ -27,7 +27,7 @@ func NewPrometheusMetrics(serviceName string) Monitoring {
 		}, []string{"status", "path", "method"}),
 		ExecutionTime: prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name: serviceName + "_durations",
-			Help: "Duration execution of request",
+			Help: "DurationMinutes execution of request",
 		}, []string{"status", "path", "method"}),
 		TotalHits: prometheus.NewCounter(prometheus.CounterOpts{
 			Name: serviceName + "_total_hits",

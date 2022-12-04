@@ -1,13 +1,13 @@
 package models
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"bytes"
 	"io"
 	"net/http"
-
-	"github.com/sirupsen/logrus"
+	"strings"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
@@ -26,33 +26,46 @@ func (i *PostImageRequest) Bind(r *http.Request) error {
 		return errors.ErrContentTypeUndefined
 	}
 
-	if r.Header.Get("Content-Type") != constparams.ContentTypeWEBP || r.Header.Get("Content-Type") != constparams.ContentTypeJPEG {
+	if !(strings.Contains(r.Header.Get("Content-Type"), constparams.ContentTypeMultipartFormData)) {
 		return errors.ErrUnsupportedMediaType
 	}
 
 	i.Key = r.FormValue("key")
 	i.Object = r.FormValue("object")
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return errors.ErrBadBodyRequest
-	}
-	defer func() {
-		err = r.Body.Close()
-		if err != nil {
-			logrus.Error(err)
-		}
-	}()
-
-	if len(body) == 0 {
-		return errors.ErrEmptyBody
-	}
-
-	if len(body) > constparams.BufSizeImage {
+	errParse := r.ParseMultipartForm(constparams.BufSizeImage)
+	if errParse != nil {
 		return errors.ErrBigImage
 	}
 
-	i.Bytes = body
+	file, multipartFileHeader, err := r.FormFile("object")
+	if err != nil {
+		return errors.ErrEmptyBody
+	}
+
+	fileHeader := make([]byte, multipartFileHeader.Size)
+	if _, errRead := file.Read(fileHeader); errRead != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	if _, errSeek := file.Seek(0, io.SeekStart); errSeek != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	// contentType := http.DetectContentType(fileHeader) more complicated way (ignoring Headers multipart value)
+	contentType := multipartFileHeader.Header.Get("Content-type")
+	if !(contentType == constparams.ContentTypeJPEG || contentType == constparams.ContentTypeWEBP || contentType == constparams.ContentTypePNG) {
+		return errors.ErrContentTypeUndefined
+	}
+
+	body := bytes.NewBuffer(nil)
+
+	_, errCopy := io.Copy(body, file)
+	if errCopy != nil {
+		return errors.ErrBadBodyRequest
+	}
+
+	i.Bytes = body.Bytes()
 
 	return nil
 }

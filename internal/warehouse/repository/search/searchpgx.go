@@ -15,6 +15,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
 )
 
+//go:generate mockgen -source searchpgx.go -destination mocks/mocksearchrepository.go -package mockSearchRepository
 type Repository interface {
 	SearchFilms(ctx context.Context, params *constparams.SearchParams) ([]models.Film, error)
 	SearchSeries(ctx context.Context, params *constparams.SearchParams) ([]models.Film, error)

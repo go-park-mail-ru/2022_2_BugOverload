@@ -51,8 +51,8 @@ func (p *PremieresCollectionRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func (p *PremieresCollectionRequest) GetParams() *innerPKG.PremiersCollectionParams {
-	return &innerPKG.PremiersCollectionParams{
+func (p *PremieresCollectionRequest) GetParams() *innerPKG.GetPremiersCollectionParams {
+	return &innerPKG.GetPremiersCollectionParams{
 		CountFilms: p.CountFilms,
 		Delimiter:  p.Delimiter,
 	}

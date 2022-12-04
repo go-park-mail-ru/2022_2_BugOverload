@@ -1,7 +1,7 @@
 package auth
 
 const (
-	createUser = `
+	CreateUser = `
 INSERT INTO users (email,
                    nickname,
                    password,
@@ -10,16 +10,16 @@ INSERT INTO users (email,
 VALUES ($1, $2, $3, 2, $4)
 RETURNING user_id`
 
-	createDefCollections = `
+	CreateDefCollections = `
 INSERT INTO collections(name, description, poster)
 VALUES ('Избранное', 'Ваши сохранные фильмы', '1'), ('Буду смотреть', 'Фильмы, которые вы отметили для просмотра', '2')
 RETURNING collection_id;`
 
-	linkUserDefCollections = `
+	LinkUserDefCollections = `
 INSERT INTO user_collections (fk_user_id, fk_collection_id)
 VALUES ($1, $2), ($1, $3)`
 
-	getUserByEmail = `
+	GetUserByEmail = `
 SELECT 
 	user_id,
 	email,
@@ -29,7 +29,7 @@ SELECT
 FROM users
 WHERE email = $1`
 
-	getUserByID = `
+	GetUserByID = `
 SELECT 
 	email,
 	nickname,
@@ -38,7 +38,7 @@ SELECT
 FROM users
 WHERE user_id = $1`
 
-	checkExist = `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)`
+	CheckExist = `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)`
 
-	updateUserPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
+	UpdateUserPassword = `UPDATE users SET password = $1 WHERE user_id = $2`
 )

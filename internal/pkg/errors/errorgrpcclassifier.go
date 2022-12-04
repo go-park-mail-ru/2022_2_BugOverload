@@ -39,6 +39,7 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	// Auth repository
 	res[ErrUserExist.Error()] = codes.InvalidArgument
 	res[ErrUserNotExist.Error()] = codes.NotFound
+	res[ErrCreateSession.Error()] = codes.Internal
 
 	// Auth service
 	res[ErrInvalidNickname.Error()] = codes.InvalidArgument

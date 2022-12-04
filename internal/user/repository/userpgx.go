@@ -15,6 +15,7 @@ import (
 	filmRepo "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 )
 
+//go:generate mockgen -source userpgx.go -destination mocks/mockuserrepository.go -package mockUserRepository
 type UserRepository interface {
 	// Profile + settings
 	GetUserProfileByID(ctx context.Context, user *models.User) (models.User, error)

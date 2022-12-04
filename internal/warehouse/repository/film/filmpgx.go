@@ -12,6 +12,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
+//go:generate mockgen -source filmpgx.go -destination mocks/mockfilmrepository.go -package mockFilmRepository
 type Repository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
@@ -48,7 +49,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 			&response.Description,
 			&response.ShortDescription,
 			&response.AgeLimit,
-			&response.Duration,
+			&response.DurationMinutes,
 			&response.PosterHor,
 			&response.Budget,
 			&response.BoxOffice,

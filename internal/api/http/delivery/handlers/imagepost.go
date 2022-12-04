@@ -3,6 +3,7 @@ package handlers
 import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -48,7 +49,7 @@ func (h *postImageHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddlewar
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/image [POST]
 func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
-	request := models.NewPutImageRequest()
+	request := models.NewPostImageRequest()
 
 	err := request.Bind(r)
 	if err != nil {
@@ -58,12 +59,12 @@ func (h *postImageHandler) Action(w http.ResponseWriter, r *http.Request) {
 
 	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
 	if !ok {
-		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 
 	if !user.IsAdmin {
-		wrapper.DefaultHandlerHTTPError(r.Context(), w, err)
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
 		return
 	}
 

@@ -14,11 +14,13 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
 
+//go:generate mockgen -source collectionpgx.go -destination mocks/mockcollectionrepository.go -package mockCollectionRepository
+
 // Repository provides the versatility of collection repositories.
 type Repository interface {
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
-	GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error)
+	GetPremieresCollection(ctx context.Context, params *constparams.GetPremiersCollectionParams) (models.Collection, error)
 
 	// GetUserCollections
 	CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
@@ -126,11 +128,11 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 
 	switch params.SortParam {
 	case constparams.CollectionSortParamDate:
-		query = getFilmsByGenreDate
+		query = GetFilmsByGenreDate
 
 		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
 	case constparams.CollectionSortParamFilmRating:
-		query = getFilmsByGenreRating
+		query = GetFilmsByGenreRating
 
 		var delimiter float64
 
@@ -180,7 +182,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 }
 
 // GetPremieresCollection it gives away only movies with prod_date > current from the repository.
-func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
+func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params *constparams.GetPremiersCollectionParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
 	var err error
@@ -194,16 +196,19 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 				params, err)
 		}
 
+		// FilmsGenres
 		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
 
+		// FilmsProdCountries
 		response.Films, err = film.GetProdCountriesBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
 
+		// FilmsDirectors
 		response.Films, err = film.GetDirectorsBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err

@@ -13,6 +13,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 )
 
+//go:generate mockgen -source personpgx.go -destination mocks/mockpersonrepository.go -package mockPersonRepository
 type Repository interface {
 	GetPersonByID(ctx context.Context, person *models.Person, params *constparams.GetPersonParams) (models.Person, error)
 }
