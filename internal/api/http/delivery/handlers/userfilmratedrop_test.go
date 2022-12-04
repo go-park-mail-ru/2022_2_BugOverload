@@ -15,9 +15,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
 func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {

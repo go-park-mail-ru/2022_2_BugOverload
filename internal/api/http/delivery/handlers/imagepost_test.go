@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
-	"io"
 	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -166,7 +166,7 @@ func TestPostImageHandler_Action_NotOk(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t,http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
 	// Check body
 	response := w.Result()
@@ -232,7 +232,7 @@ func TestPostImageHandler_Action_Object_ContetUndef(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t,http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
 	// Check body
 	response := w.Result()

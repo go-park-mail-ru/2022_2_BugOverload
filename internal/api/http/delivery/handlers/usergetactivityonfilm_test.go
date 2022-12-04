@@ -15,9 +15,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
 func TestUserGetActivityOnFilmHandler_Action_OK(t *testing.T) {
@@ -106,7 +106,6 @@ func TestUserGetActivityOnFilmHandler_Action_NotOK(t *testing.T) {
 	// Data
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/user_activity", nil)
 
-
 	// Create required setup for handling
 	user := modelsGlobal.User{
 		ID: 1,
@@ -114,7 +113,7 @@ func TestUserGetActivityOnFilmHandler_Action_NotOK(t *testing.T) {
 
 	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
 	r = r.WithContext(ctx)
-	
+
 	expectedBody := wrapper.ErrResponse{
 		ErrMassage: errors.ErrConvertQueryType.Error(),
 	}

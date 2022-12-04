@@ -1,15 +1,15 @@
 package handlers
 
 import (
-	"io"
 	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"net/textproto"
 	"testing"
-	"encoding/json"
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
@@ -151,7 +151,7 @@ func TestPutImageHandler_Action_NotOK(t *testing.T) {
 	}
 
 	// Settings mock
-	service.EXPECT().UpdateImage(ctx, &input).Return( errors.ErrNotFoundInDB)
+	service.EXPECT().UpdateImage(ctx, &input).Return(errors.ErrNotFoundInDB)
 
 	// Init
 	w := httptest.NewRecorder()
@@ -237,7 +237,7 @@ func TestPutImageHandler_Action_UndefType(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest , w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
 	// Check body
 	response := w.Result()

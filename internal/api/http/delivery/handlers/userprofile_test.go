@@ -15,9 +15,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
 func TestUserProfileHandler_Action_OK(t *testing.T) {
@@ -40,13 +40,13 @@ func TestUserProfileHandler_Action_OK(t *testing.T) {
 	}
 
 	resUser := modelsGlobal.User{
-		ID: 0,
-		Nickname: "Mike",
-		Avatar: "201",
+		ID:               0,
+		Nickname:         "Mike",
+		Avatar:           "201",
 		CountCollections: 2,
-		CountReviews: 3,
-		CountRatings: 1,
-		JoinedDate: "2022.12.02",
+		CountReviews:     3,
+		CountRatings:     1,
+		JoinedDate:       "2022.12.02",
 	}
 
 	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
@@ -107,13 +107,13 @@ func TestUserProfileHandler_Action_NotOK(t *testing.T) {
 	}
 
 	resUser := modelsGlobal.User{
-		ID: 0,
-		Nickname: "Mike",
-		Avatar: "201",
+		ID:               0,
+		Nickname:         "Mike",
+		Avatar:           "201",
 		CountCollections: 2,
-		CountReviews: 3,
-		CountRatings: 1,
-		JoinedDate: "2022.12.02",
+		CountReviews:     3,
+		CountRatings:     1,
+		JoinedDate:       "2022.12.02",
 	}
 
 	expectedBody := wrapper.ErrResponse{

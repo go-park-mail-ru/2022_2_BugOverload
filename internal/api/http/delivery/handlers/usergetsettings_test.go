@@ -38,11 +38,11 @@ func TestUserGetSettingsHandler_Action_OK(t *testing.T) {
 	r = r.WithContext(ctx)
 
 	resUser := modelsGlobal.User{
-		CountViewsFilms: 1,
+		CountViewsFilms:  1,
 		CountCollections: 2,
-		CountReviews: 44,
-		CountRatings: 1,
-		JoinedDate: "2022.12.02",
+		CountReviews:     44,
+		CountRatings:     1,
+		JoinedDate:       "2022.12.02",
 	}
 
 	service.EXPECT().GetUserProfileSettings(r.Context(), &user).Return(resUser, nil)

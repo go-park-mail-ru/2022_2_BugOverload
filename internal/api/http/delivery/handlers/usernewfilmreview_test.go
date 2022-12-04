@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"io"
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
@@ -43,7 +42,7 @@ func TestUserNewFilmReviewHandler_Action_OK(t *testing.T) {
 
 	r.Header.Set("Content-Type", "application/json")
 
-	user := modelsGlobal.User{
+	user := models.User{
 		ID: 1,
 	}
 
@@ -140,8 +139,7 @@ func TestUserNewFilmReviewHandler_Action_EmpBody(t *testing.T) {
 
 	r.Header.Set("Content-Type", "application/json")
 
-	
-	user := modelsGlobal.User{
+	user := models.User{
 		ID: 1,
 	}
 
@@ -174,5 +172,4 @@ func TestUserNewFilmReviewHandler_Action_EmpBody(t *testing.T) {
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
-
 }

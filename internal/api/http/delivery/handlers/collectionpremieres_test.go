@@ -16,9 +16,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 )
 
 // Хуета в модели ответа выстреливает если нет стран (nil)
@@ -89,7 +89,6 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
-
 
 func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
 	t.Parallel()
