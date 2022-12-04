@@ -68,7 +68,6 @@ func TestPutImageHandler_Action_OK(t *testing.T) {
 		Bytes:  imageBin,
 	}
 
-	//
 	r.Header.Set("Content-Type", writer.FormDataContentType())
 
 	user := modelsGlobal.User{
