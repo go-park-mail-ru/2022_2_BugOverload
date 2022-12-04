@@ -57,12 +57,12 @@ func (s *AuthServiceGRPCServer) Login(ctx context.Context, user *proto.User) (*p
 }
 
 func (s *AuthServiceGRPCServer) Signup(ctx context.Context, user *proto.User) (*proto.User, error) {
-	sighupProtoResponse, err := s.authManager.Signup(ctx, models.NewUser(user))
+	signupProtoResponse, err := s.authManager.Signup(ctx, models.NewUser(user))
 	if err != nil {
 		return &proto.User{}, wrapper.DefaultHandlerGRPCError(ctx, err)
 	}
 
-	return models.NewUserProto(&sighupProtoResponse), nil
+	return models.NewUserProto(&signupProtoResponse), nil
 }
 
 func (s *AuthServiceGRPCServer) GetAccess(ctx context.Context, params *proto.GetAccessParams) (*proto.Nothing, error) {
