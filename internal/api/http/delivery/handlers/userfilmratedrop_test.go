@@ -15,7 +15,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	mocUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
+	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
 )
 
 func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
@@ -25,7 +25,7 @@ func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	rateService := mocUserService.NewMockUserService(ctrl)
+	rateService := mockUserService.NewMockUserService(ctrl)
 
 	// Data
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
