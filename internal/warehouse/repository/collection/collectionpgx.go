@@ -128,11 +128,11 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 
 	switch params.SortParam {
 	case constparams.CollectionSortParamDate:
-		query = getFilmsByGenreDate
+		query = GetFilmsByGenreDate
 
 		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
 	case constparams.CollectionSortParamFilmRating:
-		query = getFilmsByGenreRating
+		query = GetFilmsByGenreRating
 
 		var delimiter float64
 

@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/require"
@@ -153,6 +154,130 @@ func TestCollection_GetPremieresCollection_OK(t *testing.T) {
 
 	// Check result
 	actual, err := repo.GetPremieresCollection(ctx, inputParams)
+	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
+
+	err = mock.ExpectationsWereMet()
+	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
+
+	// Check actual
+	require.Equal(t, expected, actual)
+}
+
+// Sequence
+// query by sort param (GetFilmsByGenreDate, GetFilmsByGenreRating)
+// GetGenresButch (GetGenresFilmBatchBegin + setID + GetGenresFilmBatchEnd)
+
+func TestCollection_GetCollectionByGenre_OK(t *testing.T) {
+	// Init sqlmock
+	db, mock, err := sqlmock.New()
+	require.Nil(t, err, fmt.Errorf("cant create mock: %s", err))
+	defer db.Close()
+
+	// Global input output
+	inputParams := &constparams.GetStdCollectionParams{
+		Target:     "tag",
+		SortParam:  "date",
+		CountFilms: 2,
+		Key:        "комедия",
+		Delimiter:  "0",
+	}
+
+	expectedFilms := []modelsGlobal.Film{{
+		ID:           1,
+		Name:         "Игра престолов",
+		OriginalName: "Game of thrones",
+		ProdDate:     "2013",
+		EndYear:      "2019",
+		Type:         "serial",
+		PosterVer:    "12",
+		Rating:       9.2,
+		Genres:       []string{"фантастика", "драма"},
+		Actors:       []modelsGlobal.FilmActor{},
+		Artists:      []modelsGlobal.FilmPerson{},
+		Directors:    []modelsGlobal.FilmPerson{},
+		Writers:      []modelsGlobal.FilmPerson{},
+		Producers:    []modelsGlobal.FilmPerson{},
+		Operators:    []modelsGlobal.FilmPerson{},
+		Montage:      []modelsGlobal.FilmPerson{},
+		Composers:    []modelsGlobal.FilmPerson{},
+	}}
+
+	expected := modelsGlobal.Collection{
+		Name:  "комедия",
+		Films: expectedFilms,
+	}
+
+	// Input global
+	ctx := context.TODO()
+
+	// Films Main
+	// Data
+	outputFilms := []film.ModelSQL{{
+		ID:           1,
+		Name:         "Игра престолов",
+		OriginalName: sqltools.NewSQLNullString("Game of thrones"),
+		ProdDate:     "2013",
+		EndYear:      sqltools.NewSQLNNullDate("", ""),
+		PosterVer:    sqltools.NewSQLNullString("12"),
+		Rating:       sqltools.NewSQLNullFloat64(9.2),
+		Type:         sqltools.NewSQLNullString("serial"),
+	}}
+
+	// Create required setup for handling
+	rowsFilms := sqlmock.NewRows([]string{"film_id", "name", "original_name", "prod_date", "poster_ver", "type", "rating"})
+
+	for _, val := range outputFilms {
+		rowsFilms = rowsFilms.AddRow(
+			val.ID,
+			val.Name,
+			val.OriginalName,
+			val.ProdDate,
+			val.PosterVer,
+			val.Type,
+			val.Rating)
+	}
+
+	// Settings mock
+	mock.
+		ExpectQuery(regexp.QuoteMeta(collection.GetFilmsByGenreDate)).
+		WithArgs(inputParams.Key, inputParams.CountFilms, inputParams.Delimiter). // Values in query
+		WillReturnRows(rowsFilms)
+
+	// Serials
+	// Data
+	rowsSerials := sqlmock.NewRows([]string{"end_year"})
+
+	endYear, _ := time.Parse(constparams.OnlyDate, "2019")
+
+	rowsSerials = rowsSerials.AddRow(endYear)
+
+	mock.
+		ExpectQuery(regexp.QuoteMeta(film.GetShortSerialByID)).
+		WithArgs(expectedFilms[0].ID). // Values in query
+		WillReturnRows(rowsSerials)
+
+	// FilmsGenres
+	// Create required setup for handling
+	rowsFilmsGenres := sqlmock.NewRows([]string{"film_id", "name"})
+
+	for _, film := range expectedFilms {
+		for _, genre := range film.Genres {
+			rowsFilmsGenres = rowsFilmsGenres.AddRow(film.ID, genre)
+		}
+	}
+
+	// Settings mock
+	query := film.GetGenresFilmBatchBegin + strconv.Itoa(expectedFilms[0].ID) + film.GetGenresFilmBatchEnd
+
+	mock.
+		ExpectQuery(regexp.QuoteMeta(query)).
+		WillReturnRows(rowsFilmsGenres)
+
+	// Init
+	repo := collection.NewCollectionPostgres(&sqltools.Database{Connection: db})
+
+	// Check result
+	actual, err := repo.GetCollectionByGenre(ctx, inputParams)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
