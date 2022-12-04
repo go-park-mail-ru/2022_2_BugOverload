@@ -55,7 +55,8 @@ func TestPutImageHandler_Action_OK(t *testing.T) {
 
 	part, err := writer.CreatePart(metadataHeader)
 	require.Nil(t, err, "Body.Close must be success")
-	part.Write(imageBin)
+	_, err = part.Write(imageBin)
+	require.Nil(t, err, "part.Write(imageBin) must be success: ", err)
 
 	err = writer.Close()
 	require.Nil(t, err, "writer.Close() must be success: ", err)
