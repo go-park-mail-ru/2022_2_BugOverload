@@ -15,6 +15,8 @@ import (
 )
 
 // Repository provides the versatility of collection repositories.
+//
+//go:generate mockgen -source collectionpgx.go -destination mocks/mockcollectionrepository.go -package mockCollectionRepository
 type Repository interface {
 	GetCollectionByTag(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
 	GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error)
