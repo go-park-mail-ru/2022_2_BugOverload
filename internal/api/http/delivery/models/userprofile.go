@@ -1,6 +1,7 @@
 package models
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"net/http"
 	"strconv"
 
@@ -21,7 +22,12 @@ func NewUserProfileRequest() *UserProfileRequest {
 func (u *UserProfileRequest) Bind(r *http.Request) error {
 	vars := mux.Vars(r)
 
-	u.ID, _ = strconv.Atoi(vars["id"])
+	var err error
+
+	u.ID, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		return errors.ErrConvertQueryType
+	}
 
 	return nil
 }

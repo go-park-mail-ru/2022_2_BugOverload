@@ -3,6 +3,8 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -72,6 +74,107 @@ func TestUserGetSettingsHandler_Action_OK(t *testing.T) {
 	var actualBody *models.GetUserSettingsResponse
 
 	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
+func TestUserGetSettingsHandler_Action_UserNotFound(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := mockUserService.NewMockUserService(ctrl)
+
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/settings", nil)
+
+	r.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	handler := NewGetSettingsHandler(service)
+	handler.Configure(router, nil)
+
+	// Check result
+	handler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	bodyResponse, errResponse := io.ReadAll(response.Body)
+	require.Nil(t, errResponse, "io.ReadAll must be success")
+
+	err := response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: errors.ErrGetUserRequest.Error(),
+	}
+
+	var actualBody wrapper.ErrResponse
+
+	err = json.Unmarshal(bodyResponse, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
+
+func TestUserGetSettingsHandler_Action_ServiceError(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := mockUserService.NewMockUserService(ctrl)
+
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/settings", nil)
+
+	r.Header.Set("Content-Type", "application/json")
+
+	user := modelsGlobal.User{
+		ID: 1,
+	}
+
+	ctx := context.WithValue(r.Context(), constparams.CurrentUserKey, user)
+	r = r.WithContext(ctx)
+
+	expectedErr := errors.ErrUserNotFound
+
+	service.EXPECT().GetUserProfileSettings(r.Context(), &user).Return(modelsGlobal.User{}, expectedErr)
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	handler := NewGetSettingsHandler(service)
+	handler.Configure(router, nil)
+
+	// Check result
+	handler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	bodyResponse, errResponse := io.ReadAll(response.Body)
+	require.Nil(t, errResponse, "io.ReadAll must be success")
+
+	err := response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: expectedErr.Error(),
+	}
+
+	var actualBody wrapper.ErrResponse
+
+	err = json.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

@@ -211,3 +211,54 @@ func TestUserFilmRateDropHandler_Action_InvParam(t *testing.T) {
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
+
+func TestUserFilmRateDropHandler_Action_UserNotFound(t *testing.T) {
+	// Init mock
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	rateService := mockUserService.NewMockUserService(ctrl)
+
+	// Data
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/rate/drop", nil)
+	vars := make(map[string]string)
+	vars["id"] = "1"
+	r = mux.SetURLVars(r, vars)
+
+	r.Header.Set("Content-Type", "application/json")
+
+	// Init
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	handler := NewFilmRateDropHandler(rateService)
+	handler.Configure(router, nil)
+
+	// Check result
+	handler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	bodyResponse, errResponse := io.ReadAll(response.Body)
+	require.Nil(t, errResponse, "io.ReadAll must be success")
+
+	err := response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: errors.ErrGetUserRequest.Error(),
+	}
+
+	var actualBody wrapper.ErrResponse
+
+	err = json.Unmarshal(bodyResponse, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}

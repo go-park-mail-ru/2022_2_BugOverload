@@ -123,3 +123,50 @@ func TestGetImageHandler_Action_NotOK(t *testing.T) {
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
+
+func TestGetImageHandler_Action_BindError(t *testing.T) {
+	// Init mock
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := mockImageClient.NewMockImageService(ctrl)
+
+	// Data
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/image?object=connection_poster&key=4", nil)
+	r.Header.Set("Content-Type", "application/json")
+
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: errors.ErrUnsupportedMediaType.Error(),
+	}
+
+	// Init
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	handler := NewGetImageHandler(service)
+	handler.Configure(router, nil)
+
+	// Check result
+	handler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	body, err := io.ReadAll(response.Body)
+	require.Nil(t, err, "io.ReadAll must be success")
+
+	err = response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	var actualBody wrapper.ErrResponse
+
+	err = json.Unmarshal(body, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}

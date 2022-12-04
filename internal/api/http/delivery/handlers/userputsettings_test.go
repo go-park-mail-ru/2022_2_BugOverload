@@ -214,3 +214,52 @@ func TestUserPutSettingsHandler_Action_Password_EmpBody(t *testing.T) {
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
 }
+
+func TestUserPutSettingsHandler_Action_Nick_UserNotFound(t *testing.T) {
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	service := mockUserService.NewMockUserService(ctrl)
+
+	mcPostBody := map[string]string{
+		"nickname": "asad",
+	}
+	body, _ := json.Marshal(mcPostBody)
+	r := httptest.NewRequest(http.MethodPost, "/api/v1/user/settings", bytes.NewReader(body))
+
+	r.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	handler := NewPutSettingsHandler(service)
+	handler.Configure(router, nil)
+
+	// Check result
+	handler.Action(w, r)
+
+	// Check code
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+
+	// Check body
+	response := w.Result()
+
+	bodyResponse, errResponse := io.ReadAll(response.Body)
+	require.Nil(t, errResponse, "io.ReadAll must be success")
+
+	err := response.Body.Close()
+	require.Nil(t, err, "Body.Close must be success")
+
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: errors.ErrGetUserRequest.Error(),
+	}
+
+	var actualBody wrapper.ErrResponse
+
+	err = json.Unmarshal(bodyResponse, &actualBody)
+	require.Nil(t, err, "json.Unmarshal must be success")
+
+	require.Equal(t, expectedBody, actualBody, "Wrong body")
+}
