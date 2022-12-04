@@ -55,7 +55,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	service.EXPECT().GetPremieresCollection(r.Context(), &constparams.PremiersCollectionParams{
+	service.EXPECT().GetPremieresCollection(r.Context(), &constparams.GetPremiersCollectionParams{
 		CountFilms: 1,
 		Delimiter:  0,
 	}).Return(res, nil)
@@ -125,7 +125,7 @@ func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
 
 	r = r.WithContext(ctx)
 
-	service.EXPECT().GetPremieresCollection(r.Context(), &constparams.PremiersCollectionParams{
+	service.EXPECT().GetPremieresCollection(r.Context(), &constparams.GetPremiersCollectionParams{
 		CountFilms: 1,
 		Delimiter:  0,
 	}).Return(res, errors.ErrNotFoundInDB)

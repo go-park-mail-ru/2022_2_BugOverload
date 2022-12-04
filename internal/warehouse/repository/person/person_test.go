@@ -169,8 +169,11 @@ func TestPerson_GetByID_OK(t *testing.T) {
 	// Create required setup for handling
 	rowsFilmsGenres := sqlmock.NewRows([]string{"film_id", "genre"})
 
-	rowsFilmsGenres = rowsFilmsGenres.AddRow(filmID, "фантастика")
-	rowsFilmsGenres = rowsFilmsGenres.AddRow(filmID, "драма")
+	for _, film := range expectedFilms {
+		for _, genre := range film.Genres {
+			rowsFilmsGenres = rowsFilmsGenres.AddRow(film.ID, genre)
+		}
+	}
 
 	// Settings mock
 	query := film.GetGenresFilmBatchBegin + strconv.Itoa(filmID) + film.GetGenresFilmBatchEnd
@@ -184,8 +187,9 @@ func TestPerson_GetByID_OK(t *testing.T) {
 	// Create required setup for handling
 	rowsPersonImages := sqlmock.NewRows([]string{"image_key"})
 
-	rowsPersonImages = rowsPersonImages.AddRow("1")
-	rowsPersonImages = rowsPersonImages.AddRow("2")
+	for _, image := range expected.Images {
+		rowsPersonImages = rowsPersonImages.AddRow(image)
+	}
 
 	// Settings mock
 	mock.

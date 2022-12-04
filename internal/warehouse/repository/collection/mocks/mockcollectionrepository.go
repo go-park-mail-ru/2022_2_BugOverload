@@ -112,7 +112,7 @@ func (mr *MockRepositoryMockRecorder) GetCollectionByTag(ctx, params interface{}
 }
 
 // GetPremieresCollection mocks base method.
-func (m *MockRepository) GetPremieresCollection(ctx context.Context, params *constparams.PremiersCollectionParams) (models.Collection, error) {
+func (m *MockRepository) GetPremieresCollection(ctx context.Context, params *constparams.GetPremiersCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPremieresCollection", ctx, params)
 	ret0, _ := ret[0].(models.Collection)

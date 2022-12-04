@@ -381,15 +381,15 @@ func NewGetStdCollectionParams(params *proto.GetStdCollectionParams) *constparam
 	}
 }
 
-func NewPremiersCollectionParamsProto(params *constparams.PremiersCollectionParams) *proto.PremiersCollectionParams {
+func NewPremiersCollectionParamsProto(params *constparams.GetPremiersCollectionParams) *proto.PremiersCollectionParams {
 	return &proto.PremiersCollectionParams{
 		Delimiter:  uint32(params.Delimiter),
 		CountFilms: uint32(params.CountFilms),
 	}
 }
 
-func NewPremiersCollectionParams(params *proto.PremiersCollectionParams) *constparams.PremiersCollectionParams {
-	return &constparams.PremiersCollectionParams{
+func NewPremiersCollectionParams(params *proto.PremiersCollectionParams) *constparams.GetPremiersCollectionParams {
+	return &constparams.GetPremiersCollectionParams{
 		Delimiter:  int(params.Delimiter),
 		CountFilms: int(params.CountFilms),
 	}

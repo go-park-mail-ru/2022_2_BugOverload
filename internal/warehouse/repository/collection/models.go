@@ -36,12 +36,24 @@ func NewCollectionSQL() ModelSQL {
 }
 
 func (c *ModelSQL) Convert() models.Collection {
+	updateTime := ""
+
+	if !c.UpdateTime.Equal(time.Time{}) {
+		updateTime = c.UpdateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat)
+	}
+
+	createTime := ""
+
+	if !c.CreateTime.Equal(time.Time{}) {
+		createTime = c.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat)
+	}
+
 	res := models.Collection{
 		ID:         c.ID,
 		Name:       c.Name,
 		Time:       c.Time,
-		UpdateTime: c.UpdateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
-		CreateTime: c.CreateTime.Format(innerPKG.DateFormat + " " + innerPKG.TimeFormat),
+		UpdateTime: updateTime,
+		CreateTime: createTime,
 
 		Description: c.Description.String,
 		Poster:      c.Poster.String,

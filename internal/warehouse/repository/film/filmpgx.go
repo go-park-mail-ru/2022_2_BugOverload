@@ -49,7 +49,7 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 			&response.Description,
 			&response.ShortDescription,
 			&response.AgeLimit,
-			&response.Duration,
+			&response.DurationMinutes,
 			&response.PosterHor,
 			&response.Budget,
 			&response.BoxOffice,

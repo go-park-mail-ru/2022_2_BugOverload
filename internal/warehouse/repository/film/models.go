@@ -60,11 +60,11 @@ type ModelPersonSQL struct {
 }
 
 type ModelSQL struct {
-	ID          int
-	Name        string
-	ProdDate    string
-	Description string
-	Duration    int
+	ID              int
+	Name            string
+	ProdDate        string
+	Description     string
+	DurationMinutes int
 
 	ShortDescription sql.NullString
 	OriginalName     sql.NullString
@@ -120,7 +120,7 @@ func (f *ModelSQL) Convert() models.Film {
 		Name:            f.Name,
 		ProdDate:        f.ProdDate,
 		Description:     f.Description,
-		DurationMinutes: f.Duration,
+		DurationMinutes: f.DurationMinutes,
 
 		ShortDescription: f.ShortDescription.String,
 		OriginalName:     f.OriginalName.String,
@@ -260,7 +260,7 @@ func GetGenresBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]M
 }
 
 const (
-	getProdCountriesFilmBatchBegin = `
+	GetProdCountriesFilmBatchBegin = `
 SELECT f.film_id,
        countries.name
 FROM countries
@@ -268,7 +268,7 @@ FROM countries
          JOIN films f ON fc.fk_film_id = f.film_id
 WHERE f.film_id IN (`
 
-	getProdCountriesBatchEnd = `) ORDER BY f.film_id, fc.weight DESC`
+	GetProdCountriesBatchEnd = `) ORDER BY f.film_id, fc.weight DESC`
 )
 
 func GetProdCountriesBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
@@ -284,7 +284,7 @@ func GetProdCountriesBatch(ctx context.Context, target []ModelSQL, conn *sql.Con
 
 	setIDRes := strings.Join(setID, ",")
 
-	query := getProdCountriesFilmBatchBegin + setIDRes + getProdCountriesBatchEnd
+	query := GetProdCountriesFilmBatchBegin + setIDRes + GetProdCountriesBatchEnd
 
 	rowsFilmsProdCountries, err := conn.QueryContext(ctx, query)
 	if err != nil {
@@ -314,7 +314,7 @@ func GetProdCountriesBatch(ctx context.Context, target []ModelSQL, conn *sql.Con
 }
 
 const (
-	getDirectorsFilmBatchBegin = `
+	GetDirectorsFilmBatchBegin = `
 SELECT DISTINCT
         f.film_id,
         persons.person_id,
@@ -332,7 +332,7 @@ WHERE persons.person_id IN (
     ORDER BY pp.weight DESC
 ) AND f.film_id IN (`
 
-	getDirectorsFilmBatchEnd = `) ORDER BY f.film_id`
+	GetDirectorsFilmBatchEnd = `) ORDER BY f.film_id`
 )
 
 func GetDirectorsBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
@@ -348,7 +348,7 @@ func GetDirectorsBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) (
 
 	setIDRes := strings.Join(setID, ",")
 
-	query := getDirectorsFilmBatchBegin + setIDRes + getDirectorsFilmBatchEnd
+	query := GetDirectorsFilmBatchBegin + setIDRes + GetDirectorsFilmBatchEnd
 
 	rowsFilmsDirectors, err := conn.QueryContext(ctx, query)
 	if err != nil {
@@ -438,7 +438,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
 	res := make([]ModelSQL, 0)
 
-	rowsFilms, err := conn.QueryContext(ctx, getNewFilms, args...)
+	rowsFilms, err := conn.QueryContext(ctx, GetNewFilms, args...)
 	if err != nil {
 		logrus.Info("NeededCondition ", err)
 		return []ModelSQL{}, err
@@ -454,7 +454,7 @@ func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]Model
 			&film.ProdDate,
 			&film.PosterVer,
 			&film.Rating,
-			&film.Duration,
+			&film.DurationMinutes,
 			&film.Description)
 		if err != nil {
 			return []ModelSQL{}, err
