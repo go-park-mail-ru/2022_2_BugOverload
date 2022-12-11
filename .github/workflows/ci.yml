@@ -13,11 +13,11 @@ jobs:
     needs: [ check ]
     steps:
       - uses: actions/checkout@v2
-      - run: make build
+      - run: make infro-build
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: main
+          path: cmd
   tests:
     runs-on: ubuntu-latest
     container: lonkidely/golang_web_light
