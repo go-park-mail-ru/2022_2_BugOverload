@@ -8,6 +8,7 @@ on:
     branches:
       - deploy
 
+
 jobs:
   linter:
     name: Run linter
@@ -61,6 +62,23 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export AWS_PROFILE=${{ secrets.AWS_PROFILE }}
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+            export POSTGRES_SSLMODE=${{ secrets.POSTGRES_SSLMODE }}
+            export GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}
+            export GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+            export GRAFANA_URL=${{ secrets.GRAFANA_URL }}
+            export PROMETHEUS_URL=${{ secrets.PROMETHEUS_URL }}
+            export TARGET_MONITOR=${{ secrets.TARGET_MONITOR }}
+            
             make stop
             make clear
 
@@ -71,6 +89,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
+            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
             git pull
 
       - name: Transfer binaries to server
@@ -90,4 +109,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
+            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
             make prod-deploy
