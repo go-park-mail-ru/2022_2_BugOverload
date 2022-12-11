@@ -13,7 +13,7 @@ jobs:
     needs: [ check ]
     steps:
       - uses: actions/checkout@v2
-      - run: make infro-build
+      - run: make build
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
