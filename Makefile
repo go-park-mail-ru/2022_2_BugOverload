@@ -13,7 +13,7 @@ create-env:
 	go mod download
 
 run-linter:
-	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTERS_CONFIG)
+	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTER_CFG)
 	go fmt $(PKG)
 
 build:
