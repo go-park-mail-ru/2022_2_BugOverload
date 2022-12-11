@@ -9,7 +9,8 @@ jobs:
       - run: make check
   build:
     runs-on: ubuntu-latest
-    container: lonkidely/golang_web_light
+    container:
+      image: lonkidely/golang_web_light
     needs: [ check ]
     steps:
       - uses: actions/checkout@v2
