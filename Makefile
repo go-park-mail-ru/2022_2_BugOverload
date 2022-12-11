@@ -13,8 +13,8 @@ create-env:
 	go mod download
 
 run-linter:
-	${GOPATH}/bin/golangci-lint run ${PKG} --config=${LINTERS_CONFIG}
-	go fmt ${PKG}
+	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTERS_CONFIG)
+	go fmt $(PKG)
 
 build:
 	rm -f cmd/api/api_bin cmd/image/image_bin cmd/warehouse/warehouse_bin cmd/auth/auth_bin cmd/filldb/filldb_bin
