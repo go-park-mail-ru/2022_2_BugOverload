@@ -32,5 +32,4 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path:
-            - cmd/*/*_bin
+          path: cmd/*/*_bin
