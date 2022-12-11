@@ -66,11 +66,8 @@ fill-S3-fast:
 MIGRATIONS_DIR = scripts/migrations
 DB_URL := $(shell echo postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${POSTGRES_SSLMODE})
 
-fill-db-debug: export POSTGRES_HOST = localhost
-fill-db-debug:
-	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/config.toml --data-path=./test/newdata
-
-fill-db-prod:
+fill-db: export POSTGRES_HOST=localhost
+fill-db:
 	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/config.toml --data-path=./test/newdata
 
 # Production BEGIN ----------------------------------------------------
@@ -83,7 +80,7 @@ prod-deploy:
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
-	make fill-db-prod
+	make fill-db
 	docker-compose -f docker-compose.production.yml up -d image warehouse auth api
 	docker-compose -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-slow ${IMAGES} ${S3_ENDPOINT}
@@ -103,7 +100,7 @@ debug-deploy:
 	docker-compose up -d main_db admin_db localstack
 	sleep 1
 	make build
-	make fill-db-debug
+	make fill-db
 	docker-compose up -d image warehouse auth api
 	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
