@@ -1,0 +1,29 @@
+name: deploy
+
+on:
+  pull_request:
+    branches:
+      - deploy
+  push:
+    branches:
+      - deploy
+
+jobs:
+  linter:
+    name: Run linter
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-linter
+
+  tests:
+    needs: linter
+    name: Run tests
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-tests
