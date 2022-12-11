@@ -1,0 +1,134 @@
+name: deploy
+
+on:
+  pull_request:
+    branches:
+      - deploy
+  push:
+    branches:
+      - deploy
+
+
+jobs:
+  linter:
+    name: Run linter
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-linter
+
+  tests:
+    needs: linter
+    name: Run tests
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-tests
+
+  build:
+    needs: tests
+    name: Build
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: cmd/*/*_bin
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Stop backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export AWS_PROFILE=${{ secrets.AWS_PROFILE }}
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+            export POSTGRES_SSLMODE=${{ secrets.POSTGRES_SSLMODE }}
+            export GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}
+            export GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+            export GRAFANA_URL=${{ secrets.GRAFANA_URL }}
+            export PROMETHEUS_URL=${{ secrets.PROMETHEUS_URL }}
+            export TARGET_MONITOR=${{ secrets.TARGET_MONITOR }}
+            
+            make stop
+            make clear
+
+      - name: Update backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            git pull
+
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: binaries
+
+      - name: Transfer binaries to server
+        uses: appleboy/scp-action@v0.0.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "binaries/*"
+          target: /home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/
+          strip_components: 1
+
+      - name: Run backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            
+            chmod -R 755 cmd/
+            chown -R ${{ secrets.USERNAME }}:${{ secrets.USERNAME }} cmd/  
+            
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export AWS_PROFILE=${{ secrets.AWS_PROFILE }}
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+            export POSTGRES_SSLMODE=${{ secrets.POSTGRES_SSLMODE }}
+            export GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}
+            export GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+            export GRAFANA_URL=${{ secrets.GRAFANA_URL }}
+            export PROMETHEUS_URL=${{ secrets.PROMETHEUS_URL }}
+            export TARGET_MONITOR=${{ secrets.TARGET_MONITOR }}
+            
+            make prod-deploy
