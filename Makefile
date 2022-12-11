@@ -80,7 +80,6 @@ prod-create-env:
 	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem ./cmd/api/
 
 prod-deploy:
-	make clear
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
