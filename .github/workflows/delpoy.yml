@@ -49,11 +49,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-20.04
     steps:
-      - name: Download binaries
-        uses: actions/download-artifact@v2
-        with:
-          name: binaries
-
       - name: Stop backend
         uses: appleboy/ssh-action@master
         with:
@@ -92,13 +87,17 @@ jobs:
             cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
             git pull
 
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
       - name: Transfer binaries to server
         uses: appleboy/scp-action@v0.0.10
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: binaries
+          source: "binaries/*"
           target: /home/webapps/movie-gate.online/backend/2022_2_BugOverload/bin/
           strip_components: 1
 
