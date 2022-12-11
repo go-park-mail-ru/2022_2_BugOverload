@@ -33,8 +33,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path:
-            - cmd/api/api_bin
-            - cmd/auth/auth_bin
-            - cmd/filldb/filldb_bin
-            - cmd/image/image_bin
-            - cmd/warehouse/warehouse_bin
+            - cmd/*/*_bin
