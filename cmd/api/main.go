@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/handlers"
 	clientAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	clientImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
