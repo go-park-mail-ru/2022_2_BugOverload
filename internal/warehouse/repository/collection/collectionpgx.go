@@ -189,7 +189,7 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 
 	// Films - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		response.Films, err = film.GetNewFilmsBatch(ctx, conn, params.CountFilms, params.Delimiter)
+		response.Films, err = film.GetFilmsPremieresBatch(ctx, conn, params.CountFilms, params.Delimiter)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
 				"Film main info Err: params input: values - [%+v]. Special Error [%s]",

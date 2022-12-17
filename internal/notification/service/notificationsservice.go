@@ -18,6 +18,7 @@ type NotificationsService interface {
 
 // notificationsService is implementation for users service corresponding to the NotificationsService interface.
 type notificationsService struct {
+	notificationHub  repository.NotificationHub
 	notificationRepo repository.NotificationRepository
 }
 

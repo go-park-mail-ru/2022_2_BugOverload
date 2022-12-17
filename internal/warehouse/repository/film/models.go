@@ -435,7 +435,7 @@ func GetShortFilmsBatch(ctx context.Context, conn *sql.Conn, query string, args 
 	return res, nil
 }
 
-func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
+func GetFilmsPremieresBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
 	res := make([]ModelSQL, 0)
 
 	rowsFilms, err := conn.QueryContext(ctx, GetNewFilms, args...)
@@ -456,6 +456,44 @@ func GetNewFilmsBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]Model
 			&film.Rating,
 			&film.DurationMinutes,
 			&film.Description)
+		if err != nil {
+			return []ModelSQL{}, err
+		}
+
+		if !film.PosterVer.Valid {
+			film.PosterVer.String = constparams.DefFilmPosterVer
+		}
+
+		res = append(res, film)
+	}
+
+	if len(res) == 0 {
+		logrus.Info("BadCondition")
+		return []ModelSQL{}, sql.ErrNoRows
+	}
+
+	return res, nil
+}
+
+func GetFilmsRealisesBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
+	res := make([]ModelSQL, 0)
+
+	rowsFilms, err := conn.QueryContext(ctx, GetNewFilms, args...)
+	if err != nil {
+		logrus.Info("NeededCondition ", err)
+		return []ModelSQL{}, err
+	}
+	defer rowsFilms.Close()
+
+	for rowsFilms.Next() {
+		film := NewFilmSQL()
+
+		err = rowsFilms.Scan(
+			&film.ID,
+			&film.Name,
+			&film.ProdDate,
+			&film.PosterVer,
+			&film.Rating)
 		if err != nil {
 			return []ModelSQL{}, err
 		}
