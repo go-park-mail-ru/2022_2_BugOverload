@@ -1,25 +1,36 @@
 package repository
 
-import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-)
+import "sync"
 
 type NotificationHub interface {
-	UpdateHub([]models.Film)
+	Update([]interface{})
+	Get() []interface{}
 }
 
 // notificationPostgres is implementation repository of Postgres corresponding to the Repository interface.
 type notificationCache struct {
-	hub []models.Film
+	mu  *sync.RWMutex
+	hub []interface{}
 }
 
 // NewNotificationCache is constructor for notificationPostgres.
 func NewNotificationCache() NotificationHub {
 	return &notificationCache{
-		hub: make([]models.Film, 0),
+		mu:  &sync.RWMutex{},
+		hub: make([]interface{}, 0),
 	}
 }
 
-func (n *notificationCache) UpdateHub(films []models.Film) {
-	n.hub = films
+func (n *notificationCache) Update(messages []interface{}) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+
+	n.hub = messages
+}
+
+func (n *notificationCache) Get() []interface{} {
+	n.mu.RLock()
+	defer n.mu.RUnlock()
+
+	return n.hub
 }

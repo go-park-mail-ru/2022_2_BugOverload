@@ -478,7 +478,7 @@ func GetFilmsPremieresBatch(ctx context.Context, conn *sql.Conn, args ...any) ([
 func GetFilmsRealisesBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]ModelSQL, error) {
 	res := make([]ModelSQL, 0)
 
-	rowsFilms, err := conn.QueryContext(ctx, GetNewFilms, args...)
+	rowsFilms, err := conn.QueryContext(ctx, getRelease, args...)
 	if err != nil {
 		logrus.Info("NeededCondition ", err)
 		return []ModelSQL{}, err

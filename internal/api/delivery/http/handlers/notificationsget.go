@@ -1,14 +1,16 @@
 package handlers
 
 import (
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/notification/service"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
@@ -28,6 +30,7 @@ func NewGetNotificationsHandler(service service.NotificationsService) handler.Ha
 }
 
 func (h *getUserNotificationsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
+	// r.HandleFunc("/api/v1/notifications", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 	r.HandleFunc("/api/v1/notifications", h.Action).
 		Methods(http.MethodGet)
 }
@@ -40,26 +43,31 @@ var upgrade = websocket.Upgrader{
 	},
 }
 
-func sendNewMsgNotifications(client *websocket.Conn, message []byte) {
-	ticker := time.NewTicker(1 * time.Minute)
-	for {
-		err := client.WriteMessage(websocket.TextMessage, message)
+func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
+	ticker := time.NewTicker(1 * time.Second)
+	for _, val := range messages {
+		message, err := json.Marshal(val)
 		if err != nil {
 			break
 		}
 
+		w, err := client.NextWriter(websocket.TextMessage)
+		if err != nil {
+			ticker.Stop()
+			break
+		}
+
+		_, err = w.Write(message)
+		if err != nil {
+			ticker.Stop()
+			break
+		}
+
+		w.Close()
+
 		<-ticker.C
 	}
 }
-
-// func newMessage() []byte {
-//	data, _ := json.Marshal(map[string]string{
-//		"email":   "123",
-//		"name":    "123" + " " + "123",
-//		"subject": "123" + " " + "123",
-//	})
-//	return data
-// }
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
@@ -75,8 +83,11 @@ func sendNewMsgNotifications(client *websocket.Conn, message []byte) {
 func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Request) {
 	connection, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {
-		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrUpdateWebSocketProtocol)
+		wrapper.DefaultHandlerHTTPError(
+			r.Context(),
+			w,
+			stdErrors.WithMessagef(errors.ErrUpdateWebSocketProtocol, "Special Error [%s]", err))
 	}
 
-	go sendNewMsgNotifications(connection, []byte("asd"))
+	go sendNewMsgNotifications(connection, h.notificationsService.GetMessages())
 }
