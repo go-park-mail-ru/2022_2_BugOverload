@@ -30,8 +30,7 @@ func NewGetNotificationsHandler(service service.NotificationsService) handler.Ha
 }
 
 func (h *getUserNotificationsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	// r.HandleFunc("/api/v1/notifications", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
-	r.HandleFunc("/api/v1/notifications", h.Action).
+	r.HandleFunc("/api/v1/notifications", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
 		Methods(http.MethodGet)
 }
 
@@ -44,7 +43,7 @@ var upgrade = websocket.Upgrader{
 }
 
 func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(constparams.PushTimeout)
 	for _, val := range messages {
 		message, err := json.Marshal(val)
 		if err != nil {

@@ -4,7 +4,6 @@ import (
 	"time"
 )
 
-// Handler factory
 const (
 	DateFormat = "2006.01.02"
 	TimeFormat = "15:04:05"
@@ -66,6 +65,9 @@ const (
 	// WebSocket size buffers
 	WSBufSizeRead  = 1024
 	WSBufSizeWrite = 1024
+
+	// Push timeout
+	PushTimeout = 30 * time.Second
 )
 
 type ContextKeyType string
