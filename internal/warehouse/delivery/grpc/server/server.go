@@ -71,6 +71,15 @@ func (s *WarehouseServiceGRPCServer) GetReviewsByFilmID(ctx context.Context, par
 	return models.NewReviewsProto(reviews), nil
 }
 
+func (s *WarehouseServiceGRPCServer) GetSimilarFilms(ctx context.Context, params *proto.GetSimilarFilmsParams) (*proto.Collection, error) {
+	collection, err := s.collectionManager.GetSimilarFilms(ctx, models.NewGetSimilarFilmsParams(params))
+	if err != nil {
+		return &proto.Collection{}, wrapper.DefaultHandlerGRPCError(ctx, err)
+	}
+
+	return models.NewCollectionProto(&collection), nil
+}
+
 func (s *WarehouseServiceGRPCServer) GetStdCollection(ctx context.Context, params *proto.GetStdCollectionParams) (*proto.Collection, error) {
 	collection, err := s.collectionManager.GetStdCollection(ctx, models.NewGetStdCollectionParams(params))
 	if err != nil {

@@ -463,3 +463,15 @@ func NewSearchResponse(response *proto.SearchResponse) models.Search {
 	}
 	return res
 }
+
+func NewGetSimilarFilmsParamsProto(params *constparams.GetSimilarFilmsParams) *proto.GetSimilarFilmsParams {
+	return &proto.GetSimilarFilmsParams{
+		FilmID: uint32(params.FilmID),
+	}
+}
+
+func NewGetSimilarFilmsParams(params *proto.GetSimilarFilmsParams) *constparams.GetSimilarFilmsParams {
+	return &constparams.GetSimilarFilmsParams{
+		FilmID: int(params.FilmID),
+	}
+}

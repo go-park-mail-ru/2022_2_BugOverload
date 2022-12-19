@@ -921,3 +921,80 @@ func TestCollectionService_GetCollectionNotAuthorized_RepoErr(t *testing.T) {
 	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
+
+func TestCollectionService_GetSimilarFilms_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockCollectionRepository.NewMockRepository(ctrl)
+
+	// Data
+	inputParams := &constparams.GetSimilarFilmsParams{
+		FilmID: 10,
+	}
+
+	output := models.Collection{
+		Name: "Похожие фильмы и сериалы",
+		Films: []models.Film{
+			{
+				ID:          1,
+				Name:        "Test film",
+				Description: "Test description",
+			},
+		},
+	}
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	repository.EXPECT().GetSimilarFilms(ctx, inputParams).Return(output, nil)
+
+	// Action
+	collectionService := service.NewCollectionService(repository)
+
+	actual, err := collectionService.GetSimilarFilms(ctx, inputParams)
+
+	// Check success
+	require.Nil(t, err, "Handling must be without errors")
+
+	// Check result handling
+	require.Equal(t, output, actual)
+}
+
+func TestCollectionService_GetSimilarFilms_NOT_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mockCollectionRepository.NewMockRepository(ctrl)
+
+	// Data
+	inputParams := &constparams.GetSimilarFilmsParams{
+		FilmID: 10,
+	}
+
+	expectedErr := errors.ErrWorkDatabase
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	repository.EXPECT().GetSimilarFilms(ctx, inputParams).Return(models.Collection{}, expectedErr)
+
+	// Action
+	collectionService := service.NewCollectionService(repository)
+
+	_, actualErr := collectionService.GetSimilarFilms(ctx, inputParams)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
+}

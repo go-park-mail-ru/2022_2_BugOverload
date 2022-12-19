@@ -120,4 +120,26 @@ WHERE fk_collection_id = $1`
 SELECT nickname
 FROM users
 WHERE user_id = $1`
+
+	getSimilarFilms = `
+SELECT f.film_id,
+       f.name,
+       f.original_name,
+       extract(YEAR FROM f.prod_date),
+       f.poster_ver,
+       f.type,
+       f.rating
+FROM films f
+WHERE f.film_id IN (
+    SELECT fk_film_id
+    FROM film_genres
+    WHERE fk_film_id <> $1 AND fk_genre_id IN (
+        SELECT fk_genre_id
+        FROM film_genres
+        WHERE fk_film_id = $1
+        ORDER BY weight DESC
+        LIMIT 2
+    )
+    ORDER BY weight DESC
+)`
 )

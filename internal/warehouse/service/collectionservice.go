@@ -21,6 +21,7 @@ type CollectionService interface {
 	GetPremieresCollection(ctx context.Context, params *constparams.GetPremiersCollectionParams) (models.Collection, error)
 	GetCollectionAuthorized(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
 	GetCollectionNotAuthorized(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+	GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error)
 }
 
 // collectionService is implementation for collection service corresponding to the CollectionService interface.
@@ -151,5 +152,14 @@ func (c *collectionService) GetCollectionNotAuthorized(ctx context.Context, para
 
 	collection.Author.ID = 0
 
+	return collection, nil
+}
+
+func (c *collectionService) GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error) {
+	collection, err := c.collectionRepo.GetSimilarFilms(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetSimilarFilms")
+	}
+	collection.Name = "Похожие фильмы и сериалы"
 	return collection, nil
 }

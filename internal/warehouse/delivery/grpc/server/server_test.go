@@ -947,3 +947,102 @@ func TestWarehouseServiceGRPCServer_Search_NOT_OK(t *testing.T) {
 	// Check result handling
 	require.Equal(t, expectedErr, actualErr)
 }
+
+// Handler OK, NOT OK workflow in tests
+func TestWarehouseServiceGRPCServer_GetSimilarFilms_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	collectionService := mockWarehouseService.NewMockCollectionService(ctrl)
+	filmService := mockWarehouseService.NewMockFilmService(ctrl)
+	personService := mockWarehouseService.NewMockPersonService(ctrl)
+	searchService := mockWarehouseService.NewMockSearchService(ctrl)
+
+	// Data
+	inputService := &constparams.GetSimilarFilmsParams{
+		FilmID: 10,
+	}
+
+	outputService := models.Collection{
+		Name:  "Похожие фильмы и сериалы",
+		Films: []models.Film{},
+	}
+
+	input := protoModels.NewGetSimilarFilmsParamsProto(inputService)
+
+	expected := protoModels.NewCollectionProto(&outputService)
+
+	// Create required setup for handling
+	ctx := context.TODO()
+
+	// Settings mock
+	collectionService.EXPECT().GetSimilarFilms(ctx, inputService).Return(outputService, nil)
+
+	// Init
+	grpcServer := grpc.NewServer()
+
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+
+	// Action
+	actual, err := warehouseServer.GetSimilarFilms(ctx, input)
+
+	// Check success
+	require.Nil(t, err, "Handling must be without errors")
+
+	// Check result handling
+	require.Equal(t, expected, actual)
+}
+
+func TestWarehouseServiceGRPCServer_GetSimilarFilms_NOT_OK(t *testing.T) {
+	// Work with mocks
+	t.Parallel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	collectionService := mockWarehouseService.NewMockCollectionService(ctrl)
+	filmService := mockWarehouseService.NewMockFilmService(ctrl)
+	personService := mockWarehouseService.NewMockPersonService(ctrl)
+	searchService := mockWarehouseService.NewMockSearchService(ctrl)
+
+	// Data
+	inputService := &constparams.GetSimilarFilmsParams{
+		FilmID: 10,
+	}
+
+	outputServiceErr := errors.ErrWorkDatabase
+
+	input := protoModels.NewGetSimilarFilmsParamsProto(inputService)
+
+	expectedErr := status.Error(codes.Internal, errors.ErrWorkDatabase.Error())
+
+	// Create required setup for handling
+	oldLogger := logrus.New()
+	logger := logrus.NewEntry(oldLogger)
+
+	ctx := context.WithValue(context.TODO(), constparams.LoggerKey, logger)
+
+	requestID := uuid.NewV4().String()
+
+	ctx = context.WithValue(ctx, constparams.RequestIDKey, requestID)
+
+	// Settings mock
+	collectionService.EXPECT().GetSimilarFilms(ctx, inputService).Return(models.Collection{}, outputServiceErr)
+
+	// Init
+	grpcServer := grpc.NewServer()
+
+	warehouseServer := server.NewWarehouseServiceGRPCServer(grpcServer, collectionService, filmService, personService, searchService)
+
+	// Action
+	_, actualErr := warehouseServer.GetSimilarFilms(ctx, input)
+
+	// Check success
+	require.NotNil(t, actualErr, "Handling must be error")
+
+	// Check result handling
+	require.Equal(t, expectedErr, actualErr)
+}

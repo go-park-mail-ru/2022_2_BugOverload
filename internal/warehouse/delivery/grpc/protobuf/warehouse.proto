@@ -178,11 +178,17 @@ message SearchResponse {
   repeated Person Persons = 3;
 }
 
+message GetSimilarFilmsParams {
+  uint32 FilmID = 1;
+}
+
+
 service WarehouseService {
   // Film
   rpc GetRecommendation(Nothing) returns (Film) {}
   rpc GetFilmByID(GetFilmParams) returns (Film) {}
   rpc GetReviewsByFilmID(GetFilmReviewsParams) returns (Reviews) {}
+  rpc GetSimilarFilms(GetSimilarFilmsParams) returns (Collection) {}
 
   // Collection
   rpc GetStdCollection(GetStdCollectionParams) returns (Collection) {}

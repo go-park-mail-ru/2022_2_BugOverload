@@ -125,3 +125,18 @@ func (mr *MockRepositoryMockRecorder) GetPremieresCollection(ctx, params interfa
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremieresCollection", reflect.TypeOf((*MockRepository)(nil).GetPremieresCollection), ctx, params)
 }
+
+// GetSimilarFilms mocks base method.
+func (m *MockRepository) GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSimilarFilms", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSimilarFilms indicates an expected call of GetSimilarFilms.
+func (mr *MockRepositoryMockRecorder) GetSimilarFilms(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSimilarFilms", reflect.TypeOf((*MockRepository)(nil).GetSimilarFilms), ctx, params)
+}
