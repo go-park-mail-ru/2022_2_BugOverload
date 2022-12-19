@@ -51,10 +51,10 @@ func TestRecommendationHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -104,10 +104,10 @@ func TestRecommendationHandler_Action_NotOKService(t *testing.T) {
 
 	recommendationHandler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

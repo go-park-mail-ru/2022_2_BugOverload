@@ -38,7 +38,7 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTP
 
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
-// @Summary Get user personal collections
+// @Summary GetNotifications user personal collections
 // @Description Collections by create time OR update time
 // @Description All fields required
 // @tags collection, completed

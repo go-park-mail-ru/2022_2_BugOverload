@@ -69,13 +69,13 @@ func TestUserGetActivityOnFilmHandler_Action_OK(t *testing.T) {
 	handler := NewGetActivityOnFilmHandler(userActivityService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -125,13 +125,13 @@ func TestUserGetActivityOnFilmHandler_Action_NotOK(t *testing.T) {
 	handler := NewGetActivityOnFilmHandler(userActivityService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -170,13 +170,13 @@ func TestUserGetActivityOnFilmHandler_Action_UserNotFound(t *testing.T) {
 	handler := NewGetActivityOnFilmHandler(userActivityService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)
@@ -234,13 +234,13 @@ func TestUserGetActivityOnFilmHandler_Action_ServiceError(t *testing.T) {
 	handler := NewGetActivityOnFilmHandler(userActivityService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

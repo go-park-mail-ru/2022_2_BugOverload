@@ -47,10 +47,10 @@ func TestUserService_GetUserProfileByID_OK(t *testing.T) {
 
 	actual, err := userService.GetUserProfileByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -82,10 +82,10 @@ func TestUserService_GetUserProfileByID_NOT_OK(t *testing.T) {
 
 	_, actualErr := userService.GetUserProfileByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -120,10 +120,10 @@ func TestUserService_GetUserProfileSettings_OK(t *testing.T) {
 
 	actual, err := userService.GetUserProfileSettings(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -155,10 +155,10 @@ func TestUserService_GetUserProfileSettings_NOT_OK(t *testing.T) {
 
 	_, actualErr := userService.GetUserProfileSettings(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -193,7 +193,7 @@ func TestUserService_ChangeUserProfileSettings_Nickname_OK(t *testing.T) {
 
 	actualErr := userService.ChangeUserProfileSettings(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, actualErr, "Handling must be without errors")
 }
 
@@ -229,7 +229,7 @@ func TestUserService_ChangeUserProfileSettings_Password_OK(t *testing.T) {
 
 	actualErr := userService.ChangeUserProfileSettings(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, actualErr, "Handling must be without errors")
 }
 
@@ -266,10 +266,10 @@ func TestUserService_ChangeUserProfileSettings_Nickname_NOT_OK(t *testing.T) {
 
 	actualErr := userService.ChangeUserProfileSettings(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -307,10 +307,10 @@ func TestUserService_ChangeUserProfileSettings_Password_NOT_OK(t *testing.T) {
 
 	actualErr := userService.ChangeUserProfileSettings(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -350,10 +350,10 @@ func TestUserService_FilmRateUpdate_OK(t *testing.T) {
 
 	actual, err := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -393,10 +393,10 @@ func TestUserService_FilmRateSet_OK(t *testing.T) {
 
 	actual, err := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -430,10 +430,10 @@ func TestUserService_FilmRate_Score_NOT_OK(t *testing.T) {
 
 	_, actualErr := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -470,10 +470,10 @@ func TestUserService_FilmRate_RepoExistErr(t *testing.T) {
 
 	_, actualErr := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -511,10 +511,10 @@ func TestUserService_FilmRate_RepoSetErr(t *testing.T) {
 
 	_, actualErr := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -552,10 +552,10 @@ func TestUserService_FilmRate_RepoUpdateErr(t *testing.T) {
 
 	_, actualErr := userService.FilmRate(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -594,10 +594,10 @@ func TestUserService_FilmRateDrop_OK(t *testing.T) {
 
 	actual, err := userService.FilmRateDrop(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -633,10 +633,10 @@ func TestUserService_FilmRateDrop_RepoExistErr(t *testing.T) {
 
 	_, actualErr := userService.FilmRateDrop(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -672,10 +672,10 @@ func TestUserService_FilmRateDrop_NotExist(t *testing.T) {
 
 	_, actualErr := userService.FilmRateDrop(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -712,10 +712,10 @@ func TestUserService_FilmRateDrop_RepoDropErr(t *testing.T) {
 
 	_, actualErr := userService.FilmRateDrop(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -753,7 +753,7 @@ func TestUserService_NewFilmReview_OK(t *testing.T) {
 
 	actualErr := userService.NewFilmReview(ctx, inputUser, inputReview, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, actualErr, "Handling must be without errors")
 }
 
@@ -793,10 +793,10 @@ func TestUserService_NewFilmReview_NOT_OK(t *testing.T) {
 
 	actualErr := userService.NewFilmReview(ctx, inputUser, inputReview, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -834,10 +834,10 @@ func TestUserService_GetUserActivityOnFilm_OK(t *testing.T) {
 
 	actual, err := userService.GetUserActivityOnFilm(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -873,10 +873,10 @@ func TestUserService_GetUserActivityOnFilm_NOT_OK(t *testing.T) {
 
 	_, actualErr := userService.GetUserActivityOnFilm(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -919,10 +919,10 @@ func TestUserService_GetUserCollections_OK(t *testing.T) {
 
 	actual, err := userService.GetUserCollections(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -960,10 +960,10 @@ func TestUserService_GetUserCollections_NOT_OK(t *testing.T) {
 
 	_, actualErr := userService.GetUserCollections(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1000,7 +1000,7 @@ func TestUserService_AddFilmToUserCollection_OK(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, actualErr, "Handling must be without errors")
 }
 
@@ -1037,10 +1037,10 @@ func TestUserService_AddFilmToUserCollection_AuthorErr(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1077,10 +1077,10 @@ func TestUserService_AddFilmToUserCollection_NotAuthor(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1118,10 +1118,10 @@ func TestUserService_AddFilmToUserCollection_ExistErr(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1159,10 +1159,10 @@ func TestUserService_AddFilmToUserCollection_Exist(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1201,10 +1201,10 @@ func TestUserService_AddFilmToUserCollection_AddFilmErr(t *testing.T) {
 
 	actualErr := userService.AddFilmToUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1241,7 +1241,7 @@ func TestUserService_DropFilmFromUserCollection_OK(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, actualErr, "Handling must be without errors")
 }
 
@@ -1278,10 +1278,10 @@ func TestUserService_DropFilmFromUserCollection_AuthorErr(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1318,10 +1318,10 @@ func TestUserService_DropFilmFromUserCollection_NotAuthor(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1359,10 +1359,10 @@ func TestUserService_DropFilmFromUserCollection_ExistErr(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1400,10 +1400,10 @@ func TestUserService_DropFilmFromUserCollection_NotExist(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -1442,9 +1442,9 @@ func TestUserService_DropFilmFromUserCollection_DropFilmErr(t *testing.T) {
 
 	actualErr := userService.DropFilmFromUserCollection(ctx, inputUser, inputParams)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }

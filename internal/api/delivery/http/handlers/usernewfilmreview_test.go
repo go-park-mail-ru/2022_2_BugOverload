@@ -65,7 +65,7 @@ func TestUserNewFilmReviewHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusCreated, w.Code)
 }
 
@@ -100,10 +100,10 @@ func TestUserNewFilmReviewHandler_Action_NotOK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -154,10 +154,10 @@ func TestUserNewFilmReviewHandler_Action_EmpBody(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -219,13 +219,13 @@ func TestUserNewFilmReviewHandler_Action_ServiceError(t *testing.T) {
 	handler := NewFilmReviewHandler(service)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	mainModels "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"net/http"
 	"time"
 
@@ -80,6 +81,17 @@ func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
 // @Failure 500 "something unusual has happened"
 // @Router /api/v1/notifications [GET]
 func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.Context().Value(constparams.CurrentUserKey).(mainModels.User)
+	if !ok {
+		wrapper.DefaultHandlerHTTPError(r.Context(), w, errors.ErrGetUserRequest)
+		return
+	}
+
+	neededSent := h.notificationsService.CheckNewNotification(&user)
+	if !neededSent {
+		wrapper.NoBody(w, http.StatusNoContent)
+	}
+
 	connection, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {
 		wrapper.DefaultHandlerHTTPError(
@@ -88,5 +100,5 @@ func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Requ
 			stdErrors.WithMessagef(errors.ErrUpdateWebSocketProtocol, "Special Error [%s]", err))
 	}
 
-	go sendNewMsgNotifications(connection, h.notificationsService.GetMessages())
+	go sendNewMsgNotifications(connection, h.notificationsService.GetMessages(&user))
 }

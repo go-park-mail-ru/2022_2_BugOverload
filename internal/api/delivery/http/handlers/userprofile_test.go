@@ -64,13 +64,13 @@ func TestUserProfileHandler_Action_OK(t *testing.T) {
 	handler := NewUserProfileHandler(rateService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -137,13 +137,13 @@ func TestUserProfileHandler_Action_NotOK(t *testing.T) {
 	handler := NewUserProfileHandler(rateService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -184,13 +184,13 @@ func TestUserProfileHandler_Action_BindError(t *testing.T) {
 	handler := NewUserProfileHandler(rateService)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

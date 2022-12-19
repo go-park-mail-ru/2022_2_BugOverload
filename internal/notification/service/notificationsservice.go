@@ -13,7 +13,8 @@ import (
 //go:generate mockgen -source notificationsservice.go -destination mocks/mocknotificationsservice.go -package mockNotificationsService
 
 type NotificationsService interface {
-	GetMessages() []interface{}
+	GetMessages(user *models.User) []interface{}
+	CheckNewNotification(user *models.User) bool
 }
 
 type notificationsService struct {
@@ -71,12 +72,16 @@ func (s *notificationsService) UpdateHubDemon() {
 			messages[idx] = val
 		}
 
-		s.notificationHub.Update(messages)
+		s.notificationHub.UpdateHub(messages)
 
 		<-ticker.C
 	}
 }
 
-func (s *notificationsService) GetMessages() []interface{} {
-	return s.notificationHub.Get()
+func (s *notificationsService) GetMessages(user *models.User) []interface{} {
+	return s.notificationHub.GetNotifications(user)
+}
+
+func (s *notificationsService) CheckNewNotification(user *models.User) bool {
+	return s.notificationHub.CheckNewNotification(user)
 }

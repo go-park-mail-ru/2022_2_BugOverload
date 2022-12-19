@@ -61,10 +61,10 @@ func TestAuthServiceGRPCServer_Auth_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.Auth(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -110,10 +110,10 @@ func TestAuthServiceGRPCServer_Auth_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.Auth(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -159,10 +159,10 @@ func TestAuthServiceGRPCServer_Login_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -209,10 +209,10 @@ func TestAuthServiceGRPCServer_Login_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -259,10 +259,10 @@ func TestAuthServiceGRPCServer_Signup_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -309,10 +309,10 @@ func TestAuthServiceGRPCServer_Signup_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -349,7 +349,7 @@ func TestAuthServiceGRPCServer_GetAccess_OK(t *testing.T) {
 	// Action
 	_, err := authServer.GetAccess(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 }
 
@@ -396,10 +396,10 @@ func TestAuthServiceGRPCServer_GetAccess_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.GetAccess(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -437,7 +437,7 @@ func TestAuthServiceGRPCServer_UpdatePassword_OK(t *testing.T) {
 	// Action
 	_, err := authServer.UpdatePassword(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 }
 
@@ -485,10 +485,10 @@ func TestAuthServiceGRPCServer_UpdatePassword_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.UpdatePassword(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -536,10 +536,10 @@ func TestAuthServiceGRPCServer_GetUserBySession_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.GetUserBySession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -588,10 +588,10 @@ func TestAuthServiceGRPCServer_GetUserBySession_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.GetUserBySession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -638,10 +638,10 @@ func TestAuthServiceGRPCServer_CreateSession_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.CreateSession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -687,10 +687,10 @@ func TestAuthServiceGRPCServer_CreateSession_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.CreateSession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -738,10 +738,10 @@ func TestAuthServiceGRPCServer_DeleteSession_OK(t *testing.T) {
 	// Action
 	actual, err := authServer.DeleteSession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -790,9 +790,9 @@ func TestAuthServiceGRPCServer_DeleteSession_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := authServer.DeleteSession(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }

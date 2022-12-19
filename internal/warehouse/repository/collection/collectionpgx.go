@@ -62,7 +62,7 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 		delimiter, err = strconv.ParseFloat(params.Delimiter, 32)
 		if err != nil {
 			return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
-				"Get Delimeter Err: params input:[%s]",
+				"GetNotifications Delimeter Err: params input:[%s]",
 				params.Delimiter)
 		}
 
@@ -89,14 +89,14 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 		rowTag := conn.QueryRowContext(ctx, getTagDescription, params.Key)
 		if rowTag.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Get Tag desctiption Err: params input: query - [%s], values - [%s]. Special Error [%s]",
+				"GetNotifications Tag desctiption Err: params input: query - [%s], values - [%s]. Special Error [%s]",
 				getTagDescription, params.Key, err)
 		}
 
 		err = rowTag.Scan(&response.Description)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Get Tag desctiption Scan Err: params input: query - [%s], values - [%s]. Special Error [%s]",
+				"GetNotifications Tag desctiption Scan Err: params input: query - [%s], values - [%s]. Special Error [%s]",
 				getTagDescription, params.Key, err)
 		}
 
@@ -139,7 +139,7 @@ func (c *collectionPostgres) GetCollectionByGenre(ctx context.Context, params *c
 		delimiter, err = strconv.ParseFloat(params.Delimiter, 32)
 		if err != nil {
 			return models.Collection{}, stdErrors.WithMessagef(errors.ErrGetParamsConvert,
-				"Get Delimeter Err: params input:[%s]",
+				"GetNotifications Delimeter Err: params input:[%s]",
 				params.Delimiter)
 		}
 

@@ -228,13 +228,13 @@ func TestPerson_GetByID_OK(t *testing.T) {
 	// Init
 	repo := person.NewPersonPostgres(&sqltools.Database{Connection: db})
 
-	// Check result
+	// CheckNewNotification result
 	actual, err := repo.GetPersonByID(ctx, inputPerson, inputParams)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// Check actual
+	// CheckNewNotification actual
 	require.Equal(t, expected, actual)
 }

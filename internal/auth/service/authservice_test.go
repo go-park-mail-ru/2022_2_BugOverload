@@ -45,10 +45,10 @@ func TestAuthService_Auth_OK(t *testing.T) {
 
 	actual, err := authService.Auth(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -79,10 +79,10 @@ func TestAuthService_Auth_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Auth(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -121,10 +121,10 @@ func TestAuthService_Login_OK(t *testing.T) {
 
 	actual, err := authService.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, output, actual)
 }
 
@@ -152,10 +152,10 @@ func TestAuthService_Login_EmailValidate_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -184,10 +184,10 @@ func TestAuthService_Login_PasswordValidate_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -220,10 +220,10 @@ func TestAuthService_Login_Repo_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -259,10 +259,10 @@ func TestAuthService_Login_PasswordCheck_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Login(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -299,7 +299,7 @@ func TestAuthService_GetAccess_OK(t *testing.T) {
 
 	err := authService.GetAccess(ctx, input, inputPassword)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 }
 
@@ -331,10 +331,10 @@ func TestAuthService_GetAccess_Repo_NOT_OK(t *testing.T) {
 
 	actualErr := authService.GetAccess(ctx, input, inputPassword)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -373,10 +373,10 @@ func TestAuthService_GetAccess_Password_NOT_OK(t *testing.T) {
 
 	actualErr := authService.GetAccess(ctx, input, inputPassword)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -404,10 +404,10 @@ func TestAuthService_Signup_NicknameValidate_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -437,10 +437,10 @@ func TestAuthService_Signup_EmailValidate_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -471,10 +471,10 @@ func TestAuthService_Signup_PasswordValidate_NOT_OK(t *testing.T) {
 
 	_, actualErr := authService.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -508,10 +508,10 @@ func TestAuthService_Signup_CheckExistErr(t *testing.T) {
 
 	_, actualErr := authService.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -545,10 +545,10 @@ func TestAuthService_Signup_UserExist(t *testing.T) {
 
 	_, actualErr := authService.Signup(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -581,9 +581,9 @@ func TestAuthService_UpdatePassword_AccessErr(t *testing.T) {
 
 	actualErr := authService.UpdatePassword(ctx, input, inputOldPassword, inputNewPassword)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }

@@ -108,10 +108,10 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 
 	filmHandler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -169,13 +169,13 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	handler := NewFilmHandler(service)
 	handler.Configure(router, nil)
 
-	// Check result
+	// CheckNewNotification result
 	handler.Action(w, r)
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -222,10 +222,10 @@ func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 
 	filmHandler.Action(w, r.WithContext(ctx))
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -272,10 +272,10 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 
 	filmHandler.Action(w, r.WithContext(ctx))
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -322,10 +322,10 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountImages(t *testin
 
 	filmHandler.Action(w, r.WithContext(ctx))
 
-	// Check code
+	// CheckNewNotification code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// Check body
+	// CheckNewNotification body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

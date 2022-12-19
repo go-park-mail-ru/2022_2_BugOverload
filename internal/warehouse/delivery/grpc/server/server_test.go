@@ -58,10 +58,10 @@ func TestWarehouseServiceGRPCServer_GetRecommendation_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetRecommendation(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -105,10 +105,10 @@ func TestWarehouseServiceGRPCServer_GetRecommendation_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.GetRecommendation(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -158,10 +158,10 @@ func TestWarehouseServiceGRPCServer_GetFilmByID_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetFilmByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -213,10 +213,10 @@ func TestWarehouseServiceGRPCServer_GetFilmByID_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.GetFilmByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -265,10 +265,10 @@ func TestWarehouseServiceGRPCServer_GetReviewsByFilmID_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetReviewsByFilmID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -318,10 +318,10 @@ func TestWarehouseServiceGRPCServer_GetReviewsByFilmID_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.GetReviewsByFilmID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -371,10 +371,10 @@ func TestWarehouseServiceGRPCServer_GetStdCollection_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetStdCollection(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -422,10 +422,10 @@ func TestWarehouseServiceGRPCServer_GetStdCollection_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.GetStdCollection(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -472,10 +472,10 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetPremieresCollection(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -524,10 +524,10 @@ func TestWarehouseServiceGRPCServer_GetPremieresCollection_NOT_OK(t *testing.T) 
 	// Action
 	_, actualErr := warehouseServer.GetPremieresCollection(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -576,10 +576,10 @@ func TestWarehouseServiceGRPCServer_GetPersonByID_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.GetPersonByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -631,10 +631,10 @@ func TestWarehouseServiceGRPCServer_GetPersonByID_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.GetPersonByID(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -684,10 +684,10 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsAuthorized_OK(t *testing.T
 	// Action
 	actual, err := warehouseServer.GetCollectionFilmsAuthorized(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -739,10 +739,10 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsAuthorized_NOT_OK(t *testi
 	// Action
 	_, actualErr := warehouseServer.GetCollectionFilmsAuthorized(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -789,10 +789,10 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsNotAuthorized_OK(t *testin
 	// Action
 	actual, err := warehouseServer.GetCollectionFilmsNotAuthorized(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -841,10 +841,10 @@ func TestWarehouseServiceGRPCServer_GetCollectionFilmsNotAuthorized_NOT_OK(t *te
 	// Action
 	_, actualErr := warehouseServer.GetCollectionFilmsNotAuthorized(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
 
@@ -890,10 +890,10 @@ func TestWarehouseServiceGRPCServer_Search_OK(t *testing.T) {
 	// Action
 	actual, err := warehouseServer.Search(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expected, actual)
 }
 
@@ -941,9 +941,9 @@ func TestWarehouseServiceGRPCServer_Search_NOT_OK(t *testing.T) {
 	// Action
 	_, actualErr := warehouseServer.Search(ctx, input)
 
-	// Check success
+	// CheckNewNotification success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// Check result handling
+	// CheckNewNotification result handling
 	require.Equal(t, expectedErr, actualErr)
 }
