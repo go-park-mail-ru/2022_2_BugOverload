@@ -56,10 +56,10 @@ func TestSearchService_Search_OK(t *testing.T) {
 
 	actual, err := searchService.Search(ctx, inputService)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, outputService, actual)
 }
 
@@ -94,10 +94,10 @@ func TestSearchService_Search_FilmsErr(t *testing.T) {
 
 	_, actualErr := searchService.Search(ctx, inputService)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -133,10 +133,10 @@ func TestSearchService_Search_SerialsErr(t *testing.T) {
 
 	_, actualErr := searchService.Search(ctx, inputService)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -173,9 +173,9 @@ func TestSearchService_Search_PersonsErr(t *testing.T) {
 
 	_, actualErr := searchService.Search(ctx, inputService)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }

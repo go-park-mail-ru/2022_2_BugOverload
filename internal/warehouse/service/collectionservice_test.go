@@ -57,10 +57,10 @@ func TestCollectionService_GetCollectionByTag_OK(t *testing.T) {
 
 	actual, err := collectionService.GetCollectionByTag(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -92,10 +92,10 @@ func TestCollectionService_GetCollectionByTag_TagErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionByTag(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -138,10 +138,10 @@ func TestCollectionService_GetCollectionByTag_RepoErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionByTag(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -187,10 +187,10 @@ func TestCollectionService_GetCollectionByGenre_OK(t *testing.T) {
 
 	actual, err := collectionService.GetCollectionByGenre(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -222,10 +222,10 @@ func TestCollectionService_GetCollectionByGenre_GenreErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionByGenre(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -268,10 +268,10 @@ func TestCollectionService_GetCollectionByGenre_RepoErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionByGenre(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -317,10 +317,10 @@ func TestCollectionService_GetStdCollection_Tag_OK(t *testing.T) {
 
 	actual, err := collectionService.GetStdCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -366,10 +366,10 @@ func TestCollectionService_GetStdCollection_Genre_OK(t *testing.T) {
 
 	actual, err := collectionService.GetStdCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -401,10 +401,10 @@ func TestCollectionService_GetStdCollection_TargetErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetStdCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -447,10 +447,10 @@ func TestCollectionService_GetStdCollection_RepoErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetStdCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -485,10 +485,10 @@ func TestCollectionService_GetPremieresCollection_OK(t *testing.T) {
 
 	actual, err := collectionService.GetPremieresCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -520,10 +520,10 @@ func TestCollectionService_GetPremieresCollection_NOT_OK(t *testing.T) {
 
 	_, actualErr := collectionService.GetPremieresCollection(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -565,10 +565,10 @@ func TestCollectionService_GetCollectionAuthorized_Author_OK(t *testing.T) {
 
 	actual, err := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -611,10 +611,10 @@ func TestCollectionService_GetCollectionAuthorized_NotAuthor_OK(t *testing.T) {
 
 	actual, err := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -649,10 +649,10 @@ func TestCollectionService_GetCollectionAuthorized_AuthorErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -688,10 +688,10 @@ func TestCollectionService_GetCollectionAuthorized_IsPublicErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -727,10 +727,10 @@ func TestCollectionService_GetCollectionAuthorized_NotPublic(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -767,10 +767,10 @@ func TestCollectionService_GetCollectionAuthorized_RepoErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionAuthorized(ctx, inputUser, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -809,10 +809,10 @@ func TestCollectionService_GetCollectionNotAuthorized_OK(t *testing.T) {
 
 	actual, err := collectionService.GetCollectionNotAuthorized(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -844,10 +844,10 @@ func TestCollectionService_GetCollectionNotAuthorized_IsPublicErr(t *testing.T) 
 
 	_, actualErr := collectionService.GetCollectionNotAuthorized(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -879,10 +879,10 @@ func TestCollectionService_GetCollectionNotAuthorized_NotPublic(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionNotAuthorized(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -915,9 +915,9 @@ func TestCollectionService_GetCollectionNotAuthorized_RepoErr(t *testing.T) {
 
 	_, actualErr := collectionService.GetCollectionNotAuthorized(ctx, inputParams)
 
-	// check success
+	// Check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// check result handling
+	// Check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }

@@ -64,13 +64,13 @@ func TestAuthLoginHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// check Needed headers
+	// Check Needed headers
 	require.True(t, len(w.Header().Get("X-Csrf-Token")) > 0)
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -113,10 +113,10 @@ func TestAuthLoginHandler_Action_InvBody(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -180,10 +180,10 @@ func TestAuthLoginHandler_Action_ServiceLoginError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusForbidden, w.Code)
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -254,10 +254,10 @@ func TestAuthLoginHandler_Action_CreateSessionError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

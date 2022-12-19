@@ -68,13 +68,13 @@ func TestUserGetUserCollectionsHandler_Action_OK(t *testing.T) {
 	handler := NewGetUserCollectionsHandler(rateService)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -144,11 +144,11 @@ func TestUserGetUserCollectionsHandler_Action_NotOK_AuthService(t *testing.T) {
 	handler := NewGetUserCollectionsHandler(rateService)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -200,7 +200,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Empty(t *testing.T) {
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -244,7 +244,7 @@ func TestUserGetUserCollectionsHandler_Action_Fatal_Error(t *testing.T) {
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -296,7 +296,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Wrong(t *testing.T) {
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -348,7 +348,7 @@ func TestUserGetUserCollectionsHandler_Action_SortPar_Empty(t *testing.T) {
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -400,7 +400,7 @@ func TestUserGetUserCollectionsHandler_Action_Delimiter_Empty(t *testing.T) {
 	handler.Action(w, r)
 
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

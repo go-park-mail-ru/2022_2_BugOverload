@@ -152,14 +152,14 @@ func TestCollection_GetPremieresCollection_OK(t *testing.T) {
 	// Init
 	repo := collection.NewCollectionPostgres(&sqltools.Database{Connection: db})
 
-	// check result
+	// Check result
 	actual, err := repo.GetPremieresCollection(ctx, inputParams)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// check actual
+	// Check actual
 	require.Equal(t, expected, actual)
 }
 
@@ -276,13 +276,13 @@ func TestCollection_GetCollectionByGenre_OK(t *testing.T) {
 	// Init
 	repo := collection.NewCollectionPostgres(&sqltools.Database{Connection: db})
 
-	// check result
+	// Check result
 	actual, err := repo.GetCollectionByGenre(ctx, inputParams)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// check actual
+	// Check actual
 	require.Equal(t, expected, actual)
 }

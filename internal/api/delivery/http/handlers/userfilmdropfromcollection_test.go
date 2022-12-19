@@ -59,7 +59,7 @@ func TestDropFilmFromUserCollectionHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusNoContent, w.Code)
 }
 
@@ -106,9 +106,9 @@ func TestDropFilmFromUserCollectionHandler_Action_NotOK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code)
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -159,9 +159,9 @@ func TestDropFilmFromUserCollectionHandler_Action_InvBody(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -213,9 +213,9 @@ func TestDropFilmFromUserCollectionHandler_Action_InvId(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -257,13 +257,13 @@ func TestDropFilmFromUserCollectionHandler_Action_UserNotFound(t *testing.T) {
 	handler := NewDropFilmFromUserCollectionHandler(service)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

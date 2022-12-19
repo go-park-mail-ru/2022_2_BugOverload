@@ -48,13 +48,13 @@ func TestGetImageHandler_Action_OK(t *testing.T) {
 	handler := NewGetImageHandler(service)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	actual, err := io.ReadAll(response.Body)
@@ -101,13 +101,13 @@ func TestGetImageHandler_Action_NotOK(t *testing.T) {
 	handler := NewGetImageHandler(service)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -148,13 +148,13 @@ func TestGetImageHandler_Action_BindError(t *testing.T) {
 	handler := NewGetImageHandler(service)
 	handler.Configure(router, nil)
 
-	// check result
+	// Check result
 	handler.Action(w, r)
 
-	// check code
+	// Check code
 	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode")
 
-	// check body
+	// Check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
