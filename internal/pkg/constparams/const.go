@@ -4,30 +4,7 @@ import (
 	"time"
 )
 
-// Handler factory
 const (
-	SignupRequest                = "SignupRequest"
-	LoginRequest                 = "LoginRequest"
-	AuthRequest                  = "AuthRequest"
-	LogoutRequest                = "LogoutRequest"
-	RecommendationRequest        = "RecommendationRequest"
-	DownloadImageRequest         = "DownloadImageRequest"
-	UploadImageRequest           = "UploadImageRequest"
-	ChangeImageRequest           = "ChangeImageRequest"
-	GetUserProfileRequest        = "GetUserProfileRequest"
-	TagCollectionRequest         = "TagCollectionRequest"
-	PremieresCollectionRequest   = "PremieresCollectionRequest"
-	PersonRequest                = "PersonRequest"
-	FilmRequest                  = "FilmRequest"
-	ReviewsFilmRequest           = "ReviewsFilmRequest"
-	GetUserSettingsRequest       = "GetUserSettingsRequest"
-	PutUserSettingsRequest       = "PutUserSettingsRequest"
-	FilmRateRequest              = "FilmRateRequest"
-	FilmRateDropRequest          = "FilmRateDropRequest"
-	NewFilmReviewRequest         = "NewFilmReviewRequest"
-	GetUserActivityOnFilmRequest = "GetUserActivityOnFilmRequest"
-	UserCollectionsRequest       = "UserCollectionsRequest"
-
 	DateFormat = "2006.01.02"
 	TimeFormat = "15:04:05"
 )
@@ -84,6 +61,13 @@ const (
 
 	// Metrics codes
 	MaxSuccessResponse = 300
+
+	// WebSocket size buffers
+	WSBufSizeRead  = 1024
+	WSBufSizeWrite = 1024
+
+	// Push timeout
+	PushTimeout = 30 * time.Second
 )
 
 type ContextKeyType string

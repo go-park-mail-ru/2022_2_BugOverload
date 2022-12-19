@@ -94,6 +94,7 @@ stop:
 
 
 # Debug BEGIN ---------------------------------------------------------
+#IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 
 debug-deploy:
 	make clear
