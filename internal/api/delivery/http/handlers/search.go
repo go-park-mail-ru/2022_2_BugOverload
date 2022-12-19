@@ -33,7 +33,7 @@ func (h *searchHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) 
 // delivery of the data to the service at the business logic level.
 // @Summary Search films, serials and persons
 // @Description Getting film, serials and persons info. WARNING for films no fields end_year.
-// @tags search, completed
+// @tags search
 // @Produce json
 // @Param q  query string true "search body"
 // @Success 200 {object} models.SearchResponse "successfully search"

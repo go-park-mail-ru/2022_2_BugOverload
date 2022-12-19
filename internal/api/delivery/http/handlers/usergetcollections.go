@@ -41,7 +41,7 @@ func (h *getUserCollectionsHandler) Configure(r *mux.Router, mw *middleware.HTTP
 // @Summary GetNotifications user personal collections
 // @Description Collections by create time OR update time
 // @Description All fields required
-// @tags collection, completed
+// @tags collection
 // @Produce json
 // @Param sort_param        query string true "create_time, update_time"
 // @Param count_collections query int    true "count collections"

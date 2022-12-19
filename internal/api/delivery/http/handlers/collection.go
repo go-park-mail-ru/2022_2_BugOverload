@@ -37,7 +37,7 @@ func (h *getCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddl
 // @Summary Getting collection by ID
 // @Description Films by ID by DESC rating or DESC date.
 // @Description All fields required
-// @tags collection, completed
+// @tags collection
 // @Produce json
 // @Param id  path int true "collection id"
 // @Param sort_param  query string true "rating, date"

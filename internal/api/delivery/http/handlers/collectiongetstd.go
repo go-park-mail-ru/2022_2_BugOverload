@@ -40,7 +40,7 @@ func (h *getStdCollectionHandler) Configure(r *mux.Router, mw *middleware.HTTPMi
 // @Summary Getting std collection (tag, genre)
 // @Description Films by genre or tag by DESC rating or DESC date. prod_company, prod_country also in the future.
 // @Description All fields required
-// @tags collection, completed
+// @tags collection
 // @Produce json
 // @Param target      query string true "genre, tag"
 // @Param key         query string true "for genre - comedy, tag - popular"

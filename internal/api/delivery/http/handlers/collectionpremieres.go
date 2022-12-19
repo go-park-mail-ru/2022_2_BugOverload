@@ -35,7 +35,7 @@ func (h *premieresCollectionHandler) Configure(r *mux.Router, mw *middleware.HTT
 // @Summary Getting premiers collection
 // @Description Return films with production date > current date.
 // @Description All fields required
-// @tags collection, completed
+// @tags collection
 // @Produce json
 // @Param count_films query int    true "count films"
 // @Param delimiter   query string true "offset"
