@@ -51,10 +51,10 @@ func TestPersonService_GetPersonByID_OK(t *testing.T) {
 
 	actual, err := personService.GetPersonByID(ctx, inputPerson, inputParams)
 
-	// CheckNewNotification success
+	// CheckNotificationSent success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// CheckNewNotification result handling
+	// CheckNotificationSent result handling
 	require.Equal(t, output, actual)
 }
 
@@ -91,9 +91,9 @@ func TestPersonService_GetPersonByID_NOT_OK(t *testing.T) {
 
 	_, actualErr := personService.GetPersonByID(ctx, inputPerson, inputParams)
 
-	// CheckNewNotification success
+	// CheckNotificationSent success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// CheckNewNotification result handling
+	// CheckNotificationSent result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }

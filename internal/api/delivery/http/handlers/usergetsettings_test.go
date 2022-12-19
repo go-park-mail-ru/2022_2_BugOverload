@@ -57,10 +57,10 @@ func TestUserGetSettingsHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -97,13 +97,13 @@ func TestUserGetSettingsHandler_Action_UserNotFound(t *testing.T) {
 	handler := NewGetSettingsHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)
@@ -153,13 +153,13 @@ func TestUserGetSettingsHandler_Action_ServiceError(t *testing.T) {
 	handler := NewGetSettingsHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

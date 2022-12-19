@@ -11,7 +11,7 @@ import (
 type NotificationHub interface {
 	UpdateHub([]interface{})
 	GetNotifications(user *models.User) []interface{}
-	CheckNewNotification(user *models.User) bool
+	CheckNotificationSent(user *models.User) bool
 }
 
 // notificationPostgres is implementation repository of Postgres corresponding to the Repository interface.
@@ -48,14 +48,14 @@ func (n *notificationCache) GetNotifications(user *models.User) []interface{} {
 	return n.hub
 }
 
-func (n *notificationCache) CheckNewNotification(user *models.User) bool {
+func (n *notificationCache) CheckNotificationSent(user *models.User) bool {
 	n.mu.RLock()
 	defer n.mu.RUnlock()
 
 	sent, ok := n.sent[user.ID]
-	if sent || !ok {
-		return false
+	if sent || ok {
+		return true
 	}
 
-	return true
+	return false
 }

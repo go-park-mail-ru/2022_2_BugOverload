@@ -66,13 +66,13 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// CheckNewNotification Needed headers
+	// CheckNotificationSent Needed headers
 	require.True(t, len(w.Header().Get("X-Csrf-Token")) > 0)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -120,10 +120,10 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 
 	authHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -177,10 +177,10 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 
 	authHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -243,10 +243,10 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 
 	authHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -306,10 +306,10 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 
 	authHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

@@ -14,7 +14,7 @@ import (
 
 type NotificationsService interface {
 	GetMessages(user *models.User) []interface{}
-	CheckNewNotification(user *models.User) bool
+	CheckNotificationSent(user *models.User) bool
 }
 
 type notificationsService struct {
@@ -82,6 +82,6 @@ func (s *notificationsService) GetMessages(user *models.User) []interface{} {
 	return s.notificationHub.GetNotifications(user)
 }
 
-func (s *notificationsService) CheckNewNotification(user *models.User) bool {
-	return s.notificationHub.CheckNewNotification(user)
+func (s *notificationsService) CheckNotificationSent(user *models.User) bool {
+	return s.notificationHub.CheckNotificationSent(user)
 }

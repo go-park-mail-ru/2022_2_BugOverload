@@ -87,8 +87,8 @@ func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	neededSent := h.notificationsService.CheckNewNotification(&user)
-	if !neededSent {
+	sent := h.notificationsService.CheckNotificationSent(&user)
+	if sent {
 		wrapper.NoBody(w, http.StatusNoContent)
 	}
 

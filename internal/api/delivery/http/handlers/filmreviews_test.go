@@ -61,10 +61,10 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -115,10 +115,10 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -161,10 +161,10 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -207,10 +207,10 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -253,10 +253,10 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -299,10 +299,10 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -345,10 +345,10 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -391,10 +391,10 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -437,10 +437,10 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -483,10 +483,10 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 
 	reviewsHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

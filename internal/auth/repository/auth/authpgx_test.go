@@ -41,14 +41,14 @@ func TestPostgres_CheckExistUserByEmail_True(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CheckExistUserByEmail(ctx, inputEmail)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, true, actual)
 }
 
@@ -78,14 +78,14 @@ func TestPostgres_CheckExistUserByEmail_False(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CheckExistUserByEmail(ctx, inputEmail)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, false, actual)
 }
 
@@ -115,14 +115,14 @@ func TestPostgres_CheckExistUserByEmail_RowError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CheckExistUserByEmail(ctx, inputEmail)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, false, actual)
 }
 
@@ -151,14 +151,14 @@ func TestPostgres_CheckExistUserByEmail_ScanError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CheckExistUserByEmail(ctx, inputEmail)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, false, actual)
 }
 
@@ -222,14 +222,14 @@ func TestPostgres_CreateUser_OK(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -267,14 +267,14 @@ func TestPostgres_CreateUser_ExistErr(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -312,14 +312,14 @@ func TestPostgres_CreateUser_Exist(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -375,14 +375,14 @@ func TestPostgres_CreateUser_RowUserErr(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -438,14 +438,14 @@ func TestPostgres_CreateUser_RowUserScanErr(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -505,14 +505,14 @@ func TestPostgres_CreateUser_CollectionsErr(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -572,14 +572,14 @@ func TestPostgres_CreateUser_CollectionsScanErr(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -643,14 +643,14 @@ func TestPostgres_CreateUser_LinkCollectionsError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.CreateUser(ctx, &inputUser)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -692,14 +692,14 @@ func TestPostgres_GetUserByEmail_OK(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByEmail(ctx, inputEmail)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -741,14 +741,14 @@ func TestPostgres_GetUserByEmail_RowUserError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByEmail(ctx, inputEmail)
 	require.NotNil(t, err, fmt.Errorf("unexpected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -790,14 +790,14 @@ func TestPostgres_GetUserByEmail_ScanError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByEmail(ctx, inputEmail)
 	require.NotNil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -839,14 +839,14 @@ func TestPostgres_GetUserByEmail_AvatarInvalid(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByEmail(ctx, inputEmail)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -885,14 +885,14 @@ func TestPostgres_GetUserByID_OK(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByID(ctx, inputID)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -931,14 +931,14 @@ func TestPostgres_GetUserByID_RowUserError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByID(ctx, inputID)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -976,14 +976,14 @@ func TestPostgres_GetUserByID_ScanError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	actual, err := repo.GetUserByID(ctx, inputID)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", err))
 
 	err = mock.ExpectationsWereMet()
 	require.Nil(t, err, fmt.Errorf("there were unfulfilled expectations: %s", err))
 
-	// CheckNewNotification actual
+	// CheckNotificationSent actual
 	require.Equal(t, outputUser, actual)
 }
 
@@ -1012,7 +1012,7 @@ func TestPostgres_UpdatePassword_OK(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	err = repo.UpdatePassword(ctx, &inputUser, inputPassword)
 	require.Nil(t, err, fmt.Errorf("unexpected err: %s", err))
 
@@ -1045,7 +1045,7 @@ func TestPostgres_UpdatePassword_ExecError(t *testing.T) {
 	// Init
 	repo := auth.NewAuthDatabase(&sqltools.Database{Connection: db})
 
-	// CheckNewNotification result
+	// CheckNotificationSent result
 	err = repo.UpdatePassword(ctx, &inputUser, inputPassword)
 	require.NotNil(t, err, fmt.Errorf("expected err: %s", sql.ErrNoRows))
 

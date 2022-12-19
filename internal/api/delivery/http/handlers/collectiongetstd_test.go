@@ -67,10 +67,10 @@ func TestTagCollectionHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -126,10 +126,10 @@ func TestTagCollectionHandler_Action_NotOKService(t *testing.T) {
 
 	tagCollectionHandler.Action(w, r)
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -173,10 +173,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrConvertQuery(t *testing.T) {
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -220,10 +220,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -267,10 +267,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Target(t *te
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -314,10 +314,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Key(t *testi
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -361,10 +361,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_SortParam(t 
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -408,10 +408,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountFilms(t
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -455,10 +455,10 @@ func TestTagCollectionHandler_Action_ErrBind_ErrBadQueryParamsEmpty_Delinmeter(t
 
 	tagCollectionHandler.Action(w, r.WithContext(ctx))
 
-	// CheckNewNotification code
+	// CheckNotificationSent code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNewNotification body
+	// CheckNotificationSent body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
