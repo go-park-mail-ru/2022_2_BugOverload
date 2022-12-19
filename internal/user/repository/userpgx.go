@@ -39,7 +39,7 @@ type UserRepository interface {
 	// Personal collections
 	GetUserCollections(ctx context.Context, user *models.User, params *constparams.GetUserCollectionsParams) ([]models.Collection, error)
 
-	// Update personal collections
+	// UpdateHub personal collections
 	CheckUserAccessToUpdateCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error)
 	CheckExistFilmInCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) (bool, error)
 	AddFilmToCollection(ctx context.Context, user *models.User, params *constparams.UserCollectionFilmsUpdateParams) error

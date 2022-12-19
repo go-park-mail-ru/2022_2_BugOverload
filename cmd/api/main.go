@@ -11,9 +11,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/handlers"
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/handlers"
 	clientAuth "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client"
 	clientImage "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client"
+	repoNotification "go-park-mail-ru/2022_2_BugOverload/internal/notification/repository"
+	serviceNotification "go-park-mail-ru/2022_2_BugOverload/internal/notification/service"
 	configPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/monitoring"
@@ -201,6 +203,15 @@ func main() {
 	// Search delivery
 	searchHandler := handlers.NewSearchHandler(warehouseService)
 	searchHandler.Configure(router, mw)
+
+	// Notification
+	notificationCache := repoNotification.NewNotificationCache()
+	notificationPgx := repoNotification.NewFilmPostgres(postgres)
+
+	notificationService := serviceNotification.NewNotificationsService(notificationPgx, notificationCache)
+
+	getNotificationHandler := handlers.NewGetNotificationsHandler(notificationService)
+	getNotificationHandler.Configure(router, mw)
 
 	http.Handle("/", router)
 

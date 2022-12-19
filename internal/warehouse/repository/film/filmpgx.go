@@ -13,6 +13,7 @@ import (
 )
 
 //go:generate mockgen -source filmpgx.go -destination mocks/mockfilmrepository.go -package mockFilmRepository
+
 type Repository interface {
 	GetRecommendation(ctx context.Context) (models.Film, error)
 	GetFilmByID(ctx context.Context, film *models.Film, params *constparams.GetFilmParams) (models.Film, error)
