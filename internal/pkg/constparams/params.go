@@ -60,6 +60,11 @@ type ChangeUserSettings struct {
 	Nickname    string
 }
 
+// GetSimilarFilmsParams in struct for getSimilarFilmsHandler
+type GetSimilarFilmsParams struct {
+	FilmID int
+}
+
 // FilmRateParams in struct for filmRateHandler
 type FilmRateParams struct {
 	FilmID int

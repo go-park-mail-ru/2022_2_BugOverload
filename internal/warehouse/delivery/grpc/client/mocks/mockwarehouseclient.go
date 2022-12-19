@@ -141,6 +141,21 @@ func (mr *MockWarehouseServiceMockRecorder) GetReviewsByFilmID(ctx, params inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewsByFilmID", reflect.TypeOf((*MockWarehouseService)(nil).GetReviewsByFilmID), ctx, params)
 }
 
+// GetSimilarFilms mocks base method.
+func (m *MockWarehouseService) GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSimilarFilms", ctx, params)
+	ret0, _ := ret[0].(models.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSimilarFilms indicates an expected call of GetSimilarFilms.
+func (mr *MockWarehouseServiceMockRecorder) GetSimilarFilms(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSimilarFilms", reflect.TypeOf((*MockWarehouseService)(nil).GetSimilarFilms), ctx, params)
+}
+
 // GetStdCollection mocks base method.
 func (m *MockWarehouseService) GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()

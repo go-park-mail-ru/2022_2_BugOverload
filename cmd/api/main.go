@@ -132,6 +132,9 @@ func main() {
 	getCollectionFilmsHandler := handlers.NewGetCollectionHandler(warehouseService)
 	getCollectionFilmsHandler.Configure(router, mw)
 
+	getSimilarFilmsHandler := handlers.NewGetSimilarFilmsHandler(warehouseService)
+	getSimilarFilmsHandler.Configure(router, mw)
+
 	// Films delivery
 	recommendationHandler := handlers.NewRecommendationFilmHandler(warehouseService)
 	recommendationHandler.Configure(router, mw)

@@ -20,6 +20,7 @@ type WarehouseService interface {
 	GetRecommendation(ctx context.Context) (modelsGlobal.Film, error)
 	GetFilmByID(ctx context.Context, film *modelsGlobal.Film, params *constparams.GetFilmParams) (modelsGlobal.Film, error)
 	GetReviewsByFilmID(ctx context.Context, params *constparams.GetFilmReviewsParams) ([]modelsGlobal.Review, error)
+	GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (modelsGlobal.Collection, error)
 
 	GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error)
 	GetPremieresCollection(ctx context.Context, params *constparams.GetPremiersCollectionParams) (modelsGlobal.Collection, error)
@@ -67,6 +68,15 @@ func (c WarehouseServiceGRPCClient) GetReviewsByFilmID(ctx context.Context, para
 	}
 
 	return models.NewReviews(reviewsProtoResponse), nil
+}
+
+func (c WarehouseServiceGRPCClient) GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (modelsGlobal.Collection, error) {
+	collectionProtoResponse, err := c.warehouseClient.GetSimilarFilms(pkg.GetDefInfoMicroService(ctx), models.NewGetSimilarFilmsParamsProto(params))
+	if err != nil {
+		return modelsGlobal.Collection{}, wrapper.GRPCErrorConvert(stdErrors.Wrap(err, "GetSimilarFilms"))
+	}
+
+	return models.NewCollection(collectionProtoResponse), nil
 }
 
 func (c WarehouseServiceGRPCClient) GetStdCollection(ctx context.Context, params *constparams.GetStdCollectionParams) (modelsGlobal.Collection, error) {
