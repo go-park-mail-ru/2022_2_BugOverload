@@ -75,7 +75,7 @@ func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
 // delivery of the data to the service at the business logic level.
 // @Summary Getting notifications
 // @Description Return user notifications
-// @tags notifications, in_process
+// @tags notifications, completed
 // @Success 200 "successfully getting"
 // @Failure 400 "return error"
 // @Failure 404 "not found"
