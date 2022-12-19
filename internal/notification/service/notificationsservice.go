@@ -50,18 +50,21 @@ func (s *notificationsService) GetFilmRelease(ctx context.Context) ([]models.Not
 }
 
 const (
-	maxHour   = 24
+	maxHour   = 23
 	maxMinute = 59
 )
 
 func (s *notificationsService) UpdateHubDemon() {
 	curTime := time.Now()
+	curTime.UTC()
 
 	offset := time.Duration(maxHour-curTime.Hour())*time.Hour + time.Duration(maxMinute-curTime.Minute())*time.Minute
 
 	ticker := time.NewTicker(offset)
+	defer ticker.Stop()
+
 	for {
-		notification, err := s.GetFilmRelease(context.TODO())
+		notification, err := s.GetFilmRelease(context.Background())
 		if err != nil {
 			break
 		}
