@@ -68,10 +68,10 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -138,10 +138,10 @@ func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -180,10 +180,10 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Empty(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -222,10 +222,10 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Empty(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -264,10 +264,10 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Wrong(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -306,10 +306,10 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Wrong(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

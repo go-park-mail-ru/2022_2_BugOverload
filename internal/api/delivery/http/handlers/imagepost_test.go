@@ -93,10 +93,10 @@ func TestPostImageHandler_Action_OK(t *testing.T) {
 	handler := NewPostImageHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusCreated, w.Code, "Wrong StatusCode")
 }
 
@@ -162,13 +162,13 @@ func TestPostImageHandler_Action_NotOk(t *testing.T) {
 	handler := NewPostImageHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	bodyResp, err := io.ReadAll(response.Body)
@@ -228,13 +228,13 @@ func TestPostImageHandler_Action_Object_ContetUndef(t *testing.T) {
 	handler := NewPostImageHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	bodyResp, err := io.ReadAll(response.Body)
@@ -292,13 +292,13 @@ func TestPostImageHandler_Action_UserNotFound(t *testing.T) {
 	handler := NewPostImageHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)
@@ -368,13 +368,13 @@ func TestPostImageHandler_Action_UserNotAdmin(t *testing.T) {
 	handler := NewPostImageHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

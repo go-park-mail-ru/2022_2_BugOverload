@@ -44,10 +44,10 @@ func TestImageService_GetImage_OK(t *testing.T) {
 
 	actual, err := service.GetImage(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -79,10 +79,10 @@ func TestImageService_GetImage_NOT_OK(t *testing.T) {
 
 	_, errActual := service.GetImage(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, errActual, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, errActual.Error(), stdErrors.Wrap(errReturn, "GetImage").Error())
 }
 
@@ -112,7 +112,7 @@ func TestImageService_UpdateImage_OK(t *testing.T) {
 
 	err := service.UpdateImage(ctx, &expected)
 
-	// CheckNotificationSent success
+	// check success
 	require.Nil(t, err, "Handling must be without errors")
 }
 
@@ -139,9 +139,9 @@ func TestImageService_UpdateImage_NOT_OK(t *testing.T) {
 
 	errActual := service.UpdateImage(ctx, &models.Image{})
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, errActual, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, errActual.Error(), stdErrors.Wrap(errReturn, "UpdateImage").Error())
 }

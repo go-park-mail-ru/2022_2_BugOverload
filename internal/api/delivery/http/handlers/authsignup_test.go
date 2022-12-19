@@ -66,13 +66,13 @@ func TestAuthSignUpHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusCreated, w.Code)
 
-	// CheckNotificationSent Needed headers
+	// check Needed headers
 	require.True(t, len(w.Header().Get("X-Csrf-Token")) > 0)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -115,10 +115,10 @@ func TestAuthSignUpHandler_Action_InvBody(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -184,10 +184,10 @@ func TestAuthSignupHandler_Action_ServiceSignupError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -260,10 +260,10 @@ func TestAuthSignupHandler_Action_CreateSessionError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

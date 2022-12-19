@@ -71,13 +71,13 @@ func TestCollectionHandler_Action_OK(t *testing.T) {
 	handler := NewGetCollectionHandler(collectionService)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusOK, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -128,13 +128,13 @@ func TestCollectionHandler_Action_BindError(t *testing.T) {
 	handler := NewGetCollectionHandler(collectionService)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -197,13 +197,13 @@ func TestCollectionHandler_Action_ServiceAuthorizedError(t *testing.T) {
 	handler := NewGetCollectionHandler(collectionService)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusForbidden, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -258,13 +258,13 @@ func TestCollectionHandler_Action_ServiceNotAuthorizedError(t *testing.T) {
 	handler := NewGetCollectionHandler(collectionService)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusForbidden, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

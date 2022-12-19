@@ -55,7 +55,7 @@ func TestUserPutSettingsHandler_Action_Nick_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNoContent, w.Code)
 }
 
@@ -97,7 +97,7 @@ func TestUserPutSettingsHandler_Action_Password_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNoContent, w.Code)
 }
 
@@ -143,10 +143,10 @@ func TestUserPutSettingsHandler_Action_Password_NotOK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -195,10 +195,10 @@ func TestUserPutSettingsHandler_Action_Password_EmpBody(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusBadRequest, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -237,13 +237,13 @@ func TestUserPutSettingsHandler_Action_Nick_UserNotFound(t *testing.T) {
 	handler := NewPutSettingsHandler(service)
 	handler.Configure(router, nil)
 
-	// CheckNotificationSent result
+	// check result
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	bodyResponse, errResponse := io.ReadAll(response.Body)

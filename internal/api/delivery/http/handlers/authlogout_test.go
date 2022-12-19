@@ -53,10 +53,10 @@ func TestAuthLogoutHandler_Action_OK(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNoContent, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	_, err := io.ReadAll(response.Body)
@@ -106,10 +106,10 @@ func TestAuthLogoutHandler_Action_CookieError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)
@@ -170,10 +170,10 @@ func TestAuthLogoutHandler_Action_SessionError(t *testing.T) {
 
 	handler.Action(w, r)
 
-	// CheckNotificationSent code
+	// check code
 	require.Equal(t, http.StatusNotFound, w.Code)
 
-	// CheckNotificationSent body
+	// check body
 	response := w.Result()
 
 	body, err := io.ReadAll(response.Body)

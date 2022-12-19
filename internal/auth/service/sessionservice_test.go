@@ -46,10 +46,10 @@ func TestSessionService_CreateSession_OK(t *testing.T) {
 
 	actual, err := sessionService.CreateSession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -77,10 +77,10 @@ func TestSessionService_CreateSession_NOT_OK_ID(t *testing.T) {
 
 	_, actualErr := sessionService.CreateSession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -111,10 +111,10 @@ func TestSessionService_CreateSession_NOT_OK_Repository(t *testing.T) {
 
 	_, actualErr := sessionService.CreateSession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -147,10 +147,10 @@ func TestSessionService_GetUserBySession_OK(t *testing.T) {
 
 	actual, err := sessionService.GetUserBySession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -181,10 +181,10 @@ func TestSessionService_GetUserBySession_NOT_OK(t *testing.T) {
 
 	_, actualErr := sessionService.GetUserBySession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
 
@@ -217,10 +217,10 @@ func TestSessionService_DeleteSession_OK(t *testing.T) {
 
 	actual, err := sessionService.DeleteSession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.Nil(t, err, "Handling must be without errors")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, output, actual)
 }
 
@@ -251,9 +251,9 @@ func TestSessionService_DeleteSession_NOT_OK(t *testing.T) {
 
 	_, actualErr := sessionService.DeleteSession(ctx, input)
 
-	// CheckNotificationSent success
+	// check success
 	require.NotNil(t, actualErr, "Handling must be error")
 
-	// CheckNotificationSent result handling
+	// check result handling
 	require.Equal(t, stdErrors.Cause(expectedErr), stdErrors.Cause(actualErr))
 }
