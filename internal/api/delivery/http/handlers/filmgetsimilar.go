@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/http/delivery/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/handler"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/middleware"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
@@ -35,7 +35,8 @@ func (h *getSimilarFilmsHandler) Configure(r *mux.Router, mw *middleware.HTTPMid
 // @Description All fields required
 // @tags collection, completed
 // @Produce json
-// @Success 200 {object} models.PremieresCollectionResponse "returns an array of movies"
+// @Param id  path int true "film id"
+// @Success 200 {object} models.GetSimilarFilmsCollectionResponse "returns an array of movies"
 // @Failure 400 "return error"
 // @Failure 405 "method not allowed"
 // @Failure 500 "something unusual has happened"

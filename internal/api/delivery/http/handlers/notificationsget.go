@@ -74,7 +74,7 @@ func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
 // Action is a method for initial validation of the request and data and
 // delivery of the data to the service at the business logic level.
 // @Summary Getting notifications
-// @Description Return user notifications
+// @Description Return user notifications. Update to WS protocol
 // @tags notifications, completed
 // @Success 200 "successfully getting"
 // @Failure 400 "return error"
