@@ -26,6 +26,9 @@ type Repository interface {
 	CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	CheckCollectionIsPublic(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	GetCollection(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+
+	// GetFilmsCollections
+	GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error)
 }
 
 // collectionPostgres is implementation repository of collection
@@ -359,6 +362,51 @@ func (c *collectionPostgres) GetCollection(ctx context.Context, params *constpar
 
 		//  Genres
 		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return response.Convert(), nil
+	}
+
+	if errMain != nil {
+		return models.Collection{}, errMain
+	}
+
+	return response.Convert(), nil
+}
+
+func (c *collectionPostgres) GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error) {
+	response := NewCollectionSQL()
+	var err error
+
+	// Films - Main
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		response.Films, err = film.GetShortFilmsBatch(ctx, conn, getSimilarFilms, params.FilmID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrNotFoundInDB,
+				"Film main info Err: params input: values - [%+v]. Special Error [%s]",
+				params, err)
+		}
+
+		// FilmsGenres
+		response.Films, err = film.GetGenresBatch(ctx, response.Films, conn)
+		if err != nil {
+			return err
+		}
+
+		// FilmsProdCountries
+		response.Films, err = film.GetProdCountriesBatch(ctx, response.Films, conn)
+		if err != nil {
+			return err
+		}
+
+		// FilmsDirectors
+		response.Films, err = film.GetDirectorsBatch(ctx, response.Films, conn)
 		if err != nil {
 			return err
 		}
