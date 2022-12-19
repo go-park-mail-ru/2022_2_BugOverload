@@ -1,12 +1,14 @@
 package models
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gorilla/mux"
+
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"net/http"
-	"strconv"
 )
 
 type GetSimilarFilmsRequest struct {
