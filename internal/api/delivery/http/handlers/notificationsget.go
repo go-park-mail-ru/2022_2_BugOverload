@@ -92,6 +92,7 @@ func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Requ
 	sent := h.notificationsService.CheckNotificationSent(&user)
 	if sent {
 		wrapper.NoBody(w, http.StatusNoContent)
+		return
 	}
 
 	connection, err := upgrade.Upgrade(w, r, nil)
