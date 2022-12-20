@@ -102,5 +102,7 @@ func (h *getUserNotificationsHandler) Action(w http.ResponseWriter, r *http.Requ
 			stdErrors.WithMessagef(errors.ErrUpdateWebSocketProtocol, "Special Error [%s]", err))
 	}
 
+	wrapper.NoBody(w, http.StatusOK)
+
 	go sendNewMsgNotifications(connection, h.notificationsService.GetMessages(&user))
 }
