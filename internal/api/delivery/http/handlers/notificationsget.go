@@ -31,7 +31,7 @@ func NewGetNotificationsHandler(service service.NotificationsService) handler.Ha
 }
 
 func (h *getUserNotificationsHandler) Configure(r *mux.Router, mw *middleware.HTTPMiddleware) {
-	r.HandleFunc("/api/v1/notifications", mw.NeedAuthMiddleware(mw.SetCsrfMiddleware(h.Action))).
+	r.HandleFunc("/api/v1/notifications", mw.NeedAuthMiddleware(h.Action)).
 		Methods(http.MethodGet)
 }
 
