@@ -59,14 +59,13 @@ func (s *notificationsService) UpdateHubDemon() {
 	curTime.UTC()
 
 	offset := time.Duration(maxHour-curTime.Hour())*time.Hour + time.Duration(maxMinute-curTime.Minute())*time.Minute
-
 	ticker := time.NewTicker(offset)
 	defer ticker.Stop()
 
-	for {
+	updateHub := func() {
 		notification, err := s.GetFilmRelease(context.Background())
 		if err != nil {
-			break
+			return
 		}
 
 		messages := make([]interface{}, len(notification))
@@ -78,6 +77,14 @@ func (s *notificationsService) UpdateHubDemon() {
 		s.notificationHub.UpdateHub(messages)
 
 		<-ticker.C
+	}
+
+	updateHub()
+
+	ticker.Reset((maxHour + 1) * time.Hour)
+
+	for {
+		updateHub()
 	}
 }
 
