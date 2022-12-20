@@ -76,6 +76,12 @@ prod-create-env:
 	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem ./cmd/api/
 	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem ./cmd/api/
 
+prod-restart:
+	docker-compose -f docker-compose.production.yml restart warehouse
+	docker-compose -f docker-compose.production.yml restart image
+	docker-compose -f docker-compose.production.yml restart auth
+	docker-compose -f docker-compose.production.yml restart api
+
 prod-deploy:
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack

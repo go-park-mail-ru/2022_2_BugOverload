@@ -82,6 +82,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            git checkout deploy
             git pull
 
       - name: Download binaries

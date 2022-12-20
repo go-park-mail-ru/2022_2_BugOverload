@@ -53,9 +53,6 @@ func (n *notificationCache) CheckNotificationSent(user *models.User) bool {
 	defer n.mu.RUnlock()
 
 	sent, ok := n.sent[user.ID]
-	if sent || ok {
-		return true
-	}
 
-	return false
+	return sent && ok
 }
