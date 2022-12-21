@@ -4,9 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"regexp"
 	"strconv"
 	"testing"
@@ -15,8 +12,11 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/require"
 
+	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
 	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/person"
 )
 
@@ -279,17 +279,7 @@ func TestPerson_GetByID_GenresFail(t *testing.T) {
 	}}
 
 	expected := modelsGlobal.Person{
-		Name:         "Вин дизель",
-		Birthday:     "1967.12.12",
-		GrowthMeters: 1.92,
-		OriginalName: "Vin Dizel",
-		Avatar:       "23",
-		Images:       []string{"1", "2"},
-		Genres:       []string{"боевик", "триллер"},
-		Professions:  []string{"режисер", "продюсер"},
-		CountFilms:   1,
-		Gender:       "male",
-		BestFilms:    expectedFilms,
+		Images: []string{"1", "2"},
 	}
 
 	// Input global
@@ -426,12 +416,6 @@ func TestPerson_GetByID_GenresFail(t *testing.T) {
 		WillReturnRows(rowsPersonProfessions)
 
 	// Genres
-	// Data
-	// Create required setup for handling
-	rowsPersonGenres := sqlmock.NewRows([]string{"name"})
-
-	rowsPersonGenres = rowsPersonGenres.AddRow("боевик")
-	rowsPersonGenres = rowsPersonGenres.AddRow("триллер")
 
 	// Settings mock
 	mock.
@@ -488,17 +472,7 @@ func TestPerson_GetByID_ProfessionsFail(t *testing.T) {
 	}}
 
 	expected := modelsGlobal.Person{
-		Name:         "Вин дизель",
-		Birthday:     "1967.12.12",
-		GrowthMeters: 1.92,
-		OriginalName: "Vin Dizel",
-		Avatar:       "23",
-		Images:       []string{"1", "2"},
-		Genres:       []string{"боевик", "триллер"},
-		Professions:  []string{"режисер", "продюсер"},
-		CountFilms:   1,
-		Gender:       "male",
-		BestFilms:    expectedFilms,
+		Images: []string{"1", "2"},
 	}
 
 	// Input global
@@ -621,12 +595,6 @@ func TestPerson_GetByID_ProfessionsFail(t *testing.T) {
 		WillReturnRows(rowsPersonImages)
 
 	// Professions
-	// Data
-	// Create required setup for handling
-	rowsPersonProfessions := sqlmock.NewRows([]string{"name"})
-
-	rowsPersonProfessions = rowsPersonProfessions.AddRow("режисер")
-	rowsPersonProfessions = rowsPersonProfessions.AddRow("продюсер")
 
 	// Settings mock
 	mock.
@@ -681,20 +649,6 @@ func TestPerson_GetByID_ImagesFail(t *testing.T) {
 		Montage:      []modelsGlobal.FilmPerson{},
 		Composers:    []modelsGlobal.FilmPerson{},
 	}}
-
-	expected := modelsGlobal.Person{
-		Name:         "Вин дизель",
-		Birthday:     "1967.12.12",
-		GrowthMeters: 1.92,
-		OriginalName: "Vin Dizel",
-		Avatar:       "23",
-		Images:       []string{"1", "2"},
-		Genres:       []string{"боевик", "триллер"},
-		Professions:  []string{"режисер", "продюсер"},
-		CountFilms:   1,
-		Gender:       "male",
-		BestFilms:    expectedFilms,
-	}
 
 	// Input global
 	ctx := context.TODO()
@@ -801,13 +755,6 @@ func TestPerson_GetByID_ImagesFail(t *testing.T) {
 		WillReturnRows(rowsFilmsGenres)
 
 	// Images
-	// Data
-	// Create required setup for handling
-	rowsPersonImages := sqlmock.NewRows([]string{"image_key"})
-
-	for _, image := range expected.Images {
-		rowsPersonImages = rowsPersonImages.AddRow(image)
-	}
 
 	// Settings mock
 	mock.
@@ -1070,12 +1017,6 @@ func TestPerson_GetByID_BestFilmFail2(t *testing.T) {
 		WillReturnRows(rowsFilms)
 
 	// Serials
-	// Data
-	rowsSerials := sqlmock.NewRows([]string{"end_year"})
-
-	endYear, _ := time.Parse(constparams.OnlyDate, "2019")
-
-	rowsSerials = rowsSerials.AddRow(endYear)
 
 	mock.
 		ExpectQuery(regexp.QuoteMeta(film.GetShortSerialByID)).
@@ -1113,35 +1054,6 @@ func TestPerson_GetByID_NoRowsPerson(t *testing.T) {
 	// Input global
 	ctx := context.TODO()
 
-	// Person Main
-	// Data
-
-	birthday, _ := time.Parse(constparams.DateFormat, "1967.12.12")
-
-	outputMain := person.ModelSQL{
-		Name:         "Вин дизель",
-		Birthday:     birthday,
-		GrowthMeters: 1.92,
-		OriginalName: sqltools.NewSQLNullString("Vin Dizel"),
-		Avatar:       sqltools.NewSQLNullString("23"),
-		Death:        sqltools.NewSQLNNullDate("", constparams.DateFormat),
-		Gender:       sqltools.NewSQLNullString("male"),
-		CountFilms:   sqltools.NewSQLNullInt32(1),
-	}
-
-	// Create required setup for handling
-	rowMain := sqlmock.NewRows([]string{"name", "birthday", "growth_meters", "original_name", "avatar", "death", "gender", "count_films"})
-
-	rowMain = rowMain.AddRow(
-		outputMain.Name,
-		outputMain.Birthday,
-		outputMain.GrowthMeters,
-		outputMain.OriginalName,
-		outputMain.Avatar,
-		outputMain.Death,
-		outputMain.Gender,
-		outputMain.CountFilms)
-
 	// Settings mock
 	mock.
 		ExpectQuery(regexp.QuoteMeta(person.GetPersonByID)).
@@ -1178,35 +1090,6 @@ func TestPerson_GetByID_PersonFail(t *testing.T) {
 
 	// Input global
 	ctx := context.TODO()
-
-	// Person Main
-	// Data
-
-	birthday, _ := time.Parse(constparams.DateFormat, "1967.12.12")
-
-	outputMain := person.ModelSQL{
-		Name:         "Вин дизель",
-		Birthday:     birthday,
-		GrowthMeters: 1.92,
-		OriginalName: sqltools.NewSQLNullString("Vin Dizel"),
-		Avatar:       sqltools.NewSQLNullString("23"),
-		Death:        sqltools.NewSQLNNullDate("", constparams.DateFormat),
-		Gender:       sqltools.NewSQLNullString("male"),
-		CountFilms:   sqltools.NewSQLNullInt32(1),
-	}
-
-	// Create required setup for handling
-	rowMain := sqlmock.NewRows([]string{"name", "birthday", "growth_meters", "original_name", "avatar", "death", "gender", "count_films"})
-
-	rowMain = rowMain.AddRow(
-		outputMain.Name,
-		outputMain.Birthday,
-		outputMain.GrowthMeters,
-		outputMain.OriginalName,
-		outputMain.Avatar,
-		outputMain.Death,
-		outputMain.Gender,
-		outputMain.CountFilms)
 
 	// Settings mock
 	mock.
@@ -1330,7 +1213,6 @@ func TestPerson_GetByID_PersonScanError(t *testing.T) {
 		Avatar:       sql.NullString{},
 		Death:        sqltools.NewSQLNNullDate("", constparams.DateFormat),
 		Gender:       sqltools.NewSQLNullString("male"),
-		CountFilms:   sqltools.NewSQLNullInt32(1),
 	}
 
 	// Create required setup for handling

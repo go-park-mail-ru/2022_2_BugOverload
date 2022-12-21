@@ -4,18 +4,19 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"go-park-mail-ru/2022_2_BugOverload/internal/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
-	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/search"
 	"regexp"
 	"strconv"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/require"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/film"
+	"go-park-mail-ru/2022_2_BugOverload/internal/warehouse/repository/search"
 )
 
 func TestSearch_SearchFilms_OK(t *testing.T) {
