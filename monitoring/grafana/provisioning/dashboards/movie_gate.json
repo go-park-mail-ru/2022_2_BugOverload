@@ -1142,7 +1142,7 @@
           "refId": "A"
         }
       ],
-      "title": "Panel Title",
+      "title": "Active RAM",
       "type": "timeseries"
     },
     {
@@ -1252,6 +1252,6 @@
   "timezone": "",
   "title": "main",
   "uid": "WBtNFDF4k",
-  "version": 11,
+  "version": 2,
   "weekStart": ""
 }

@@ -25,7 +25,8 @@ const (
     		films f
        		JOIN film_persons fp ON f.film_id = fp.fk_film_id
         	JOIN persons p ON fp.fk_person_id = $1
-		GROUP BY f.film_id
+		GROUP BY f.film_id, f.rating
+		ORDER BY f.rating DESC
 		LIMIT $2`
 
 	GetPersonImages = `SELECT image_key FROM person_images WHERE person_id = $1 ORDER BY weight DESC LIMIT $2`
