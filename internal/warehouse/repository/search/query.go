@@ -1,7 +1,7 @@
 package search
 
 const (
-	searchFilmsByName = `
+	SearchFilmsByName = `
 SELECT f.film_id,
        f.name,
        f.original_name,
@@ -13,7 +13,7 @@ FROM films f
 WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'film'
 LIMIT 6`
 
-	searchSeriesByName = `
+	SearchSeriesByName = `
 SELECT f.film_id,
        f.name,
        f.original_name,
@@ -25,7 +25,7 @@ FROM films f
 WHERE (f.name ILIKE $1 OR f.original_name ILIKE $1) AND f.type = 'serial'
 LIMIT 6`
 
-	searchPersonsByName = `
+	SearchPersonsByName = `
 SELECT
     person_id,
     name,

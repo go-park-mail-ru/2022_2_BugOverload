@@ -54,11 +54,11 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 
 	switch params.SortParam {
 	case constparams.CollectionSortParamDate:
-		query = getFilmsByTagDate
+		query = GetFilmsByTagDate
 
 		values = []interface{}{params.Key, params.CountFilms, params.Delimiter}
 	case constparams.CollectionSortParamFilmRating:
-		query = getFilmsByTagRating
+		query = GetFilmsByTagRating
 
 		var delimiter float64
 
@@ -89,18 +89,18 @@ func (c *collectionPostgres) GetCollectionByTag(ctx context.Context, params *con
 		}
 
 		// Tag Description
-		rowTag := conn.QueryRowContext(ctx, getTagDescription, params.Key)
+		rowTag := conn.QueryRowContext(ctx, GetTagDescription, params.Key)
 		if rowTag.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"GetNotifications Tag desctiption Err: params input: query - [%s], values - [%s]. Special Error [%s]",
-				getTagDescription, params.Key, err)
+				GetTagDescription, params.Key, err)
 		}
 
 		err = rowTag.Scan(&response.Description)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"GetNotifications Tag desctiption Scan Err: params input: query - [%s], values - [%s]. Special Error [%s]",
-				getTagDescription, params.Key, err)
+				GetTagDescription, params.Key, err)
 		}
 
 		response.Name = params.Key
@@ -232,18 +232,18 @@ func (c *collectionPostgres) CheckUserIsAuthor(ctx context.Context, user *models
 	var response bool
 
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		row := conn.QueryRowContext(ctx, checkUserIsCollectionAuthor, params.CollectionID, user.ID)
+		row := conn.QueryRowContext(ctx, CheckUserIsCollectionAuthor, params.CollectionID, user.ID)
 		if row.Err() != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
-				checkUserIsCollectionAuthor, user.ID, params.CollectionID, row.Err())
+				CheckUserIsCollectionAuthor, user.ID, params.CollectionID, row.Err())
 		}
 
 		err := row.Scan(&response)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d, %d]. Special Error [%s]",
-				checkUserIsCollectionAuthor, user.ID, params.CollectionID, err)
+				CheckUserIsCollectionAuthor, user.ID, params.CollectionID, err)
 		}
 
 		return nil
