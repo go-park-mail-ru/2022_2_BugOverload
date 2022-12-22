@@ -18,11 +18,14 @@ type DBFiller struct {
 
 	DB *sqltools.Database
 
-	films    []FilmFiller
-	filmsSQL []FilmSQLFiller
+	films          []FilmFiller
+	filmsSQL       []FilmSQLFiller
+	filmsDirectors map[string]int
+	filmsActors    map[string]int
 
 	persons    []PersonFiller
 	personsSQL []PersonSQLFiller
+	mapPersons map[string]int
 
 	collections    []CollectionFiller
 	collectionsSQL []CollectionSQLFiller
@@ -47,6 +50,7 @@ func NewDBFiller(path string, config *Config) (*DBFiller, error) {
 		companies:   make(map[string]int),
 		professions: make(map[string]int),
 		tags:        make(map[string]int),
+		mapPersons:  make(map[string]int),
 
 		generator: generatordatadb.NewDBGenerator(),
 	}
@@ -297,11 +301,21 @@ func (f *DBFiller) Action() error {
 		logrus.Infof("%d film reviews link end", count)
 	}
 
-	count, err = f.linkFilmPersons()
-	if err != nil {
-		return errors.Wrap(err, "Action")
+	if f.Config.Volume.TypeFilmPersonLinks == TypeFilmPersonLinksRandom {
+		count, err = f.linkFilmPersonsRandom()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d film persons link end", count)
 	}
-	logrus.Infof("%d film persons link end", count)
+
+	if f.Config.Volume.TypeFilmPersonLinks == TypeFilmPersonLinksReal {
+		count, err = f.linkFilmPersonsReal()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d film persons link end", count)
+	}
 
 	count, err = f.uploadCollections()
 	if err != nil {

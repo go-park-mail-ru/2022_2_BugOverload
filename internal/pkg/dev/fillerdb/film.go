@@ -325,7 +325,7 @@ func (f *DBFiller) linkFilmCompanies() (int, error) {
 	return countInserts, nil
 }
 
-func (f *DBFiller) linkFilmPersons() (int, error) {
+func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 	values := make([]interface{}, 0)
 
 	countInserts := 0
@@ -365,7 +365,49 @@ func (f *DBFiller) linkFilmPersons() (int, error) {
 
 	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
-		return 0, errors.Wrap(err, "linkFilmPersons")
+		return 0, errors.Wrap(err, "linkFilmPersonsRandom")
+	}
+
+	return countInserts, nil
+}
+
+func (f *DBFiller) linkFilmPersonsReal() (int, error) {
+	values := make([]interface{}, 0)
+
+	countInserts := 0
+
+	for _, value := range f.films {
+		countActors := len(value.Actors)
+		if countActors > 0 {
+			weightActors := countActors - 1
+
+			for i := 0; i < countActors; i++ {
+				values = append(values, f.mapPersons[value.Actors[i].Name], value.ID, f.professions["актер"], sqltools.NewSQLNullString(value.Actors[i].Name), weightActors)
+				weightActors--
+			}
+		}
+
+		countDirectors := len(value.Directors)
+		if countDirectors > 0 {
+			weightDirectors := countDirectors - 1
+
+			for i := 0; i < countDirectors; i++ {
+				values = append(values, f.mapPersons[value.Directors[i]], value.ID, f.professions["режиссер"], sqltools.NewSQLNullString(""), weightDirectors)
+				weightDirectors--
+			}
+		}
+
+		countInserts += countActors + countDirectors
+	}
+
+	insertStatement, _ := sqltools.CreateFullQuery(insertFilmsPersons, countInserts)
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "linkFilmPersonsRandom")
 	}
 
 	return countInserts, nil
