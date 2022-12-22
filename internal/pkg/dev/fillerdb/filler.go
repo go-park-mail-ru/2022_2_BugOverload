@@ -18,10 +18,8 @@ type DBFiller struct {
 
 	DB *sqltools.Database
 
-	films          []FilmFiller
-	filmsSQL       []FilmSQLFiller
-	filmsDirectors map[string]int
-	filmsActors    map[string]int
+	films    []FilmFiller
+	filmsSQL []FilmSQLFiller
 
 	persons    []PersonFiller
 	personsSQL []PersonSQLFiller
