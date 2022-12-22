@@ -65,6 +65,16 @@ CREATE TABLE IF NOT EXISTS films
 
 -- 1:1
 -- Generator completed
+CREATE TABLE IF NOT EXISTS media
+(
+    "film_id" integer NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
+    "trailer" text DEFAULT NULL,
+    CONSTRAINT "trailer_length" CHECK (LENGTH("trailer") <= 256),
+    "ticket"  text DEFAULT NULL,
+    CONSTRAINT "ticket_length" CHECK (LENGTH("ticket") <= 256)
+);
+
+-- Generator completed
 CREATE TABLE IF NOT EXISTS serials
 (
     "film_id"       integer NOT NULL PRIMARY KEY REFERENCES films (film_id) ON DELETE CASCADE,
