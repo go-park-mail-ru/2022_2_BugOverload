@@ -919,5 +919,117 @@
       "5",
       "6"
     ]
+  },
+  {
+    "name": "Джордж Миллер",
+    "avatar": "37",
+    "original_name": "George Miller",
+    "birthday": "1945.03.03",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "фантастика",
+      "боевик"
+    ],
+    "professions": [
+      "продюсер",
+      "режиссер",
+      "сценарист",
+      "актер",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Идрис Эльба",
+    "avatar": "38",
+    "original_name": "Idris Elba",
+    "birthday": "1972.09.06",
+    "gender": "male",
+    "growth_meters": 1.89,
+    "genres": [
+      "драма",
+      "криминал",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист",
+      "композитор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Сидни Крейвен",
+    "avatar": "39",
+    "original_name": "Sydney Craven",
+    "birthday": "1994.07.25",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "драма",
+      "ужасы",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Имран Адамс",
+    "avatar": "40",
+    "original_name": "Imran Adams",
+    "birthday": "1994.07.25",
+    "gender": "male",
+    "growth_meters": 1.89,
+    "genres": [
+      "короткометражка",
+      "драма",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Тимо Вуоренсола",
+    "avatar": "41",
+    "original_name": "Timo Vuorensola",
+    "birthday": "1979.11.29",
+    "gender": "male",
+    "growth_meters": 1.98,
+    "genres": [
+      "фантастика",
+      "комедия",
+      "ужасы"
+    ],
+    "professions": [
+      "режиссер",
+      "актер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   }
 ]

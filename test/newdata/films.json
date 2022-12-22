@@ -31,15 +31,15 @@
     "actors": [
       {
         "name": "Тильда Суинтон",
-        "character": "some"
+        "character": "Алитея"
       },
       {
-        "name": "Шон Коннери",
-        "character": "some 2"
+        "name": "Идрис Эльба",
+        "character": "Джин"
       }
     ],
     "directors": [
-      "Шон Коннери"
+      "Джордж Миллер"
     ]
   },
   {
@@ -69,7 +69,20 @@
     "duration_minutes": 88,
     "currency_budget": "USD",
     "trailer": "https://www.youtube.com/watch?v=8pYKm3JWzZw&ab_channel=%D0%9A%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F%D0%9F%D0%B0%D1%80%D0%B0%D0%B4%D0%B8%D0%B7",
-    "ticket": "https://www.afisha.ru/movie/266697/"
+    "ticket": "https://www.afisha.ru/movie/266697/",
+    "actors": [
+      {
+        "name": "Сидни Крейвен",
+        "character": "Леин"
+      },
+      {
+        "name": "Имран Адамс",
+        "character": "Чиз"
+      }
+    ],
+    "directors": [
+      "Тимо Вуоренсола"
+    ]
   },
   {
     "name": "Эра выживания",
@@ -97,7 +110,20 @@
     "age_limit": "16+",
     "duration_minutes": 114,
     "trailer": "https://www.youtube.com/watch?v=M2Clvw4169I&ab_channel=%D0%92%D0%A0%D0%B5%D0%B9%D1%82%D0%B8%D0%BD%D0%B3%D0%B5",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Раффиелла Чепмен",
+        "character": "Веспер"
+      },
+      {
+        "name": "Эдди Марсан",
+        "character": "йнонас"
+      }
+    ],
+    "directors": [
+      "Кристина Буожите"
+    ]
   },
   {
     "name": "Проклятие Плачущей. Возвращение",
@@ -119,7 +145,20 @@
     "budget": 9000000,
     "age_limit": "16+",
     "duration_minutes": 98,
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Отем Ризер",
+        "character": "Керли Кендлевуд"
+      },
+      {
+        "name": "Антонио Купо",
+        "character": "Эндрю Кендлевуд"
+      }
+    ],
+    "directors": [
+      "Патриция Харрис Сили"
+    ]
   },
   {
     "name": "Люси",
@@ -151,7 +190,20 @@
     "age_limit": "16+",
     "duration_minutes": 89,
     "trailer": "https://www.youtube.com/watch?v=Elfle5fkaZU&ab_channel=iVideos",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Скарлетт Йоханссон",
+        "character": "Люси"
+      },
+      {
+        "name": "Морган Фриман",
+        "character": "Профессор Норман"
+      }
+    ],
+    "directors": [
+      "Люк Бессон"
+    ]
   },
   {
     "name": "Властелин колец. Братство кольца",
@@ -180,7 +232,20 @@
     "age_limit": "12+",
     "duration_minutes": 178,
     "trailer": "https://www.youtube.com/watch?v=RNksw9VU2BQ&ab_channel=%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8B%D0%BA%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%D0%BC",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Элайджа Вуд",
+        "character": "Фродо"
+      },
+      {
+        "name": "Иэн Маккеллен",
+        "character": "Гендальф"
+      }
+    ],
+    "directors": [
+      "Питер Джексон"
+    ]
   },
   {
     "name": "Дом, который построил Джек",
@@ -214,7 +279,20 @@
     "age_limit": "18+",
     "duration_minutes": 152,
     "trailer": "https://www.youtube.com/watch?v=YMaDOx6KBK0&ab_channel=iVideos",
-    "currency_budget": "EURO"
+    "currency_budget": "EURO",
+    "actors": [
+      {
+        "name": "Мэтт Диллон",
+        "character": "Джек"
+      },
+      {
+        "name": "Бруно Ганц",
+        "character": "Грань"
+      }
+    ],
+    "directors": [
+      "Ларс фон Триер"
+    ]
   },
   {
     "name": "Интерстеллар",
@@ -244,7 +322,20 @@
     "age_limit": "16+",
     "duration_minutes": 169,
     "trailer": "https://www.youtube.com/watch?v=qcPfI0y7wRU&ab_channel=WBRussia",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Мэттью МакКонахи",
+        "character": "Купер"
+      },
+      {
+        "name": "Энн Хэтэуэй",
+        "character": "Бренд"
+      }
+    ],
+    "directors": [
+      "Кристофер Нолан"
+    ]
   },
   {
     "name": "1+1",
@@ -272,7 +363,20 @@
     "age_limit": "16+",
     "duration_minutes": 169,
     "trailer": "https://www.youtube.com/watch?v=tTwFeGArcrs&ab_channel=%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8B%D0%BA%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%D0%BC",
-    "currency_budget": "EURO"
+    "currency_budget": "EURO",
+    "actors": [
+      {
+        "name": "Франсуа Клюзе",
+        "character": "Филипп"
+      },
+      {
+        "name": "Омар Си",
+        "character": "Дрисс"
+      }
+    ],
+    "directors": [
+      "Оливье Накаш"
+    ]
   },
   {
     "name": "Темный рыцарь",
@@ -304,7 +408,20 @@
     "age_limit": "16+",
     "duration_minutes": 152,
     "trailer": "https://www.youtube.com/watch?v=HF1_epZNoCg&ab_channel=%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8B%D0%BA%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%D0%BC",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Кристиан Бэйл",
+        "character": "Брюс Уэйн"
+      },
+      {
+        "name": "Хит Леджер",
+        "character": "Джокер"
+      }
+    ],
+    "directors": [
+      "Кристофер Нолан"
+    ]
   },
   {
     "name": "Бойцовский клуб",
@@ -333,7 +450,20 @@
     "age_limit": "18+",
     "duration_minutes": 139,
     "trailer": "https://www.youtube.com/watch?v=C7-7qQ61QHU&ab_channel=%D0%A2%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8B%D0%BA%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%D0%BC",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Эдвард Нортон",
+        "character": "Рассказчик"
+      },
+      {
+        "name": "Брэд Питт",
+        "character": "Тайлер Дюрден"
+      }
+    ],
+    "directors": [
+      "Дэвид Финчер"
+    ]
   },
   {
     "name": "Титаник",
@@ -364,7 +494,20 @@
     "age_limit": "12+",
     "duration_minutes": 194,
     "trailer": "https://www.youtube.com/watch?v=qFjyxJ21VJY&ab_channel=20thCenturyStudiosRussia",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Леонардо ДиКаприо",
+        "character": "Джек Доусон"
+      },
+      {
+        "name": "Кейт Уинслет",
+        "character": "Роза Девид Букатер"
+      }
+    ],
+    "directors": [
+      "Джеймс Кэмерон"
+    ]
   },
   {
     "name": "Ходячий замок",
@@ -394,7 +537,20 @@
     "age_limit": "6+",
     "duration_minutes": 119,
     "trailer": "https://www.youtube.com/watch?v=otCW9XEZwlY&ab_channel=Kinoman",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Тиэко Байсё",
+        "character": "Софи, озвучка"
+      },
+      {
+        "name": "Такуя Кимура",
+        "character": "Хоуро, озвучка"
+      }
+    ],
+    "directors": [
+      "Хаяо Миядзаки"
+    ]
   },
   {
     "name": "Волк с Уолл-стрит",
@@ -423,7 +579,20 @@
     "age_limit": "16+",
     "duration_minutes": 180,
     "trailer": "https://www.youtube.com/watch?v=CHivqmutR0I&ab_channel=%D0%9D%D0%BE%D0%B2%D1%8B%D0%B5%D1%82%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8B",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Леонардо ДиКаприо",
+        "character": "Джордан Белфорт"
+      },
+      {
+        "name": "Джона Хилл",
+        "character": "Донни Азоф"
+      }
+    ],
+    "directors": [
+      "Мартин Скорсезе"
+    ]
   },
   {
     "name": "Дюна",
@@ -454,7 +623,20 @@
     "age_limit": "12+",
     "duration_minutes": 155,
     "trailer": "https://www.youtube.com/watch?v=DOlTmIhEsg0&ab_channel=WBRussia",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Тимоти Шаламе",
+        "character": "Пол Атрейдес"
+      },
+      {
+        "name": "Ребекка Фергюсон",
+        "character": "Леди Джесика Атрейдес"
+      }
+    ],
+    "directors": [
+      "Дени Вильнёв"
+    ]
   },
   {
     "name": "Убить Билла",
@@ -481,7 +663,20 @@
     "age_limit": "18+",
     "duration_minutes": 111,
     "trailer": "https://www.youtube.com/watch?v=7kSuas6mRpk&ab_channel=RottenTomatoesClassicTrailers",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Ума Турман",
+        "character": "Невеста"
+      },
+      {
+        "name": "Люси Лью",
+        "character": "Орен Исии"
+      }
+    ],
+    "directors": [
+      "Квентин Тарантино"
+    ]
   },
   {
     "name": "Головокружение",
@@ -509,7 +704,20 @@
     "age_limit": "12+",
     "duration_minutes": 128,
     "trailer": "https://www.youtube.com/watch?v=8QJqPbRV378&ab_channel=%D0%94%D0%B5%D0%BD%D0%B8%D1%81%D0%91%D0%BE%D1%80%D0%B8%D1%81%D0%BE%D0%B2",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Джеймс Стюарт",
+        "character": "Джон \"Скотти\" Фергюсон"
+      },
+      {
+        "name": "Ким Новак",
+        "character": "Меделлин Елстер"
+      }
+    ],
+    "directors": [
+      "Альфред Хичкок"
+    ]
   },
   {
     "name": "Петровы в гриппе",
@@ -536,7 +744,20 @@
     "age_limit": "18+",
     "duration_minutes": 145,
     "trailer": "https://www.youtube.com/watch?v=1T5XpucIw60&ab_channel=%D0%9A%D0%B8%D0%BD%D0%BE%D1%82%D1%80%D0%B5%D0%B9%D0%BB%D0%B5%D1%80%D1%8BHD",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Семён Серзин",
+        "character": "Петров-старший"
+      },
+      {
+        "name": "Чулпан Хаматова",
+        "character": "Нурлыниса Петрова"
+      }
+    ],
+    "directors": [
+      "Кирилл Серебренников"
+    ]
   },
   {
     "name": "Она",
@@ -564,7 +785,20 @@
     "age_limit": "16+",
     "duration_minutes": 126,
     "trailer": "https://www.youtube.com/watch?v=OjyN5aXFljw&ab_channel=Cameralabs",
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "actors": [
+      {
+        "name": "Хоакин Феникс",
+        "character": "Теодор"
+      },
+      {
+        "name": "Скарлетт Йоханссон",
+        "character": "Саманта, озвучка"
+      }
+    ],
+    "directors": [
+      "Спайк Джонс"
+    ]
   },
   {
     "name": "Плата за страх",
@@ -585,7 +819,20 @@
     ],
     "age_limit": "12+",
     "trailer": "https://www.youtube.com/watch?v=k1IX8Pq_dkc&ab_channel=ArtAN",
-    "duration_minutes": 156
+    "duration_minutes": 156,
+    "actors": [
+      {
+        "name": "Ив Монтан",
+        "character": "Марио Ливи"
+      },
+      {
+        "name": "Шарль Ванель",
+        "character": "М. Джо"
+      }
+    ],
+    "directors": [
+      "Анри-Жорж Клузо"
+    ]
   },
   {
     "name": "Черное зеркало",
