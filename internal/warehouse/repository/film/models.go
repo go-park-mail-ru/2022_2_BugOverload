@@ -593,6 +593,9 @@ func GetTrailersBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([
 	query := GetTrailerOfFilmBatchBegin + setIDRes + GetTrailerOfFilmBatchEnd
 
 	rowsFilmsTickets, err := conn.QueryContext(ctx, query)
+	if err == sql.ErrNoRows {
+		return target, nil
+	}
 	if err != nil {
 		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
 			"Err: params input: query - [%s]. Special Error [%s]",

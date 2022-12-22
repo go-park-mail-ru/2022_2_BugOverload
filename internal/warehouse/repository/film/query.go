@@ -126,12 +126,8 @@ SELECT f.film_id,
        f.poster_ver,
        f.rating,
        f.duration_minutes,
-       f.description,
-       m.trailer,
-       m.ticket
+       f.description
 FROM films f
-JOIN media m
-ON m.film_id = f.film_id
 WHERE f.prod_date > now()
   AND f.type = 'film'
 ORDER BY f.prod_date, f.film_id
