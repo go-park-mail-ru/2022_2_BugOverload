@@ -103,6 +103,6 @@ SET count_likes = COALESCE((SELECT COUNT(*)
                    WHERE rl.fk_review_id = r.review_id
                    GROUP BY rl.fk_review_id), 0);`
 
-	insertCollections        = `INSERT INTO collections(name, description, poster, create_time) VALUES`
+	insertCollections        = `INSERT INTO collections(name, description, poster, create_time, is_public) VALUES`
 	insertProfileCollections = `INSERT INTO user_collections(fk_collection_id, fk_user_id) VALUES`
 )

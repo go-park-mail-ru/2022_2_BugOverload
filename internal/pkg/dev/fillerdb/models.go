@@ -14,6 +14,7 @@ type CollectionFiller struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	Poster      string `json:"poster,omitempty"`
+	Public      bool   `json:"public,omitempty"`
 }
 
 type PersonFiller struct {
@@ -188,6 +189,7 @@ type CollectionSQLFiller struct {
 	Poster      sql.NullString
 	CountLikes  sql.NullInt32
 	CountFilms  sql.NullInt32
+	Public      bool
 
 	Films []film.ModelSQL
 }
@@ -198,5 +200,6 @@ func NewCollectionSQLFilmOnCollection(collection CollectionFiller) CollectionSQL
 		Name:        collection.Name,
 		Description: sqltools.NewSQLNullString(collection.Description),
 		Poster:      sqltools.NewSQLNullString(collection.Poster),
+		Public:      collection.Public,
 	}
 }

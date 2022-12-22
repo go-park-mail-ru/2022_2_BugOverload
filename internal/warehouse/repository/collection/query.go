@@ -116,8 +116,8 @@ SELECT fk_user_id
 FROM user_collections
 WHERE fk_collection_id = $1`
 
-	getAuthorByID = `
-SELECT nickname
+	getAuthorCollectionByID = `
+SELECT nickname, count_collections, avatar
 FROM users
 WHERE user_id = $1`
 

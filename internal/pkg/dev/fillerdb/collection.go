@@ -29,6 +29,8 @@ func (f *DBFiller) uploadCollections() (int, error) {
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++
+			values[pos] = value.Public
+			pos++
 		}
 	}
 

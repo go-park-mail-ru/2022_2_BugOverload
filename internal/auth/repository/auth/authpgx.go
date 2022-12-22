@@ -102,7 +102,9 @@ func (ad *Postgres) CreateUser(ctx context.Context, user *models.User) (models.U
 		}
 		defer rowsCollections.Close()
 
-		ids := make([]int, 0)
+		values := make([]interface{}, 0)
+
+		values = append(values, userID)
 
 		for rowsCollections.Next() {
 			var colID int
@@ -113,14 +115,14 @@ func (ad *Postgres) CreateUser(ctx context.Context, user *models.User) (models.U
 					CreateDefCollections, errCollections)
 			}
 
-			ids = append(ids, colID)
+			values = append(values, colID)
 		}
 
-		_, err = tx.ExecContext(ctx, LinkUserDefCollections, userID, ids[0], ids[1])
+		_, err = tx.ExecContext(ctx, LinkUserDefCollections, values...)
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values -[%d, %d, %d]. Special error: [%s]",
-				LinkUserDefCollections, userID, ids[0], ids[1], errCollections)
+				"Err: params input: query - [%s], values -[%+v]. Special error: [%s]",
+				LinkUserDefCollections, values, errCollections)
 		}
 
 		return nil

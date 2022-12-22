@@ -26,6 +26,7 @@ type Repository interface {
 	CheckUserIsAuthor(ctx context.Context, user *models.User, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	CheckCollectionIsPublic(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (bool, error)
 	GetCollection(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error)
+	GetCollectionAuthor(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.User, error)
 
 	// GetFilmsCollections
 	GetSimilarFilms(ctx context.Context, params *constparams.GetSimilarFilmsParams) (models.Collection, error)
@@ -290,7 +291,7 @@ func (c *collectionPostgres) CheckCollectionIsPublic(ctx context.Context, params
 	return response, nil
 }
 
-// GetCollectionFilmsAuthorized return collection by id with author
+// GetCollection return collection by id with author
 func (c *collectionPostgres) GetCollection(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.Collection, error) {
 	response := NewCollectionSQL()
 
@@ -306,7 +307,7 @@ func (c *collectionPostgres) GetCollection(ctx context.Context, params *constpar
 		return models.Collection{}, errors.ErrUnsupportedSortParameter
 	}
 
-	//  Films - Main
+	//  Collection - Main
 	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
 		rowCollection := conn.QueryRowContext(ctx, getCollectionShortInfo, params.CollectionID)
 		if rowCollection.Err() != nil {
@@ -318,36 +319,10 @@ func (c *collectionPostgres) GetCollection(ctx context.Context, params *constpar
 		err = rowCollection.Scan(
 			&response.Name,
 			&response.Description)
-
 		if err != nil {
 			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
 				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
 				getCollectionShortInfo, params.CollectionID, rowCollection.Err())
-		}
-
-		rowAuthorID := conn.QueryRowContext(ctx, getAuthorID, params.CollectionID)
-		if rowAuthorID.Err() != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getAuthorID, params.CollectionID, rowAuthorID.Err())
-		}
-		err = rowAuthorID.Scan(&response.Author.ID)
-		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getAuthorID, params.CollectionID, rowAuthorID.Err())
-		}
-		rowAuthor := conn.QueryRowContext(ctx, getAuthorByID, response.Author.ID)
-		if rowAuthor.Err() != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getAuthorByID, response.Author.ID, rowAuthor.Err())
-		}
-		err = rowAuthor.Scan(&response.Author.Nickname)
-		if err != nil {
-			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
-				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
-				getAuthorByID, response.Author.ID, rowAuthor.Err())
 		}
 
 		response.Films, err = film.GetShortFilmsBatch(ctx, conn, query, params.CollectionID)
@@ -375,6 +350,60 @@ func (c *collectionPostgres) GetCollection(ctx context.Context, params *constpar
 
 	if errMain != nil {
 		return models.Collection{}, errMain
+	}
+
+	return response.Convert(), nil
+}
+
+func (c *collectionPostgres) GetCollectionAuthor(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.User, error) {
+	response := NewAuthorSQL()
+
+	errMain := sqltools.RunQuery(ctx, c.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
+		rowAuthorID := conn.QueryRowContext(ctx, getAuthorID, params.CollectionID)
+		if rowAuthorID.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getAuthorID, params.CollectionID, rowAuthorID.Err())
+		}
+
+		err := rowAuthorID.Scan(&response.ID)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getAuthorID, params.CollectionID, rowAuthorID.Err())
+		}
+
+		rowAuthor := conn.QueryRowContext(ctx, getAuthorCollectionByID, response.ID)
+		if rowAuthor.Err() != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getAuthorCollectionByID, response.ID, rowAuthor.Err())
+		}
+
+		err = rowAuthor.Scan(
+			&response.Nickname,
+			&response.CountCollections,
+			&response.Avatar,
+		)
+		if err != nil {
+			return stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err: params input: query - [%s], values - [%d]. Special Error [%s]",
+				getAuthorCollectionByID, response.ID, rowAuthor.Err())
+		}
+
+		if !response.Avatar.Valid {
+			response.Avatar.String = constparams.DefUserAvatar
+		}
+
+		return nil
+	})
+
+	if stdErrors.Is(errMain, sql.ErrNoRows) {
+		return response.Convert(), nil
+	}
+
+	if errMain != nil {
+		return models.User{}, errMain
 	}
 
 	return response.Convert(), nil
