@@ -7,7 +7,7 @@ INSERT INTO users (email,
                    password,
                    count_collections,
                    avatar)
-VALUES ($1, $2, $3, 2, $4)
+VALUES ($1, $2, $3, 4, $4)
 RETURNING user_id`
 
 	CreateDefCollections = `
