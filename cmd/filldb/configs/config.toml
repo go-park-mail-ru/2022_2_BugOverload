@@ -1,5 +1,5 @@
 [database]
-timeout = 1
+timeout = 3
 
 [volume]
 count_users = 200
