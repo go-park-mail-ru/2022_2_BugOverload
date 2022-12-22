@@ -151,6 +151,13 @@ func TestCollection_GetPremieresCollection_OK(t *testing.T) {
 		ExpectQuery(regexp.QuoteMeta(query)).
 		WillReturnRows(rowsFilmsDirectors)
 
+	rowsFilmsTickets := sqlmock.NewRows([]string{"film_id", "ticket"})
+	query = film.GetTicketOfFilmBatchBegin + strconv.Itoa(expectedFilms[0].ID) + film.GetTicketOfFilmBatchEnd
+
+	mock.
+		ExpectQuery(regexp.QuoteMeta(query)).
+		WillReturnRows(rowsFilmsTickets)
+
 	// Init
 	repo := collection.NewCollectionPostgres(&sqltools.Database{Connection: db})
 

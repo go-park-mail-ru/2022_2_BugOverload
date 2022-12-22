@@ -144,4 +144,10 @@ FROM films f
 WHERE f.prod_date > now()
 ORDER BY f.prod_date, f.film_id
 LIMIT 5`
+
+	getTrailer = `
+SELECT m.trailer
+FROM media m
+WHERE m.film_id = $1
+`
 )

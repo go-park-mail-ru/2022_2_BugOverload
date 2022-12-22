@@ -248,6 +248,10 @@ func easyjson14b8084aDecodeGoParkMailRu20222BugOverloadInternalModels2(in *jlexe
 			out.PosterHor = string(in.String())
 		case "poster_ver":
 			out.PosterVer = string(in.String())
+		case "ticket":
+			out.Ticket = string(in.String())
+		case "trailer":
+			out.Trailer = string(in.String())
 		case "box_office_dollars":
 			out.BoxOfficeDollars = int(in.Int())
 		case "budget":
@@ -694,6 +698,26 @@ func easyjson14b8084aEncodeGoParkMailRu20222BugOverloadInternalModels2(out *jwri
 			out.RawString(prefix)
 		}
 		out.String(string(in.PosterVer))
+	}
+	if in.Ticket != "" {
+		const prefix string = ",\"ticket\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Ticket))
+	}
+	if in.Trailer != "" {
+		const prefix string = ",\"trailer\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Trailer))
 	}
 	if in.BoxOfficeDollars != 0 {
 		const prefix string = ",\"box_office_dollars\":"

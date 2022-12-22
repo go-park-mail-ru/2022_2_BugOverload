@@ -218,6 +218,11 @@ func (c *collectionPostgres) GetPremieresCollection(ctx context.Context, params 
 			return err
 		}
 
+		response.Films, err = film.GetTicketsBatch(ctx, response.Films, conn)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 

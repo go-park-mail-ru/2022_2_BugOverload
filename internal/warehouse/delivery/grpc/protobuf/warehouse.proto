@@ -74,6 +74,9 @@ message Film {
   repeated FilmPerson Composers = 35;
 
   repeated string Images = 36;
+
+  string Ticket = 37;
+  string Trailer = 38;
 }
 
 message GetFilmParams {

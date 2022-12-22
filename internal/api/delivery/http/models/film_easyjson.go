@@ -54,6 +54,8 @@ func easyjson14b8084aDecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 			out.DurationMinutes = int(in.Int())
 		case "poster_hor":
 			out.PosterHor = string(in.String())
+		case "trailer":
+			out.Trailer = string(in.String())
 		case "budget":
 			out.Budget = int(in.Int())
 		case "box_office_dollars":
@@ -480,6 +482,16 @@ func easyjson14b8084aEncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 			out.RawString(prefix)
 		}
 		out.String(string(in.PosterHor))
+	}
+	if in.Trailer != "" {
+		const prefix string = ",\"trailer\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Trailer))
 	}
 	if in.Budget != 0 {
 		const prefix string = ",\"budget\":"
