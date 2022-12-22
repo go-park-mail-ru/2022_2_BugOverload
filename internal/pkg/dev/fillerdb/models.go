@@ -32,6 +32,11 @@ type PersonFiller struct {
 	Images []string `json:"images,omitempty"`
 }
 
+type FilmActorFiller struct {
+	Name      string `json:"name,omitempty"`
+	Character string `json:"character,omitempty"`
+}
+
 type FilmFiller struct {
 	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name,omitempty"`
@@ -61,6 +66,15 @@ type FilmFiller struct {
 
 	Ticket  string `json:"ticket,omitempty"`
 	Trailer string `json:"trailer,omitempty"`
+
+	Actors    []FilmActorFiller `json:"actors,omitempty"`
+	Artists   []string          `json:"artists,omitempty"`
+	Directors []string          `json:"directors,omitempty"`
+	Writers   []string          `json:"writers,omitempty"`
+	Producers []string          `json:"producers,omitempty"`
+	Operators []string          `json:"operators,omitempty"`
+	Montage   []string          `json:"montage,omitempty"`
+	Composers []string          `json:"composers,omitempty"`
 }
 
 type FilmSQLFiller struct {

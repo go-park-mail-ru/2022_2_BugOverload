@@ -29,28 +29,17 @@
     "ticket": "some url",
     "trailer": "some url",
     "actors": [
-      "Брюс ли"
-    ],
-    "artists": [
-      "Брюс ли"
+      {
+        "name": "Тильда Суинтон",
+        "character": "some"
+      },
+      {
+        "name": "Шон Коннери",
+        "character": "some 2"
+      }
     ],
     "directors": [
-      "Брюс ли"
-    ],
-    "writers": [
-      "Брюс ли"
-    ],
-    "producers": [
-      "Брюс ли"
-    ],
-    "operators": [
-      "Брюс ли"
-    ],
-    "montage": [
-      "Брюс ли"
-    ],
-    "composers": [
-      "Брюс ли"
+      "Шон Коннери"
     ]
   },
   {
