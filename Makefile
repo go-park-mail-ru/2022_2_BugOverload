@@ -41,7 +41,8 @@ get-stat-coverage:
 api-doc-generate:
 	swag init --parseDependency --parseInternal --parseDepth 1 -g ./cmd/api/main.go -o docs
 
-mocks-generate:
+# mocks, easyjson
+generate:
 	go generate ${PKG}
 
 proto-generate:

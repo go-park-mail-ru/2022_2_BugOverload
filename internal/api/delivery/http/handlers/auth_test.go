@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
@@ -83,12 +83,12 @@ func TestAuthHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewUserAuthResponse(&resAuth)
 
-	var actualBody *models.UserAuthResponse
+	var actualBody models.UserAuthResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
@@ -134,7 +134,7 @@ func TestAuthHandler_AuthWithoutCookie(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -191,7 +191,7 @@ func TestAuthHandler_AuthWithInvalidCookie(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -257,7 +257,7 @@ func TestAuthHandler_Action_NotOK_AuthService(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -320,7 +320,7 @@ func TestAuthHandler_Action_NotOK_SessionService(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

@@ -10,6 +10,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
@@ -18,6 +19,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestUserGetUserCollectionsHandler_Action_OK(t *testing.T) {
@@ -72,7 +74,7 @@ func TestUserGetUserCollectionsHandler_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code)
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -85,7 +87,7 @@ func TestUserGetUserCollectionsHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewShortFilmCollectionResponse(userCollections)
 
-	var actualBody []models.ShortFilmCollectionResponse
+	var actualBody models.ShortFilmCollectionResponseList
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -147,7 +149,7 @@ func TestUserGetUserCollectionsHandler_Action_NotOK_AuthService(t *testing.T) {
 	// Check result
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -159,7 +161,7 @@ func TestUserGetUserCollectionsHandler_Action_NotOK_AuthService(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -199,7 +201,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Empty(t *testing.T) {
 
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -211,7 +213,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Empty(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -243,7 +245,7 @@ func TestUserGetUserCollectionsHandler_Action_Fatal_Error(t *testing.T) {
 
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -255,7 +257,7 @@ func TestUserGetUserCollectionsHandler_Action_Fatal_Error(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -295,7 +297,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Wrong(t *testing.T) {
 
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -307,7 +309,7 @@ func TestUserGetUserCollectionsHandler_Action_CountCol_Wrong(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -347,7 +349,7 @@ func TestUserGetUserCollectionsHandler_Action_SortPar_Empty(t *testing.T) {
 
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -359,7 +361,7 @@ func TestUserGetUserCollectionsHandler_Action_SortPar_Empty(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -399,7 +401,7 @@ func TestUserGetUserCollectionsHandler_Action_Delimiter_Empty(t *testing.T) {
 
 	handler.Action(w, r)
 
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 	// Check body
 	response := w.Result()
 
@@ -411,7 +413,7 @@ func TestUserGetUserCollectionsHandler_Action_Delimiter_Empty(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

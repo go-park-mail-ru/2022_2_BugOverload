@@ -4,6 +4,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+//go:generate easyjson  -disallow_unknown_fields usergetsettings.go
+
+//easyjson:json
 type GetUserSettingsResponse struct {
 	CountViewsFilms  int    `json:"count_views_films,omitempty" example:"23"`
 	CountCollections int    `json:"count_collections,omitempty" example:"3"`

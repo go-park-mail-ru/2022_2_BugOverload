@@ -44,8 +44,14 @@ var upgrade = websocket.Upgrader{
 }
 
 func sendNewMsgNotifications(client *websocket.Conn, messages []interface{}) {
-	ticker := time.NewTicker(constparams.PushTimeout)
+	// Init for first push timeout
+	ticker := time.NewTicker(constparams.FirstPushTimeout)
 	defer ticker.Stop()
+
+	<-ticker.C
+
+	// Update ticker for push between messages
+	ticker.Reset(constparams.PushTimeout)
 
 	for _, val := range messages {
 		message, err := json.Marshal(val)

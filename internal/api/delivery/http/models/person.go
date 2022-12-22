@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields person.go
+
 type PersonRequest struct {
 	ID          int
 	CountFilms  int
@@ -72,6 +74,7 @@ func (p *PersonRequest) GetParams() *innerPKG.GetPersonParams {
 	}
 }
 
+//easyjson:json
 type filmInPersonResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
@@ -82,6 +85,7 @@ type filmInPersonResponse struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
+//easyjson:json
 type PersonResponse struct {
 	Name         string                 `json:"name,omitempty" example:"Шон Коннери"`
 	OriginalName string                 `json:"original_name,omitempty" example:"Sean Connery"`

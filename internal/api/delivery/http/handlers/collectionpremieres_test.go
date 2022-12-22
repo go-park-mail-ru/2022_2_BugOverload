@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
@@ -19,11 +19,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
-// Хуета в модели ответа выстреливает если нет стран (nil)
-// expected: &models.PremieresCollectionResponse{Name:"популярное", Description:"", Films:[]models.PremieresCollectionFilm{models.PremieresCollectionFilm{ID:123, Name:"Игра престолов", ProdDate:"2013", PosterVer:"123", Rating:7.12332, DurationMinutes:0, Description:"", Genres:[]string{"фэнтези", "приключения"}, ProdCountries:[]string{}, Directors:[]models.FilmPersonPremiersResponse(nil)}}}
-// actual  : &models.PremieresCollectionResponse{Name:"популярное", Description:"", Films:[]models.PremieresCollectionFilm{models.PremieresCollectionFilm{ID:123, Name:"Игра престолов", ProdDate:"2013", PosterVer:"123", Rating:7.12332, DurationMinutes:0, Description:"", Genres:[]string{"фэнтези", "приключения"}, ProdCountries:[]string(nil), Directors:[]models.FilmPersonPremiersResponse(nil)}}}
 func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	t.Parallel()
 
@@ -69,7 +67,7 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -82,12 +80,12 @@ func TestTCollectionHandlerPremiere_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewPremieresCollectionResponse(&res)
 
-	var actualBody *models.PremieresCollectionResponse
+	var actualBody models.PremieresCollectionResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
@@ -139,7 +137,7 @@ func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -152,7 +150,7 @@ func TestTCollectionHandlerPremiere_Action_NotOK(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -181,7 +179,7 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Empty(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -194,7 +192,7 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Empty(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -223,7 +221,7 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Empty(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -236,7 +234,7 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Empty(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -265,7 +263,7 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Wrong(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -278,7 +276,7 @@ func TestTCollectionHandlerPremiere_Action_Delimiter_Wrong(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -307,7 +305,7 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Wrong(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -320,7 +318,7 @@ func TestTCollectionHandlerPremiere_Action_CountFilms_Wrong(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

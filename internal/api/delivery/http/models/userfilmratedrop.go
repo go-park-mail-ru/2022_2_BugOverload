@@ -11,6 +11,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields userfilmratedrop.go
+
+//easyjson:json
 type FilmRateDropRequest struct {
 	FilmID int `json:"film_id,omitempty" example:"23"`
 }
@@ -44,6 +47,7 @@ func (f *FilmRateDropRequest) GetFilm() *models.Film {
 	}
 }
 
+//easyjson:json
 type FilmRateDropResponse struct {
 	Rating       float32 `json:"rating,omitempty" example:"9.2"`
 	CountRatings int     `json:"count_ratings,omitempty" example:"12"`

@@ -9,6 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields collectiongetstd.go
+
 type GetStdCollectionRequest struct {
 	Target     string
 	Key        string
@@ -72,6 +74,7 @@ func (p *GetStdCollectionRequest) GetParams() *innerPKG.GetStdCollectionParams {
 	}
 }
 
+//easyjson:json
 type FilmTagCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
@@ -82,6 +85,7 @@ type FilmTagCollectionResponse struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
+//easyjson:json
 type GetStdCollectionResponse struct {
 	Name        string                      `json:"name,omitempty" example:"Сейчас в кино"`
 	Description string                      `json:"description,omitempty" example:"Фильмы, которые можно посмотреть в российском кинопрокате"`

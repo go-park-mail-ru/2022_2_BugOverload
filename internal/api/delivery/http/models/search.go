@@ -8,6 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields search.go
+
 type SearchRequest struct {
 	query string
 }
@@ -31,11 +33,13 @@ func (p *SearchRequest) GetParams() *constparams.SearchParams {
 	}
 }
 
+//easyjson:json
 type SearchFilmPersonResponse struct {
 	ID   int    `json:"id,omitempty" example:"123123"`
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
+//easyjson:json
 type SearchFilmResponse struct {
 	ID           int     `json:"id,omitempty" example:"23"`
 	Name         string  `json:"name,omitempty" example:"Игра престолов"`
@@ -51,6 +55,7 @@ type SearchFilmResponse struct {
 	EndYear string `json:"end_year,omitempty" example:"2019.01.13"`
 }
 
+//easyjson:json
 type SearchPersonResponse struct {
 	ID           int      `json:"id,omitempty" example:"23"`
 	Name         string   `json:"name,omitempty" example:"Шон Коннери"`
@@ -61,6 +66,7 @@ type SearchPersonResponse struct {
 	Professions  []string `json:"professions,omitempty" example:"актер,продюсер,режиссер"`
 }
 
+//easyjson:json
 type SearchResponse struct {
 	Films   []SearchFilmResponse   `json:"films,omitempty"`
 	Series  []SearchFilmResponse   `json:"serials,omitempty"`

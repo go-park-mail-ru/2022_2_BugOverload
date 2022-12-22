@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
+//go:generate easyjson  -disallow_unknown_fields userprofile.go
+
 type UserProfileRequest struct {
 	ID int
 }
@@ -38,6 +40,7 @@ func (u *UserProfileRequest) GetUser() *models.User {
 	}
 }
 
+//easyjson:json
 type UserProfileResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"Калыван"`
 	Avatar   string `json:"avatar,omitempty" example:"23"`

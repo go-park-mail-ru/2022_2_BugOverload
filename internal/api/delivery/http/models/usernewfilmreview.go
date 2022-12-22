@@ -1,19 +1,22 @@
 package models
 
 import (
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields usernewfilmreview.go
+
+//easyjson:json
 type NewFilmReviewRequest struct {
 	FilmID     int    `json:"-"`
 	ReviewName string `json:"name,omitempty" example:"Почему игра престолов это всего лишь пустое насилие?"`
@@ -58,9 +61,10 @@ func (f *NewFilmReviewRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	err = json.Unmarshal(body, f)
+	err = easyjson.Unmarshal(body, f)
 	if err != nil {
-		return errors.ErrJSONUnexpectedEnd
+		return err
+		//  return errors.ErrJSONUnexpectedEnd
 	}
 
 	if f.ReviewName == "" || f.ReviewType == "" || f.ReviewBody == "" {
@@ -84,6 +88,7 @@ func (f *NewFilmReviewRequest) GetParams() *constparams.NewFilmReviewParams {
 	}
 }
 
+//easyjson:json
 type FilmReviewResponse struct {
 	UserID int `json:"user_id,omitempty" example:"13"`
 }

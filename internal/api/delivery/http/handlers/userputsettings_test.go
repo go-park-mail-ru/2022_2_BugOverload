@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -18,6 +19,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestUserPutSettingsHandler_Action_Nick_OK(t *testing.T) {
@@ -157,7 +159,7 @@ func TestUserPutSettingsHandler_Action_Password_NotOK(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -209,7 +211,7 @@ func TestUserPutSettingsHandler_Action_Password_EmpBody(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -241,7 +243,7 @@ func TestUserPutSettingsHandler_Action_Nick_UserNotFound(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -258,7 +260,7 @@ func TestUserPutSettingsHandler_Action_Nick_UserNotFound(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResponse, &actualBody)
+	err = easyjson.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

@@ -9,6 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields collectionpremieres.go
+
 type PremieresCollectionRequest struct {
 	CountFilms int
 	Delimiter  int
@@ -58,11 +60,13 @@ func (p *PremieresCollectionRequest) GetParams() *innerPKG.GetPremiersCollection
 	}
 }
 
+//easyjson:json
 type FilmPersonPremiersResponse struct {
 	ID   int    `json:"id,omitempty" example:"123123"`
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
+//easyjson:json
 type PremieresCollectionFilm struct {
 	ID              int     `json:"id,omitempty" example:"23"`
 	Name            string  `json:"name,omitempty" example:"Игра престолов"`
@@ -77,6 +81,7 @@ type PremieresCollectionFilm struct {
 	Directors     []FilmPersonPremiersResponse `json:"directors,omitempty"`
 }
 
+//easyjson:json
 type PremieresCollectionResponse struct {
 	Name        string                    `json:"name,omitempty" example:"Сейчас в кино"`
 	Description string                    `json:"description,omitempty" example:"Здесь вы можете посмотреть новинки кинопроката"`

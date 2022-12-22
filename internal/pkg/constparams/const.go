@@ -66,8 +66,9 @@ const (
 	WSBufSizeRead  = 1024
 	WSBufSizeWrite = 1024
 
-	// Push timeout
-	PushTimeout = 30 * time.Second
+	// Push timeouts
+	FirstPushTimeout = 2 * time.Minute
+	PushTimeout      = 2 * time.Minute
 )
 
 type ContextKeyType string

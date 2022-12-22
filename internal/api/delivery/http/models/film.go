@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields film.go
+
 type FilmRequest struct {
 	FilmID      int
 	CountImages int
@@ -56,6 +58,7 @@ func (f *FilmRequest) GetFilm() *models.Film {
 	}
 }
 
+//easyjson:json
 type FilmActorResponse struct {
 	ID        int    `json:"id,omitempty" example:"2132"`
 	Name      string `json:"name,omitempty" example:"Питер Динклэйдж"`
@@ -63,11 +66,13 @@ type FilmActorResponse struct {
 	Character string `json:"character,omitempty" example:"Тирион Ланистер"`
 }
 
+//easyjson:json
 type FilmPersonResponse struct {
 	ID   int    `json:"id,omitempty" example:"123123"`
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
+//easyjson:json
 type FilmResponse struct {
 	Name             string `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`

@@ -5,6 +5,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
+//go:generate easyjson -disallow_unknown_fields auth.go
+
+//easyjson:json
 type UserAuthResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"Bot373"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`

@@ -1,5 +1,7 @@
 package models
 
+//go:generate easyjson -all -disallow_unknown_fields user.go
+
 type User struct {
 	ID               int    `json:"user_id,omitempty"`
 	Nickname         string `json:"nickname,omitempty"`
