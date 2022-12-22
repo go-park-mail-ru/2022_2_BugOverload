@@ -1023,6 +1023,233 @@
       "актер",
       "сценарист",
       "продюсер"
+    ]
+  },
+  {
+    "name": "Раффиелла Чепмен",
+    "avatar": "42",
+    "original_name": "Raffiella Chapman",
+    "birthday": "2007.10.11",
+    "gender": "female",
+    "growth_meters": 1.53,
+    "genres": [
+      "драма",
+      "фэнтези",
+      "детектив"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Эдди Марсан",
+    "avatar": "43",
+    "original_name": "Eddie Marsan",
+    "birthday": "1968.06.09",
+    "gender": "male",
+    "growth_meters": 1.74,
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Кристина Буожите",
+    "avatar": "44",
+    "original_name": "Kristina Buožytė",
+    "birthday": "1982.10.09",
+    "gender": "female",
+    "growth_meters": 1.74,
+    "genres": [
+      "триллер",
+      "фантастика",
+      "драма"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Отем Ризер",
+    "avatar": "45",
+    "original_name": "Autumn Reeser",
+    "birthday": "1980.09.21",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Антонио Купо",
+    "avatar": "46",
+    "original_name": "Antonio Cupo",
+    "birthday": "1978.01.10",
+    "gender": "male",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Патриция Харрис Сили",
+    "avatar": "47",
+    "original_name": "Patricia Harris Seeley",
+    "birthday": "1978.01.10",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "короткометражка",
+      "документальный",
+      "реальное ТВ"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Люк Бессон",
+    "avatar": "48",
+    "original_name": "Luc Besson",
+    "birthday": "1959.03.18",
+    "gender": "male",
+    "growth_meters": 1.72,
+    "genres": [
+      "боевик",
+      "триллер",
+      "драма"
+    ],
+    "professions": [
+      "продюсер",
+      "сценарист",
+      "режиссер",
+      "актер",
+      "оператор",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Элайджа Вуд",
+    "avatar": "49",
+    "original_name": "Elijah Wood",
+    "birthday": "1981.01.28",
+    "gender": "male",
+    "growth_meters": 1.65,
+    "genres": [
+      "драма",
+      "комедия",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Иэн Маккеллен",
+    "avatar": "50",
+    "original_name": "Ian McKellen",
+    "birthday": "1939.05.25",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "драма",
+      "комедия",
+      "короткометражка"
+    ],
+    "professions": [
+      "актер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Питер Джексон",
+    "avatar": "51",
+    "original_name": "Peter Jackson",
+    "birthday": "1961.10.31",
+    "gender": "male",
+    "growth_meters": 1.65,
+    "genres": [
+      "короткометражка",
+      "фэнтези",
+      "драма"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "актер",
+      "оператор",
+      "художник",
+      "монтажер"
     ],
     "images": [
       "1",
