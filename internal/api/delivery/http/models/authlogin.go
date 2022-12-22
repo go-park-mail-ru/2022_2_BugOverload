@@ -1,18 +1,21 @@
 package models
 
 import (
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 	"io"
 	"net/http"
 
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
+//go:generate easyjson  -disallow_unknown_fields authlogin.go
+
+//easyjson:json
 type UserLoginRequest struct {
 	Email    string `json:"email,omitempty" example:"YasaPupkinEzji@top.world"`
 	Password string `json:"password,omitempty" example:"Widget Adapter"`
@@ -46,7 +49,7 @@ func (u *UserLoginRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	err = json.Unmarshal(body, u)
+	err = easyjson.Unmarshal(body, u)
 	if err != nil {
 		return errors.ErrJSONUnexpectedEnd
 	}
@@ -65,6 +68,7 @@ func (u *UserLoginRequest) GetUser() *models.User {
 	}
 }
 
+//easyjson:json
 type UserLoginResponse struct {
 	Nickname string `json:"nickname,omitempty" example:"StepByyyy"`
 	Email    string `json:"email,omitempty" example:"dop123@mail.ru"`

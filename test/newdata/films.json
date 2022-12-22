@@ -25,7 +25,33 @@
     "budget": 60000000,
     "age_limit": "18+",
     "duration_minutes": 108,
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "ticket": "some url",
+    "trailer": "some url",
+    "actors": [
+      "Брюс ли"
+    ],
+    "artists": [
+      "Брюс ли"
+    ],
+    "directors": [
+      "Брюс ли"
+    ],
+    "writers": [
+      "Брюс ли"
+    ],
+    "producers": [
+      "Брюс ли"
+    ],
+    "operators": [
+      "Брюс ли"
+    ],
+    "montage": [
+      "Брюс ли"
+    ],
+    "composers": [
+      "Брюс ли"
+    ]
   },
   {
     "name": "Джиперс Криперс: Возрожденный",

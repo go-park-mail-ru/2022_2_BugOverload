@@ -8,6 +8,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+//go:generate mockgen -source notificationcache.go -destination mocks/mocknotificationshub.go -package mockNotificationsRepository
+
 type NotificationHub interface {
 	UpdateHub([]interface{})
 	GetNotifications(user *models.User) []interface{}

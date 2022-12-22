@@ -22,6 +22,7 @@ func NewErrGRPCClassifier() ErrGRPCClassifier {
 	res[ErrBadRequestParams.Error()] = codes.InvalidArgument
 	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = codes.InvalidArgument
 	res[ErrBadRequestParams.Error()] = codes.InvalidArgument
+	res[ErrGetEasyJSON.Error()] = codes.Internal
 
 	// Common repository
 	res[ErrNotFoundInDB.Error()] = codes.NotFound

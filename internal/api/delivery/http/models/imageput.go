@@ -10,6 +10,9 @@ import (
 	"strings"
 )
 
+//go:generate easyjson  -disallow_unknown_fields imageput.go
+
+//easyjson:json
 type PutImageRequest struct {
 	Key    string `json:"key" example:"23"`
 	Object string `json:"object" example:"user_avatar"`

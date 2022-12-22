@@ -1,16 +1,19 @@
 package models
 
 import (
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields userputsettings.go
+
+//easyjson:json
 type UserPutSettingsRequest struct {
 	Nickname    string `json:"nickname,omitempty" example:"StepByyyy"`
 	NewPassword string `json:"new_password,omitempty" example:"Widget Adapter"`
@@ -45,7 +48,7 @@ func (u *UserPutSettingsRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	err = json.Unmarshal(body, u)
+	err = easyjson.Unmarshal(body, u)
 	if err != nil {
 		return errors.ErrJSONUnexpectedEnd
 	}

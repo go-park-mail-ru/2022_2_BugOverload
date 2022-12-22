@@ -2,18 +2,33 @@ package wrapper
 
 import (
 	"context"
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"net/http"
 
+	"github.com/mailru/easyjson"
+
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+func getEasyJSON(someStruct interface{}) ([]byte, error) {
+	someStructUpdate, ok := someStruct.(easyjson.Marshaler)
+	if !ok {
+		return []byte{}, errors.ErrGetEasyJSON
+	}
+
+	out, err := easyjson.Marshal(someStructUpdate)
+	if !ok {
+		return []byte{}, errors.ErrJSONUnexpectedEnd
+	}
+
+	return out, err
+}
+
 // Response is a function for giving any response with a JSON body
 func Response(ctx context.Context, w http.ResponseWriter, statusCode int, someStruct interface{}) {
-	out, err := json.Marshal(someStruct)
+	out, err := getEasyJSON(someStruct)
 	if err != nil {
-		DefaultHandlerHTTPError(ctx, w, errors.ErrJSONUnexpectedEnd)
+		DefaultHandlerHTTPError(ctx, w, err)
 		return
 	}
 

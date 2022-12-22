@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
@@ -18,6 +18,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
@@ -79,12 +80,12 @@ func TestUserFilmRateDropHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewFilmRateDropResponse(&resRate)
 
-	var actualBody *models.FilmRateDropResponse
+	var actualBody models.FilmRateDropResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestUserFilmRateDropHandler_Action_NotOK(t *testing.T) {
@@ -150,7 +151,7 @@ func TestUserFilmRateDropHandler_Action_NotOK(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -206,7 +207,7 @@ func TestUserFilmRateDropHandler_Action_InvParam(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -240,7 +241,7 @@ func TestUserFilmRateDropHandler_Action_UserNotFound(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -257,7 +258,7 @@ func TestUserFilmRateDropHandler_Action_UserNotFound(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResponse, &actualBody)
+	err = easyjson.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

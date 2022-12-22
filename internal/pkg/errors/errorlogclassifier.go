@@ -29,6 +29,7 @@ func NewErrLogClassifier() ErrLogClassifier {
 	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = errLogLevel
 	res[ErrBadRequestParams.Error()] = errLogLevel
 	res[ErrUpdateWebSocketProtocol.Error()] = errLogLevel
+	res[ErrGetEasyJSON.Error()] = errLogLevel
 
 	// Common repository
 	res[ErrNotFoundInDB.Error()] = errLogLevel

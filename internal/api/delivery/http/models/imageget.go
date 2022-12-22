@@ -7,6 +7,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields imageget.go
+
+//easyjson:json
 type GetImageRequest struct {
 	Key    string `json:"key" example:"1"`
 	Object string `json:"object" example:"film_poster_hor"`

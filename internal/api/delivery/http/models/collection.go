@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields collection.go
+
 type CollectionRequest struct {
 	CollectionID int
 	SortParam    string
@@ -44,6 +46,7 @@ func (p *CollectionRequest) GetParams() *innerPKG.CollectionGetFilmsRequestParam
 	}
 }
 
+//easyjson:json
 type CollectionResponse struct {
 	Name        string                      `json:"name,omitempty" example:"Сейчас в кино"`
 	Description string                      `json:"description,omitempty" example:"Фильмы, которые можно посмотреть в российском кинопрокате"`

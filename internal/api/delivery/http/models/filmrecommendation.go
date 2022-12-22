@@ -4,6 +4,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
 )
 
+//go:generate easyjson  -disallow_unknown_fields filmrecommendation.go
+
+//easyjson:json
 type RecommendFilmResponse struct {
 	ID               int    `json:"id,omitempty" example:"23"`
 	Name             string `json:"name,omitempty" example:"Терминатор"`

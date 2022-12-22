@@ -18,6 +18,7 @@ var (
 	ErrBadRequestParams                    = stdErrors.New("bad query params")
 	ErrBadRequestParamsEmptyRequiredFields = stdErrors.New("bad params, empty required field")
 	ErrUpdateWebSocketProtocol             = stdErrors.New("err update ws protocol")
+	ErrGetEasyJSON                         = stdErrors.New("err get easyjson")
 
 	// Common repository
 	ErrNotFoundInDB             = stdErrors.New("not found")
@@ -103,6 +104,7 @@ func NewErrHTTPClassifier() ErrHTTPClassifier {
 	res[ErrBadRequestParamsEmptyRequiredFields.Error()] = http.StatusBadRequest
 	res[ErrBadRequestParams.Error()] = http.StatusBadRequest
 	res[ErrUpdateWebSocketProtocol.Error()] = http.StatusBadRequest
+	res[ErrGetEasyJSON.Error()] = http.StatusInternalServerError
 
 	// Common repository
 	res[ErrNotFoundInDB.Error()] = http.StatusNotFound

@@ -5,20 +5,23 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"time"
 
+	"github.com/mailru/easyjson"
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	commonPkg "go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 var secret []byte
 
+//go:generate easyjson csrf.go
+
+//easyjson:json
 type TokenData struct {
 	SessionID string
 	User      models.User
@@ -52,7 +55,7 @@ func CreateCsrfToken(session *models.Session) (string, error) {
 	}
 
 	td := &TokenData{SessionID: session.ID, User: *session.User, Exp: time.Now().Add(time.Hour).Unix()}
-	data, _ := json.Marshal(td)
+	data, _ := easyjson.Marshal(td)
 	ciphertext := aesgcm.Seal(nil, nonce, data, nil)
 
 	res := append([]byte(nil), nonce...)
@@ -101,7 +104,7 @@ func CheckCsrfToken(session *models.Session, inputToken string) (bool, error) {
 	}
 
 	td := TokenData{}
-	err = json.Unmarshal(plaintext, &td)
+	err = easyjson.Unmarshal(plaintext, &td)
 	if err != nil {
 		return false, errors.ErrCsrfTokenCheck
 	}

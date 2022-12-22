@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
-	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,12 +9,16 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestReviewsHandler_Action_OK(t *testing.T) {
@@ -62,7 +64,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -75,7 +77,7 @@ func TestReviewsHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewReviewsResponse(&res)
 
-	var actualBody []*models.ReviewResponse
+	var actualBody models.ReviewList
 
 	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
@@ -116,7 +118,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -129,7 +131,7 @@ func TestReviewsHandler_Action_NotOKService(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -162,7 +164,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusUnsupportedMediaType, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -175,7 +177,7 @@ func TestReviewsHandler_Action_ErrBind_ErrUnsupportedMediaType(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -208,7 +210,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -221,7 +223,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQueryParams_CountReviews_Empty(
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -254,7 +256,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -267,7 +269,7 @@ func TestReviewsHandler_Action_ErrBind_ErrConvertQuery_Offset_Empty(t *testing.T
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -300,7 +302,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -313,7 +315,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews_ErrConvert
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -346,7 +348,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -359,7 +361,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_CountReviews(t *testing
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -392,7 +394,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -405,7 +407,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset_ErrConvert(t *te
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -438,7 +440,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -451,7 +453,7 @@ func TestReviewsHandler_Action_ErrBind_ErrBadQueryParams_Offset(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -484,7 +486,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 	reviewsHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -497,7 +499,7 @@ func TestPersonHandler_Action_ErrBind_ErrBadQueryParams_CountImages_Empty(t *tes
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

@@ -2,9 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
-	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,13 +9,17 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestFilmHandler_Action_OK(t *testing.T) {
@@ -109,7 +110,7 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 	filmHandler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -122,12 +123,12 @@ func TestFilmHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewFilmResponse(&res)
 
-	var actualBody *models.FilmResponse
+	var actualBody models.FilmResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestFilmHandler_Action_NotOKService(t *testing.T) {
@@ -173,7 +174,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -186,7 +187,7 @@ func TestFilmHandler_Action_NotOKService(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -212,18 +213,18 @@ func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	router := mux.NewRouter()
-	filmHandler := NewFilmHandler(filmService)
-	filmHandler.Configure(router, nil)
+	handler := NewFilmHandler(filmService)
+	handler.Configure(router, nil)
 
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
 	ctx := context.WithValue(r.Context(), constparams.LoggerKey, logger)
 
-	filmHandler.Action(w, r.WithContext(ctx))
+	handler.Action(w, r.WithContext(ctx))
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -236,7 +237,7 @@ func TestFilmHandler_Action_ErrBind_ErrConvertQuery_Params(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -273,7 +274,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 	filmHandler.Action(w, r.WithContext(ctx))
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -286,7 +287,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParams(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -323,7 +324,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountImages(t *testin
 	filmHandler.Action(w, r.WithContext(ctx))
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -336,7 +337,7 @@ func TestFilmHandler_Action_ErrBind_ErrBadQueryParamsEmpty_CountImages(t *testin
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
