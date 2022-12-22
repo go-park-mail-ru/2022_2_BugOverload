@@ -7,6 +7,8 @@ INSERT INTO films(name, prod_date, poster_ver, poster_hor, description,
                   box_office_dollars, budget, duration_minutes, currency_budget, type)
 VALUES`
 
+	insertFilmsMedia = `INSERT INTO media(film_id, ticket, trailer) VALUES`
+
 	insertSerials = `INSERT INTO serials(film_id, count_seasons, end_year) VALUES`
 
 	insertFilmsGenres    = `INSERT INTO film_genres(fk_film_id, fk_genre_id, weight) VALUES`

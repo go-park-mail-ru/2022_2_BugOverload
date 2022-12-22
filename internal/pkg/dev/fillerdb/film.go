@@ -73,6 +73,54 @@ func (f *DBFiller) uploadFilms() (int, error) {
 	return countInserts, nil
 }
 
+func (f *DBFiller) uploadFilmsMedia() (int, error) {
+	countInserts := 0
+
+	ids := make([]int, 0)
+
+	for idx := range f.films {
+		if f.films[idx].Ticket != "" || f.films[idx].Trailer != "" {
+			countInserts++
+
+			ids = append(ids, idx)
+		}
+	}
+
+	insertStatement, countAttributes := sqltools.CreateFullQuery(insertFilmsMedia, countInserts)
+
+	values := make([]interface{}, countAttributes*countInserts)
+
+	pos := 0
+
+	for _, value := range ids {
+		values[pos] = f.films[value].ID
+		pos++
+		values[pos] = f.filmsSQL[value].Ticket
+		pos++
+		values[pos] = f.filmsSQL[value].Trailer
+		pos++
+	}
+
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+	defer cancelFunc()
+
+	rows, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadFilmsMedia")
+	}
+
+	affected, err := rows.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "uploadFilmsMedia")
+	}
+
+	for i := 0; i < int(affected); i++ {
+		f.films[i].ID = i + 1
+	}
+
+	return countInserts, nil
+}
+
 func (f *DBFiller) uploadSerials() (int, error) {
 	countInserts := 0
 
