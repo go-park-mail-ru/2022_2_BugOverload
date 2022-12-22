@@ -31,6 +31,7 @@ env:
 	export GF_SECURITY_ADMIN_USER=mguser && export GF_SECURITY_ADMIN_PASSWORD=mgpass &&
 	export GRAFANA_URL=grafana && export PROMETHEUS_URL=http://localhost:9999/prometheus/ && export TARGET_MONITOR=etwcwvloiuygotvk
 
+
 # Development -------------------------------------
 check:
 	${GOPATH}/bin/golangci-lint run ${PKG} --config=${LINTERS_CONFIG}
