@@ -270,24 +270,26 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d face users profiles ratings link end", count)
 
-	f.faceReviews = f.generator.GenerateReviews(f.Config.Volume.CountReviews, f.Config.Volume.MaxLengthReviewsBody)
-	count, err = f.uploadReviews()
-	if err != nil {
-		return errors.Wrap(err, "Action")
-	}
-	logrus.Infof("%d face reviews upload", count)
+	if f.Config.Volume.CountReviews > 0 {
+		f.faceReviews = f.generator.GenerateReviews(f.Config.Volume.CountReviews, f.Config.Volume.MaxLengthReviewsBody)
+		count, err = f.uploadReviews()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d face reviews upload", count)
 
-	count, err = f.linkReviewsLikes()
-	if err != nil {
-		return errors.Wrap(err, "Action")
-	}
-	logrus.Infof("%d face reviews likes link end", count)
+		count, err = f.linkReviewsLikes()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d face reviews likes link end", count)
 
-	count, err = f.linkFilmsReviews()
-	if err != nil {
-		return errors.Wrap(err, "Action")
+		count, err = f.linkFilmsReviews()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d film reviews link end", count)
 	}
-	logrus.Infof("%d film reviews link end", count)
 
 	count, err = f.linkFilmPersons()
 	if err != nil {
@@ -325,11 +327,13 @@ func (f *DBFiller) Action() error {
 	}
 	logrus.Infof("%d profiles denormal fields updated", count)
 
-	count, err = f.UpdateReviews()
-	if err != nil {
-		return errors.Wrap(err, "Action")
+	if f.Config.Volume.CountReviews > 0 {
+		count, err = f.UpdateReviews()
+		if err != nil {
+			return errors.Wrap(err, "Action")
+		}
+		logrus.Infof("%d reviews denormal fields updated", count)
 	}
-	logrus.Infof("%d reviews denormal fields updated", count)
 
 	return nil
 }

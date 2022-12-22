@@ -128,7 +128,10 @@ func (c *collectionService) GetCollectionAuthorized(ctx context.Context, user *m
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthorized")
 	}
 	if !isAuthor {
-		collection.Author.ID = 0
+		collection.Author, err = c.collectionRepo.GetCollectionAuthor(ctx, params)
+		if err != nil {
+			return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthor")
+		}
 	}
 
 	return collection, nil
@@ -150,7 +153,10 @@ func (c *collectionService) GetCollectionNotAuthorized(ctx context.Context, para
 		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionNotAuthorized")
 	}
 
-	collection.Author.ID = 0
+	collection.Author, err = c.collectionRepo.GetCollectionAuthor(ctx, params)
+	if err != nil {
+		return models.Collection{}, stdErrors.Wrap(err, "GetCollectionAuthor")
+	}
 
 	return collection, nil
 }

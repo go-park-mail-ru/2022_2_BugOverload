@@ -335,10 +335,7 @@ func NewCollectionProto(collection *models.Collection) *proto.Collection {
 		CountFilms:  uint32(collection.CountFilms),
 		CountLikes:  uint32(collection.CountLikes),
 		Films:       NewFilmsProto(collection.Films),
-		Author: &proto.User{
-			ID:       uint32(collection.Author.ID),
-			Nickname: collection.Author.Nickname,
-		},
+		Author:      NewUserProto(&collection.Author),
 	}
 }
 
@@ -354,10 +351,7 @@ func NewCollection(collection *proto.Collection) models.Collection {
 		CountFilms:  int(collection.CountFilms),
 		CountLikes:  int(collection.CountLikes),
 		Films:       NewFilms(collection.Films),
-		Author: models.User{
-			ID:       int(collection.Author.ID),
-			Nickname: collection.Author.Nickname,
-		},
+		Author:      NewUser(collection.Author),
 	}
 }
 

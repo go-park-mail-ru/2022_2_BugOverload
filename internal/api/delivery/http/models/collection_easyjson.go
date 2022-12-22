@@ -65,6 +65,16 @@ func easyjson31a05f68DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 			}
 		case "is_author":
 			out.IsAuthor = bool(in.Bool())
+		case "author":
+			if in.IsNull() {
+				in.Skip()
+				out.Author = nil
+			} else {
+				if out.Author == nil {
+					out.Author = new(CollectionAuthorResponse)
+				}
+				(*out.Author).UnmarshalEasyJSON(in)
+			}
 		default:
 			in.AddError(&jlexer.LexerError{
 				Offset: in.GetPos(),
@@ -128,6 +138,16 @@ func easyjson31a05f68EncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 		}
 		out.Bool(bool(in.IsAuthor))
 	}
+	if in.Author != nil {
+		const prefix string = ",\"author\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		(*in.Author).MarshalEasyJSON(out)
+	}
 	out.RawByte('}')
 }
 
@@ -153,4 +173,111 @@ func (v *CollectionResponse) UnmarshalJSON(data []byte) error {
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *CollectionResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson31a05f68DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels(l, v)
+}
+func easyjson31a05f68DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(in *jlexer.Lexer, out *CollectionAuthorResponse) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "id":
+			out.ID = int(in.Int())
+		case "nickname":
+			out.Nickname = string(in.String())
+		case "count_collections":
+			out.CountCollections = int(in.Int())
+		case "avatar":
+			out.Avatar = string(in.String())
+		default:
+			in.AddError(&jlexer.LexerError{
+				Offset: in.GetPos(),
+				Reason: "unknown field",
+				Data:   key,
+			})
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson31a05f68EncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(out *jwriter.Writer, in CollectionAuthorResponse) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if in.ID != 0 {
+		const prefix string = ",\"id\":"
+		first = false
+		out.RawString(prefix[1:])
+		out.Int(int(in.ID))
+	}
+	if in.Nickname != "" {
+		const prefix string = ",\"nickname\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Nickname))
+	}
+	if in.CountCollections != 0 {
+		const prefix string = ",\"count_collections\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Int(int(in.CountCollections))
+	}
+	if in.Avatar != "" {
+		const prefix string = ",\"avatar\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Avatar))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v CollectionAuthorResponse) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson31a05f68EncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v CollectionAuthorResponse) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson31a05f68EncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *CollectionAuthorResponse) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson31a05f68DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *CollectionAuthorResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson31a05f68DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpModels1(l, v)
 }
