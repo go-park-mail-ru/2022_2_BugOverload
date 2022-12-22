@@ -78,7 +78,8 @@
     "budget": 2000000,
     "age_limit": "16+",
     "duration_minutes": 88,
-    "currency_budget": "USD"
+    "currency_budget": "USD",
+    "trailer": "some url"
   },
   {
     "name": "Эра выживания",
