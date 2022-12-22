@@ -8,6 +8,7 @@ type AnonsFilmNotificationPayload struct {
 	ProdDate  string  `json:"prod_date,omitempty" example:"2014.01.13"`
 	PosterVer string  `json:"poster_ver,omitempty" example:"{{key}}"`
 	Rating    float32 `json:"rating,omitempty" example:"9.2"`
+	Ticket    string  `json:"ticket,omitempty" example:"https://youtube.com/asdahd"`
 }
 
 func NewAnonsFilmNotificationPayload(film models.Film) *AnonsFilmNotificationPayload {
@@ -17,5 +18,6 @@ func NewAnonsFilmNotificationPayload(film models.Film) *AnonsFilmNotificationPay
 		ProdDate:  film.ProdDate,
 		PosterVer: film.PosterVer,
 		Rating:    film.Rating,
+		Ticket:    film.Ticket,
 	}
 }
