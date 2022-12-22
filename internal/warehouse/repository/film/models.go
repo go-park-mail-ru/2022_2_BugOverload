@@ -72,6 +72,8 @@ type ModelSQL struct {
 	AgeLimit         sql.NullString
 	PosterHor        sql.NullString
 	PosterVer        sql.NullString
+	Ticket           sql.NullString
+	Trailer          sql.NullString
 
 	BoxOffice      sql.NullInt32
 	Budget         sql.NullInt32
@@ -128,6 +130,8 @@ func (f *ModelSQL) Convert() models.Film {
 		AgeLimit:         f.AgeLimit.String,
 		PosterHor:        f.PosterHor.String,
 		PosterVer:        f.PosterVer.String,
+		Ticket:           f.Ticket.String,
+		Trailer:          f.Trailer.String,
 
 		BoxOfficeDollars: int(f.BoxOffice.Int32),
 		Budget:           int(f.Budget.Int32),
@@ -511,4 +515,107 @@ func GetFilmsRealisesBatch(ctx context.Context, conn *sql.Conn, args ...any) ([]
 	}
 
 	return res, nil
+}
+
+const (
+	GetTicketOfFilmBatchBegin = `
+SELECT f.film_id, m.ticket
+FROM media m
+JOIN films f on f.film_id = m.film_id
+WHERE f.film_id IN (
+`
+	GetTicketOfFilmBatchEnd = `)`
+)
+
+func GetTicketsBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
+	setID := make([]string, len(target))
+
+	mapFilms := make(map[int]int, len(target))
+
+	for idx := range target {
+		setID[idx] = strconv.Itoa(target[idx].ID)
+
+		mapFilms[target[idx].ID] = idx
+	}
+
+	setIDRes := strings.Join(setID, ",")
+
+	query := GetTicketOfFilmBatchBegin + setIDRes + GetTicketOfFilmBatchEnd
+
+	rowsFilmsTickets, err := conn.QueryContext(ctx, query)
+	if err != nil {
+		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			query, err)
+	}
+	defer rowsFilmsTickets.Close()
+
+	for rowsFilmsTickets.Next() {
+		var filmID int
+		var ticket sql.NullString
+
+		err = rowsFilmsTickets.Scan(&filmID, &ticket)
+		if err != nil {
+			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				query, err)
+		}
+
+		target[mapFilms[filmID]].Ticket = ticket
+	}
+
+	return target, nil
+}
+
+const (
+	GetTrailerOfFilmBatchBegin = `
+SELECT f.film_id, m.trailer
+FROM media m
+JOIN films f on f.film_id = m.film_id
+WHERE f.film_id IN (
+`
+	GetTrailerOfFilmBatchEnd = `)`
+)
+
+func GetTrailersBatch(ctx context.Context, target []ModelSQL, conn *sql.Conn) ([]ModelSQL, error) {
+	setID := make([]string, len(target))
+
+	mapFilms := make(map[int]int, len(target))
+
+	for idx := range target {
+		setID[idx] = strconv.Itoa(target[idx].ID)
+
+		mapFilms[target[idx].ID] = idx
+	}
+
+	setIDRes := strings.Join(setID, ",")
+
+	query := GetTrailerOfFilmBatchBegin + setIDRes + GetTrailerOfFilmBatchEnd
+
+	rowsFilmsTickets, err := conn.QueryContext(ctx, query)
+	if err == sql.ErrNoRows {
+		return target, nil
+	}
+	if err != nil {
+		return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+			"Err: params input: query - [%s]. Special Error [%s]",
+			query, err)
+	}
+	defer rowsFilmsTickets.Close()
+
+	for rowsFilmsTickets.Next() {
+		var filmID int
+		var trailer sql.NullString
+
+		err = rowsFilmsTickets.Scan(&filmID, &trailer)
+		if err != nil {
+			return []ModelSQL{}, stdErrors.WithMessagef(errors.ErrWorkDatabase,
+				"Err Scan: params input: query - [%s]. Special Error [%s]",
+				query, err)
+		}
+
+		target[mapFilms[filmID]].Trailer = trailer
+	}
+
+	return target, nil
 }

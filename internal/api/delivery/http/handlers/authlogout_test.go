@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	stdErrors "github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
@@ -120,7 +120,7 @@ func TestAuthLogoutHandler_Action_CookieError(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -184,7 +184,7 @@ func TestAuthLogoutHandler_Action_SessionError(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

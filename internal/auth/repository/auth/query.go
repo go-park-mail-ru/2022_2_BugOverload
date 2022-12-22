@@ -7,17 +7,21 @@ INSERT INTO users (email,
                    password,
                    count_collections,
                    avatar)
-VALUES ($1, $2, $3, 2, $4)
+VALUES ($1, $2, $3, 4, $4)
 RETURNING user_id`
 
 	CreateDefCollections = `
-INSERT INTO collections(name, description, poster)
-VALUES ('Избранное', 'Ваши сохранные фильмы', '1'), ('Буду смотреть', 'Фильмы, которые вы отметили для просмотра', '2')
+INSERT INTO collections(name, description, poster, is_public)
+VALUES 
+    ('Избранное', 'Ваши сохранные фильмы', '1', false), 
+	('Буду смотреть', 'Фильмы, которые вы отметили для просмотра', '2', false),
+	('Мои рекомендации', 'Фильмы, которые вы рекомендуете к просмотру', '3', true), 
+	('Мои лучшие', 'Фильмы, который вы отметили как лучшие', '4', true)
 RETURNING collection_id;`
 
 	LinkUserDefCollections = `
 INSERT INTO user_collections (fk_user_id, fk_collection_id)
-VALUES ($1, $2), ($1, $3)`
+VALUES ($1, $2), ($1, $3), ($1, $4), ($1, $5)`
 
 	GetUserByEmail = `
 SELECT 

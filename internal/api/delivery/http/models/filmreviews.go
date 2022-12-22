@@ -12,6 +12,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
 )
 
+//go:generate easyjson  -disallow_unknown_fields filmreviews.go
+
 type ReviewsRequest struct {
 	FilmID       int
 	CountReviews int
@@ -72,6 +74,7 @@ func (rr *ReviewsRequest) GetParams() *innerPKG.GetFilmReviewsParams {
 	}
 }
 
+//easyjson:json
 type ReviewAuthorResponse struct {
 	ID           int    `json:"id,omitempty" example:"54521"`
 	Nickname     string `json:"nickname,omitempty" example:"Инокентий"`
@@ -79,6 +82,7 @@ type ReviewAuthorResponse struct {
 	Avatar       string `json:"avatar,omitempty" example:"54521"`
 }
 
+//easyjson:json
 type ReviewResponse struct {
 	Name       string               `json:"name,omitempty" example:"Почему Игра престолов всего лишь одно насилие?"`
 	Type       string               `json:"type,omitempty" example:"negative"`
@@ -88,11 +92,14 @@ type ReviewResponse struct {
 	Author     ReviewAuthorResponse `json:"author,omitempty"`
 }
 
-func NewReviewsResponse(reviews *[]models.Review) []*ReviewResponse {
-	res := make([]*ReviewResponse, len(*reviews))
+//easyjson:json
+type ReviewList []ReviewResponse
+
+func NewReviewsResponse(reviews *[]models.Review) ReviewList {
+	res := make([]ReviewResponse, len(*reviews))
 
 	for idx, value := range *reviews {
-		res[idx] = &ReviewResponse{
+		res[idx] = ReviewResponse{
 			Name:       security.Sanitize(value.Name),
 			Type:       value.Type,
 			CreateTime: value.CreateTime,

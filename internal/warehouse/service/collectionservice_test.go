@@ -605,6 +605,7 @@ func TestCollectionService_GetCollectionAuthorized_NotAuthor_OK(t *testing.T) {
 	repository.EXPECT().CheckUserIsAuthor(ctx, inputUser, inputParams).Return(false, nil)
 	repository.EXPECT().CheckCollectionIsPublic(ctx, inputParams).Return(true, nil)
 	repository.EXPECT().GetCollection(ctx, inputParams).Return(output, nil)
+	repository.EXPECT().GetCollectionAuthor(ctx, inputParams).Return(output.Author, nil)
 
 	// Action
 	collectionService := service.NewCollectionService(repository)
@@ -803,6 +804,7 @@ func TestCollectionService_GetCollectionNotAuthorized_OK(t *testing.T) {
 	// Settings mock
 	repository.EXPECT().CheckCollectionIsPublic(ctx, inputParams).Return(true, nil)
 	repository.EXPECT().GetCollection(ctx, inputParams).Return(output, nil)
+	repository.EXPECT().GetCollectionAuthor(ctx, inputParams).Return(output.Author, nil)
 
 	// Action
 	collectionService := service.NewCollectionService(repository)

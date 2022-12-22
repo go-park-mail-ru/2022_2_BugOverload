@@ -44,6 +44,11 @@ func (n *notificationPostgres) GetFilmRelease(ctx context.Context) ([]models.Fil
 				"Film main info: Special Error [%s]", err)
 		}
 
+		response, err = film.GetTicketsBatch(ctx, response, conn)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 

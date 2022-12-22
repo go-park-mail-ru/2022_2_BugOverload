@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson -omit_empty -disallow_unknown_fields collection.go
+
 type CollectionRequest struct {
 	CollectionID int
 	SortParam    string
@@ -44,11 +46,21 @@ func (p *CollectionRequest) GetParams() *innerPKG.CollectionGetFilmsRequestParam
 	}
 }
 
+//easyjson:json
+type CollectionAuthorResponse struct {
+	ID               int    `json:"id,omitempty" example:"54521"`
+	Nickname         string `json:"nickname,omitempty" example:"Инокентий"`
+	CountCollections int    `json:"count_collections,omitempty" example:"42"`
+	Avatar           string `json:"avatar,omitempty" example:"54521"`
+}
+
+//easyjson:json
 type CollectionResponse struct {
 	Name        string                      `json:"name,omitempty" example:"Сейчас в кино"`
 	Description string                      `json:"description,omitempty" example:"Фильмы, которые можно посмотреть в российском кинопрокате"`
 	Films       []FilmTagCollectionResponse `json:"films,omitempty"`
 	IsAuthor    bool                        `json:"is_author,omitempty" example:"true"`
+	Author      *CollectionAuthorResponse   `json:"author"`
 }
 
 func NewCollectionResponse(collection *models.Collection) *CollectionResponse {
@@ -70,8 +82,17 @@ func NewCollectionResponse(collection *models.Collection) *CollectionResponse {
 		}
 	}
 
-	if collection.Author.ID != 0 {
+	if collection.Author.ID == 0 {
 		res.IsAuthor = true
+
+		return res
+	}
+
+	res.Author = &CollectionAuthorResponse{
+		ID:               collection.Author.ID,
+		Nickname:         collection.Author.Nickname,
+		Avatar:           collection.Author.Avatar,
+		CountCollections: collection.Author.CountCollections,
 	}
 
 	return res

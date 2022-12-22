@@ -10,8 +10,23 @@ import (
 )
 
 type AuthorSQL struct {
-	ID       int
-	Nickname sql.NullString
+	ID               int
+	Nickname         string
+	CountCollections int
+	Avatar           sql.NullString
+}
+
+func NewAuthorSQL() AuthorSQL {
+	return AuthorSQL{}
+}
+
+func (a *AuthorSQL) Convert() models.User {
+	return models.User{
+		ID:               a.ID,
+		Avatar:           a.Avatar.String,
+		CountCollections: a.CountCollections,
+		Nickname:         a.Nickname,
+	}
 }
 
 type ModelSQL struct {
@@ -62,8 +77,10 @@ func (c *ModelSQL) Convert() models.Collection {
 		Films:       make([]models.Film, len(c.Films)),
 
 		Author: models.User{
-			ID:       c.Author.ID,
-			Nickname: c.Author.Nickname.String,
+			ID:               c.Author.ID,
+			Nickname:         c.Author.Nickname,
+			Avatar:           c.Author.Avatar.String,
+			CountCollections: c.Author.CountCollections,
 		},
 	}
 

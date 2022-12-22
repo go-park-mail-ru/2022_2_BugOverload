@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
@@ -18,6 +19,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockUserService "go-park-mail-ru/2022_2_BugOverload/internal/user/service/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestUserNewFilmReviewHandler_Action_OK(t *testing.T) {
@@ -29,10 +31,9 @@ func TestUserNewFilmReviewHandler_Action_OK(t *testing.T) {
 	service := mockUserService.NewMockUserService(ctrl)
 
 	mcPostBody := map[string]string{
-		"body":   "dwdwqdqdw",
-		"filmId": "1",
-		"name":   "asasd",
-		"type":   "positive",
+		"body": "dwdwqdqdw",
+		"name": "asasd",
+		"type": "positive",
 	}
 	body, _ := json.Marshal(mcPostBody)
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/review/new", bytes.NewReader(body))
@@ -66,7 +67,7 @@ func TestUserNewFilmReviewHandler_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusCreated, w.Code)
+	require.Equal(t, http.StatusCreated, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 }
 
 func TestUserNewFilmReviewHandler_Action_NotOK(t *testing.T) {
@@ -78,10 +79,9 @@ func TestUserNewFilmReviewHandler_Action_NotOK(t *testing.T) {
 	service := mockUserService.NewMockUserService(ctrl)
 
 	mcPostBody := map[string]string{
-		"body":   "dwdwqdqdw",
-		"filmId": "1",
-		"name":   "asasd",
-		"type":   "positive",
+		"body": "dwdwqdqdw",
+		"name": "asasd",
+		"type": "positive",
 	}
 	body, _ := json.Marshal(mcPostBody)
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/review/new", bytes.NewReader(body))
@@ -114,7 +114,7 @@ func TestUserNewFilmReviewHandler_Action_NotOK(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -168,7 +168,7 @@ func TestUserNewFilmReviewHandler_Action_EmpBody(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -183,10 +183,9 @@ func TestUserNewFilmReviewHandler_Action_ServiceError(t *testing.T) {
 	service := mockUserService.NewMockUserService(ctrl)
 
 	mcPostBody := map[string]string{
-		"body":   "dwdwqdqdw",
-		"filmId": "1",
-		"name":   "asasd",
-		"type":   "positive",
+		"body": "dwdwqdqdw",
+		"name": "asasd",
+		"type": "positive",
 	}
 	body, _ := json.Marshal(mcPostBody)
 	r := httptest.NewRequest(http.MethodPost, "/api/v1/film/1/review/new", bytes.NewReader(body))
@@ -223,7 +222,7 @@ func TestUserNewFilmReviewHandler_Action_ServiceError(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -240,7 +239,7 @@ func TestUserNewFilmReviewHandler_Action_ServiceError(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResponse, &actualBody)
+	err = easyjson.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

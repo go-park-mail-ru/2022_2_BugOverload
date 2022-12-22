@@ -2,9 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,12 +9,17 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
+	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 	mockWarehouseClient "go-park-mail-ru/2022_2_BugOverload/internal/warehouse/delivery/grpc/client/mocks"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 func TestGetSimilarFilmsHandler_Action_OK(t *testing.T) {
@@ -69,7 +71,7 @@ func TestGetSimilarFilmsHandler_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusOK, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -82,12 +84,12 @@ func TestGetSimilarFilmsHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewGetSimilarFilmsCollectionResponse(&res)
 
-	var actualBody *models.GetSimilarFilmsCollectionResponse
+	var actualBody models.GetSimilarFilmsCollectionResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestGetSimilarFilmsHandler_Action_BadRequest(t *testing.T) {
@@ -120,7 +122,7 @@ func TestGetSimilarFilmsHandler_Action_BadRequest(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 }
 
 func TestGetSimilarFilmsHandler_Action_ServiceError(t *testing.T) {
@@ -143,6 +145,10 @@ func TestGetSimilarFilmsHandler_Action_ServiceError(t *testing.T) {
 
 	expectedErr := errors.ErrNotFoundInDB
 
+	expectedBody := wrapper.ErrResponse{
+		ErrMassage: expectedErr.Error(),
+	}
+
 	oldLogger := logrus.New()
 	logger := logrus.NewEntry(oldLogger)
 
@@ -161,7 +167,7 @@ func TestGetSimilarFilmsHandler_Action_ServiceError(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -172,11 +178,10 @@ func TestGetSimilarFilmsHandler_Action_ServiceError(t *testing.T) {
 	err = response.Body.Close()
 	require.Nil(t, err, "Body.Close must be success")
 
-	expectedBody := &models.GetSimilarFilmsCollectionResponse{}
+	var actualBody wrapper.ErrResponse
 
-	var actualBody *models.GetSimilarFilmsCollectionResponse
+	err = easyjson.Unmarshal(body, &actualBody)
 
-	err = json.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

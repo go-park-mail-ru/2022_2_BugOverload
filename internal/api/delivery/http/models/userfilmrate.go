@@ -1,19 +1,22 @@
 package models
 
 import (
-	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields userfilmrate.go
+
+//easyjson:json
 type FilmRateRequest struct {
 	FilmID int `json:"-"`
 	Score  int `json:"score,omitempty" example:"4"`
@@ -56,7 +59,7 @@ func (f *FilmRateRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	err = json.Unmarshal(body, f)
+	err = easyjson.Unmarshal(body, f)
 	if err != nil {
 		return errors.ErrJSONUnexpectedEnd
 	}
@@ -71,6 +74,7 @@ func (f *FilmRateRequest) GetParams() *constparams.FilmRateParams {
 	}
 }
 
+//easyjson:json
 type FilmRateResponse struct {
 	Rating       float32 `json:"rating,omitempty" example:"9.2"`
 	CountRatings int     `json:"count_ratings,omitempty" example:"22"`

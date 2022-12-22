@@ -3,11 +3,11 @@ package film
 import (
 	"context"
 	"database/sql"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 
 	stdErrors "github.com/pkg/errors"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/sqltools"
 )
@@ -68,6 +68,15 @@ func (f *filmPostgres) GetFilmByID(ctx context.Context, film *models.Film, param
 
 		if !response.PosterHor.Valid {
 			response.PosterHor.String = constparams.DefFilmPosterHor
+		}
+
+		// Trailer
+		rowTrailer := conn.QueryRowContext(ctx, getTrailer, film.ID)
+		if rowTrailer.Err() == nil {
+			err = rowTrailer.Scan(&response.Trailer)
+			if err != nil {
+				response.Trailer = sql.NullString{}
+			}
 		}
 
 		if response.Type.String != constparams.DefTypeSerial {

@@ -11,6 +11,9 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields filmgetsimilar.go
+
+//easyjson:json
 type GetSimilarFilmsRequest struct {
 	FilmID int `json:"film_id,omitempty" example:"23"`
 }
@@ -38,6 +41,7 @@ func (p *GetSimilarFilmsRequest) GetParams() *constparams.GetSimilarFilmsParams 
 	}
 }
 
+//easyjson:json
 type SimilarFilmCollectionResponse struct {
 	ID        int      `json:"id,omitempty" example:"23"`
 	Name      string   `json:"name,omitempty" example:"Game of Thrones"`
@@ -48,6 +52,7 @@ type SimilarFilmCollectionResponse struct {
 	Genres    []string `json:"genres,omitempty" example:"фэнтези,приключения"`
 }
 
+//easyjson:json
 type GetSimilarFilmsCollectionResponse struct {
 	Name  string                          `json:"name,omitempty" example:"Похожие фильмы"`
 	Films []SimilarFilmCollectionResponse `json:"films,omitempty"`

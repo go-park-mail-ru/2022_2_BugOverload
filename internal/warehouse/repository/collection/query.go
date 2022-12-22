@@ -1,7 +1,7 @@
 package collection
 
 const (
-	getFilmsByTagRating = `
+	GetFilmsByTagRating = `
 SELECT f.film_id,
        f.name,
        f.original_name,
@@ -16,7 +16,7 @@ WHERE t.name = $1 AND f.rating < $2
 ORDER BY f.rating DESC
 LIMIT $3`
 
-	getFilmsByTagDate = `
+	GetFilmsByTagDate = `
 SELECT f.film_id,
        f.name,
        f.original_name,
@@ -63,9 +63,9 @@ ORDER BY f.prod_date DESC
 LIMIT $2
 OFFSET $3`
 
-	getTagDescription = `SELECT description FROM tags WHERE name = $1`
+	GetTagDescription = `SELECT description FROM tags WHERE name = $1`
 
-	checkUserIsCollectionAuthor = `
+	CheckUserIsCollectionAuthor = `
 SELECT EXISTS (
     SELECT 1 FROM user_collections
     WHERE fk_collection_id = $1
@@ -116,8 +116,8 @@ SELECT fk_user_id
 FROM user_collections
 WHERE fk_collection_id = $1`
 
-	getAuthorByID = `
-SELECT nickname
+	getAuthorCollectionByID = `
+SELECT nickname, count_collections, avatar
 FROM users
 WHERE user_id = $1`
 

@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	mockImageClient "go-park-mail-ru/2022_2_BugOverload/internal/image/delivery/grpc/client/mocks"
@@ -20,6 +20,7 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
+	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
 // Multipart body
@@ -97,7 +98,7 @@ func TestPostImageHandler_Action_OK(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusCreated, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusCreated, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 }
 
 func TestPostImageHandler_Action_NotOk(t *testing.T) {
@@ -166,7 +167,7 @@ func TestPostImageHandler_Action_NotOk(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusNotFound, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -179,7 +180,7 @@ func TestPostImageHandler_Action_NotOk(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResp, &actualBody)
+	err = easyjson.Unmarshal(bodyResp, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -232,7 +233,7 @@ func TestPostImageHandler_Action_Object_ContetUndef(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusBadRequest, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -245,7 +246,7 @@ func TestPostImageHandler_Action_Object_ContetUndef(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResp, &actualBody)
+	err = easyjson.Unmarshal(bodyResp, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -296,7 +297,7 @@ func TestPostImageHandler_Action_UserNotFound(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -313,7 +314,7 @@ func TestPostImageHandler_Action_UserNotFound(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResponse, &actualBody)
+	err = easyjson.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -372,7 +373,7 @@ func TestPostImageHandler_Action_UserNotAdmin(t *testing.T) {
 	handler.Action(w, r)
 
 	// Check code
-	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode")
+	require.Equal(t, http.StatusInternalServerError, w.Code, "Wrong StatusCode", pkg.GetResponseBody(*w))
 
 	// Check body
 	response := w.Result()
@@ -389,7 +390,7 @@ func TestPostImageHandler_Action_UserNotAdmin(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(bodyResponse, &actualBody)
+	err = easyjson.Unmarshal(bodyResponse, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")

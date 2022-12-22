@@ -1,18 +1,21 @@
 package models
 
 import (
-	"encoding/json"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/sirupsen/logrus"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields userfilmdropfromcollection.go
+
+//easyjson:json
 type DropFilmFromUserCollectionRequest struct {
 	FilmID       int `json:"-"`
 	CollectionID int `json:"collection_id,omitempty" example:"4"`
@@ -55,7 +58,7 @@ func (p *DropFilmFromUserCollectionRequest) Bind(r *http.Request) error {
 		return errors.ErrEmptyBody
 	}
 
-	err = json.Unmarshal(body, p)
+	err = easyjson.Unmarshal(body, p)
 	if err != nil {
 		return errors.ErrJSONUnexpectedEnd
 	}

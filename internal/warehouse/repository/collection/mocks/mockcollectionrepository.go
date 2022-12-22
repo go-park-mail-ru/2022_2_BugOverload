@@ -81,6 +81,21 @@ func (mr *MockRepositoryMockRecorder) GetCollection(ctx, params interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollection", reflect.TypeOf((*MockRepository)(nil).GetCollection), ctx, params)
 }
 
+// GetCollectionAuthor mocks base method.
+func (m *MockRepository) GetCollectionAuthor(ctx context.Context, params *constparams.CollectionGetFilmsRequestParams) (models.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCollectionAuthor", ctx, params)
+	ret0, _ := ret[0].(models.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionAuthor indicates an expected call of GetCollectionAuthor.
+func (mr *MockRepositoryMockRecorder) GetCollectionAuthor(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionAuthor", reflect.TypeOf((*MockRepository)(nil).GetCollectionAuthor), ctx, params)
+}
+
 // GetCollectionByGenre mocks base method.
 func (m *MockRepository) GetCollectionByGenre(ctx context.Context, params *constparams.GetStdCollectionParams) (models.Collection, error) {
 	m.ctrl.T.Helper()

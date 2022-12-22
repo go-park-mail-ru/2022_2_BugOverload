@@ -1,5 +1,7 @@
 package models
 
+//go:generate easyjson -all -disallow_unknown_fields film.go
+
 type FilmActor struct {
 	ID        int    `json:"id,omitempty"`
 	Name      string `json:"name,omitempty"`
@@ -24,6 +26,8 @@ type Film struct {
 	DurationMinutes  int    `json:"duration_minutes,omitempty"`
 	PosterHor        string `json:"poster_hor,omitempty"`
 	PosterVer        string `json:"poster_ver,omitempty"`
+	Ticket           string `json:"ticket,omitempty"`
+	Trailer          string `json:"trailer,omitempty"`
 
 	BoxOfficeDollars int    `json:"box_office_dollars,omitempty"`
 	Budget           int    `json:"budget,omitempty"`

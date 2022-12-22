@@ -7,6 +7,8 @@ INSERT INTO films(name, prod_date, poster_ver, poster_hor, description,
                   box_office_dollars, budget, duration_minutes, currency_budget, type)
 VALUES`
 
+	insertFilmsMedia = `INSERT INTO media(film_id, ticket, trailer) VALUES`
+
 	insertSerials = `INSERT INTO serials(film_id, count_seasons, end_year) VALUES`
 
 	insertFilmsGenres    = `INSERT INTO film_genres(fk_film_id, fk_genre_id, weight) VALUES`
@@ -68,11 +70,11 @@ SET (rating, count_ratings) =
 
 	updatePersons = `
 UPDATE persons p
-SET count_films = (SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()
+SET count_films = COALESCE((SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()
                    FROM film_persons fp
                    WHERE fp.fk_person_id = p.person_id
                    GROUP BY fk_film_id, fk_person_id
-                   LIMIT 1);`
+                   LIMIT 1), 0);`
 
 	updateProfiles = `
 UPDATE users p
@@ -103,6 +105,6 @@ SET count_likes = COALESCE((SELECT COUNT(*)
                    WHERE rl.fk_review_id = r.review_id
                    GROUP BY rl.fk_review_id), 0);`
 
-	insertCollections        = `INSERT INTO collections(name, description, poster, create_time) VALUES`
+	insertCollections        = `INSERT INTO collections(name, description, poster, create_time, is_public) VALUES`
 	insertProfileCollections = `INSERT INTO user_collections(fk_collection_id, fk_user_id) VALUES`
 )

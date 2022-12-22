@@ -126,6 +126,8 @@ func NewFilmProto(film *models.Film) *proto.Film {
 		DurationMinutes:      uint32(film.DurationMinutes),
 		PosterHor:            film.PosterHor,
 		PosterVer:            film.PosterVer,
+		Ticket:               film.Ticket,
+		Trailer:              film.Trailer,
 		BoxOfficeDollars:     uint32(film.BoxOfficeDollars),
 		Budget:               uint32(film.Budget),
 		CurrencyBudget:       film.CurrencyBudget,
@@ -186,6 +188,8 @@ func NewFilm(film *proto.Film) models.Film {
 		DurationMinutes:      int(film.DurationMinutes),
 		PosterHor:            film.PosterHor,
 		PosterVer:            film.PosterVer,
+		Ticket:               film.Ticket,
+		Trailer:              film.Trailer,
 		BoxOfficeDollars:     int(film.BoxOfficeDollars),
 		Budget:               int(film.Budget),
 		CurrencyBudget:       film.CurrencyBudget,
@@ -335,10 +339,7 @@ func NewCollectionProto(collection *models.Collection) *proto.Collection {
 		CountFilms:  uint32(collection.CountFilms),
 		CountLikes:  uint32(collection.CountLikes),
 		Films:       NewFilmsProto(collection.Films),
-		Author: &proto.User{
-			ID:       uint32(collection.Author.ID),
-			Nickname: collection.Author.Nickname,
-		},
+		Author:      NewUserProto(&collection.Author),
 	}
 }
 
@@ -354,10 +355,7 @@ func NewCollection(collection *proto.Collection) models.Collection {
 		CountFilms:  int(collection.CountFilms),
 		CountLikes:  int(collection.CountLikes),
 		Films:       NewFilms(collection.Films),
-		Author: models.User{
-			ID:       int(collection.Author.ID),
-			Nickname: collection.Author.Nickname,
-		},
+		Author:      NewUser(collection.Author),
 	}
 }
 

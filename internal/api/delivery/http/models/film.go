@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields film.go
+
 type FilmRequest struct {
 	FilmID      int
 	CountImages int
@@ -56,6 +58,7 @@ func (f *FilmRequest) GetFilm() *models.Film {
 	}
 }
 
+//easyjson:json
 type FilmActorResponse struct {
 	ID        int    `json:"id,omitempty" example:"2132"`
 	Name      string `json:"name,omitempty" example:"Питер Динклэйдж"`
@@ -63,11 +66,13 @@ type FilmActorResponse struct {
 	Character string `json:"character,omitempty" example:"Тирион Ланистер"`
 }
 
+//easyjson:json
 type FilmPersonResponse struct {
 	ID   int    `json:"id,omitempty" example:"123123"`
 	Name string `json:"name,omitempty" example:"Стивен Спилберг"`
 }
 
+//easyjson:json
 type FilmResponse struct {
 	Name             string `json:"name,omitempty" example:"Игра престолов"`
 	OriginalName     string `json:"original_name,omitempty" example:"Game of Thrones"`
@@ -78,6 +83,7 @@ type FilmResponse struct {
 	AgeLimit         string `json:"age_limit,omitempty" example:"18+"`
 	DurationMinutes  int    `json:"duration_minutes,omitempty" example:"55"`
 	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
+	Trailer          string `json:"trailer,omitempty" example:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"`
 
 	Budget           int    `json:"budget,omitempty" example:"18323222"`
 	BoxOfficeDollars int    `json:"box_office_dollars,omitempty" example:"60000000"`
@@ -143,6 +149,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		CurrencyBudget:   film.CurrencyBudget,
 		DurationMinutes:  film.DurationMinutes,
 		PosterHor:        film.PosterHor,
+		Trailer:          film.Trailer,
 
 		CountSeasons: film.CountSeasons,
 		EndYear:      film.EndYear,

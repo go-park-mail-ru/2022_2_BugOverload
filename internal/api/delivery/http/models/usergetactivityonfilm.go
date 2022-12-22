@@ -11,6 +11,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields usergetactivityonfilm.go
+
 type GetUserActivityOnFilmRequest struct {
 	FilmID int
 }
@@ -42,12 +44,14 @@ func (f *GetUserActivityOnFilmRequest) GetParams() *innerPKG.GetUserActivityOnFi
 	}
 }
 
+//easyjson:json
 type NodeInUserCollectionResponse struct {
 	ID     int    `json:"id,omitempty" example:"123"`
 	Name   string `json:"name,omitempty" example:"Избранное"`
 	IsUsed bool   `json:"is_used,omitempty" example:"true"`
 }
 
+//easyjson:json
 type GetUserActivityOnFilmResponse struct {
 	CountReviews int                            `json:"count_reviews,omitempty" example:"44"`
 	Rating       int                            `json:"rating,omitempty" example:"5"`

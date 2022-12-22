@@ -9,6 +9,8 @@ import (
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 )
 
+//go:generate easyjson  -disallow_unknown_fields usergetcollection.go
+
 type GetUserCollectionRequest struct {
 	Target           string
 	Key              string
@@ -60,6 +62,7 @@ func (p *GetUserCollectionRequest) GetParams() *innerPKG.GetUserCollectionsParam
 	}
 }
 
+//easyjson:json
 type ShortFilmCollectionResponse struct {
 	ID         int    `json:"id,omitempty" example:"12"`
 	Name       string `json:"name,omitempty" example:"Избранное"`
@@ -70,7 +73,10 @@ type ShortFilmCollectionResponse struct {
 	CreateTime string `json:"create_time,omitempty"  example:"2012.06.05 01:25:00"`
 }
 
-func NewShortFilmCollectionResponse(collections []models.Collection) []ShortFilmCollectionResponse {
+//easyjson:json
+type ShortFilmCollectionResponseList []ShortFilmCollectionResponse
+
+func NewShortFilmCollectionResponse(collections []models.Collection) ShortFilmCollectionResponseList {
 	res := make([]ShortFilmCollectionResponse, len(collections))
 
 	for idx := range collections {

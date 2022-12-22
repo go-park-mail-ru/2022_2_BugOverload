@@ -2,11 +2,25 @@
   {
     "name": "Избранное",
     "description": "Ваши сохранные фильмы",
-    "poster": "1"
+    "poster": "1",
+    "public": false
   },
   {
     "name": "Буду смотреть",
     "description": "Фильмы, которые вы отметили для просмотра",
-    "poster": "2"
+    "poster": "2",
+    "public": false
+  },
+  {
+    "name": "Мои рекомендации",
+    "description": "Фильмы, которые вы рекомендуете к просмотру",
+    "poster": "3",
+    "public": true
+  },
+  {
+    "name": "Мои лучшие",
+    "description": "Фильмы, который вы отметили как лучшие",
+    "poster": "4",
+    "public": true
   }
 ]

@@ -39,7 +39,7 @@ func (s *searchPostgres) SearchFilms(ctx context.Context, params *constparams.Se
 	var err error
 
 	errMain := sqltools.RunQuery(ctx, s.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		responseDB, err = film.GetShortFilmsBatch(ctx, conn, searchFilmsByName, params.Query)
+		responseDB, err = film.GetShortFilmsBatch(ctx, conn, SearchFilmsByName, params.Query)
 		if stdErrors.Is(err, sql.ErrNoRows) {
 			return sql.ErrNoRows
 		}
@@ -86,7 +86,7 @@ func (s *searchPostgres) SearchSeries(ctx context.Context, params *constparams.S
 	var err error
 
 	errMain := sqltools.RunQuery(ctx, s.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		responseDB, err = film.GetShortFilmsBatch(ctx, conn, searchSeriesByName, params.Query)
+		responseDB, err = film.GetShortFilmsBatch(ctx, conn, SearchSeriesByName, params.Query)
 		if stdErrors.Is(err, sql.ErrNoRows) {
 			return sql.ErrNoRows
 		}
@@ -132,7 +132,7 @@ func (s *searchPostgres) SearchPersons(ctx context.Context, params *constparams.
 	var responseDB []person.ModelSQL
 
 	errMain := sqltools.RunQuery(ctx, s.database.Connection, func(ctx context.Context, conn *sql.Conn) error {
-		rowsPersons, err := conn.QueryContext(ctx, searchPersonsByName, params.Query)
+		rowsPersons, err := conn.QueryContext(ctx, SearchPersonsByName, params.Query)
 		if err != nil {
 			logrus.Info("NeededCondition ", err)
 			return err

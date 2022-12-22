@@ -14,6 +14,7 @@ type CollectionFiller struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	Poster      string `json:"poster,omitempty"`
+	Public      bool   `json:"public,omitempty"`
 }
 
 type PersonFiller struct {
@@ -29,6 +30,11 @@ type PersonFiller struct {
 	Genres       []string `json:"genres,omitempty"`
 
 	Images []string `json:"images,omitempty"`
+}
+
+type FilmActorFiller struct {
+	Name      string `json:"name,omitempty"`
+	Character string `json:"character,omitempty"`
 }
 
 type FilmFiller struct {
@@ -57,6 +63,18 @@ type FilmFiller struct {
 	ProdCompanies []string `json:"prod_companies,omitempty"`
 	ProdCountries []string `json:"prod_countries,omitempty"`
 	Images        []string `json:"images,omitempty"`
+
+	Ticket  string `json:"ticket,omitempty"`
+	Trailer string `json:"trailer,omitempty"`
+
+	Actors    []FilmActorFiller `json:"actors,omitempty"`
+	Artists   []string          `json:"artists,omitempty"`
+	Directors []string          `json:"directors,omitempty"`
+	Writers   []string          `json:"writers,omitempty"`
+	Producers []string          `json:"producers,omitempty"`
+	Operators []string          `json:"operators,omitempty"`
+	Montage   []string          `json:"montage,omitempty"`
+	Composers []string          `json:"composers,omitempty"`
 }
 
 type FilmSQLFiller struct {
@@ -93,6 +111,9 @@ type FilmSQLFiller struct {
 	ProdCompanies []string
 	ProdCountries []string
 	Images        []string
+
+	Ticket  sql.NullString
+	Trailer sql.NullString
 }
 
 func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
@@ -133,6 +154,9 @@ func NewFilmSQLFillerOnFilm(film FilmFiller) FilmSQLFiller {
 		CountSeasons: sqltools.NewSQLNullInt32(film.CountSeasons),
 		EndYear:      sqltools.NewSQLNNullDate(film.EndYear, constparams.OnlyDate),
 		Type:         sqltools.NewSQLNullString(film.Type),
+
+		Ticket:  sqltools.NewSQLNullString(film.Ticket),
+		Trailer: sqltools.NewSQLNullString(film.Trailer),
 	}
 }
 
@@ -188,6 +212,7 @@ type CollectionSQLFiller struct {
 	Poster      sql.NullString
 	CountLikes  sql.NullInt32
 	CountFilms  sql.NullInt32
+	Public      bool
 
 	Films []film.ModelSQL
 }
@@ -198,5 +223,6 @@ func NewCollectionSQLFilmOnCollection(collection CollectionFiller) CollectionSQL
 		Name:        collection.Name,
 		Description: sqltools.NewSQLNullString(collection.Description),
 		Poster:      sqltools.NewSQLNullString(collection.Poster),
+		Public:      collection.Public,
 	}
 }

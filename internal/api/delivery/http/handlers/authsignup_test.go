@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,11 +11,13 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/mailru/easyjson"
 	"github.com/stretchr/testify/require"
 
 	"go-park-mail-ru/2022_2_BugOverload/internal/api/delivery/http/models"
 	mockAuthClient "go-park-mail-ru/2022_2_BugOverload/internal/auth/delivery/grpc/client/mocks"
 	modelsGlobal "go-park-mail-ru/2022_2_BugOverload/internal/models"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/errors"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/wrapper"
 )
@@ -83,12 +84,12 @@ func TestAuthSignUpHandler_Action_OK(t *testing.T) {
 
 	expectedBody := models.NewUserSignUpResponse(&resSignup)
 
-	var actualBody *models.UserSignupResponse
+	var actualBody models.UserSignupResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
-	require.Equal(t, expectedBody, actualBody, "Wrong body")
+	require.Equal(t, expectedBody, &actualBody, "Wrong body")
 }
 
 func TestAuthSignUpHandler_Action_InvBody(t *testing.T) {
@@ -129,7 +130,7 @@ func TestAuthSignUpHandler_Action_InvBody(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -198,7 +199,7 @@ func TestAuthSignupHandler_Action_ServiceSignupError(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
@@ -274,7 +275,7 @@ func TestAuthSignupHandler_Action_CreateSessionError(t *testing.T) {
 
 	var actualBody wrapper.ErrResponse
 
-	err = json.Unmarshal(body, &actualBody)
+	err = easyjson.Unmarshal(body, &actualBody)
 	require.Nil(t, err, "json.Unmarshal must be success")
 
 	require.Equal(t, expectedBody, actualBody, "Wrong body")
