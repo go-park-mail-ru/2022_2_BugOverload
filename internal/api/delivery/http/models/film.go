@@ -83,6 +83,7 @@ type FilmResponse struct {
 	AgeLimit         string `json:"age_limit,omitempty" example:"18+"`
 	DurationMinutes  int    `json:"duration_minutes,omitempty" example:"55"`
 	PosterHor        string `json:"poster_hor,omitempty" example:"23"`
+	Trailer          string `json:"trailer,omitempty" example:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"`
 
 	Budget           int    `json:"budget,omitempty" example:"18323222"`
 	BoxOfficeDollars int    `json:"box_office_dollars,omitempty" example:"60000000"`
@@ -148,6 +149,7 @@ func NewFilmResponse(film *models.Film) *FilmResponse {
 		CurrencyBudget:   film.CurrencyBudget,
 		DurationMinutes:  film.DurationMinutes,
 		PosterHor:        film.PosterHor,
+		Trailer:          film.Trailer,
 
 		CountSeasons: film.CountSeasons,
 		EndYear:      film.EndYear,

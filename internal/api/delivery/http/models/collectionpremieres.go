@@ -75,7 +75,7 @@ type PremieresCollectionFilm struct {
 	Rating          float32 `json:"rating,omitempty" example:"9.2"`
 	DurationMinutes int     `json:"duration_minutes,omitempty" example:"55"`
 	Description     string  `json:"description,omitempty" example:"Британская лингвистка Алетея прилетает из Лондона"`
-	Ticket          string  `json:"ticket,omitempty" example:"https://youtube.com/asdahd"`
+	Ticket          string  `json:"ticket,omitempty" example:"https://www.afisha.ru/movie/265357/"`
 
 	Genres        []string                     `json:"genres,omitempty" example:"фэнтези,приключения"`
 	ProdCountries []string                     `json:"prod_countries,omitempty" example:"США,Великобритания"`
