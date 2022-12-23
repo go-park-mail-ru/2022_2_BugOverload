@@ -18,7 +18,7 @@ import (
 
 //easyjson:json
 type NewFilmReviewRequest struct {
-	FilmID     int    `json:"-"`
+	FilmID     int
 	ReviewName string `json:"name,omitempty" example:"Почему игра престолов это всего лишь пустое насилие?"`
 	ReviewType string `json:"type,omitempty" example:"negative"`
 	ReviewBody string `json:"body,omitempty" example:"много много текса"`
