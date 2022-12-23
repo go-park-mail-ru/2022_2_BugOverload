@@ -407,7 +407,7 @@ func (f *DBFiller) linkFilmPersonsReal() (int, error) {
 
 	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
 	if err != nil {
-		return 0, errors.Wrap(err, "linkFilmPersonsRandom")
+		return 0, errors.Wrap(err, "linkFilmPersonsReal")
 	}
 
 	return countInserts, nil
