@@ -3,7 +3,6 @@ package fillerdb
 import (
 	"context"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg/constparams"
 	"time"
 
@@ -383,11 +382,6 @@ func (f *DBFiller) linkFilmPersonsReal() (int, error) {
 			weightActors := countActors - 1
 
 			for i := 0; i < countActors; i++ {
-				_, ok := f.mapPersons[value.Actors[i].Name]
-				if !ok {
-					logrus.Error(value)
-				}
-
 				values = append(values, f.mapPersons[value.Actors[i].Name], value.ID, f.professions["актер"], sqltools.NewSQLNullString(value.Actors[i].Name), weightActors)
 				weightActors--
 			}
@@ -398,12 +392,6 @@ func (f *DBFiller) linkFilmPersonsReal() (int, error) {
 			weightDirectors := countDirectors - 1
 
 			for i := 0; i < countDirectors; i++ {
-
-				_, ok := f.mapPersons[value.Directors[i]]
-				if !ok {
-					logrus.Error(value)
-				}
-
 				values = append(values, f.mapPersons[value.Directors[i]], value.ID, f.professions["режиссер"], sqltools.NewSQLNullString(""), weightDirectors)
 				weightDirectors--
 			}
