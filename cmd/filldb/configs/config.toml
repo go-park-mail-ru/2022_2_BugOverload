@@ -1,5 +1,5 @@
 [database]
-timeout = 1
+timeout = 3
 
 [volume]
 count_users = 200
@@ -14,6 +14,7 @@ max_reviews_on_film = 0
 count_reviews_likes = 0
 max_likes_on_review = 0
 
+type_film_persons_links = "real"
 max_film_actors = 5
 max_film_persons = 4
 max_films_in_tag = 20

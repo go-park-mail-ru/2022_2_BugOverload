@@ -70,11 +70,11 @@ SET (rating, count_ratings) =
 
 	updatePersons = `
 UPDATE persons p
-SET count_films = (SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()
+SET count_films = COALESCE((SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()
                    FROM film_persons fp
                    WHERE fp.fk_person_id = p.person_id
                    GROUP BY fk_film_id, fk_person_id
-                   LIMIT 1);`
+                   LIMIT 1), 0);`
 
 	updateProfiles = `
 UPDATE users p

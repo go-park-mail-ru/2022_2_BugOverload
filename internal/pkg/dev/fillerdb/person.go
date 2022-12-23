@@ -51,6 +51,8 @@ func (f *DBFiller) uploadPersons() (int, error) {
 
 	for i := 0; i < int(affected); i++ {
 		f.persons[i].ID = i + 1
+
+		f.mapPersons[f.persons[i].Name] = f.persons[i].ID
 	}
 
 	return countInserts, nil

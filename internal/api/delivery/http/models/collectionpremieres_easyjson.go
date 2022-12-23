@@ -175,6 +175,8 @@ func easyjson4f9fdeaDecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMod
 			out.DurationMinutes = int(in.Int())
 		case "description":
 			out.Description = string(in.String())
+		case "ticket":
+			out.Ticket = string(in.String())
 		case "genres":
 			if in.IsNull() {
 				in.Skip()
@@ -327,6 +329,16 @@ func easyjson4f9fdeaEncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMod
 			out.RawString(prefix)
 		}
 		out.String(string(in.Description))
+	}
+	if in.Ticket != "" {
+		const prefix string = ",\"ticket\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Ticket))
 	}
 	if len(in.Genres) != 0 {
 		const prefix string = ",\"genres\":"
