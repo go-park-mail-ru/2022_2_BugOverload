@@ -83,7 +83,7 @@ func (p *personPostgres) GetPersonByID(ctx context.Context, person *models.Perso
 				GetPersonBestFilms, person.ID, params.CountFilms, err)
 		}
 		if stdErrors.Is(err, sql.ErrNoRows) {
-			return err
+			return nil
 		}
 		response.BestFilms, err = film.GetGenresBatch(ctx, response.BestFilms, conn)
 		if err != nil {
