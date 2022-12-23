@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"time"
 
 	"github.com/pkg/errors"
@@ -77,6 +78,12 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		for _, profession := range value.Professions {
 			values[pos] = value.ID
 			pos++
+
+			_, ok := f.professions[profession]
+			if !ok {
+				logrus.Error(value)
+			}
+
 			values[pos] = f.professions[profession]
 			weight--
 			pos++
