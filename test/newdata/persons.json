@@ -919,5 +919,2187 @@
       "5",
       "6"
     ]
+  },
+  {
+    "name": "Джордж Миллер",
+    "avatar": "37",
+    "original_name": "George Miller",
+    "birthday": "1945.03.03",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "фантастика",
+      "боевик"
+    ],
+    "professions": [
+      "продюсер",
+      "режиссер",
+      "сценарист",
+      "актер",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Идрис Эльба",
+    "avatar": "38",
+    "original_name": "Idris Elba",
+    "birthday": "1972.09.06",
+    "gender": "male",
+    "growth_meters": 1.89,
+    "genres": [
+      "драма",
+      "криминал",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист",
+      "композитор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Сидни Крейвен",
+    "avatar": "39",
+    "original_name": "Sydney Craven",
+    "birthday": "1994.07.25",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "драма",
+      "ужасы",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Имран Адамс",
+    "avatar": "40",
+    "original_name": "Imran Adams",
+    "birthday": "1994.07.25",
+    "gender": "male",
+    "growth_meters": 1.89,
+    "genres": [
+      "короткометражка",
+      "драма",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Тимо Вуоренсола",
+    "avatar": "41",
+    "original_name": "Timo Vuorensola",
+    "birthday": "1979.11.29",
+    "gender": "male",
+    "growth_meters": 1.98,
+    "genres": [
+      "фантастика",
+      "комедия",
+      "ужасы"
+    ],
+    "professions": [
+      "режиссер",
+      "актер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Раффиелла Чепмен",
+    "avatar": "42",
+    "original_name": "Raffiella Chapman",
+    "birthday": "2007.10.11",
+    "gender": "female",
+    "growth_meters": 1.53,
+    "genres": [
+      "драма",
+      "фэнтези",
+      "детектив"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Эдди Марсан",
+    "avatar": "43",
+    "original_name": "Eddie Marsan",
+    "birthday": "1968.06.09",
+    "gender": "male",
+    "growth_meters": 1.74,
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Кристина Буожите",
+    "avatar": "44",
+    "original_name": "Kristina Buožytė",
+    "birthday": "1982.10.09",
+    "gender": "female",
+    "growth_meters": 1.74,
+    "genres": [
+      "триллер",
+      "фантастика",
+      "драма"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Отем Ризер",
+    "avatar": "45",
+    "original_name": "Autumn Reeser",
+    "birthday": "1980.09.21",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Антонио Купо",
+    "avatar": "46",
+    "original_name": "Antonio Cupo",
+    "birthday": "1978.01.10",
+    "gender": "male",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Патриция Харрис Сили",
+    "avatar": "47",
+    "original_name": "Patricia Harris Seeley",
+    "birthday": "1978.01.10",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "короткометражка",
+      "документальный",
+      "реальное ТВ"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Люк Бессон",
+    "avatar": "48",
+    "original_name": "Luc Besson",
+    "birthday": "1959.03.18",
+    "gender": "male",
+    "growth_meters": 1.72,
+    "genres": [
+      "боевик",
+      "триллер",
+      "драма"
+    ],
+    "professions": [
+      "продюсер",
+      "сценарист",
+      "режиссер",
+      "актер",
+      "оператор",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Элайджа Вуд",
+    "avatar": "49",
+    "original_name": "Elijah Wood",
+    "birthday": "1981.01.28",
+    "gender": "male",
+    "growth_meters": 1.65,
+    "genres": [
+      "драма",
+      "комедия",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Иэн Маккеллен",
+    "avatar": "50",
+    "original_name": "Ian McKellen",
+    "birthday": "1939.05.25",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "драма",
+      "комедия",
+      "короткометражка"
+    ],
+    "professions": [
+      "актер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Питер Джексон",
+    "avatar": "51",
+    "original_name": "Peter Jackson",
+    "birthday": "1961.10.31",
+    "gender": "male",
+    "growth_meters": 1.65,
+    "genres": [
+      "короткометражка",
+      "фэнтези",
+      "драма"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "актер",
+      "оператор",
+      "художник",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Мэтт Диллон",
+    "avatar": "52",
+    "original_name": "Matt Dillon",
+    "birthday": "1964.02.18",
+    "gender": "male",
+    "growth_meters": 1.8,
+    "genres": [
+      "драма",
+      "комедия",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Бруно Ганц",
+    "avatar": "53",
+    "original_name": "Bruno Ganz",
+    "birthday": "1941.03.22",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "комедия",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "оператор",
+      "монтажер"
+    ],
+    "images": [
+      "1"
+    ]
+  },
+  {
+    "name": "Бруно Ганц",
+    "avatar": "53",
+    "original_name": "Bruno Ganz",
+    "birthday": "1941.03.22",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "комедия",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "оператор",
+      "монтажер"
+    ],
+    "images": [
+      "1"
+    ]
+  },
+  {
+    "name": "Ларс фон Триер",
+    "avatar": "54",
+    "original_name": "Lars von Trier",
+    "birthday": "1956.04.30",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "короткометражка",
+      "комедия"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "актер",
+      "продюсер",
+      "оператор",
+      "монтажер",
+      "композитор",
+      "художник"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Кристофер Нолан",
+    "avatar": "55",
+    "original_name": "Christopher Nolan",
+    "birthday": "1970.07.30",
+    "gender": "male",
+    "growth_meters": 1.81,
+    "genres": [
+      "фантастика",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "продюсер",
+      "сценарист",
+      "режиссер",
+      "оператор",
+      "монтажер",
+      "актер",
+      "композитор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Франсуа Клюзе",
+    "avatar": "56",
+    "original_name": "François Cluzet",
+    "birthday": "1955.09.21",
+    "gender": "male",
+    "growth_meters": 1.74,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Омар Си",
+    "avatar": "57",
+    "original_name": "Omar Sy",
+    "birthday": "1978.01.20",
+    "gender": "male",
+    "growth_meters": 1.9,
+    "genres": [
+      "комедия",
+      "драма",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Оливье Накаш",
+    "avatar": "58",
+    "original_name": "Olivier Nakache",
+    "birthday": "1973.04.15",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "комедия",
+      "драма",
+      "короткометражка"
+    ],
+    "professions": [
+      "сценарист",
+      "продюсер",
+      "режиссер",
+      "актер"
+    ]
+  },
+  {
+    "name": "Хит Леджер",
+    "avatar": "59",
+    "original_name": "Heath Ledger",
+    "birthday": "1979.04.04",
+    "gender": "male",
+    "death": "2008.01.22",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Дэвид Финчер",
+    "avatar": "60",
+    "original_name": "David Fincher",
+    "birthday": "1962.08.28",
+    "gender": "male",
+    "growth_meters": 1.84,
+    "genres": [
+      "короткометражка",
+      "драма",
+      "музыка"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "актер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Кейт Уинслет",
+    "avatar": "61",
+    "original_name": "Kate Winslet",
+    "birthday": "1975.10.05",
+    "gender": "female",
+    "growth_meters": 1.69,
+    "genres": [
+      "мелодрама",
+      "драма",
+      "семейный"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Джеймс Кэмерон",
+    "avatar": "62",
+    "original_name": "James Cameron",
+    "birthday": "1954.08.16",
+    "gender": "male",
+    "growth_meters": 1.88,
+    "genres": [
+      "фантастика",
+      "боевик",
+      "документальный"
+    ],
+    "professions": [
+      "продюсер",
+      "сценарист",
+      "режиссер",
+      "актер",
+      "монтажер",
+      "художник",
+      "оператор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Тиэко Байсё",
+    "avatar": "63",
+    "original_name": "Chieko Baisho",
+    "birthday": "1941.06.29",
+    "gender": "female",
+    "growth_meters": 1.59,
+    "genres": [
+      "комедия",
+      "драма",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1"
+    ]
+  },
+  {
+    "name": "Такуя Кимура",
+    "avatar": "64",
+    "original_name": "Takuya Kimura",
+    "birthday": "1972.11.13",
+    "gender": "male",
+    "growth_meters": 1.76,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "детектив"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Хаяо Миядзаки",
+    "avatar": "65",
+    "original_name": "Hayao Miyazaki",
+    "birthday": "1941.01.05",
+    "gender": "male",
+    "growth_meters": 1.64,
+    "genres": [
+      "мультфильм",
+      "аниме",
+      "фэнтези"
+    ],
+    "professions": [
+      "сценарист",
+      "режиссер",
+      "продюсер",
+      "монтажер",
+      "актер",
+      "художник"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Джона Хилл",
+    "avatar": "66",
+    "original_name": "Jonah Hill",
+    "birthday": "1983.12.20",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "комедия",
+      "драма",
+      "мультфильм"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Мартин Скорсезе",
+    "avatar": "67",
+    "original_name": "Martin Scorsese",
+    "birthday": "1942.11.17",
+    "gender": "male",
+    "growth_meters": 1.6,
+    "genres": [
+      "драма",
+      "документальный",
+      "криминал"
+    ],
+    "professions": [
+      "продюсер",
+      "режиссер",
+      "актер",
+      "сценарист",
+      "монтажер",
+      "оператор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Тимоти Шаламе",
+    "avatar": "68",
+    "original_name": "Timothée Chalamet",
+    "birthday": "1995.12.27",
+    "gender": "male",
+    "growth_meters": 1.78,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Ребекка Фергюсон",
+    "avatar": "69",
+    "original_name": "Rebecca Ferguson",
+    "birthday": "1983.11.19",
+    "gender": "female",
+    "growth_meters": 1.65,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Дени Вильнёв",
+    "avatar": "70",
+    "original_name": "Denis Villeneuve",
+    "birthday": "1967.11.03",
+    "gender": "male",
+    "growth_meters": 1.82,
+    "genres": [
+      "драма",
+      "короткометражка",
+      "фантастика"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "актер",
+      "продюсер",
+      "монтажер",
+      "оператор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Люси Лью",
+    "avatar": "71",
+    "original_name": "Lucy Liu",
+    "birthday": "1968.12.02",
+    "gender": "female",
+    "growth_meters": 1.6,
+    "genres": [
+      "драма",
+      "комедия",
+      "мультфильм"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Джеймс Стюарт",
+    "avatar": "72",
+    "original_name": "James Stewart",
+    "birthday": "1908.05.20",
+    "gender": "male",
+    "death": "1997.07.02",
+    "growth_meters": 1.91,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Ким Новак",
+    "avatar": "73",
+    "original_name": "Kim Novak",
+    "birthday": "1933.02.13",
+    "gender": "female",
+    "growth_meters": 1.68,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Альфред Хичкок",
+    "avatar": "74",
+    "original_name": "Alfred Hitchcock",
+    "birthday": "1899.08.13",
+    "gender": "male",
+    "death": "1980.04.29",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "триллер",
+      "детектив"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "художник",
+      "актер",
+      "монтажер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Семён Серзин",
+    "avatar": "75",
+    "birthday": "1987.06.12",
+    "gender": "male",
+    "growth_meters": 1.86,
+    "genres": [
+      "драма",
+      "комедия",
+      "детектив"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "монтажер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Чулпан Хаматова",
+    "avatar": "76",
+    "birthday": "1975.11.01",
+    "gender": "female",
+    "growth_meters": 1.64,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Кирилл Серебренников",
+    "avatar": "77",
+    "birthday": "1969.09.7",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "музыка",
+      "документальный"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "актер",
+      "художник",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  {
+    "name": "Спайк Джонс",
+    "avatar": "78",
+    "original_name": "Spike Jonze",
+    "birthday": "1969.10.22",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "короткометражка",
+      "музыка",
+      "документальный"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "актер",
+      "оператор"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  },
+  {
+    "name": "Ив Монтан",
+    "avatar": "79",
+    "original_name": "Yves Montand",
+    "birthday": "1921.10.13",
+    "gender": "male",
+    "death": "1991.11.09",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  {
+    "name": "Шарль Ванель",
+    "avatar": "80",
+    "original_name": "Charles Vanel",
+    "birthday": "1892.08.21",
+    "gender": "male",
+    "death": "1989.04.15",
+    "growth_meters": 1.8,
+    "genres": [
+      "драма",
+      "криминал",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Анри-Жорж Клузо",
+    "avatar": "81",
+    "original_name": "Henri-Georges Clouzot",
+    "birthday": "1907.11.20",
+    "gender": "male",
+    "death": "1977.01.12",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "триллер",
+      "комедия"
+    ],
+    "professions": [
+      "сценарист",
+      "режиссер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2"
+    ]
+  },
+  {
+    "name": "Ромуальд Буланже",
+    "avatar": "82",
+    "original_name": "Romuald Boulanger",
+    "birthday": "1978.04.04",
+    "gender": "male",
+    "growth_meters": 1.80,
+    "genres": [
+      "комедия",
+      "короткометражка",
+      "триллер"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Мэл Гибсон",
+    "avatar": "83",
+    "original_name": "Mel Gibson",
+    "birthday": "1956.01.03",
+    "gender": "male",
+    "growth_meters": 1.77,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Уильям Моусли",
+    "avatar": "84",
+    "original_name": "William Moseley",
+    "birthday": "1987.04.27",
+    "gender": "male",
+    "growth_meters": 1.78,
+    "genres": [
+      "драма",
+      "триллер",
+      "приключения"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Лаки Макки",
+    "avatar": "85",
+    "original_name": "Lucky McKee",
+    "birthday": "1975.11.01",
+    "gender": "male",
+    "growth_meters": 1.96,
+    "genres": [
+      "ужасы",
+      "триллер"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Стивен Лэнг",
+    "avatar": "86",
+    "original_name": "Stephen Lang",
+    "birthday": "1952.07.11",
+    "gender": "male",
+    "growth_meters": 1.79,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Марк Сентер",
+    "avatar": "87",
+    "original_name": "Marc Senter",
+    "birthday": "1982.11.03",
+    "gender": "male",
+    "growth_meters": 1.84,
+    "genres": [
+      "ужасы",
+      "триллер",
+      "драма"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Чак Рассел",
+    "avatar": "88",
+    "original_name": "Chuck Russell",
+    "birthday": "1952.08.06",
+    "gender": "male",
+    "growth_meters": 1.75,
+    "genres": [
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1"
+    ]
+  },
+  {
+    "name": "Джон Траволта",
+    "avatar": "89",
+    "original_name": "John Travolta",
+    "birthday": "1954.02.18",
+    "gender": "male",
+    "growth_meters": 1.88,
+    "genres": [
+      "драма",
+      "триллер",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Брюс Уиллис",
+    "avatar": "90",
+    "original_name": "Bruce Willis",
+    "birthday": "1955.03.19",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "триллер",
+      "боевик",
+      "комедия"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Григорий Вожакин",
+    "avatar": "91",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "мультфильм"
+    ],
+    "professions": [
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Иван Чабан",
+    "avatar": "92",
+    "birthday": "1997.07.23",
+    "gender": "male",
+    "growth_meters": 1.73,
+    "genres": [
+      "драма",
+      "комедия",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Александр Олешко",
+    "avatar": "93",
+    "birthday": "1976.07.23",
+    "gender": "male",
+    "growth_meters": 1.8,
+    "genres": [
+      "комедия",
+      "драма"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Фрэнсис О’Коннор",
+    "avatar": "94",
+    "original_name": "Frances O'Connor",
+    "birthday": "1967.06.12",
+    "gender": "female",
+    "growth_meters": 1.73,
+    "genres": [
+      "драма",
+      "комедия"
+    ],
+    "professions": [
+      "режиссер",
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Эмма Маки",
+    "avatar": "95",
+    "original_name": "Emma Mackey",
+    "birthday": "1996.01.04",
+    "gender": "female",
+    "growth_meters": 1.74,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "комедия"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Оливер Джексон-Коэн",
+    "avatar": "96",
+    "original_name": "Oliver Jackson-Cohen",
+    "birthday": "1986.10.24",
+    "gender": "male",
+    "growth_meters": 1.94,
+    "genres": [
+      "драма",
+      "мелодрама",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Джастин Ли",
+    "avatar": "97",
+    "original_name": "Justin Lee",
+    "gender": "male",
+    "genres": [
+      "боевик",
+      "ужасы"
+    ],
+    "professions": [
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Никки Уилан",
+    "avatar": "98",
+    "original_name": "Nicky Whelan",
+    "birthday": "1981.06.10",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "комедия",
+      "драма",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Трэйси Эдкинс",
+    "avatar": "99",
+    "original_name": "Trace Adkins",
+    "birthday": "1962.01.13",
+    "gender": "male",
+    "growth_meters": 2.0,
+    "genres": [
+      "драма"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Лоркан Финнеган",
+    "avatar": "100",
+    "original_name": "Lorcan Finnegan",
+    "birthday": "1979.05.25",
+    "gender": "male",
+    "genres": [
+      "ужасы",
+      "драма"
+    ],
+    "professions": [
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Ева Грин",
+    "avatar": "101",
+    "original_name": "Eva Green",
+    "birthday": "1980.07.06",
+    "gender": "female",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Марк Стронг",
+    "avatar": "102",
+    "original_name": "Mark Strong",
+    "birthday": "1963.08.05",
+    "gender": "male",
+    "growth_meters": 1.88,
+    "genres": [
+      "драма",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Рассел Кроу",
+    "avatar": "103",
+    "original_name": "Russell Crowe",
+    "birthday": "1964.04.07",
+    "gender": "male",
+    "growth_meters": 1.82,
+    "genres": [
+      "драма",
+      "боевик",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Лиам Хемсворт",
+    "avatar": "104",
+    "original_name": "Liam Hemsworth",
+    "birthday": "1990.01.13",
+    "gender": "male",
+    "growth_meters": 1.93,
+    "genres": [
+      "драма",
+      "триллер",
+      "боевик"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Андрей Никифоров",
+    "avatar": "105",
+    "birthday": "1986.02.28",
+    "gender": "male",
+    "genres": [
+      "комедия"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист"
+    ]
+  },
+  {
+    "name": "Артем Ткаченко",
+    "avatar": "106",
+    "birthday": "1982.04.30",
+    "gender": "male",
+    "growth_meters": 1.75,
+    "genres": [
+      "драма",
+      "комедия",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Ольга Рыжкова",
+    "avatar": "107",
+    "birthday": "1984.02.14",
+    "gender": "female",
+    "growth_meters": 1.72,
+    "genres": [
+      "комедия",
+      "триллер",
+      "мелодрама"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Иван Петухов",
+    "avatar": "108",
+    "birthday": "1984.10.11",
+    "gender": "male",
+    "genres": [
+      "комедия"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2"
+    ]
+  },
+  {
+    "name": "Ирина Старшенбаум",
+    "avatar": "109",
+    "birthday": "1992.03.30",
+    "gender": "female",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "комедия",
+      "фантастика"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Никита Ефремов",
+    "avatar": "110",
+    "birthday": "1988.05.30",
+    "gender": "male",
+    "growth_meters": 1.8,
+    "genres": [
+      "драма",
+      "комедия"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Стэнли Кубрик",
+    "avatar": "111",
+    "original_name": "Stanley Kubrick",
+    "birthday": "1928.07.26",
+    "death": "1999.03.07",
+    "gender": "male",
+    "growth_meters": 1.69,
+    "genres": [
+      "драма",
+      "триллер"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Кир Дуллеа",
+    "avatar": "112",
+    "original_name": "Keir Dullea",
+    "birthday": "1936.05.30",
+    "gender": "male",
+    "growth_meters": 1.8,
+    "genres": [
+      "драма",
+      "триллер",
+      "детектив"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2"
+    ]
+  },
+  {
+    "name": "Гэри Локвуд",
+    "avatar": "113",
+    "original_name": "Gary Lockwood",
+    "birthday": "1937.03.21",
+    "gender": "male",
+    "growth_meters": 1.84,
+    "genres": [
+      "драма",
+      "боевик",
+      "криминал"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Тодд Филлипс",
+    "avatar": "114",
+    "original_name": "Todd Phillips",
+    "birthday": "1970.12.20",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "комедия",
+      "драма",
+      "криминал"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Роберт Де Ниро",
+    "avatar": "115",
+    "original_name": "Robert De Niro",
+    "birthday": "1943.08.17",
+    "gender": "male",
+    "growth_meters": 1.75,
+    "genres": [
+      "драма",
+      "комедия",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Джордж Лукас",
+    "avatar": "116",
+    "original_name": "George Lucas",
+    "birthday": "1944.05.14",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "фантастика",
+      "приключения",
+      "боевик"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер",
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Марк Хэмилл",
+    "avatar": "117",
+    "original_name": "Mark Hamill",
+    "birthday": "1951.09.25",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "мультфильм",
+      "комедия",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Харрисон Форд",
+    "avatar": "118",
+    "original_name": "Harrison Ford",
+    "birthday": "1942.07.13",
+    "gender": "male",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "боевик",
+      "приключения"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Янн Артюс-Бертран",
+    "avatar": "119",
+    "original_name": "Yann Arthus-Bertrand",
+    "birthday": "1946.03.13",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "документальный"
+    ],
+    "professions": [
+      "режиссер"
+    ]
+  },
+  {
+    "name": "Luis Cancu",
+    "avatar": "avatar",
+    "original_name": "Luis Cancu"
+  },
+  {
+    "name": "Atman",
+    "avatar": "avatar",
+    "original_name": "Atman"
+  },
+  {
+    "name": "Нильс Арден Оплев",
+    "avatar": "122",
+    "original_name": "Niels Arden Oplev",
+    "birthday": "1961.03.26",
+    "gender": "male",
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Микаэл Нюквист",
+    "avatar": "123",
+    "original_name": "Michael Nyqvist",
+    "birthday": "1960.11.08",
+    "gender": "male",
+    "growth_meters": 1.78,
+    "genres": [
+      "драма",
+      "триллер",
+      "детектив"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Нуми Рапас",
+    "avatar": "124",
+    "original_name": "Noomi Rapace",
+    "birthday": "1979.12.28",
+    "gender": "female",
+    "growth_meters": 1.63,
+    "genres": [
+      "драма",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Вонг Кар-Вай",
+    "avatar": "125",
+    "original_name": "Wong Kar-Wai",
+    "birthday": "1958.07.17",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "драма",
+      "мелодрама"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Бриджит Линь",
+    "avatar": "126",
+    "original_name": "Brigitte Lin",
+    "birthday": "1954.11.03",
+    "gender": "female",
+    "growth_meters": 1.65,
+    "genres": [
+      "мелодрама",
+      "боевик",
+      "драма"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Тони Люн Чу Вай",
+    "avatar": "127",
+    "original_name": "Tony Leung Chiu-Wai",
+    "birthday": "1962.06.27",
+    "gender": "male",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "комедия",
+      "боевик"
+    ],
+    "professions": [
+      "актер"
+    ]
+  },
+  {
+    "name": "Квентин Тарантино",
+    "avatar": "128",
+    "original_name": "Quentin Tarantino",
+    "birthday": "1963.03.27",
+    "gender": "male",
+    "growth_meters": 1.85,
+    "genres": [
+      "драма",
+      "комедия",
+      "криминал"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер",
+      "сценарист",
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Курт Рассел",
+    "avatar": "129",
+    "original_name": "Kurt Russell",
+    "birthday": "1951.03.17",
+    "gender": "male",
+    "growth_meters": 1.76,
+    "genres": [
+      "драма",
+      "комедия",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Розарио Доусон",
+    "avatar": "130",
+    "original_name": "Rosario Dawson",
+    "birthday": "1979.05.09",
+    "gender": "female",
+    "growth_meters": 1.7,
+    "genres": [
+      "драма",
+      "комедия",
+      "боевик"
+    ],
+    "professions": [
+      "актер",
+      "продюсер",
+      "режиссер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Пак Чхан-ук",
+    "avatar": "131",
+    "original_name": "Park Chan-wook",
+    "birthday": "1963.08.23",
+    "gender": "male",
+    "growth_meters": 1.69,
+    "genres": [
+      "драма",
+      "триллер",
+      "мелодрама"
+    ],
+    "professions": [
+      "режиссер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Чхве Мин-сик",
+    "avatar": "132",
+    "original_name": "Choi Min-sik",
+    "birthday": "1962.05.30",
+    "gender": "male",
+    "growth_meters": 1.77,
+    "genres": [
+      "драма",
+      "криминал",
+      "боевик"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Ю Джи-тхэ",
+    "avatar": "133",
+    "original_name": "Yoo Ji-tae",
+    "birthday": "1976.04.13",
+    "gender": "male",
+    "growth_meters": 1.86,
+    "genres": [
+      "драма",
+      "криминал",
+      "триллер"
+    ],
+    "professions": [
+      "актер",
+      "режиссер",
+      "сценарист"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Оуэн Харрис",
+    "avatar": "134",
+    "original_name": "Owen Harris",
+    "gender": "male",
+    "genres": [
+      "драма",
+      "фантастика",
+      "триллер"
+    ],
+    "professions": [
+      "режиссер",
+      "продюсер"
+    ]
+  },
+  {
+    "name": "Рори Киннер",
+    "avatar": "135",
+    "original_name": "Rory Kinnear",
+    "birthday": "1976.02.17",
+    "gender": "male",
+    "growth_meters": 1.83,
+    "genres": [
+      "драма",
+      "комедия",
+      "триллер"
+    ],
+    "professions": [
+      "актер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  {
+    "name": "Дэниэл Калуя",
+    "avatar": "136",
+    "original_name": "Daniel Kaluuya",
+    "birthday": "1989.02.24",
+    "gender": "male",
+    "growth_meters": 1.74,
+    "genres": [
+      "драма",
+      "комедия",
+      "криминал"
+    ],
+    "professions": [
+      "актер",
+      "сценарист",
+      "продюсер"
+    ],
+    "images": [
+      "1",
+      "2",
+      "3"
+    ]
   }
 ]
