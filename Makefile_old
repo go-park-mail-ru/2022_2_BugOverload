@@ -9,7 +9,7 @@ PKG = ./internal/... ./pkg/...
 PKG_INTERNAL = ./internal/...
 
 SERVICE_DEV = dev
-
+пох
 MICROSERVICE_DIR=$(PWD)/internal
 
 # ENV
@@ -20,13 +20,17 @@ create-env-lint:
 
 migrate-install:
 	curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
-	sudo mv migrate /bin
+	sudo mv migrate /binЫ
 	rm README.md LICENSE
 
 env:
 	export AWS_REGION=us-east-1 && export AWS_PROFILE=default && export AWS_ACCESS_KEY_ID=foo && export AWS_SECRET_ACCESS_KEY=bar &&
-	export POSTGRES_HOST=main_db &&
-	export POSTGRES_DB=mgdb && export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
+	export POSTGRES_HOST=main_db && export POSTGRES_DB=mgdb &&
+	export POSTGRES_USER=mguser && export POSTGRES_PASSWORD=mgpass &&
+	export POSTGRES_USER_APP=user_app && export POSTGRES_PASSWORD_USER_APP=pass_microservice_2022_user &&
+	export POSTGRES_AUTH_APP=auth_app && export POSTGRES_PASSWORD_AUTH_APP=pass_microservice_2022_auth &&
+	export POSTGRES_WAREHOUSE_APP=warehouse_app && export POSTGRES_PASSWORD_WAREHOUSE_APP=pass_microservice_2022_warehouse &&
+	export POSTGRES_IMAGE_APP=image_app && export POSTGRES_PASSWORD_IMAGE_APP=pass_microservice_2022_image &&
 	export POSTGRES_PORT=5432 && export POSTGRES_SSLMODE=disable && export POSTGRES_HOST_DEV=localhost &&
 	export GF_SECURITY_ADMIN_USER=mguser && export GF_SECURITY_ADMIN_PASSWORD=mgpass &&
 	export GRAFANA_URL=grafana && export PROMETHEUS_URL=http://localhost:9999/prometheus/ && export TARGET_MONITOR=etwcwvloiuygotvk
