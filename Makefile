@@ -89,7 +89,7 @@ prod-deploy:
 	sleep 2
 	make fill-db
 	docker-compose -f docker-compose.production.yml up -d image warehouse auth api
-	docker-compose -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
+	docker-compose -f docker-compose.production.yml up -d monitor_db prometheus node_exporter grafana
 	sleep 5
 	make fill-S3-slow IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 
@@ -111,7 +111,7 @@ debug-deploy:
 	make build
 	make fill-db
 	docker-compose up -d image warehouse auth api
-	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
+	docker-compose up -d monitor_db prometheus node_exporter grafana
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
 
 debug-restart:

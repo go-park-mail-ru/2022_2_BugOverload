@@ -297,22 +297,6 @@ services:
     user: "104:107"
 
 
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: "alertmanager"
-    networks:
-      - monitoring-net
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-    #      - '--web.external-url=http://localhost:9093'
-    environment:
-      TZ: "Europe/Moscow"
-    volumes:
-      - ./monitoring/alertmanager:/etc/alertmanager
-    ports:
-      - '9093:9093'
-
-
 networks:
   localstack-net:
     external: false
