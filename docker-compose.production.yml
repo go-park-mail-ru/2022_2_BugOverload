@@ -160,28 +160,6 @@ services:
     command:
       - "postgres"
       - "-c"
-      - "max_connections=100"
-      - "-c"
-      - "shared_buffers=512MB"
-      - "-c"
-      - "effective_cache_size=512MB"
-      - "-c"
-      - "work_mem=16MB"
-      - "-c"
-      - "maintenance_work_mem=512MB"
-      - "-c"
-      - "random_page_cost=1.1"
-      - "-c"
-      - "temp_file_limit=1GB"
-      - "-c"
-      - "log_min_duration_statement=200ms"
-      - "-c"
-      - "idle_in_transaction_session_timeout=10s"
-      - "-c"
-      - "lock_timeout=1s"
-      - "-c"
-      - "statement_timeout=60s"
-      - "-c"
       - "shared_preload_libraries=pg_stat_statements"
       - "-c"
       - "pg_stat_statements.max=10000"
@@ -189,6 +167,8 @@ services:
       - "pg_stat_statements.track=all"
       - "-c"
       - "pg_stat_statements.track_utility=false"
+      - "-c"
+      - 'config_file=/etc/postgresql/postgresql.conf'
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -196,6 +176,8 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./scripts/migrations/up:/docker-entrypoint-initdb.d
+      - ./configs/database:/etc/postgresql
+      - ./logs/database/main:/logs
     ports:
       - "5432:5432"
 
