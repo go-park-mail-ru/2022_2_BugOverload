@@ -121,7 +121,7 @@ dev-debug-deploy:
 	docker-compose up -d main_db admin_db localstack
 	make build
 	docker-compose up -d image warehouse auth api
-	docker-compose up -d prometheus node_exporter grafana
+	docker-compose up -d monitor_db prometheus node_exporter grafana
 
 debug-restart:
 	docker-compose restart warehouse
