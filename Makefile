@@ -84,6 +84,8 @@ prod-restart:
 	docker-compose -f docker-compose.production.yml restart api
 
 prod-deploy:
+	make clear
+	mkdir -p --mode=777 logs/database/main
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
