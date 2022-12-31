@@ -36,6 +36,8 @@ func easyjsonEf032899DecodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 			continue
 		}
 		switch key {
+		case "FilmID":
+			out.FilmID = int(in.Int())
 		case "name":
 			out.ReviewName = string(in.String())
 		case "type":
@@ -60,34 +62,24 @@ func easyjsonEf032899EncodeGoParkMailRu20222BugOverloadInternalApiDeliveryHttpMo
 	out.RawByte('{')
 	first := true
 	_ = first
+	{
+		const prefix string = ",\"FilmID\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.FilmID))
+	}
 	if in.ReviewName != "" {
 		const prefix string = ",\"name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ReviewName))
 	}
 	if in.ReviewType != "" {
 		const prefix string = ",\"type\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ReviewType))
 	}
 	if in.ReviewBody != "" {
 		const prefix string = ",\"body\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ReviewBody))
 	}
 	out.RawByte('}')

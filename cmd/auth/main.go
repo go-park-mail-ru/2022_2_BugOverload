@@ -54,7 +54,7 @@ func main() {
 	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
-	postgres := sqltools.NewPostgresRepository()
+	postgres := sqltools.NewPostgresRepository(&config.DatabaseParams)
 
 	// Auth repository
 	authStorage := repoAuth.NewAuthDatabase(postgres)

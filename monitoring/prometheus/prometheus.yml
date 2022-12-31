@@ -36,11 +36,3 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: [ 'node_exporter:9100' ]
-
-#rule_files:
-#  - 'rules.yml'
-#
-#alerting:
-#  alertmanagers:
-#    - static_configs:
-#        - targets: ['alertmanager:10004']

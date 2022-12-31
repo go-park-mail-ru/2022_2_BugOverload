@@ -84,12 +84,14 @@ prod-restart:
 	docker-compose -f docker-compose.production.yml restart api
 
 prod-deploy:
+	make clear
+	mkdir -p --mode=777 logs/database/main
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
 	sleep 2
 	make fill-db
 	docker-compose -f docker-compose.production.yml up -d image warehouse auth api
-	docker-compose -f docker-compose.production.yml up -d monitor_db alertmanager prometheus node_exporter grafana
+	docker-compose -f docker-compose.production.yml up -d monitor_db prometheus node_exporter grafana
 	sleep 5
 	make fill-S3-slow IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 
@@ -106,13 +108,22 @@ stop:
 
 debug-deploy:
 	make clear
+	mkdir -p --mode=777 logs/database/main
 	docker-compose up -d main_db admin_db localstack
 	sleep 1
 	make build
 	make fill-db
 	docker-compose up -d image warehouse auth api
-	docker-compose up -d monitor_db alertmanager prometheus node_exporter grafana
+	docker-compose up -d monitor_db prometheus node_exporter grafana
 	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+
+dev-debug-deploy:
+	make clear
+	mkdir -p --mode=777 logs/database/main
+	docker-compose up -d main_db admin_db localstack
+	make build
+	docker-compose up -d image warehouse auth api
+	docker-compose up -d monitor_db prometheus node_exporter grafana
 
 debug-restart:
 	docker-compose restart warehouse

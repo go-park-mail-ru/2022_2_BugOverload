@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
 	"log"
 	"os"
 
@@ -35,11 +36,13 @@ type Database struct {
 	Connection *sql.DB
 }
 
-func NewPostgresRepository() *Database {
+func NewPostgresRepository(config *innerPKG.DatabaseParams) *Database {
 	connection, err := sql.Open("pgx", NewPostgresURL())
 	if err != nil {
 		log.Fatalln("Can't parse config", err)
 	}
+
+	connection.SetMaxOpenConns(config.MaxOpenCons)
 
 	err = connection.Ping()
 	if err != nil {

@@ -12,8 +12,8 @@ services:
     command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER_APP}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD_USER_APP}"
       POSTGRES_PORT: "${POSTGRES_PORT}"
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
@@ -45,8 +45,8 @@ services:
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
       AWS_REGION: "${AWS_REGION}"
       POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_IMAGE_APP}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD_IMAGE_APP}"
       POSTGRES_PORT: "${POSTGRES_PORT}"
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
@@ -72,8 +72,8 @@ services:
     command: sh -c "./app/warehouse_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_WAREHOUSE_APP}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD_WAREHOUSE_APP}"
       POSTGRES_PORT: "${POSTGRES_PORT}"
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
@@ -98,8 +98,8 @@ services:
     command: sh -c "./app/auth_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_AUTH_APP}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD_AUTH_APP}"
       POSTGRES_PORT: "${POSTGRES_PORT}"
       POSTGRES_SSLMODE: "${POSTGRES_SSLMODE}"
       POSTGRES_HOST: "${POSTGRES_HOST}"
@@ -160,28 +160,6 @@ services:
     command:
       - "postgres"
       - "-c"
-      - "max_connections=100"
-      - "-c"
-      - "shared_buffers=512MB"
-      - "-c"
-      - "effective_cache_size=512MB"
-      - "-c"
-      - "work_mem=16MB"
-      - "-c"
-      - "maintenance_work_mem=512MB"
-      - "-c"
-      - "random_page_cost=1.1"
-      - "-c"
-      - "temp_file_limit=1GB"
-      - "-c"
-      - "log_min_duration_statement=200ms"
-      - "-c"
-      - "idle_in_transaction_session_timeout=10s"
-      - "-c"
-      - "lock_timeout=1s"
-      - "-c"
-      - "statement_timeout=60s"
-      - "-c"
       - "shared_preload_libraries=pg_stat_statements"
       - "-c"
       - "pg_stat_statements.max=10000"
@@ -189,6 +167,8 @@ services:
       - "pg_stat_statements.track=all"
       - "-c"
       - "pg_stat_statements.track_utility=false"
+      - "-c"
+      - 'config_file=/etc/postgresql/postgresql.conf'
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -196,6 +176,8 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./scripts/migrations/up:/docker-entrypoint-initdb.d
+      - ./configs/database:/etc/postgresql
+      - ./logs/database/main:/logs
     ports:
       - "5432:5432"
 
@@ -295,22 +277,6 @@ services:
       - node_exporter
       - prometheus
     user: "104:107"
-
-
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: "alertmanager"
-    networks:
-      - monitoring-net
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-    #      - '--web.external-url=http://localhost:9093'
-    environment:
-      TZ: "Europe/Moscow"
-    volumes:
-      - ./monitoring/alertmanager:/etc/alertmanager
-    ports:
-      - '9093:9093'
 
 
 networks:

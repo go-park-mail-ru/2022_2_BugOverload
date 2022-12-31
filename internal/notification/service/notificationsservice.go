@@ -75,16 +75,18 @@ func (s *notificationsService) UpdateHubDemon() {
 		}
 
 		s.notificationHub.UpdateHub(messages)
-
-		<-ticker.C
 	}
 
 	updateHub()
 
-	ticker.Reset((maxHour + 1) * time.Hour)
+	<-ticker.C
+
+	ticker.Reset(maxHour * time.Hour)
 
 	for {
 		updateHub()
+
+		<-ticker.C
 	}
 }
 

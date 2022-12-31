@@ -57,7 +57,7 @@ func main() {
 	md := middleware.NewGRPCMiddleware(logger, metrics)
 
 	// Connections
-	postgres := sqltools.NewPostgresRepository()
+	postgres := sqltools.NewPostgresRepository(&config.DatabaseParams)
 
 	// Film repository
 	fs := repoFilm.NewFilmPostgres(postgres)
