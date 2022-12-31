@@ -136,5 +136,13 @@ jobs:
             export GRAFANA_URL=${{ secrets.GRAFANA_URL }}
             export PROMETHEUS_URL=${{ secrets.PROMETHEUS_URL }}
             export TARGET_MONITOR=${{ secrets.TARGET_MONITOR }}
+            export POSTGRES_USER_APP=${{ secrets.POSTGRES_USER_APP }}
+            export POSTGRES_PASSWORD_USER_APP=${{ secrets.POSTGRES_PASSWORD_USER_APP }}
+            export POSTGRES_AUTH_APP=${{ secrets.POSTGRES_AUTH_APP }}
+            export POSTGRES_PASSWORD_AUTH_APP=${{ secrets.POSTGRES_PASSWORD_AUTH_APP }}
+            export POSTGRES_WAREHOUSE_APP=${{ secrets.POSTGRES_PASSWORD_WAREHOUSE_APP }}
+            export POSTGRES_PASSWORD_WAREHOUSE_APP=${{ secrets.POSTGRES_PASSWORD_WAREHOUSE_APP }}
+            export POSTGRES_IMAGE_APP=${{ secrets.POSTGRES_IMAGE_APP }}
+            export POSTGRES_PASSWORD_IMAGE_APP=${{ secrets.POSTGRES_PASSWORD_IMAGE_APP }}
             
             make prod-deploy
