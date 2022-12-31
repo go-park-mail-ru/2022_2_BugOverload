@@ -53,7 +53,7 @@ func NewDBFiller(path string, config *Config) (*DBFiller, error) {
 		generator: generatordatadb.NewDBGenerator(),
 	}
 
-	res.DB = sqltools.NewPostgresRepository()
+	res.DB = sqltools.NewPostgresRepository(&config.DatabaseParams)
 
 	err := res.fillGuides(path)
 	if err != nil {

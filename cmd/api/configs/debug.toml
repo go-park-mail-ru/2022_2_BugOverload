@@ -33,3 +33,6 @@ urls = ["http://localhost:3000", "http://movie-gate.online"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = true
+
+[database_params]
+max_open_cons = 25

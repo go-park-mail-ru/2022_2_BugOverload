@@ -12,3 +12,6 @@ log_path = "logs/image/debug/"
 
 [S3]
 endpoint = "http://localstack:4566"
+
+[database_params]
+max_open_cons = 20

@@ -1,5 +1,7 @@
 package fillerdb
 
+import innerPKG "go-park-mail-ru/2022_2_BugOverload/internal/pkg"
+
 type Volume struct {
 	CountUser int `toml:"count_users"`
 
@@ -29,8 +31,9 @@ type Database struct {
 }
 
 type Config struct {
-	Volume   Volume   `toml:"volume"`
-	Database Database `toml:"database"`
+	Volume         Volume                  `toml:"volume"`
+	Database       Database                `toml:"database"`
+	DatabaseParams innerPKG.DatabaseParams `toml:"database_params"`
 }
 
 func NewConfig() *Config {
