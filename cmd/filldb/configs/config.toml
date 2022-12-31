@@ -23,3 +23,7 @@ count_views = 600
 max_views_on_film = 15
 
 count_collections = 30
+
+
+[database_params]
+max_open_cons = 50
