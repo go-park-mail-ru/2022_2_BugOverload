@@ -9,3 +9,6 @@ bind_addr_http = ":9003"
 [logger]
 log_level = "debug"
 log_path = "logs/warehouse/prod/"
+
+[database_params]
+max_open_cons = 80

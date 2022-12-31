@@ -62,7 +62,8 @@ func main() {
 	}(closeResource, logger)
 
 	// Connections
-	postgres := sqltools.NewPostgresRepository()
+	postgres := sqltools.NewPostgresRepository(&config.DatabaseParams)
+
 	// Microservices
 	grpcConnImage, err := grpc.Dial(
 		config.ServerGRPCImage.URL,

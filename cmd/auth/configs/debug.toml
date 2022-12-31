@@ -10,3 +10,6 @@ bind_addr_http = ":9004"
 log_level = "debug"
 log_path = "logs/auth/debug/"
 
+[database_params]
+max_open_cons = 25
+

@@ -43,17 +43,22 @@ type ServerGRPC struct {
 	URL               string `toml:"URL"`
 }
 
+type DatabaseParams struct {
+	MaxOpenCons int `toml:"max_open_cons"`
+}
+
 type Config struct {
-	ServerHTTPApi       ServerHTTP `toml:"server_http_api"`
-	ServerGRPCImage     ServerGRPC `toml:"server_grpc_image"`
-	ServerGRPCWarehouse ServerGRPC `toml:"server_grpc_warehouse"`
-	ServerGRPCUser      ServerGRPC `toml:"server_grpc_user"`
-	ServerGRPCAuth      ServerGRPC `toml:"server_grpc_auth"`
-	Cors                Cors       `toml:"cors"`
-	Metrics             Metrics    `toml:"metrics"`
-	S3                  S3         `toml:"S3"`
-	Context             Context    `toml:"context"`
-	Logger              Logger     `toml:"logger"`
+	ServerHTTPApi       ServerHTTP     `toml:"server_http_api"`
+	ServerGRPCImage     ServerGRPC     `toml:"server_grpc_image"`
+	ServerGRPCWarehouse ServerGRPC     `toml:"server_grpc_warehouse"`
+	ServerGRPCUser      ServerGRPC     `toml:"server_grpc_user"`
+	ServerGRPCAuth      ServerGRPC     `toml:"server_grpc_auth"`
+	Cors                Cors           `toml:"cors"`
+	Metrics             Metrics        `toml:"metrics"`
+	S3                  S3             `toml:"S3"`
+	Context             Context        `toml:"context"`
+	Logger              Logger         `toml:"logger"`
+	DatabaseParams      DatabaseParams `toml:"database_params"`
 }
 
 func NewConfig() *Config {
