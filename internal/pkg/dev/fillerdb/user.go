@@ -153,7 +153,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			// For update denormal fields
 			f.films[filmID-1].Rating += float64(score)
 
-			f.films[filmID-1].CountScores += 1
+			f.films[filmID-1].CountScores++
 		}
 
 		appended += count

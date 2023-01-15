@@ -286,11 +286,11 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 			// For update denormal fields
 			switch f.Reviews[curID-1].Type {
 			case devpkg.TypeReviewNegative:
-				f.films[value.ID-1].CountNegativeReviews += 1
+				f.films[value.ID-1].CountNegativeReviews++
 			case devpkg.TypeReviewNeutral:
-				f.films[value.ID-1].CountNeutralReviews += 1
+				f.films[value.ID-1].CountNeutralReviews++
 			case devpkg.TypeReviewPositive:
-				f.films[value.ID-1].CountPositiveReviews += 1
+				f.films[value.ID-1].CountPositiveReviews++
 			}
 		}
 
@@ -680,7 +680,7 @@ func (f *DBFiller) UpdateFilms() (int, error) {
 
 	countAttributes := strings.Count(query, "$")
 
-	action := func(countInserts int, values []interface{}) error {
+	action := func(values []interface{}) error {
 		ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
 		defer cancelFunc()
 
@@ -692,11 +692,11 @@ func (f *DBFiller) UpdateFilms() (int, error) {
 		return nil
 	}
 
-	pos := 0
-
 	values := make([]interface{}, countAttributes)
 
 	for i := 0; i < len(f.films); i++ {
+		pos := 0
+
 		countScores := f.films[i].CountScores
 
 		rating := sqltools.NewSQLNullFloat64(float32(math.Round(f.films[i].Rating/float64(countScores)*10*float64(1)) / 10 * float64(1)))
@@ -716,13 +716,10 @@ func (f *DBFiller) UpdateFilms() (int, error) {
 		values[pos] = f.films[i].ID
 		pos++
 
-		err := action(countAttributes, values)
+		err := action(values)
 		if err != nil {
 			return 0, errors.Wrap(err, message)
 		}
-
-		pos = 0
-
 	}
 
 	return globalCountInserts, nil
