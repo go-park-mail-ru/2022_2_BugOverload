@@ -46,7 +46,7 @@ func (f *DBFiller) uploadFilms() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(f.films); i++ {
 		values[pos] = f.filmsSQL[i].Name
 		pos++
 		values[pos] = f.filmsSQL[i].ProdYear
@@ -76,11 +76,9 @@ func (f *DBFiller) uploadFilms() (int, error) {
 		values[pos] = f.filmsSQL[i].Type
 		pos++
 
-		i++
-
 		countInserts++
 
-		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(f.films) {
+		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(f.films)-1 {
 			values = values[:pos]
 
 			err := action(countInserts, values)
@@ -92,15 +90,13 @@ func (f *DBFiller) uploadFilms() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(f.films) {
-			for j := 0; j < globalCountInserts; j++ {
-				f.films[j].ID = j + 1
-			}
-
-			return globalCountInserts, nil
-		}
 	}
+
+	for j := 0; j < globalCountInserts; j++ {
+		f.films[j].ID = j + 1
+	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) uploadFilmsMedia() (int, error) {
@@ -144,7 +140,7 @@ func (f *DBFiller) uploadFilmsMedia() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(ids); i++ {
 		values[pos] = f.films[ids[i]].ID
 		pos++
 		values[pos] = f.filmsSQL[ids[i]].Ticket
@@ -152,11 +148,9 @@ func (f *DBFiller) uploadFilmsMedia() (int, error) {
 		values[pos] = f.filmsSQL[ids[i]].Trailer
 		pos++
 
-		i++
-
 		countInserts++
 
-		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(ids) {
+		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(ids)-1 {
 			values = values[:pos]
 
 			err := action(countInserts, values)
@@ -168,11 +162,9 @@ func (f *DBFiller) uploadFilmsMedia() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(ids) {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) uploadSerials() (int, error) {
@@ -216,7 +208,7 @@ func (f *DBFiller) uploadSerials() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(ids); i++ {
 		values[pos] = f.films[ids[i]].ID
 		pos++
 		values[pos] = f.filmsSQL[ids[i]].CountSeasons
@@ -224,11 +216,9 @@ func (f *DBFiller) uploadSerials() (int, error) {
 		values[pos] = f.filmsSQL[ids[i]].EndYear
 		pos++
 
-		i++
-
 		countInserts++
 
-		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(ids) {
+		if devpkg.MaxInsertValuesSQL-pos < 20 || i == len(ids)-1 {
 			values = values[:pos]
 
 			err := action(countInserts, values)
@@ -240,11 +230,9 @@ func (f *DBFiller) uploadSerials() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(ids) {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkFilmsReviews() (int, error) {
@@ -460,7 +448,7 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 
 	maxPersons := int(math.Max(float64(f.Config.Volume.MaxFilmsActors), float64(f.Config.Volume.MaxFilmsPersons)))
 
-	for i := 0; ; {
+	for i := 0; i < len(f.films); i++ {
 		countActors := pkg.RandMaxInt(f.Config.Volume.MaxFilmsActors) + 1
 
 		sequencePersons := pkg.CryptoRandSequence(maxPersons+1, 1)
@@ -514,9 +502,7 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 
 		countInserts += countPersons
 
-		i++
-
-		if devpkg.MaxInsertValuesSQL-pos < 50 || i == len(f.films) {
+		if devpkg.MaxInsertValuesSQL-pos < 50 || i == len(f.films)-1 {
 			err := action(countInserts, values[:pos])
 			if err != nil {
 				return 0, errors.Wrap(err, message)
@@ -528,11 +514,9 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(f.films) {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkFilmPersonsReal() (int, error) {
