@@ -2,7 +2,6 @@ package fillerdb
 
 import (
 	"context"
-	"math"
 	"strings"
 	"time"
 
@@ -247,7 +246,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	pos := 0
 	appended := 0
 
-	sequenceReviewsID := pkg.CryptoRandSequence(len(f.Reviews)+1, 1)
+	sequenceReviewsID := pkg.CryptoRandSequenceOld(len(f.Reviews)+1, 1)
 
 	for _, value := range f.films {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
@@ -255,11 +254,7 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 			count = countInserts - appended
 		}
 
-		if count == 0 {
-			continue
-		}
-
-		sequenceUsersID := pkg.CryptoRandSequence(count+1, 1)
+		sequenceUsersID := pkg.CryptoRandSequence(len(f.Users)+1, 1, count)
 
 		for j := 0; j < count; j++ {
 			curID := sequenceReviewsID[appended:][j]
@@ -446,45 +441,40 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 
 	countInserts := 0
 
-	maxPersons := int(math.Max(float64(f.Config.Volume.MaxFilmsActors), float64(f.Config.Volume.MaxFilmsPersons)))
-
 	for i := 0; i < len(f.films); i++ {
 		countActors := pkg.RandMaxInt(f.Config.Volume.MaxFilmsActors) + 1
 
-		sequencePersons := pkg.CryptoRandSequence(maxPersons+1, 1)
+		sequenceActors := pkg.CryptoRandSequence(len(f.persons)+1, 1, countActors)
 
-		if countActors != 0 {
-			weightActors := countActors - 1
+		weightActors := countActors - 1
 
-			for j := 0; j < countActors; j++ {
-				values[pos] = sequencePersons[j]
-				pos++
-				values[pos] = f.films[i].ID
-				pos++
-				values[pos] = f.guides.Professions["актер"]
-				pos++
-				values[pos] = sqltools.NewSQLNullString(faker.Word())
-				weightActors--
-				pos++
-				values[pos] = weightActors
-				pos++
+		for j := 0; j < countActors; j++ {
+			values[pos] = sequenceActors[j]
+			pos++
+			values[pos] = f.films[i].ID
+			pos++
+			values[pos] = f.guides.Professions["актер"]
+			pos++
+			values[pos] = sqltools.NewSQLNullString(faker.Word())
+			weightActors--
+			pos++
+			values[pos] = weightActors
+			pos++
 
-				f.films[i].CountActors = countActors
-			}
-
-			countInserts += countActors
+			f.films[i].CountActors = countActors
 		}
+
+		countInserts += countActors
 
 		countPersons := pkg.RandMaxInt(f.Config.Volume.MaxFilmsPersons) + 1
-		if countPersons == 0 {
-			continue
-		}
 
 		weightPersons := countPersons - 1
 
 		end := 2
 
-		sequenceProfessions := pkg.CryptoRandSequence(len(f.guides.Professions)+1, end)
+		sequencePersons := pkg.CryptoRandSequence(len(f.persons)+1, 1, countPersons)
+
+		sequenceProfessions := pkg.CryptoRandSequence(len(f.guides.Professions)+1, end, countPersons)
 
 		for j := 0; j < countPersons; j++ {
 			values[pos] = sequencePersons[j]
@@ -583,11 +573,8 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 
 	for _, value := range f.guides.Tags {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxFilmsInTag) + 1
-		if count == 0 {
-			continue
-		}
 
-		sequence := pkg.CryptoRandSequence(count+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1, count)
 
 		for i := 0; i < count; i++ {
 			values = append(values, sequence[i], value)
@@ -682,10 +669,13 @@ func (f *DBFiller) UpdateFilms() (int, error) {
 		pos := 0
 
 		countScores := f.films[i].CountScores
+		rating := 0.0
 
-		rating := sqltools.NewSQLNullFloat64(float32(math.Round(f.films[i].Rating/float64(countScores)*10*float64(1)) / 10 * float64(1)))
+		if countScores > 0 {
+			rating = f.films[i].Rating / float64(countScores)
+		}
 
-		values[pos] = rating
+		values[pos] = sqltools.NewSQLNullFloat64(float32(rating))
 		pos++
 		values[pos] = countScores
 		pos++
@@ -745,7 +735,7 @@ func (f *DBFiller) linkFilmGenresRandom() (int, error) {
 	countInserts := 0
 
 	for i := 0; i < len(f.films); i++ {
-		sequence := pkg.CryptoRandSequence(len(f.guides.Genres)+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.guides.Genres)+1, 1, len(f.films[i].Genres))
 
 		for j := 0; j < len(f.films[i].Genres); j++ {
 			values[pos] = f.films[i].ID
@@ -811,7 +801,7 @@ func (f *DBFiller) linkFilmCountriesRandom() (int, error) {
 	countInserts := 0
 
 	for i := 0; i < len(f.films); i++ {
-		sequence := pkg.CryptoRandSequence(len(f.guides.Countries)+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.guides.Countries)+1, 1, len(f.films[i].ProdCountries))
 
 		for j := 0; j < len(f.films[i].ProdCountries); j++ {
 			values[pos] = f.films[i].ID
@@ -877,7 +867,7 @@ func (f *DBFiller) linkFilmCompaniesRandom() (int, error) {
 	countInserts := 0
 
 	for i := 0; i < len(f.films); i++ {
-		sequence := pkg.CryptoRandSequence(len(f.guides.Companies)+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.guides.Companies)+1, 1, len(f.films[i].ProdCompanies))
 
 		for j := 0; j < len(f.films[i].ProdCompanies); j++ {
 			values[pos] = f.films[i].ID

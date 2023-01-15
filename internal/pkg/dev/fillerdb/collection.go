@@ -2,6 +2,7 @@ package fillerdb
 
 import (
 	"context"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/devpkg"
 	"strings"
 	"time"
 
@@ -12,71 +13,122 @@ import (
 )
 
 func (f *DBFiller) uploadCollections() (int, error) {
-	countInserts := len(f.collections) * len(f.Users)
+	// Defining sending parameters
+	query := insertCollections
+	message := "uploadCollections"
 
-	countAttributes := strings.Count(insertCollections, ",") + 1
+	globalCountInserts := len(f.collections) * len(f.Users)
 
-	insertStatement := sqltools.CreateFullQuery(insertCollections, countInserts, countAttributes)
+	countAttributes := strings.Count(query, ",") + 1
 
-	values := make([]interface{}, countAttributes*countInserts)
+	maxInsertValues := devpkg.MaxInsertValuesSQL / countAttributes
+
+	action := func(countInserts int, values []interface{}) error {
+		ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+		defer cancelFunc()
+
+		insertStatement := sqltools.CreateFullQuery(query, countInserts, countAttributes)
+
+		_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+		if err != nil {
+			return errors.Wrap(err, message)
+		}
+
+		return nil
+	}
 
 	pos := 0
 
-	for _, value := range f.collectionsSQL {
-		for range f.Users {
-			values[pos] = value.Name
+	values := make([]interface{}, maxInsertValues*countAttributes)
+
+	countInserts := 0
+
+	for i := 0; i < len(f.collections); i++ {
+		for j := 0; j < len(f.Users); j++ {
+			values[pos] = f.collectionsSQL[i].Name
 			pos++
-			values[pos] = value.Description
+			values[pos] = f.collectionsSQL[i].Description
 			pos++
-			values[pos] = value.Poster
+			values[pos] = f.collectionsSQL[i].Poster
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++
-			values[pos] = value.Public
+			values[pos] = f.collectionsSQL[i].Public
 			pos++
+
+			countInserts++
+
+			if devpkg.MaxInsertValuesSQL-pos < 20 || j == countInserts-1 {
+				err := action(countInserts, values[:pos])
+				if err != nil {
+					return 0, errors.Wrap(err, message)
+				}
+
+				pos = 0
+
+				countInserts = 0
+			}
 		}
 	}
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
-	defer cancelFunc()
-
-	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
-	if err != nil {
-		return 0, errors.Wrap(err, "insertCollections")
-	}
-
-	return countInserts, nil
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkCollectionProfile() (int, error) {
-	countInserts := len(f.collections) * len(f.Users)
+	// Defining sending parameters
+	query := insertProfileCollections
+	message := "linkCollectionProfile"
 
-	countAttributes := strings.Count(insertProfileCollections, ",") + 1
+	globalCountInserts := len(f.collections) * len(f.Users)
 
-	insertStatement := sqltools.CreateFullQuery(insertProfileCollections, countInserts, countAttributes)
+	countAttributes := strings.Count(query, ",") + 1
 
-	values := make([]interface{}, countAttributes*countInserts)
+	maxInsertValues := devpkg.MaxInsertValuesSQL / countAttributes
+
+	action := func(countInserts int, values []interface{}) error {
+		ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+		defer cancelFunc()
+
+		insertStatement := sqltools.CreateFullQuery(query, countInserts, countAttributes)
+
+		_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
+		if err != nil {
+			return errors.Wrap(err, message)
+		}
+
+		return nil
+	}
 
 	pos := 0
+
+	values := make([]interface{}, maxInsertValues*countAttributes)
+
+	countInserts := 0
+
 	collectionID := 1
 
-	for range f.collectionsSQL {
-		for _, user := range f.Users {
+	for i := 0; i < len(f.collections); i++ {
+		for j := 0; j < len(f.Users); j++ {
 			values[pos] = collectionID
 			collectionID++
 			pos++
-			values[pos] = user.ID
+			values[pos] = f.Users[i].ID
 			pos++
+
+			countInserts++
+
+			if devpkg.MaxInsertValuesSQL-pos < 20 || j == countInserts-1 {
+				err := action(countInserts, values[:pos])
+				if err != nil {
+					return 0, errors.Wrap(err, message)
+				}
+
+				pos = 0
+
+				countInserts = 0
+			}
 		}
 	}
 
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
-	defer cancelFunc()
-
-	_, err := sqltools.InsertBatch(ctx, f.DB.Connection, insertStatement, values)
-	if err != nil {
-		return 0, errors.Wrap(err, "linkCollectionProfile")
-	}
-
-	return countInserts, nil
+	return globalCountInserts, nil
 }

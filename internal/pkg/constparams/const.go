@@ -51,7 +51,7 @@ const (
 	// Crypt
 	SaltLength     = 16
 	ArgonTime      = 1
-	ArgonMemory    = 16 * 1024
+	ArgonMemory    = 1 * 1024
 	ArgonThreads   = 4
 	ArgonKeyLength = 16
 

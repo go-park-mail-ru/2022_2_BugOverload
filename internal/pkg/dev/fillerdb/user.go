@@ -79,13 +79,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 			count = countInserts - appended
 		}
 
-		if count == 0 {
-			continue
-		}
-
-		faker.Word()
-
-		sequence := pkg.CryptoRandSequence(count+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1, count)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
@@ -130,11 +124,7 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			count = countInserts - appended
 		}
 
-		if count == 0 {
-			continue
-		}
-
-		sequence := pkg.CryptoRandSequence(count+1, 1)
+		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1, count)
 
 		for j := 0; j < count; j++ {
 			filmID := sequence[j]
