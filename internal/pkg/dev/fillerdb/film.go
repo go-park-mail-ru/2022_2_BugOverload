@@ -760,7 +760,7 @@ func (f *DBFiller) linkFilmGenresRandom() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(f.films); i++ {
 		sequence := pkg.CryptoRandSequence(len(f.guides.Genres)+1, 1)
 
 		for j := 0; j < len(f.films[i].Genres); j++ {
@@ -771,8 +771,6 @@ func (f *DBFiller) linkFilmGenresRandom() (int, error) {
 			values[pos] = j
 			pos++
 		}
-
-		i++
 
 		countInserts += len(f.films[i].Genres)
 
@@ -788,11 +786,9 @@ func (f *DBFiller) linkFilmGenresRandom() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(f.films)-1 {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkFilmCountriesRandom() (int, error) {
@@ -830,7 +826,7 @@ func (f *DBFiller) linkFilmCountriesRandom() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(f.films); i++ {
 		sequence := pkg.CryptoRandSequence(len(f.guides.Countries)+1, 1)
 
 		for j := 0; j < len(f.films[i].ProdCountries); j++ {
@@ -841,8 +837,6 @@ func (f *DBFiller) linkFilmCountriesRandom() (int, error) {
 			values[pos] = j
 			pos++
 		}
-
-		i++
 
 		countInserts += len(f.films[i].ProdCountries)
 
@@ -858,11 +852,9 @@ func (f *DBFiller) linkFilmCountriesRandom() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(f.films)-1 {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkFilmCompaniesRandom() (int, error) {
@@ -900,7 +892,7 @@ func (f *DBFiller) linkFilmCompaniesRandom() (int, error) {
 
 	countInserts := 0
 
-	for i := 0; ; {
+	for i := 0; i < len(f.films); i++ {
 		sequence := pkg.CryptoRandSequence(len(f.guides.Companies)+1, 1)
 
 		for j := 0; j < len(f.films[i].ProdCompanies); j++ {
@@ -911,8 +903,6 @@ func (f *DBFiller) linkFilmCompaniesRandom() (int, error) {
 			values[pos] = j
 			pos++
 		}
-
-		i++
 
 		countInserts += len(f.films[i].ProdCompanies)
 
@@ -928,9 +918,7 @@ func (f *DBFiller) linkFilmCompaniesRandom() (int, error) {
 
 			countInserts = 0
 		}
-
-		if i == len(f.films)-1 {
-			return globalCountInserts, nil
-		}
 	}
+
+	return globalCountInserts, nil
 }

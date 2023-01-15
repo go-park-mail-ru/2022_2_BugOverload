@@ -5,7 +5,7 @@ timeout = 1440
 count_users = 200
 
 type_film = "random"
-count_films = 200
+count_films = 100
 max_films_name_length = 70
 max_films_description_length = 300
 max_films_short_description_length = 170
