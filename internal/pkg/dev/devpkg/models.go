@@ -75,6 +75,13 @@ type FilmFiller struct {
 	Operators []string          `json:"operators,omitempty"`
 	Montage   []string          `json:"montage,omitempty"`
 	Composers []string          `json:"composers,omitempty"`
+
+	Rating               float64
+	CountScores          int
+	CountActors          int
+	CountNegativeReviews int
+	CountNeutralReviews  int
+	CountPositiveReviews int
 }
 
 type FilmSQLFiller struct {

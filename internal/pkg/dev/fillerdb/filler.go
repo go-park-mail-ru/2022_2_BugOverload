@@ -396,13 +396,11 @@ func (f *DBFiller) Action() error {
 		logrus.Infof("%d reviews denormal fields updated", count)
 	}
 
-	if f.Config.Volume.TypeFilms == devpkg.TypeDataReal {
-		count, err = f.UpdateFilms()
-		if err != nil {
-			return errors.Wrap(err, "Action")
-		}
-		logrus.Infof("%d films denormal fields updated", count)
+	count, err = f.UpdateFilms()
+	if err != nil {
+		return errors.Wrap(err, "Action")
 	}
+	logrus.Infof("%d films denormal fields updated", count)
 
 	return nil
 }

@@ -73,7 +73,11 @@ func (f *DBFiller) linkReviewsLikes() (int, error) {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(len(f.Users), 1)
+		if count == 0 {
+			continue
+		}
+
+		sequence := pkg.CryptoRandSequence(count+1, 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID

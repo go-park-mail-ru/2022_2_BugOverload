@@ -72,6 +72,16 @@ SET rating =
          WHERE f.film_id = fk_film_id
            AND fp.fk_profession_id = (SELECT profession_id FROM professions p WHERE p.name = 'актер'))`
 
+	updateFilmsSimple = `
+UPDATE films
+SET rating                 = $1,
+    count_ratings 		   = $2,
+    count_negative_reviews = $3,
+    count_neutral_reviews  = $4,
+    count_positive_reviews = $5,
+    count_actors           = $6
+WHERE film_id = $7;`
+
 	updatePersons = `
 UPDATE persons p
 SET count_films = COALESCE((SELECT SUM(COUNT(DISTINCT (fk_film_id, fk_person_id))) OVER ()

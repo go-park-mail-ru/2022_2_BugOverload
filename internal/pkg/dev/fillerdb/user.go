@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
-	"math"
 	"strings"
 	"time"
 
@@ -80,9 +79,13 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 			count = countInserts - appended
 		}
 
+		if count == 0 {
+			continue
+		}
+
 		faker.Word()
 
-		sequence := pkg.CryptoRandSequence(int(math.Min(float64(len(f.films)+1), float64(len(f.Users)+1))), 1)
+		sequence := pkg.CryptoRandSequence(count+1, 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
@@ -127,17 +130,30 @@ func (f *DBFiller) linkProfileRatings() (int, error) {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(int(math.Min(float64(len(f.films)+1), float64(len(f.Users)+1))), 1)
+		if count == 0 {
+			continue
+		}
+
+		sequence := pkg.CryptoRandSequence(count+1, 1)
 
 		for j := 0; j < count; j++ {
+			filmID := sequence[j]
+
+			score := pkg.RandMaxInt(f.Config.Volume.MaxRatings-offset) + 1 + offset
+
 			values[pos] = value.ID
 			pos++
-			values[pos] = sequence[j]
+			values[pos] = filmID
 			pos++
-			values[pos] = pkg.RandMaxInt(f.Config.Volume.MaxRatings-offset) + 1 + offset
+			values[pos] = score
 			pos++
 			values[pos] = faker.Timestamp()
 			pos++
+
+			// For update denormal fields
+			f.films[filmID-1].Rating += float64(score)
+
+			f.films[filmID-1].CountScores += 1
 		}
 
 		appended += count

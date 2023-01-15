@@ -11,4 +11,8 @@ const (
 	MaxInsertValuesPostgreSQL = 65535
 
 	MaxInsertValuesSQL = MaxInsertValuesPostgreSQL - 100
+
+	TypeReviewPositive = "positive"
+	TypeReviewNegative = "negative"
+	TypeReviewNeutral  = "neutral"
 )

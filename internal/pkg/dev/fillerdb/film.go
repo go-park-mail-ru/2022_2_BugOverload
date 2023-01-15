@@ -2,7 +2,6 @@ package fillerdb
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"strings"
 	"time"
@@ -260,26 +259,42 @@ func (f *DBFiller) linkFilmsReviews() (int, error) {
 	pos := 0
 	appended := 0
 
-	sequenceReviews := pkg.CryptoRandSequence(len(f.Reviews)+1, 1)
+	sequenceReviewsID := pkg.CryptoRandSequence(len(f.Reviews)+1, 1)
 
 	for _, value := range f.films {
-		countPartBatch := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
-		if (countInserts - appended) < countPartBatch {
-			countPartBatch = countInserts - appended
+		count := pkg.RandMaxInt(f.Config.Volume.MaxReviewsOnFilm)
+		if (countInserts - appended) < count {
+			count = countInserts - appended
 		}
 
-		sequenceUsers := pkg.CryptoRandSequence(len(f.Users)+1, 1)
+		if count == 0 {
+			continue
+		}
 
-		for j := 0; j < countPartBatch; j++ {
-			values[pos] = sequenceReviews[appended:][j]
+		sequenceUsersID := pkg.CryptoRandSequence(count+1, 1)
+
+		for j := 0; j < count; j++ {
+			curID := sequenceReviewsID[appended:][j]
+
+			values[pos] = curID
 			pos++
-			values[pos] = sequenceUsers[j]
+			values[pos] = sequenceUsersID[j]
 			pos++
 			values[pos] = value.ID
 			pos++
+
+			// For update denormal fields
+			switch f.Reviews[curID-1].Type {
+			case devpkg.TypeReviewNegative:
+				f.films[value.ID-1].CountNegativeReviews += 1
+			case devpkg.TypeReviewNeutral:
+				f.films[value.ID-1].CountNeutralReviews += 1
+			case devpkg.TypeReviewPositive:
+				f.films[value.ID-1].CountPositiveReviews += 1
+			}
 		}
 
-		appended += countPartBatch
+		appended += count
 	}
 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
@@ -417,7 +432,7 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 	query := insertFilmsPersons
 	message := "linkFilmPersonsRandom"
 
-	globalCountInserts := len(f.filmsSQL)
+	globalCountInserts := 0
 
 	countAttributes := strings.Count(query, ",") + 1
 
@@ -443,29 +458,40 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 
 	countInserts := 0
 
+	maxPersons := int(math.Max(float64(f.Config.Volume.MaxFilmsActors), float64(f.Config.Volume.MaxFilmsPersons)))
+
 	for i := 0; ; {
-		countActors := pkg.RandMaxInt(int(math.Max(float64(f.Config.Volume.MaxFilmsActors), float64(f.Config.Volume.MaxFilmsPersons)))) + 1
-		weightActors := countActors - 1
+		countActors := pkg.RandMaxInt(f.Config.Volume.MaxFilmsActors) + 1
 
-		sequencePersons := pkg.CryptoRandSequence(len(f.persons)+1, 1)
+		sequencePersons := pkg.CryptoRandSequence(maxPersons+1, 1)
 
-		for j := 0; j < countActors; j++ {
-			values[pos] = sequencePersons[j]
-			pos++
-			values[pos] = f.films[i].ID
-			pos++
-			values[pos] = f.guides.Professions["актер"]
-			pos++
-			values[pos] = sqltools.NewSQLNullString(faker.Word())
-			weightActors--
-			pos++
-			values[pos] = weightActors
-			pos++
+		if countActors != 0 {
+			weightActors := countActors - 1
+
+			for j := 0; j < countActors; j++ {
+				values[pos] = sequencePersons[j]
+				pos++
+				values[pos] = f.films[i].ID
+				pos++
+				values[pos] = f.guides.Professions["актер"]
+				pos++
+				values[pos] = sqltools.NewSQLNullString(faker.Word())
+				weightActors--
+				pos++
+				values[pos] = weightActors
+				pos++
+
+				f.films[i].CountActors = countActors
+			}
+
+			countInserts += countActors
 		}
 
-		countInserts += countActors
-
 		countPersons := pkg.RandMaxInt(f.Config.Volume.MaxFilmsPersons) + 1
+		if countPersons == 0 {
+			continue
+		}
+
 		weightPersons := countPersons - 1
 
 		end := 2
@@ -497,6 +523,8 @@ func (f *DBFiller) linkFilmPersonsRandom() (int, error) {
 			}
 
 			pos = 0
+
+			globalCountInserts += countInserts
 
 			countInserts = 0
 		}
@@ -571,8 +599,11 @@ func (f *DBFiller) linkFilmTags() (int, error) {
 
 	for _, value := range f.guides.Tags {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxFilmsInTag) + 1
+		if count == 0 {
+			continue
+		}
 
-		sequence := pkg.CryptoRandSequence(int(math.Min(float64(len(f.films)+1), float64(f.Config.Volume.MaxFilmsInTag))), 1)
+		sequence := pkg.CryptoRandSequence(count+1, 1)
 
 		for i := 0; i < count; i++ {
 			values = append(values, sequence[i], value)
@@ -641,20 +672,60 @@ func (f *DBFiller) linkFilmImages() (int, error) {
 }
 
 func (f *DBFiller) UpdateFilms() (int, error) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
-	defer cancelFunc()
+	// Defining sending parameters
+	query := updateFilmsSimple
+	message := "UpdateFilms"
 
-	rows, err := f.DB.Connection.ExecContext(ctx, updateFilms)
-	if err != nil {
-		return 0, fmt.Errorf("UpdateFilms: [%w] when inserting row into [%s] table", err, updateFilms)
+	globalCountInserts := len(f.filmsSQL)
+
+	countAttributes := strings.Count(query, "$")
+
+	action := func(countInserts int, values []interface{}) error {
+		ctx, cancelFunc := context.WithTimeout(context.Background(), time.Duration(f.Config.Database.Timeout)*time.Second)
+		defer cancelFunc()
+
+		_, err := sqltools.InsertBatch(ctx, f.DB.Connection, query, values)
+		if err != nil {
+			return errors.Wrap(err, message)
+		}
+
+		return nil
 	}
 
-	affected, err := rows.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "UpdateFilms")
+	pos := 0
+
+	values := make([]interface{}, countAttributes)
+
+	for i := 0; i < len(f.films); i++ {
+		countScores := f.films[i].CountScores
+
+		rating := sqltools.NewSQLNullFloat64(float32(math.Round(f.films[i].Rating/float64(countScores)*10*float64(1)) / 10 * float64(1)))
+
+		values[pos] = rating
+		pos++
+		values[pos] = countScores
+		pos++
+		values[pos] = f.films[i].CountNegativeReviews
+		pos++
+		values[pos] = f.films[i].CountNeutralReviews
+		pos++
+		values[pos] = f.films[i].CountPositiveReviews
+		pos++
+		values[pos] = f.films[i].CountActors
+		pos++
+		values[pos] = f.films[i].ID
+		pos++
+
+		err := action(countAttributes, values)
+		if err != nil {
+			return 0, errors.Wrap(err, message)
+		}
+
+		pos = 0
+
 	}
 
-	return int(affected), nil
+	return globalCountInserts, nil
 }
 
 func (f *DBFiller) linkFilmGenresRandom() (int, error) {
