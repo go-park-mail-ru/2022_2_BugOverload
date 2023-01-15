@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS film_images
 (
     "film_id"   serial  NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "image_key" text DEFAULT NULL,
-    "weight"    integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     CONSTRAINT "image_length" CHECK (LENGTH(image_key) <= 32),
     PRIMARY KEY (image_key, film_id)
 );
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS person_images
 (
     "person_id" serial  NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
     "image_key" text DEFAULT NULL,
-    "weight"    integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     CONSTRAINT "image_length" CHECK (LENGTH(image_key) <= 32),
     PRIMARY KEY (image_key, person_id)
 );
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS film_genres
 (
     "fk_film_id"  integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_genre_id" integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
-    "weight"      integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_film_id, fk_genre_id)
 );
 
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS film_countries
 (
     "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_country_id" integer NOT NULL REFERENCES countries (country_id) ON DELETE CASCADE,
-    "weight"        integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_film_id, fk_country_id)
 );
 
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS film_companies
 (
     "fk_film_id"    integer NOT NULL REFERENCES films (film_id) ON DELETE CASCADE,
     "fk_company_id" integer NOT NULL REFERENCES companies (company_id) ON DELETE CASCADE,
-    "weight"        integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_film_id, fk_company_id)
 );
 
@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS film_persons
     "fk_profession_id" integer NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
     "character"        text DEFAULT NULL,
     CONSTRAINT "character_length" CHECK (LENGTH("character") <= 64),
-    "weight"           integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_person_id, fk_film_id, fk_profession_id)
 );
 
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS person_professions
 (
     "fk_person_id"     integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
     "fk_profession_id" integer NOT NULL REFERENCES professions (profession_id) ON DELETE CASCADE,
-    "weight"           integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_person_id, fk_profession_id)
 );
 
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS person_genres
 (
     "fk_person_id" integer NOT NULL REFERENCES persons (person_id) ON DELETE CASCADE,
     "fk_genre_id"  integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
-    "weight"       integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_person_id, fk_genre_id)
 );
 
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS collections_genres
 (
     "fk_collection_id" integer NOT NULL REFERENCES collections (collection_id) ON DELETE CASCADE,
     "fk_genre_id"      integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
-    "weight"           integer NOT NULL,
+    "weight"    integer NOT NULL DEFAULT 0,
     PRIMARY KEY (fk_collection_id, fk_genre_id)
 );
 

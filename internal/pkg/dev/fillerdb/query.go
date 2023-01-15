@@ -38,12 +38,16 @@ VALUES`
 
 	updateFilms = `
 UPDATE films f
-SET (rating, count_ratings) =
-        (SELECT SUM(ur.score) / CAST(COUNT(*) AS float) AS rating,
-                COALESCE(COUNT(*), 0)
+SET rating =
+        (SELECT SUM(ur.score) / CAST(COUNT(*) AS float) AS rating
          FROM user_ratings ur
          WHERE f.film_id = fk_film_id
          GROUP BY ur.fk_film_id),
+    count_ratings =
+        COALESCE((SELECT COALESCE(COUNT(*), 0)
+         FROM user_ratings ur
+         WHERE f.film_id = fk_film_id
+         GROUP BY ur.fk_film_id), 0),
     count_negative_reviews =
         (SELECT COUNT(*)
          FROM user_reviews

@@ -7,6 +7,15 @@ import (
 	"math/big"
 )
 
+func RandIntInInterval(max int, min int) int {
+	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max-min)))
+	if err != nil {
+		return 0
+	}
+
+	return int(number.Int64()) + min
+}
+
 func RandMaxInt(max int) int {
 	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max)))
 	if err != nil {

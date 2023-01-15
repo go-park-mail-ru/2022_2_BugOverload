@@ -2,6 +2,7 @@ package fillerdb
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
@@ -11,16 +12,18 @@ import (
 )
 
 func (f *DBFiller) uploadCollections() (int, error) {
-	countInserts := len(f.collections) * len(f.faceUsers)
+	countInserts := len(f.collections) * len(f.Users)
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertCollections, countInserts)
+	countAttributes := strings.Count(insertCollections, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertCollections, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 
 	for _, value := range f.collectionsSQL {
-		for range f.faceUsers {
+		for range f.Users {
 			values[pos] = value.Name
 			pos++
 			values[pos] = value.Description
@@ -46,9 +49,11 @@ func (f *DBFiller) uploadCollections() (int, error) {
 }
 
 func (f *DBFiller) linkCollectionProfile() (int, error) {
-	countInserts := len(f.collections) * len(f.faceUsers)
+	countInserts := len(f.collections) * len(f.Users)
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertProfileCollections, countInserts)
+	countAttributes := strings.Count(insertProfileCollections, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertProfileCollections, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -56,7 +61,7 @@ func (f *DBFiller) linkCollectionProfile() (int, error) {
 	collectionID := 1
 
 	for range f.collectionsSQL {
-		for _, user := range f.faceUsers {
+		for _, user := range f.Users {
 			values[pos] = collectionID
 			collectionID++
 			pos++

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/security"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
@@ -14,15 +16,17 @@ import (
 )
 
 func (f *DBFiller) uploadUsers() (int, error) {
-	countInserts := len(f.faceUsers)
+	countInserts := len(f.Users)
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertUsers, countInserts)
+	countAttributes := strings.Count(insertUsers, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertUsers, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 
-	for _, value := range f.faceUsers {
+	for _, value := range f.Users {
 		values[pos] = value.Nickname
 		pos++
 
@@ -52,7 +56,7 @@ func (f *DBFiller) uploadUsers() (int, error) {
 	}
 
 	for i := 0; i < int(affected); i++ {
-		f.faceUsers[i].ID = i + 1
+		f.Users[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -61,14 +65,16 @@ func (f *DBFiller) uploadUsers() (int, error) {
 func (f *DBFiller) linkProfileViews() (int, error) {
 	countInserts := f.Config.Volume.CountViews
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertProfileViews, countInserts)
+	countAttributes := strings.Count(insertProfileViews, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertProfileViews, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 	appended := 0
 
-	for _, value := range f.faceUsers {
+	for _, value := range f.Users {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxViewOnFilm)
 		if (countInserts - appended) < count {
 			count = countInserts - appended
@@ -76,7 +82,7 @@ func (f *DBFiller) linkProfileViews() (int, error) {
 
 		faker.Word()
 
-		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1)
+		sequence := pkg.CryptoRandSequence(int(math.Min(float64(len(f.films)+1), float64(len(f.Users)+1))), 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
@@ -106,20 +112,22 @@ const offset = 3
 func (f *DBFiller) linkProfileRatings() (int, error) {
 	countInserts := f.Config.Volume.CountRatings
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertProfileRatings, countInserts)
+	countAttributes := strings.Count(insertProfileRatings, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertProfileRatings, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 	appended := 0
 
-	for _, value := range f.faceUsers {
+	for _, value := range f.Users {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxCountRatingsOnFilm)
 		if (countInserts - appended) < count {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(len(f.films)+1, 1)
+		sequence := pkg.CryptoRandSequence(int(math.Min(float64(len(f.films)+1), float64(len(f.Users)+1))), 1)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID
