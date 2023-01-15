@@ -71,10 +71,6 @@ fill-db: export POSTGRES_HOST=localhost
 fill-db:
 	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/prod.toml --data-path=./test/newdata
 
-fill-db-debug: export POSTGRES_HOST=localhost
-fill-db-debug:
-	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
-
 # Production BEGIN ----------------------------------------------------
 
 prod-create-env:
@@ -110,17 +106,29 @@ stop:
 # Debug BEGIN ---------------------------------------------------------
 #IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 
+debug-fill-db: export POSTGRES_HOST=localhost
+debug-fill-db:
+	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
+
+debug-base-deploy:
+	docker-compose up -d main_db admin_db localstack
+
+debug-app-deploy:
+	docker-compose up -d image warehouse auth api
+
+debug-monitoring-deploy:
+	docker-compose up -d monitor_db prometheus node_exporter grafana
+
 debug-deploy:
 	make clear
 	mkdir -p --mode=777 logs/database/main
-	docker-compose up -d main_db admin_db localstack
+	make debug-base-deploy
 	sleep 1
 	make build
-	make fill-db-debug
-	docker-compose up -d image warehouse auth api
-	docker-compose up -d monitor_db prometheus node_exporter grafana
+	make debug-app-deploy
+	make debug-monitoring-deploy
 
-debug-restart:
+debug-app-restart:
 	docker-compose restart warehouse
 	docker-compose restart image
 	docker-compose restart auth
