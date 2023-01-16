@@ -12,8 +12,8 @@ SELECT f.film_id,
 FROM films f
          JOIN film_tags ft on f.film_id = ft.fk_film_id
          JOIN tags t on ft.fk_tag_id = t.tag_id
-WHERE t.name = $1 AND f.rating < $2
-ORDER BY f.rating DESC
+WHERE t.name = $1 AND (f.rating <= $2 OR f.rating IS NULL)
+ORDER BY f.rating DESC NULLS LAST
 LIMIT $3`
 
 	GetFilmsByTagDate = `
@@ -43,8 +43,8 @@ SELECT f.film_id,
 FROM films f
         JOIN film_genres fg on f.film_id = fg.fk_film_id
         JOIN genres g on g.genre_id = fg.fk_genre_id
-WHERE g.name = $1 AND f.rating < $2
-ORDER BY f.rating DESC
+WHERE g.name = $1 AND (f.rating <= $2 OR f.rating IS NULL)
+ORDER BY f.rating DESC NULLS LAST
 LIMIT $3`
 
 	GetFilmsByGenreDate = `
@@ -104,7 +104,7 @@ WHERE f.film_id IN (
     FROM collections_films cf
     WHERE fk_collection_id = $1
 )
-ORDER BY f.rating DESC`
+ORDER BY f.rating DESC NULLS LAST`
 
 	getCollectionShortInfo = `
 SELECT name, description
@@ -140,6 +140,6 @@ WHERE f.film_id IN (
         ORDER BY weight DESC
         LIMIT 2
     )
-    ORDER BY weight DESC
-)`
+    ORDER BY weight DESC)
+    LIMIT 10`
 )

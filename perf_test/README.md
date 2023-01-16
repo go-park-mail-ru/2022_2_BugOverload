@@ -57,6 +57,8 @@ DDL можно наблюдать [тут](ddl/end).
 
 ## Примечание
 
+API документация [тут](https://app.swaggerhub.com/apis/BugOverload/API-Kino/1.0.0).
+
 Работа наполнителя:
 
 ![image](https://user-images.githubusercontent.com/88785411/212561311-1bdc37d9-8f90-44bc-b029-91b7433f2966.png)

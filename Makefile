@@ -134,8 +134,10 @@ debug-app-restart:
 	docker-compose restart auth
 	docker-compose restart api
 
-# Debug END -----------------------------------------------------------
+run-perf-tests:
+	go run ./perf_test/perftest.go
 
+# Debug END -----------------------------------------------------------
 
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
