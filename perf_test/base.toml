@@ -1,5 +1,5 @@
 # Global
-rate = 10
+rate = 10000
 duration = 1 # seconds
 name_testing = "Base performanse test"
 timeout_testing = 20 # seconds

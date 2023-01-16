@@ -7,6 +7,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/sirupsen/logrus"
 	vegeta "github.com/tsenart/vegeta/lib"
+
 	"go-park-mail-ru/2022_2_BugOverload/pkg"
 )
 
@@ -44,6 +45,30 @@ func BasePerformanceTest() {
 		logrus.Fatal("No config file")
 	}
 
+	targets := GetTestingData(&config)
+
+	rate := vegeta.Rate{Freq: config.Rate, Per: time.Second}
+	duration := time.Duration(config.Duration) * time.Second
+
+	targeter := vegeta.NewStaticTargeter(targets...)
+	attacker := vegeta.NewAttacker()
+
+	go func() {
+		time.Sleep(time.Duration(config.TimeoutTesting) * time.Second)
+
+		attacker.Stop()
+	}()
+
+	var metrics vegeta.Metrics
+	for res := range attacker.Attack(targeter, rate, duration, config.NameTesting) {
+		metrics.Add(res)
+	}
+	metrics.Close()
+
+	GetReport(metrics)
+}
+
+func GetTestingData(config *performanceTestConfig) []vegeta.Target {
 	globalCountRequest := 0
 
 	for _, value := range config.CountTargets {
@@ -137,29 +162,42 @@ func BasePerformanceTest() {
 		logrus.Infof("Request: %s", curURL[i])
 	}
 
-	rate := vegeta.Rate{Freq: config.Rate, Per: time.Second}
-	duration := time.Duration(config.Duration) * time.Second
+	return targets
+}
 
-	targeter := vegeta.NewStaticTargeter(targets...)
-	attacker := vegeta.NewAttacker()
+const (
+	percent     = 100.0
+	scaleMemory = 1024.0
+)
 
-	var metrics vegeta.Metrics
-	for res := range attacker.Attack(targeter, rate, duration, config.NameTesting) {
-		metrics.Add(res)
-	}
-	metrics.Close()
+func GetReport(metrics vegeta.Metrics) {
+	loadKB := float64(metrics.BytesIn.Total) / scaleMemory
 
 	logrus.Info("\n----Testing results----")
 	logrus.Infof("Count request:   %d", metrics.Requests)
 	logrus.Infof("99th percentile: %s", metrics.Latencies.P99)
-	logrus.Infof("Duration: 		  %s", metrics.Duration)
+	logrus.Infof("Duration:        %s", metrics.Duration)
+	logrus.Infof("Rate:            %g", metrics.Rate)
+	logrus.Infof("BiteIn:          Mean: %g | Total: %dB %3.2fKB", metrics.BytesIn.Mean, metrics.BytesIn.Total, loadKB)
+	logrus.Infof("BiteOut:         Mean: %g | Total: %d", metrics.BytesOut.Mean, metrics.BytesOut.Total)
+
+	countAnswers := 0.0
 
 	logrus.Info("Status Codes\n")
 	statusCodes := metrics.StatusCodes
 	logrus.Info("Code | Count")
 	for key, value := range statusCodes {
 		logrus.Infof("%s  : %d", key, value)
+		if key != "0" && key != "500" {
+			countAnswers += float64(value)
+		}
 	}
+
+	logrus.Info("\n----Total----")
+	logrus.Infof("Count success (200):              %3.2f %%", metrics.Success*percent)
+	logrus.Infof("Count Answers (!500, !0):         %3.2f %%", countAnswers/float64(metrics.Requests)*percent)
+	logrus.Infof("RPS (Count Answers / Duration):   %3.2f", countAnswers/metrics.Duration.Seconds())
+	logrus.Infof("Read flow (BiteIn / Duration):    %3.2f KB/s", loadKB/metrics.Duration.Seconds())
 }
 
 func main() {

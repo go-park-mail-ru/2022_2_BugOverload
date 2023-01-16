@@ -7,13 +7,15 @@ LINTER_CFG = ./configs/.golangci.yml
 PKG = ./internal/... ./pkg/...
 PKG_INTERNAL = ./internal/...
 
+PKG_LINTERS = ./...
+
 MICROSERVICE_DIR=$(PWD)/internal
 
 create-env:
 	go mod download
 
 run-linter:
-	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTER_CFG)
+	$(GOPATH)/bin/golangci-lint run $(PKG_LINTERS) --config=$(LINTER_CFG)
 	go fmt $(PKG)
 
 build:
