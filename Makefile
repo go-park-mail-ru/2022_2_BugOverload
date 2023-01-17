@@ -7,13 +7,15 @@ LINTER_CFG = ./configs/.golangci.yml
 PKG = ./internal/... ./pkg/...
 PKG_INTERNAL = ./internal/...
 
+PKG_LINTERS = ./...
+
 MICROSERVICE_DIR=$(PWD)/internal
 
 create-env:
 	go mod download
 
 run-linter:
-	$(GOPATH)/bin/golangci-lint run $(PKG) --config=$(LINTER_CFG)
+	$(GOPATH)/bin/golangci-lint run $(PKG_LINTERS) --config=$(LINTER_CFG)
 	go fmt $(PKG)
 
 build:
@@ -69,7 +71,7 @@ DB_URL := $(shell echo postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POST
 
 fill-db: export POSTGRES_HOST=localhost
 fill-db:
-	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/config.toml --data-path=./test/newdata
+	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/prod.toml --data-path=./test/newdata
 
 # Production BEGIN ----------------------------------------------------
 
@@ -106,33 +108,38 @@ stop:
 # Debug BEGIN ---------------------------------------------------------
 #IMAGES=/home/andeo/Загрузки/images S3_ENDPOINT=http://localhost:4566
 
+debug-fill-db: export POSTGRES_HOST=localhost
+debug-fill-db:
+	./cmd/filldb/filldb_bin --config-path=./cmd/filldb/configs/debug.toml --data-path=./test/newdata
+
+debug-base-deploy:
+	docker-compose up -d main_db admin_db localstack
+
+debug-app-deploy:
+	docker-compose up -d image warehouse auth api
+
+debug-monitoring-deploy:
+	docker-compose up -d monitor_db prometheus node_exporter grafana
+
 debug-deploy:
 	make clear
 	mkdir -p --mode=777 logs/database/main
-	docker-compose up -d main_db admin_db localstack
+	make debug-base-deploy
 	sleep 1
 	make build
-	make fill-db
-	docker-compose up -d image warehouse auth api
-	docker-compose up -d monitor_db prometheus node_exporter grafana
-	make fill-S3-fast ${IMAGES} ${S3_ENDPOINT}
+	make debug-app-deploy
+	make debug-monitoring-deploy
 
-dev-debug-deploy:
-	make clear
-	mkdir -p --mode=777 logs/database/main
-	docker-compose up -d main_db admin_db localstack
-	make build
-	docker-compose up -d image warehouse auth api
-	docker-compose up -d monitor_db prometheus node_exporter grafana
-
-debug-restart:
+debug-app-restart:
 	docker-compose restart warehouse
 	docker-compose restart image
 	docker-compose restart auth
 	docker-compose restart api
 
-# Debug END -----------------------------------------------------------
+run-perf-tests:
+	go run ./perf_test/perftest.go
 
+# Debug END -----------------------------------------------------------
 
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin

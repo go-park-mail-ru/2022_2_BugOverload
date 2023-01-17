@@ -36,37 +36,15 @@ VALUES`
 
 	insertFilmsPersons = `INSERT INTO film_persons(fk_person_id, fk_film_id, fk_profession_id, character, weight) VALUES`
 
-	updateFilms = `
-UPDATE films f
-SET (rating, count_ratings) =
-        (SELECT SUM(ur.score) / CAST(COUNT(*) AS float) AS rating,
-                COALESCE(COUNT(*), 0)
-         FROM user_ratings ur
-         WHERE f.film_id = fk_film_id
-         GROUP BY ur.fk_film_id),
-    count_negative_reviews =
-        (SELECT COUNT(*)
-         FROM user_reviews
-                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
-         WHERE f.film_id = fk_film_id
-           AND r.type = 'negative'),
-    count_neutral_reviews  =
-        (SELECT COALESCE(COUNT(*), 0)
-         FROM user_reviews
-                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
-         WHERE f.film_id = fk_film_id
-           AND r.type = 'neutral'),
-    count_positive_reviews =
-        (SELECT COALESCE(COUNT(*), 0)
-         FROM user_reviews
-                  JOIN reviews r on user_reviews.fk_review_id = r.review_id
-         WHERE f.film_id = fk_film_id
-           AND r.type = 'positive'),
-    count_actors           =
-        (SELECT COALESCE(COUNT(*), 0)
-         FROM film_persons fp
-         WHERE f.film_id = fk_film_id
-           AND fp.fk_profession_id = (SELECT profession_id FROM professions p WHERE p.name = 'актер'))`
+	updateFilmsSimple = `
+UPDATE films
+SET rating                 = $1,
+    count_ratings 		   = $2,
+    count_negative_reviews = $3,
+    count_neutral_reviews  = $4,
+    count_positive_reviews = $5,
+    count_actors           = $6
+WHERE film_id = $7;`
 
 	updatePersons = `
 UPDATE persons p

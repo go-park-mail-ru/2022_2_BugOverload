@@ -4,26 +4,24 @@ timeout = 3
 [volume]
 count_users = 200
 
+type_film  = "real"
+
 count_ratings = 600
 max_rating = 10
 max_count_ratings_on_film = 20
 
 count_reviews = 0
-max_length_review_body = 0
-max_reviews_on_film = 0
+max_length_review_body = 300
+max_reviews_on_film = 10
 count_reviews_likes = 0
-max_likes_on_review = 0
+max_likes_on_review = 10
 
 type_film_persons_links = "real"
-max_film_actors = 5
-max_film_persons = 4
+
 max_films_in_tag = 20
 
 count_views = 600
 max_views_on_film = 15
-
-count_collections = 30
-
 
 [database_params]
 max_open_cons = 50

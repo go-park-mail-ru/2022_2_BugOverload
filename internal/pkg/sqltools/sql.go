@@ -15,7 +15,8 @@ import (
 func InsertBatch(ctx context.Context, db *sql.DB, query string, values []interface{}) (sql.Result, error) {
 	rows, err := db.ExecContext(ctx, query, values...)
 	if err != nil {
-		return nil, fmt.Errorf("InsertBatch: [%w] when inserting row into [%s] table \n [%+v]", err, query, values)
+		//  return nil, fmt.Errorf("InsertBatch: [%w] when inserting row into [%s] table \n [%+v]", err, query, values)
+		return nil, fmt.Errorf("InsertBatch: [%w] ", err)
 	}
 
 	return rows, nil
