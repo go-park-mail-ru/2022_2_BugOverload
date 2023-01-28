@@ -38,7 +38,7 @@ GRANT
     -- For collections
     collections, user_collections, users,
     -- For persons
-    persons, professions, person_professions, person_genres
+    persons, professions, person_professions, person_genres, person_images
     TO warehouse_app;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO warehouse_app;
