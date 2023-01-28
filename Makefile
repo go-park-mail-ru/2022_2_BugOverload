@@ -86,7 +86,6 @@ prod-restart:
 	docker-compose -f docker-compose.production.yml restart api
 
 prod-deploy:
-	make clear
 	mkdir -p --mode=777 logs/database/main
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
@@ -149,8 +148,4 @@ send-bin:
 	scp ./cmd/auth/auth_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/auth/auth_bin
 
 clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem
-
-clear-bin:
-	sudo rm -rf cmd/*/*_bin
-
+	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
