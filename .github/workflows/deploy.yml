@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: cmd/*/*_bin
+          path: cmd/filldb/filldb_bin
 
   deploy:
     needs: build
