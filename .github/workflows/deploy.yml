@@ -81,7 +81,6 @@ jobs:
             
             make stop
             make clear
-            make bin-clear
 
       - name: Update backend
         uses: appleboy/ssh-action@master
