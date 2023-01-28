@@ -57,7 +57,7 @@ proto-generate:
 IMAGES = /home/webapps/images
 S3_ENDPOINT = http://localhost:4566
 
-# Example: make fill-S3 IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
+# Example: make fill-S3-slow IMAGES=/home/webapps/images S3_ENDPOINT=http://localhost:4566
 fill-S3-slow:
 	./scripts/fill_data_S3.sh ${IMAGES} ${S3_ENDPOINT}
 
@@ -150,4 +150,7 @@ send-bin:
 
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
+
+clear-bin:
+	sudo rm -rf cmd/*/*_bin
 
