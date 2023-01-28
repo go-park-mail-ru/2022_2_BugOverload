@@ -2,7 +2,7 @@
 -- Access
 GRANT
     SELECT ON users, user_collections, user_ratings, user_reviews, user_views_films,
-    collections, collections_films, collection_likes,
+    collections, collections_films, collection_likes, collections_genres,
     films, media
     TO user_app;
 
@@ -11,8 +11,8 @@ GRANT
     TO user_app;
 
 GRANT
-    INSERT, DELETE ON reviews, user_reviews, user_ratings, collections,
-    collections_films, collection_likes
+    INSERT, DELETE, UPDATE ON reviews, user_reviews, user_ratings, collections,
+    collections_films, collection_likes, user_collections, users
     TO user_app;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO user_app;
@@ -32,13 +32,18 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO auth_app;
 -- Access
 GRANT
     SELECT ON
+    -- Global
+    genres, companies, countries, tags, professions,
+    -- For reviews
+    reviews, reviews_likes,
     -- For film
-    films, serials, reviews, user_reviews, users, genres, companies, countries,
-    tags, persons, film_tags, film_images, film_persons, media, film_companies, film_countries, film_genres,
+    films, serials, media, reviews, users, film_tags, film_images, film_persons, film_companies, film_countries, film_genres,
+    -- For users
+    users, user_collections, user_ratings, user_reviews, user_views_films,
     -- For collections
-    collections, user_collections, users,
+    collections, collection_likes, collections_films, collections_genres,
     -- For persons
-    persons, professions, person_professions, person_genres, person_images
+    persons, person_professions, person_genres, person_images
     TO warehouse_app;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO warehouse_app;
