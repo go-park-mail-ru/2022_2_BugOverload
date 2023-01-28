@@ -7,27 +7,27 @@ on:
 
 
 jobs:
-#  linter:
-#    name: Run linter
-#    runs-on: ubuntu-20.04
-#    container:
-#      image: lonkidely/golang_web_light
-#    steps:
-#      - uses: actions/checkout@v2
-#      - run: make run-linter
-#
-#  tests:
-#    needs: linter
-#    name: Run tests
-#    runs-on: ubuntu-20.04
-#    container:
-#      image: lonkidely/golang_web_light
-#    steps:
-#      - uses: actions/checkout@v2
-#      - run: make run-tests
+  linter:
+    name: Run linter
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-linter
+
+  tests:
+    needs: linter
+    name: Run tests
+    runs-on: ubuntu-20.04
+    container:
+      image: lonkidely/golang_web_light
+    steps:
+      - uses: actions/checkout@v2
+      - run: make run-tests
 
   build:
-#    needs: tests
+    needs: tests
     name: Build
     runs-on: ubuntu-20.04
     container:
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: binaries
-          path: cmd/filldb/filldb_bin
+          path: cmd/*/*_bin
 
   deploy:
     needs: build
