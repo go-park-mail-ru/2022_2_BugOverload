@@ -1,0 +1,39 @@
+# Global
+rate = 10000
+duration = 1 # seconds
+name_testing = "Base performanse test"
+timeout_testing = 20 # seconds
+
+# Request params
+# GetFilm
+request_max_film_id = 1000000
+request_max_film_images = 1
+# GetReviews
+request_max_film_reviews = 10
+request_max_film_reviews_page = 2
+# GetFilmSimilar
+request_max_film_similar = 10
+# GetPopular
+request_max_film_in_tag = 10
+request_max_film_in_tag_delimiter = 10.0
+
+# Targets
+domain = "http://localhost:8088"
+methods_targets = [
+    "GET",
+    "GET",
+    "GET",
+    "GET"
+]
+count_targets = [
+    1,
+    1,
+    1,
+    1
+]
+url_targets = [
+    "/api/v1/film/%d?count_images=%d",
+    "/api/v1/film/%d/similar",
+    "/api/v1/film/%d/reviews?count_reviews=%d&offset=%d",
+    "/api/v1/collection?target=tag&key=popular&sort_param=rating&count_films=%d&delimiter=%g"
+]

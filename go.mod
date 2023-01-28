@@ -45,6 +45,7 @@ require (
 	github.com/butuzov/ireturn v0.1.1 // indirect
 	github.com/bxcodec/faker v2.0.1+incompatible // indirect
 	github.com/bxcodec/faker/v4 v4.0.0-beta.3 // indirect
+	github.com/c2h5oh/datasize v0.0.0-20220606134207-859f65c6625b // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/charithe/durationcheck v0.0.9 // indirect
 	github.com/chavacava/garif v0.0.0-20220630083739-93517212f375 // indirect
@@ -105,6 +106,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/influxdata/tdigest v0.0.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -203,6 +205,8 @@ require (
 	github.com/timonwong/logrlint v0.4.0 // indirect
 	github.com/tomarrell/wrapcheck/v2 v2.7.0 // indirect
 	github.com/tommy-muehle/go-mnd/v2 v2.5.1 // indirect
+	github.com/tsenart/go-tsz v0.0.0-20180814235614-0bd30b3df1c3 // indirect
+	github.com/tsenart/vegeta v12.7.0+incompatible // indirect
 	github.com/ultraware/funlen v0.0.3 // indirect
 	github.com/ultraware/whitespace v0.0.5 // indirect
 	github.com/urfave/negroni v1.0.0 // indirect

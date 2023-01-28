@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-faker/faker/v4"
@@ -13,15 +14,17 @@ import (
 )
 
 func (f *DBFiller) uploadReviews() (int, error) {
-	countInserts := len(f.faceReviews)
+	countInserts := len(f.Reviews)
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertReviews, countInserts)
+	countAttributes := strings.Count(insertReviews, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertReviews, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 
-	for _, value := range f.faceReviews {
+	for _, value := range f.Reviews {
 		values[pos] = value.Name
 		pos++
 		values[pos] = value.Type
@@ -46,7 +49,7 @@ func (f *DBFiller) uploadReviews() (int, error) {
 	}
 
 	for i := 0; i < int(affected); i++ {
-		f.faceReviews[i].ID = i + 1
+		f.Reviews[i].ID = i + 1
 	}
 
 	return countInserts, nil
@@ -55,20 +58,22 @@ func (f *DBFiller) uploadReviews() (int, error) {
 func (f *DBFiller) linkReviewsLikes() (int, error) {
 	countInserts := f.Config.Volume.CountReviewsLikes
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertReviewsLikes, countInserts)
+	countAttributes := strings.Count(insertReviewsLikes, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertReviewsLikes, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
 	pos := 0
 	appended := 0
 
-	for _, value := range f.faceReviews {
+	for _, value := range f.Reviews {
 		count := pkg.RandMaxInt(f.Config.Volume.MaxLikesOnReview)
 		if (countInserts - appended) < count {
 			count = countInserts - appended
 		}
 
-		sequence := pkg.CryptoRandSequence(len(f.faceUsers), 1)
+		sequence := pkg.CryptoRandSequence(len(f.Users)+1, 1, count)
 
 		for j := 0; j < count; j++ {
 			values[pos] = value.ID

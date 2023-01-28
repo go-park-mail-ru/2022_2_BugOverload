@@ -3,6 +3,7 @@ package fillerdb
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -13,7 +14,9 @@ import (
 func (f *DBFiller) uploadPersons() (int, error) {
 	countInserts := len(f.personsSQL)
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersons, countInserts)
+	countAttributes := strings.Count(insertPersons, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertPersons, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -65,7 +68,9 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		countInserts += len(value.Professions)
 	}
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsProfessions, countInserts)
+	countAttributes := strings.Count(insertPersonsProfessions, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertPersonsProfessions, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -77,7 +82,7 @@ func (f *DBFiller) linkPersonProfession() (int, error) {
 		for _, profession := range value.Professions {
 			values[pos] = value.ID
 			pos++
-			values[pos] = f.professions[profession]
+			values[pos] = f.guides.Professions[profession]
 			weight--
 			pos++
 			values[pos] = weight
@@ -103,7 +108,9 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		countInserts += len(value.Genres)
 	}
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsGenres, countInserts)
+	countAttributes := strings.Count(insertPersonsGenres, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertPersonsGenres, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 
@@ -115,7 +122,7 @@ func (f *DBFiller) linkPersonGenres() (int, error) {
 		for _, genre := range value.Genres {
 			values[pos] = value.ID
 			pos++
-			values[pos] = f.genres[genre]
+			values[pos] = f.guides.Genres[genre]
 			weight--
 			pos++
 			values[pos] = weight
@@ -141,7 +148,9 @@ func (f *DBFiller) linkPersonImages() (int, error) {
 		countInserts += len(value.Images)
 	}
 
-	insertStatement, countAttributes := sqltools.CreateFullQuery(insertPersonsImages, countInserts)
+	countAttributes := strings.Count(insertPersonsImages, ",") + 1
+
+	insertStatement := sqltools.CreateFullQuery(insertPersonsImages, countInserts, countAttributes)
 
 	values := make([]interface{}, countAttributes*countInserts)
 

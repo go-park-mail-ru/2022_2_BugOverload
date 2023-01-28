@@ -7,6 +7,15 @@ import (
 	"math/big"
 )
 
+func RandIntInInterval(max int, min int) int {
+	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max-min)))
+	if err != nil {
+		return 0
+	}
+
+	return int(number.Int64()) + min
+}
+
 func RandMaxInt(max int) int {
 	number, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(int64(max)))
 	if err != nil {
@@ -71,7 +80,7 @@ func CryptoRandInInterval(max int, min int) int {
 	return RandMaxInt(max-min) + min
 }
 
-func CryptoRandSequence(max int, min int) []int {
+func CryptoRandSequenceOld(max int, min int) []int {
 	length := max - min
 
 	res := make([]int, length)
@@ -100,4 +109,28 @@ func CryptoRandSequence(max int, min int) []int {
 			return res
 		}
 	}
+}
+
+func CryptoRandSequence(max int, min int, count int) []int {
+	table := make(map[int]int)
+
+	for len(table) < count {
+		value := CryptoRandInInterval(max, min)
+
+		_, ok := table[value]
+		if !ok {
+			table[value] = value
+		}
+	}
+
+	res := make([]int, count)
+
+	i := 0
+	for value := range table {
+		res[i] = value
+
+		i++
+	}
+
+	return res
 }

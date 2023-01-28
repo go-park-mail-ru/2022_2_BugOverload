@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"go-park-mail-ru/2022_2_BugOverload/internal/pkg/dev/devpkg"
 
 	"github.com/BurntSushi/toml"
 	"github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func main() {
 
 	flag.Parse()
 
-	config := fillerdb.NewConfig()
+	config := devpkg.NewConfig()
 
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {

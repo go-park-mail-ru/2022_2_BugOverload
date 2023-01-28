@@ -1,0 +1,50 @@
+[database]
+timeout = 1440
+
+[volume]
+count_users = 10000
+
+type_film = "random"
+count_films = 1000000
+max_films_name_length = 70
+max_films_description_length = 300
+max_films_short_description_length = 170
+max_films_original_name_length = 75
+max_films_slogan_length = 120
+max_films_poster_hor_length = 30
+max_films_poster_ver_length = 30
+max_films_box_office_dollars = 1000000000
+max_films_budget = 250000000
+max_films_duration_minutes = 330
+max_films_count_seasons = 15
+max_films_ticket_length = 250
+max_films_trailer_length = 250
+max_films_many_to_many_fields = 2
+max_films_prod_countries_count = 2
+max_films_prod_companies_count = 2
+max_films_genres_fields = 3
+
+count_ratings = 7000
+max_rating = 10
+max_count_ratings_on_film = 20
+
+count_reviews = 12000
+max_length_review_body = 300
+max_reviews_on_film = 40
+max_likes_on_review = 10
+count_reviews_likes = 400
+
+type_film_persons_links = "random"
+max_film_actors = 5
+max_film_persons = 4
+
+max_films_in_tag = 20
+
+count_views = 600
+max_views_on_film = 15
+
+count_collections = 30
+
+
+[database_params]
+max_open_cons = 50
