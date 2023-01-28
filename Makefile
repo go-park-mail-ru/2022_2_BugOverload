@@ -141,9 +141,6 @@ run-perf-tests:
 
 # Debug END -----------------------------------------------------------
 
-clear:
-	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem
-
 send-bin:
 	scp ./cmd/filldb/filldb_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/filldb/filldb_bin
 	scp ./cmd/api/api_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/api/api_bin
@@ -154,7 +151,7 @@ send-bin:
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem
 
-clear-bin:
+bin-clear:
 	sudo rm -rf cmd/*/*_bin
 
 
