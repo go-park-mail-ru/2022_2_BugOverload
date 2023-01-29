@@ -9,7 +9,7 @@ services:
     build:
       context: ./docker
       dockerfile: microservice.Dockerfile
-    command: sh -c "cd app && ./api_bin -config-path=./configs/prod.toml"
+    command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER_APP}"
