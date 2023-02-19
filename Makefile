@@ -89,7 +89,7 @@ prod-deploy:
 	mkdir -p --mode=777 logs/database/main
 	make prod-create-env
 	docker-compose -f docker-compose.production.yml up -d main_db admin_db localstack
-	sleep 2
+	sleep 5
 	make fill-db
 	docker-compose -f docker-compose.production.yml up -d image warehouse auth api
 	docker-compose -f docker-compose.production.yml up -d monitor_db prometheus node_exporter grafana
