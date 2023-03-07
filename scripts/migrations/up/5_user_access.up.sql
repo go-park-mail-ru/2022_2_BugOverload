@@ -13,8 +13,6 @@ GRANT
 GRANT
     INSERT, DELETE, UPDATE ON reviews, user_reviews, user_ratings, collections,
     collections_films, collection_likes, user_collections, users
-    INSERT, UPDATE, DELETE ON reviews, user_reviews, user_ratings, collections,
-    collections_films, collection_likes, ser_collections, users,
     TO user_app;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO user_app;
