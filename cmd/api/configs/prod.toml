@@ -4,8 +4,8 @@ bind_addr_http = "0.0.0.0:8088"
 read_timeout = 10 #seconds
 write_timeout = 10 #seconds
 protocol = "https"
-tls_certificate_file = "./fullchain.pem"
-tls_key_file = "./privkey.pem"
+tls_certificate_file = "./app/fullchain.pem"
+tls_key_file = "./app/privkey.pem"
 
 [metrics]
 bind_addr_http = ":9001"
