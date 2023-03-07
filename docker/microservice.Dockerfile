@@ -1,6 +1,7 @@
 FROM alpine:latest
 
 RUN apk add libc6-compat
+RUN ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2
 
 ENV TZ=Europe/Moscow
 
