@@ -137,6 +137,7 @@ debug-app-restart:
 
 run-perf-tests:
 	go run ./perf_test/perftest.go
+<<<<<<< HEAD
 
 # Debug END -----------------------------------------------------------
 
@@ -146,6 +147,10 @@ send-bin:
 	scp ./cmd/image/image_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/image/image_bin
 	scp ./cmd/warehouse/warehouse_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/warehouse/warehouse_bin
 	scp ./cmd/auth/auth_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/auth/auth_bin
+=======
+
+# Debug END -----------------------------------------------------------
+>>>>>>> fix
 
 clear:
 	sudo rm -rf main coverage.html coverage.out c.out *.log logs/ c2.out fullchain.pem privkey.pem cmd/*/*_bin
