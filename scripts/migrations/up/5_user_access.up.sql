@@ -36,7 +36,7 @@ GRANT
     films, serials, reviews, user_reviews, users, genres, companies, countries,
     tags, persons, film_tags, film_images, film_persons, media, film_companies, film_countries, film_genres,
     -- For collections
-    collections, user_collections, users,
+    collections, user_collections, users, collections_films,
     -- For persons
     persons, professions, person_professions, person_genres
     TO warehouse_app;
