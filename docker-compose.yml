@@ -144,13 +144,12 @@ services:
       - KINESIS_PROVIDER=kinesalite
 
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - CLEAR_TMP_FOLDER=0
     volumes:
       # - ./data:/tmp/localstack
       # - "/var/run/docker.sock:/var/run/docker.sock"
       # - ./bin:/docker-entrypoint-initaws.d
-      - './localstack:/tmp/localstack'
-      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './localstack:/var/lib/localstack'
+      - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
       - "4566-4599:4566-4599"
 
