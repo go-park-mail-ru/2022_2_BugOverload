@@ -148,8 +148,8 @@ services:
       # - ./data:/tmp/localstack
       # - "/var/run/docker.sock:/var/run/docker.sock"
       # - ./bin:/docker-entrypoint-initaws.d
-      - './localstack:/var/lib/localstack'
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./data:/var/lib/localstack
+      - ./bin:/docker-entrypoint-initaws.d
     ports:
       - "4566-4599:4566-4599"
 
