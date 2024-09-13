@@ -145,9 +145,11 @@ services:
 
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - ./data:/tmp/localstack
+      # - ./data:/tmp/localstack
       # - "/var/run/docker.sock:/var/run/docker.sock"
-      - ./bin:/docker-entrypoint-initaws.d
+      # - ./bin:/docker-entrypoint-initaws.d
+      - "./localstack_data:/var/lib/localstack" # Mounts the local directory to the container
+      - "/var/run/docker.sock:/var/run/docker.sock" # Mounts the docker socket
     ports:
       - "4566-4599:4566-4599"
 
