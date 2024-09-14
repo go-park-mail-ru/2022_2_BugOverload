@@ -1,9 +1,6 @@
 name: deploy_binaries
 
-on:
-  push:
-    branches:
-      - deploy_binaries
+on: workflow_dispatch
 
 
 jobs:
