@@ -76,8 +76,8 @@ fill-db:
 # Production BEGIN ----------------------------------------------------
 
 prod-create-env:
-	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem ./cmd/api/
-	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem ./cmd/api/
+	sudo cp /etc/letsencrypt/live/movie-gate.ru/fullchain.pem ./cmd/api/
+	sudo cp /etc/letsencrypt/live/movie-gate.ru/privkey.pem ./cmd/api/
 
 prod-restart:
 	docker-compose -f docker-compose.production.yml restart warehouse
@@ -141,11 +141,11 @@ run-perf-tests:
 # Debug END -----------------------------------------------------------
 
 send-bin:
-	scp ./cmd/filldb/filldb_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/filldb/filldb_bin
-	scp ./cmd/api/api_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/api/api_bin
-	scp ./cmd/image/image_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/image/image_bin
-	scp ./cmd/warehouse/warehouse_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/warehouse/warehouse_bin
-	scp ./cmd/auth/auth_bin root@95.163.242.214:/home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/auth/auth_bin
+	scp ./cmd/filldb/filldb_bin root@95.163.242.214:/home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/filldb/filldb_bin
+	scp ./cmd/api/api_bin root@95.163.242.214:/home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/api/api_bin
+	scp ./cmd/image/image_bin root@95.163.242.214:/home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/image/image_bin
+	scp ./cmd/warehouse/warehouse_bin root@95.163.242.214:/home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/warehouse/warehouse_bin
+	scp ./cmd/auth/auth_bin root@95.163.242.214:/home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/auth/auth_bin
 
 # Debug END -----------------------------------------------------------
 

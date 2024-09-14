@@ -31,7 +31,7 @@ work_timeout = 3 #seconds
 
 [cors]
 methods = ["POST", "GET", "PUT", "DELETE"]
-urls = ["https://movie-gate.online", "http://localhost:8088", "https://localhost:8088", "http://localhost:3000", "https://localhost:3000"]
+urls = ["https://movie-gate.ru", "http://localhost:8088", "https://localhost:8088", "http://localhost:3000", "https://localhost:3000"]
 headers = ["Content-Type", "Content-Length", "X-Csrf-Token"]
 credentials = true
 debug = false
