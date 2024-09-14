@@ -33,10 +33,10 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host movie-gate.online
+// @host movie-gate.ru
 // @BasePath  /
 // @termsOfService http://swagger.io/terms/
-// @servers http://movie-gate.online
+// @servers http://movie-gate.ru
 func main() {
 	// Config
 	var configPath string

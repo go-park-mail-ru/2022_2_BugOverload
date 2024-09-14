@@ -65,7 +65,7 @@ MovieGate - это агрегатор фильмов, сериалов, актё
 
 [Демо](https://www.youtube.com/watch?v=MOiBZshB6GA)
 
-[Деплой](http://movie-gate.online/)
+[Деплой](http://movie-gate.ru/)
 
 API [документация](https://app.swaggerhub.com/apis/BugOverload/API-Kino/1.0.0)
 
