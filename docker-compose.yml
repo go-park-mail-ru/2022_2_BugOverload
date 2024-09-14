@@ -118,7 +118,7 @@ services:
     networks:
       - localstack-net
     container_name: "localstack"
-    image: localstack/localstack:2.0.0
+    image: localstack/localstack:latest
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
