@@ -74,8 +74,8 @@ fill-db:
 # Production BEGIN ----------------------------------------------------
 
 prod-create-env:
-	sudo cp /etc/letsencrypt/live/movie-gate.online/fullchain.pem ./cmd/api/
-	sudo cp /etc/letsencrypt/live/movie-gate.online/privkey.pem ./cmd/api/
+	sudo cp /etc/letsencrypt/live/movie-gate.ru/fullchain.pem ./cmd/api/
+	sudo cp /etc/letsencrypt/live/movie-gate.ru/privkey.pem ./cmd/api/
 
 prod-restart:
 	docker-compose -f docker-compose.production.yml restart warehouse

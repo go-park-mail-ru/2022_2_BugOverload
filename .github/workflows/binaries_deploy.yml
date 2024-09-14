@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            cd /home/webapps/movie-gate.ru/backend/2022_2_BugOverload
             git checkout deploy_binaries
             git pull
 
@@ -70,7 +70,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           source: "binaries/*"
-          target: /home/webapps/movie-gate.online/backend/2022_2_BugOverload/cmd/
+          target: /home/webapps/movie-gate.ru/backend/2022_2_BugOverload/cmd/
           strip_components: 1
 
       - name: Restart backend
@@ -80,7 +80,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            cd /home/webapps/movie-gate.online/backend/2022_2_BugOverload
+            cd /home/webapps/movie-gate.ru/backend/2022_2_BugOverload
             
             chmod -R 755 cmd/
             chown -R ${{ secrets.USERNAME }}:${{ secrets.USERNAME }} cmd/  
