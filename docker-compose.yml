@@ -130,7 +130,7 @@ services:
       - SERVICES=s3
       # - DEBUG=1
 
-      - DATA_DIR=/tmp/localstack/data
+      - DATA_DIR=/var/lib/localstack/data
       - EAGER_SERVICE_LOADING=1
       - LEGACY_DIRECTORIES=1
 
