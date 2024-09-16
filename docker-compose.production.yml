@@ -39,6 +39,7 @@ services:
       - monitoring-net
     build:
       context: ./docker
+      network: host
       dockerfile: microservice.Dockerfile
     command: sh -c "./app/image_bin -config-path=./app/configs/prod.toml"
     environment:
