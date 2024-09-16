@@ -6,6 +6,10 @@ services:
     networks:
       - postgres-net
       - monitoring-net
+      default:                               
+        driver: bridge                       
+        driver_opts:                         
+          com.docker.network.driver.mtu: 1400
     build:
       context: ./docker
       dockerfile: microservice.Dockerfile
@@ -35,6 +39,10 @@ services:
       - localstack-net
       - postgres-net
       - monitoring-net
+      default:                               
+        driver: bridge                       
+        driver_opts:                         
+          com.docker.network.driver.mtu: 1400
     build:
       context: ./docker
       dockerfile: microservice.Dockerfile
