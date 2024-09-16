@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.8
 
 RUN apk add libc6-compat
 RUN ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2
