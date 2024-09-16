@@ -8,6 +8,7 @@ services:
       - monitoring-net
     build:
       context: ./docker
+      network: host
       dockerfile: microservice.Dockerfile
     command: sh -c "./app/api_bin -config-path=./app/configs/prod.toml"
     environment:
@@ -71,6 +72,7 @@ services:
       - monitoring-net
     build:
       context: ./docker
+      network: host
       dockerfile: microservice.Dockerfile
     command: sh -c "./app/warehouse_bin -config-path=./app/configs/prod.toml"
     environment:
@@ -97,6 +99,7 @@ services:
       - monitoring-net
     build:
       context: ./docker
+      network: host
       dockerfile: microservice.Dockerfile
     command: sh -c "./app/auth_bin -config-path=./app/configs/prod.toml"
     environment:
