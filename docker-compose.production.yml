@@ -284,9 +284,15 @@ networks:
     external: false
     driver: bridge
     name: localstack-net
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
   postgres-net:
     driver: bridge
     name: postgres-net
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
   monitoring-net:
     driver: bridge
     name: monitoring-net
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
