@@ -31,6 +31,8 @@ services:
 
   image:
     container_name: "image"
+    dns:
+      - 8.8.8.8
     networks:
       - localstack-net
       - postgres-net
